@@ -3667,8 +3667,8 @@
       "sha256": "181b5d58dc57bc79310eabc18c2281dc372928fd2585ffc8778f206ff9b92c23"
     },
     "tools/lock_dependencies.py": {
-      "bytes": 2700,
-      "sha256": "7462f28502cb7c1a9e8f8e4e3297527ac91023b02ae617e263b4b8b6dbd0ee25"
+      "bytes": 1555,
+      "sha256": "f972c0326a36975e6f4b53435e48df1c092eb45227dd1b1678059bb8741fc8f6"
     },
     "tools/make_demo_dataset.py": {
       "bytes": 2994,
