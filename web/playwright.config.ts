@@ -28,6 +28,10 @@ export default defineConfig({
   testDir: "e2e",
   outputDir: "test-results",
   fullyParallel: true,
+  // Each SwiftShader context saturates several CPU threads; locally the default
+  // (half the cores) timed out 10 of 12 tests on a 20-thread laptop. CI runners
+  // have few cores, so they keep Playwright's default.
+  workers: process.env.CI ? undefined : Number(process.env.E2E_WORKERS ?? 4),
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   timeout: 45_000,
