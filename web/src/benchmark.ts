@@ -8,6 +8,10 @@ let renderer: SpatialRenderer | null = null,
   report: Record<string, unknown> | null = null;
 let cleanupVisibility = () => {};
 const params = new URLSearchParams(location.search);
+/** Fixed tier (never auto) so a run measures one known configuration. */
+const quality = (["balanced", "cinematic", "performance"] as const).find(
+  (tier) => tier === params.get("quality"),
+) ?? "balanced";
 /** Deterministic pseudo-random sequence so every run sees identical frames. */
 function random(seed: number) {
   let state = seed >>> 0;
@@ -209,6 +213,7 @@ start.onclick = () => {
           drawing_buffer: metrics.drawingBuffer,
           css_canvas: [host.clientWidth, host.clientHeight],
           pixel_ratio: 1,
+          quality: metrics.quality,
           elapsed_seconds: elapsed,
           warmup_seconds: 5,
           sampled_one_second_windows: windows.length,
@@ -244,7 +249,7 @@ start.onclick = () => {
           cleanupVisibility();
         }
       },
-      { fixedBuffer: [1920, 1080], pixelRatio: 1 },
+      { fixedBuffer: [1920, 1080], pixelRatio: 1, quality },
     );
     const base = fixture();
     renderer.updateFrame(base);
