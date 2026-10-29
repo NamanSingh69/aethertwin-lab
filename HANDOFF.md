@@ -91,7 +91,8 @@ CI status; anything deferred or uncertain; the PR link.
 | `50e8c57` | chore: agent workspace setup (CLAUDE.md, `.claude/settings.json`, pre-commit hook, `test-runner` + `diff-reviewer` agents) |
 | `3222c84` | Playwright E2E: mock project (fake service + binary WebSocket) and live project (real simulator), axe WCAG 2.1 AA, phone layout; brand-link a11y fix; Vitest limited to `tests/` |
 | `af0a6b2` | Split `App.tsx` into `useStudioSession`, `useControlCommands`, `useSpatialRenderer` and `components/studio/*`; deterministic live route test |
-| (handoff commit) | HANDOFF.md (this file) and a CLAUDE.md pointer to it |
+| `9ca2c9d` | HANDOFF.md (this file) and a CLAUDE.md pointer to it |
+| (next) | Halo: malformed snapshot shows disconnected; serial frames stop when status stalls (IoT finding 1, fixed with tests); HANDOFF update |
 
 No PR has been opened yet. Check with `git log --oneline origin/main..HEAD`.
 
@@ -108,7 +109,7 @@ listed in `.git/info/exclude`); recreate it locally (section 9).
 | 4 | Renderer perf + cinematic effects + camera animation (plan task 3) | **next** | Benchmarked before/after on `/benchmark.html` (1080p, 100k instances) and in the live studio; p50/p95 frame time not worse at equal quality; effects are presentation-only, labelled, off under reduced motion; quality tiers; all suites green; screenshots reviewed |
 | 5 | UX: shortcuts, help overlay, quality selector, toast auto-dismiss, map progress (plan task 4) | pending | Keyboard-only usable; shortcuts never fire while typing in inputs; help overlay is an accessible dialog (focus trap, Escape); E2E tests per feature; axe clean |
 | 6 | CI/CD (plan task 5) | pending | Workflows below exist, are least-privilege, pass on the PR; Dependabot + CodeQL configured |
-| 7 | IoT web server review & hardening (gateway + ESP32 halo) | reviewed (section 12); fixes pending | Findings triaged; software-verifiable fixes made with tests; hardware-dependent items documented as unverified |
+| 7 | IoT web server review & hardening (gateway + ESP32 halo) | finding 1 fixed; others pending (section 12). Next planned: unauthenticated `/healthz`+`/readyz` in `service.py`, per-peer login rate limit (429), `AETHERTWIN_*_TOKEN_FILE` support in `auth.py`, HSTS on HTTPS. Note `deployment/gateway/verification.json` pins `gateway.py`'s hash (historical evidence, no test reads it): if you edit `gateway.py`, record a new verification honestly rather than rewriting the old one | Findings triaged; software-verifiable fixes made with tests; hardware-dependent items documented as unverified |
 | 8 | Review & roadmap doc, security review, PR (plan task 6) | pending | `docs/REVIEW_AND_ROADMAP.md`; security review notes; PR opened with the final report |
 
 ---
@@ -225,7 +226,7 @@ Dense: semicolon-joined statements, one-line `if`s, compact signatures (see
 `command_center/service.py`). Match the surrounding style; do not reformat files.
 
 ### Baselines measured in the cloud container
-- pytest: **330 passed, 2 skipped** (~100 s, CPU torch, Python 3.12).
+- pytest: **330 passed, 2 skipped** (332 passed after the 2 halo tests) (~100 s, CPU torch, Python 3.12).
 - Vitest: **41 passed, 1 skipped** (the optional live-service integration test).
 - Playwright: **mock 12 passed** (repeat-each 3: 36/36), **live 4 passed**.
 - Build (gzip): three-vendor 635.7 kB (159.4 kB gz), react-vendor 218.8 kB
@@ -679,7 +680,7 @@ handshake → ESP32 (250 ms link watchdog, WS2812 via RMT, OLED). **The ESP32 ha
 server** (no WiFi/BLE/HTTP/OTA code).
 
 Findings (severity | location | problem | fix | effort):
-1. High (confirmed) | `hardware_halo/controller.py` `HaloController._run` | no try/except: a malformed snapshot (e.g. `processing_ms=None`) kills the status thread while the transport keeps sending the frozen state with fresh sequence numbers, so the firmware watchdog never trips and the ring can show a stale "clear" | catch errors and publish a watchdog/disconnected state; transport stops sending if `_ticks` has not advanced for >2 periods; add a test | S
+1. **FIXED** (tests `test_malformed_snapshot_*`, `test_stalled_status_worker_*`) — High | `hardware_halo/controller.py` `HaloController._run` | no try/except: a malformed snapshot (e.g. `processing_ms=None`) kills the status thread while the transport keeps sending the frozen state with fresh sequence numbers, so the firmware watchdog never trips and the ring can show a stale "clear" | catch errors and publish a watchdog/disconnected state; transport stops sending if `_ticks` has not advanced for >2 periods; add a test | S
 2. High | `controller.py` transport + `aether_halo.ino` | ESP32 reset with the port still open → device unpaired and silently dropping frames while the host reports connected; no reconnect after handshake/write failure | reconnect loop with backoff, periodic re-HELLO or device heartbeat/ack | M, **needs hardware**
 3. Medium | `aether_halo.ino` parser | no inter-byte timeout and no rescan for the `0xA7` start byte after a CRC failure | reset after >5 ms gap; shift to next `0xA7`; Python byte-stream mirror + fuzz test | S
 4. Medium | `gateway.py` asset sync | failed sync retried every 2 s poll (up to 64 MiB each) | per-revision exponential backoff | S
