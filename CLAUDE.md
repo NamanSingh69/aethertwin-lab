@@ -1,5 +1,8 @@
 # AetherTwin — working notes for Claude
 
+**Continuing the improvement work? Read `HANDOFF.md` first** (goals, owner decisions,
+repo state, remaining plan, Windows/GPU setup, constraints). Keep `PROGRESS.md` local/untracked.
+
 Python 3.12 research platform (LiDAR/RGB-D perception, mapping, tracking, planning) plus a
 React 19 / TypeScript 7 / Vite 8 / Three.js r186 browser studio in `web/`. Honesty about
 evidence is a core convention: UI and docs never imply hardware verification or accuracy
@@ -28,13 +31,16 @@ that was not measured; visual effects are presentation-only and must say so.
 - `@axe-core/playwright` is pinned to our `playwright-core` via npm `overrides`.
 - `uv` needs `--index-strategy unsafe-best-match` for the lock (pip semantics across two indexes).
 - Headless WebGL needs `--use-angle=swiftshader --enable-unsafe-swiftshader` (set in playwright.config.ts).
+- `pkill -f <pattern>` kills your own shell when the pattern is in the command line; stop the service by PID.
+- The live route E2E derives endpoints from `/api/v2/state` because the simulated robot reaches its goal.
 - Python style in this repo is dense (semicolon-joined statements); match surrounding code.
 - SOURCE_MANIFEST.json hashes every tracked file; any tracked change requires regenerating it.
 
 ## Remaining plan (update as tasks complete)
-1. Playwright E2E (mock + live + axe) — green, to commit.
-2. Refactor `App.tsx` into hooks/components, no behaviour change, E2E stays green.
+1. Playwright E2E (mock + live + axe) — done (`3222c84`).
+2. Refactor `App.tsx` into hooks/components — done (`af0a6b2`).
 3. Renderer perf (measure before/after with `/benchmark.html`), cinematic effects, camera animation.
 4. UX: shortcuts, help overlay, quality selector, toast auto-dismiss, map loading progress.
 5. CI/CD: e2e jobs, dist drift, bundle budget, CodeQL, Dependabot, release workflow.
-6. `docs/REVIEW_AND_ROADMAP.md`, security review, push, PR to NamanSingh69/aethertwin main.
+6. IoT gateway + ESP32 halo hardening (findings in HANDOFF.md section 12).
+7. `docs/REVIEW_AND_ROADMAP.md`, security review, push, PR to NamanSingh69/aethertwin main.

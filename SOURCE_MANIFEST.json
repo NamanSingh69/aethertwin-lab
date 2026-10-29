@@ -43,12 +43,16 @@
       "sha256": "0bfe8bfb8d7f2c93f871bb8da3e47a13b82f1062d53f4da7695e4edfba54ff23"
     },
     "CLAUDE.md": {
-      "bytes": 3111,
-      "sha256": "36e87e4970665ebe43be11f3ec2ac422000220e614f4a243464805b7c8e60919"
+      "bytes": 3569,
+      "sha256": "de051bf56055ad038c16dd57d717865ebddbe7e91ecd17dbeb18dae491877770"
     },
     "CONTRIBUTING.md": {
       "bytes": 1403,
       "sha256": "b3ff25cf1d30a44371730b5500c92d7d0ab53be302e667da4a6bb497589f41d8"
+    },
+    "HANDOFF.md": {
+      "bytes": 45463,
+      "sha256": "a88a827cc57fa80cfb6f755e6ad0ef929fcbfd4056156f25327c6b3150c44454"
     },
     "PEAK_HIL_AND_UI_SPEC.md": {
       "bytes": 23580,
