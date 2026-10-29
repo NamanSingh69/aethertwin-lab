@@ -3114,9 +3114,13 @@
       "bytes": 1609,
       "sha256": "2c96a1eeacf81f9f53eab90fe9bc770f22a659f01cadaa5d1970924bdad706ae"
     },
+    "reports/github_clone_smoke.json": {
+      "bytes": 4013,
+      "sha256": "ed54e89134d93669b60daf176ec6f23d71623848e93dae48ca93609387af1468"
+    },
     "reports/github_snapshot_validation.json": {
-      "bytes": 1272,
-      "sha256": "d5d486ed8b6a331e10c4ea336c4541e8e2da70a49495da7ce077c29cc9250d97"
+      "bytes": 1615,
+      "sha256": "64d27012c6084b54a7a3ba61ece379850664a94e32bae819014b626f2be455ee"
     },
     "reports/github_snapshot_windows.xml": {
       "bytes": 46531,
