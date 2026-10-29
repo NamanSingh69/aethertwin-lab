@@ -56,17 +56,23 @@ class HaloController:
             if self.enabled:
                 try:self._serial=self._handshake()
                 except Exception as error:self._error=f'{type(error).__name__}: {error}'
-            deadline=time.monotonic()
+            deadline=time.monotonic();seen_ticks=-1;ticked_at=time.monotonic()
             while not self._stop.is_set():
-                with self._lock:state=copy.deepcopy(self._virtual)
-                if self._serial is not None:
+                with self._lock:state=copy.deepcopy(self._virtual);ticks=self._ticks
+                if ticks!=seen_ticks:seen_ticks=ticks;ticked_at=time.monotonic()
+                # A stalled status worker must not keep refreshing the device's link watchdog with a frozen state.
+                fresh=time.monotonic()-ticked_at<=2/self.hz+.05
+                if self._serial is not None and fresh:
                     try:
                         packet=encode_packet(state,self._sequence)
                         written=self._serial.write(packet)
                         if written!=len(packet):raise RuntimeError('Incomplete Halo serial write')
                         self._sequence=(self._sequence+1)&0xFFFF;self._sent+=1
                     except Exception as error:
-                        self._error=f'{type(error).__name__}: {error}';self._connected=False;self._serial.close();self._serial=None
+                        self._error=f'{type(error).__name__}: {error}';self._connected=False
+                        try:self._serial.close()
+                        except Exception:pass
+                        self._serial=None
                 deadline+=1/self.hz;self._stop.wait(max(0,deadline-time.monotonic()))
                 if deadline<time.monotonic()-1/self.hz:deadline=time.monotonic()
         finally:
@@ -76,8 +82,14 @@ class HaloController:
         deadline=time.monotonic()
         while not self._stop.is_set():
             with self._lock:snapshot=self._snapshot
-            state=halo_state(snapshot,**self.options)
-            with self._lock:self._virtual=state;self._ticks+=1
+            try:state=halo_state(snapshot,**self.options);error=None
+            except Exception as failure:
+                # A malformed snapshot must show as disconnected, never keep the last (possibly clear) state alive.
+                error=f'Invalid Halo snapshot: {type(failure).__name__}: {failure}'
+                state={**halo_state(None,**self.options),'reason':'invalid_snapshot'}
+            with self._lock:
+                self._virtual=state;self._ticks+=1
+                if error:self._error=error
             deadline+=1/self.hz;self._stop.wait(max(0,deadline-time.monotonic()))
             if deadline<time.monotonic()-1/self.hz:deadline=time.monotonic()
     def status(self):
