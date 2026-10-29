@@ -58,18 +58,28 @@ test("pause, single step and resume act on the real processing loop", async ({ p
 });
 
 test("a requested route is planned and exported as CSV", async ({ page, request }) => {
+  // The simulated robot keeps driving, so a path can legitimately be empty once
+  // it arrives. Use the service's own reported robot position as the start and a
+  // fixed open floor point in the simulated lab as the goal.
+  type State = { trajectory_status?: string; path?: number[][] | null; diagnostics: { robot_position?: number[] } };
+  const state = async () => (await (await request.get("/api/v2/state")).json()) as State;
+  await expect.poll(async () => (await state()).diagnostics.robot_position?.length, { timeout: 60_000 }).toBe(3);
+  const robot = (await state()).diagnostics.robot_position!;
   await page.goto("/");
   await expect(page.getByText("Connected", { exact: true })).toBeVisible({ timeout: 60_000 });
   await page.getByRole("button", { name: "Plan a safe route" }).click();
-  const start = page.getByLabel("Start · x, y, z (m)");
-  const goal = page.getByLabel("Goal · x, y, z (m)");
-  // Simulation pre-fills the robot position and the current goal.
-  await expect(start).not.toHaveValue("", { timeout: 60_000 });
-  await expect(goal).not.toHaveValue("");
+  await page.getByLabel("Start · x, y, z (m)").fill(robot.map((v) => v.toFixed(3)).join(", "));
+  const goal = [-robot[0] * 0.5, -robot[1] * 0.5, robot[2]];
+  await page.getByLabel("Goal · x, y, z (m)").fill(goal.map((v) => v.toFixed(3)).join(", "));
   await page.getByRole("button", { name: "Plan route" }).click();
   await expect(page.getByText(/Applied set start goal/)).toBeVisible({ timeout: 60_000 });
-  await expect(page.locator(".route-actions a.button:not(.disabled)")).toBeVisible({ timeout: 60_000 });
+  await expect
+    .poll(async () => {
+      const current = await state();
+      return current.trajectory_status === "ok" && (current.path?.length ?? 0) >= 2;
+    }, { timeout: 60_000 })
+    .toBe(true);
   const csv = await request.get("/api/v2/trajectory.csv");
   expect(csv.ok()).toBe(true);
-  expect((await csv.text()).split("\n").length).toBeGreaterThan(2);
+  expect((await csv.text()).trim().split("\n").length).toBeGreaterThan(2);
 });
