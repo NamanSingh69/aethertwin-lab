@@ -2,6 +2,22 @@
   "schema_version": 1,
   "project": "lidar_lab_digital_twin",
   "files": {
+    ".claude/agents/diff-reviewer.md": {
+      "bytes": 1044,
+      "sha256": "4f6a5c3cf896ac9692dd4bf6fbdd09556a1f99ebc8068102948e0885ca311c76"
+    },
+    ".claude/agents/test-runner.md": {
+      "bytes": 943,
+      "sha256": "6c4b1394256beeeb23002dc7825af6d909c96d9d2ece18be644c1efde2ded5d0"
+    },
+    ".claude/hooks/pre-commit-check.sh": {
+      "bytes": 1089,
+      "sha256": "419c90d883913b2bc48ea346b1808d837c2d6ea891a47b9d03543b7f20c9766d"
+    },
+    ".claude/settings.json": {
+      "bytes": 1155,
+      "sha256": "c40d4d5e2b2e60770346791dcc7b7a365d417698d80dd8b881a0886f3f072576"
+    },
     ".dockerignore": {
       "bytes": 298,
       "sha256": "481ce219626e3cae8b4bba77c0e3f3deca00732fd899705861ce5b4e17e47845"
@@ -25,6 +41,10 @@
     "AETHERTWIN_REVISED_PLAN.md": {
       "bytes": 15480,
       "sha256": "0bfe8bfb8d7f2c93f871bb8da3e47a13b82f1062d53f4da7695e4edfba54ff23"
+    },
+    "CLAUDE.md": {
+      "bytes": 3111,
+      "sha256": "36e87e4970665ebe43be11f3ec2ac422000220e614f4a243464805b7c8e60919"
     },
     "CONTRIBUTING.md": {
       "bytes": 1403,
