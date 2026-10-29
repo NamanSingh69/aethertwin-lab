@@ -1,11 +1,11 @@
 {
-  "_SpatialRenderer-BGgNbCOT.js": {
-    "file": "assets/SpatialRenderer-BGgNbCOT.js",
+  "_SpatialRenderer-DCok71Z5.js": {
+    "file": "assets/SpatialRenderer-DCok71Z5.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
       "_spatial-contracts-33vaUxT7.js",
-      "_three-vendor-Bc4s0MDm.js"
+      "_three-vendor-6QXwi0w9.js"
     ]
   },
   "_modulepreload-polyfill-P2Xu9kJm.js": {
@@ -27,22 +27,22 @@
     "file": "assets/spatial-contracts-33vaUxT7.js",
     "name": "spatial-contracts"
   },
-  "_three-vendor-Bc4s0MDm.js": {
-    "file": "assets/three-vendor-Bc4s0MDm.js",
+  "_three-vendor-6QXwi0w9.js": {
+    "file": "assets/three-vendor-6QXwi0w9.js",
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-CT9VPbcl.js",
+    "file": "assets/benchmark-B_b_Zerr.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
       "_modulepreload-polyfill-P2Xu9kJm.js",
-      "_SpatialRenderer-BGgNbCOT.js"
+      "_SpatialRenderer-DCok71Z5.js"
     ]
   },
   "index.html": {
-    "file": "assets/index-NAxwYrPr.js",
+    "file": "assets/index-CaMdXkWv.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -52,7 +52,7 @@
       "_spatial-contracts-33vaUxT7.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-BGgNbCOT.js"
+      "_SpatialRenderer-DCok71Z5.js"
     ],
     "css": [
       "assets/index-CebD2Odz.css"

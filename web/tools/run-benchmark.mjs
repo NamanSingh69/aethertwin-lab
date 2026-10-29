@@ -10,6 +10,7 @@ const { values: args } = parseArgs({
   options: {
     url: { type: "string", default: "http://127.0.0.1:4173" },
     mode: { type: "string", default: "static" },
+    quality: { type: "string", default: "balanced" },
     duration: { type: "string", default: "60" },
     runs: { type: "string", default: "3" },
     uncapped: { type: "boolean", default: false },
@@ -50,7 +51,7 @@ for (let attempt = 1, run = 0; run < runs && attempt <= runs * 2; attempt++) {
   try {
     const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
     await page.addInitScript(watchGaps);
-    await page.goto(`${url}/benchmark.html?mode=${mode}&duration=${duration}&autostart=1`);
+    await page.goto(`${url}/benchmark.html?mode=${mode}&quality=${args.quality}&duration=${duration}&autostart=1`);
     await page.bringToFront();
     const report = await page.waitForFunction(() => window.benchmarkReport, null, {
       timeout: (duration + 60) * 1000,
@@ -78,6 +79,7 @@ const output = {
   browser: "Chrome stable (Playwright channel=chrome), headed",
   vsync: uncapped ? "disabled (--disable-gpu-vsync --disable-frame-rate-limit)" : "enabled",
   mode,
+  quality: args.quality,
   duration_seconds: duration,
   valid_runs: results.filter((r) => r.valid).length,
   runs: results,
