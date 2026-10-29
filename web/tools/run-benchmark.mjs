@@ -60,11 +60,19 @@ for (let attempt = 1, run = 0; run < runs && attempt <= runs * 2; attempt++) {
     const value = await report.jsonValue();
     const gaps = await page.evaluate(() => window.throttleGaps);
     const throttled = value.hidden_during_measurement || gaps > 0;
-    if (!throttled) run++;
-    results.push({ attempt, valid: !throttled, throttle_gaps_over_500ms: gaps, ...value });
+    // A cinematic run only counts if post-processing actually ran.
+    const effectsMissing = args.quality === "cinematic" && !value.effects?.postprocessing;
+    if (!throttled && !effectsMissing) run++;
+    results.push({
+      attempt,
+      valid: !throttled && !effectsMissing,
+      throttle_gaps_over_500ms: gaps,
+      effects_missing: effectsMissing,
+      ...value,
+    });
     const last = results.at(-1);
     console.log(
-      (throttled ? "INVALID (throttled) " : "") +
+      (throttled ? "INVALID (throttled) " : effectsMissing ? "INVALID (no effects) " : "") +
       `run ${attempt}: fps ${last.mean_render_fps?.toFixed(1)} p95 ${last.frame_interval_ms_last_1200.p95?.toFixed(2)} ms` +
         (last.update_cpu_ms_after_warmup ? ` update p95 ${last.update_cpu_ms_after_warmup.p95?.toFixed(2)} ms` : "") +
         ` hidden ${last.hidden_during_measurement} gpu ${last.device?.renderer}`,

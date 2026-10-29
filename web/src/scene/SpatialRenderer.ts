@@ -16,6 +16,7 @@ import { zoneYaw } from "../lib/geometry";
 import { chooseLOD, normalizeBounds } from "./assets";
 import { floorPickPoint } from "./picking";
 import { GrowableGeometry } from "./buffers";
+import type { CinematicEffects } from "./effects";
 export interface RenderMetrics {
   fps: number;
   frameMs: number;
@@ -35,6 +36,14 @@ export interface RenderMetrics {
   qualitySetting: Quality;
   pixelRatio: number;
   renderMode: "continuous" | "on-demand";
+  /** Presentation-only effects currently drawn: post-processing and decorative motion. */
+  effects: { postprocessing: boolean; motion: boolean };
+}
+/** Measured-map tile loading, emitted as a `tileprogress` event on the host. */
+export interface MapProgress {
+  loaded: number;
+  total: number;
+  failed: number;
 }
 export type Quality = "auto" | "performance" | "balanced" | "cinematic";
 export type ResolvedQuality = Exclude<Quality, "auto">;
@@ -71,6 +80,81 @@ export function createSemanticVoxelMesh(capacity: number) {
   mesh.frustumCulled = false;
   return mesh;
 }
+type Uniform<V> = { value: V };
+/**
+ * Decorative pulse for the cinematic tier: a slow ring (1.2 m/s, every 10 s)
+ * from the sensor pose. It is presentation only and deliberately unlike the
+ * real LiDAR scan rate or phase.
+ */
+function decoratePulse(
+  material: T.Material,
+  uniforms: { time: Uniform<number>; origin: Uniform<T.Vector3>; strength: Uniform<number> },
+) {
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, {
+      uPulseTime: uniforms.time,
+      uPulseOrigin: uniforms.origin,
+      uPulseStrength: uniforms.strength,
+    });
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vPulseWorld;")
+      .replace(
+        "#include <project_vertex>",
+        `#include <project_vertex>
+#ifdef USE_INSTANCING
+  vPulseWorld = (modelMatrix * instanceMatrix * vec4(transformed, 1.0)).xyz;
+#else
+  vPulseWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
+#endif`,
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+varying vec3 vPulseWorld;
+uniform float uPulseTime;
+uniform vec3 uPulseOrigin;
+uniform float uPulseStrength;`,
+      )
+      .replace(
+        "#include <dithering_fragment>",
+        `#include <dithering_fragment>
+  float pulseRadius = mod(uPulseTime * 1.2, 12.0);
+  float pulse = exp(-pow((distance(vPulseWorld.xy, uPulseOrigin.xy) - pulseRadius) * 2.5, 2.0));
+  gl_FragColor.rgb += uPulseStrength * pulse * vec3(0.16, 0.42, 0.5);`,
+      );
+  };
+  material.customProgramCacheKey = () => "decorative-pulse";
+}
+/** Animated dashes: shift the dash pattern along the line. */
+function decorateDashOffset(material: T.LineDashedMaterial, offset: Uniform<number>) {
+  material.onBeforeCompile = (shader) => {
+    shader.uniforms.uDashOffset = offset;
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nuniform float uDashOffset;")
+      .replace(
+        "vLineDistance = scale * lineDistance;",
+        "vLineDistance = scale * lineDistance - uDashOffset;",
+      );
+  };
+  material.customProgramCacheKey = () => "dash-offset";
+}
+/** Floor rings under tracks breathe in and out, per instance. */
+function decorateRings(material: T.Material, time: Uniform<number>) {
+  material.onBeforeCompile = (shader) => {
+    shader.uniforms.uPulseTime = time;
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nuniform float uPulseTime;")
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+  transformed.xy *= 1.0 + 0.18 * sin(uPulseTime * 2.4 + float(gl_InstanceID) * 1.7);`,
+      );
+  };
+  material.customProgramCacheKey = () => "breathing-rings";
+}
+const easeInOutCubic = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 const edgeIndices = Array.from({ length: 8 }, (_, i) =>
   [1, 2, 4].filter((bit) => (i & bit) === 0).map((bit) => [i, i | bit]),
 ).flat();
@@ -125,10 +209,35 @@ export class SpatialRenderer {
   private quality: Quality = "auto";
   private resolved: ResolvedQuality = "balanced";
   private slowWindows = 0;
+  private headroomWindows = 0;
+  private autoDemoted = false;
+  private overBudgetWindows = 0;
   private fastWindows = 0;
   private skipInterval = true;
   private onscreen = true;
   private visibility: IntersectionObserver;
+  private effects: CinematicEffects | null = null;
+  private effectsLoading = false;
+  private reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  private fog = new T.FogExp2("#070d15", 0.028);
+  private epoch = performance.now();
+  private decorative = {
+    time: { value: 0 },
+    origin: { value: new T.Vector3() },
+    strength: { value: 0 },
+  };
+  private dashOffset = { value: 0 };
+  private rings: T.InstancedMesh;
+  private breachedFills: T.MeshBasicMaterial[] = [];
+  private introduced = false;
+  private flight: {
+    fromPosition: T.Vector3;
+    fromTarget: T.Vector3;
+    toPosition: T.Vector3;
+    toTarget: T.Vector3;
+    start: number;
+    duration: number;
+  } | null = null;
   private resize: ResizeObserver;
   private raf = 0;
   private disposed = false;
@@ -149,6 +258,7 @@ export class SpatialRenderer {
   private manifest: Manifest | null = null;
   private tiles = new Map<string, { lod: string; object: T.Object3D }>();
   private pending = new Set<string>();
+  private failedTiles = new Set<string>();
   private cutaway = true;
   private lodClock = 0;
   private loadGeneration = 0;
@@ -172,11 +282,14 @@ export class SpatialRenderer {
     this.quality = options.quality ?? "auto";
     this.resolved = this.quality === "auto" ? "balanced" : this.quality;
     this.renderer.setPixelRatio(this.pixelRatioCap());
+    this.applyTier();
     this.renderer.setClearColor("#070d15");
     this.renderer.outputColorSpace = T.SRGBColorSpace;
     this.renderer.toneMapping = T.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.15;
     this.renderer.localClippingEnabled = true;
+    // Post-processing renders several passes per frame; count the whole frame.
+    this.renderer.info.autoReset = false;
     this.renderer.domElement.setAttribute(
       "aria-label",
       "Interactive 3D lab. Drag to orbit, scroll to zoom. Select tracks from the adjacent list.",
@@ -282,7 +395,24 @@ export class SpatialRenderer {
       new T.MeshBasicMaterial(),
       MAX_TRACKS,
     );
-    for (const mesh of [this.pickMesh, this.markers]) {
+    decoratePulse(this.voxelMesh.material as T.Material, this.decorative);
+    decorateDashOffset(
+      (this.pathLine.object as T.Line).material as T.LineDashedMaterial,
+      this.dashOffset,
+    );
+    const ringMaterial = new T.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0.45,
+      depthWrite: false,
+      blending: T.AdditiveBlending,
+    });
+    decorateRings(ringMaterial, this.decorative.time);
+    this.rings = new T.InstancedMesh(
+      new T.RingGeometry(0.22, 0.28, 40),
+      ringMaterial,
+      MAX_TRACKS,
+    );
+    for (const mesh of [this.pickMesh, this.markers, this.rings]) {
       mesh.count = 0;
       mesh.visible = false;
       mesh.frustumCulled = false;
@@ -298,6 +428,9 @@ export class SpatialRenderer {
     });
     this.visibility.observe(host);
     this.controls.addEventListener("change", this.invalidate);
+    // User input takes over from any camera flight.
+    this.controls.addEventListener("start", this.cancelFlight);
+    this.reducedMotion.addEventListener("change", this.invalidate);
     document.addEventListener("visibilitychange", this.markDirty);
     this.resizeViewport();
     this.renderer.domElement.addEventListener("pointerdown", this.pointerDown);
@@ -314,6 +447,7 @@ export class SpatialRenderer {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
+    this.effects?.setSize(width, height, this.renderer.getPixelRatio());
     this.invalidate();
   }
   setLayers(layers: Layers) {
@@ -343,22 +477,54 @@ export class SpatialRenderer {
       const [a, b] = normalizeBounds(this.manifest.bounds);
       center.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 0.6);
     }
-    this.controls.target.copy(center);
-    if (name === "top")
-      this.camera.position.copy(center).add(new T.Vector3(0, -0.01, 19));
+    const target = center.clone(),
+      position = new T.Vector3();
+    if (name === "top") position.copy(center).add(new T.Vector3(0, -0.01, 19));
     else if (name === "sensor" && this.frame?.scene.sensor_pose_world) {
       const m = this.frame.scene.sensor_pose_world;
-      this.camera.position.set(m[0][3], m[1][3] - 2, m[2][3] + 1.5);
-      this.controls.target.set(m[0][3], m[1][3] + 3, m[2][3]);
-    } else this.camera.position.copy(center).add(new T.Vector3(11, -13, 12));
-    this.controls.update();
+      position.set(m[0][3], m[1][3] - 2, m[2][3] + 1.5);
+      target.set(m[0][3], m[1][3] + 3, m[2][3]);
+    } else position.copy(center).add(new T.Vector3(11, -13, 12));
+    this.flyTo(position, target);
   }
   focusTrack(id: number) {
     const track = this.frame?.scene.tracks.find((t) => t.track_id === id);
     if (!track) return;
-    this.controls.target.fromArray(track.position);
-    this.camera.position.fromArray(track.position).add(new T.Vector3(4, -5, 4));
-    this.controls.update();
+    const target = new T.Vector3().fromArray(track.position);
+    this.flyTo(target.clone().add(new T.Vector3(4, -5, 4)), target);
+  }
+  /** Eased camera move; instant under reduced motion. */
+  private flyTo(position: T.Vector3, target: T.Vector3, duration = 900) {
+    if (this.reducedMotion.matches || duration <= 0) {
+      this.flight = null;
+      this.camera.position.copy(position);
+      this.controls.target.copy(target);
+      this.controls.update();
+      this.invalidate();
+      return;
+    }
+    this.flight = {
+      fromPosition: this.camera.position.clone(),
+      fromTarget: this.controls.target.clone(),
+      toPosition: position.clone(),
+      toTarget: target.clone(),
+      start: performance.now(),
+      duration,
+    };
+    this.invalidate();
+  }
+  private cancelFlight = () => {
+    this.flight = null;
+  };
+  private stepFlight(now: number) {
+    const f = this.flight;
+    if (!f) return;
+    const t = Math.min(1, (now - f.start) / f.duration),
+      e = easeInOutCubic(t);
+    this.camera.position.lerpVectors(f.fromPosition, f.toPosition, e);
+    this.controls.target.lerpVectors(f.fromTarget, f.toTarget, e);
+    if (t >= 1) this.flight = null;
+    this.invalidate();
   }
   async loadManifest(url: string) {
     const generation = ++this.loadGeneration;
@@ -402,7 +568,9 @@ export class SpatialRenderer {
       disposeObject(object);
     }
     this.tiles.clear();
+    this.failedTiles.clear();
     this.manifest = manifest;
+    this.emitProgress();
     this.refreshLods();
   }
   private applyStaticMaterial(object: T.Object3D) {
@@ -433,6 +601,26 @@ export class SpatialRenderer {
       }
     });
   }
+  /**
+   * One loader for all tiles. The meshopt decoder (WebAssembly, allowed by the
+   * CSP's wasm-unsafe-eval) loads with the first tile, not with the studio.
+   */
+  private gltfLoader: Promise<GLTFLoader> | null = null;
+  private loader() {
+    return (this.gltfLoader ??= import(
+      "three/addons/libs/meshopt_decoder.module.js"
+    ).then(({ MeshoptDecoder }) =>
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),
+    ));
+  }
+  private emitProgress() {
+    const detail: MapProgress = {
+      loaded: this.tiles.size,
+      total: this.manifest?.tiles.length ?? 0,
+      failed: this.failedTiles.size,
+    };
+    this.host.dispatchEvent(new CustomEvent("tileprogress", { detail }));
+  }
   private refreshLods() {
     if (!this.manifest || this.pending.size >= 2) return;
     for (const tile of this.manifest.tiles) {
@@ -451,8 +639,8 @@ export class SpatialRenderer {
         continue;
       this.pending.add(tile.id);
       const generation = this.loadGeneration;
-      void new GLTFLoader()
-        .loadAsync(lod.url)
+      void this.loader()
+        .then((loader) => loader.loadAsync(lod.url))
         .then((gltf) => {
           if (this.disposed || generation !== this.loadGeneration) {
             disposeObject(gltf.scene);
@@ -466,13 +654,18 @@ export class SpatialRenderer {
           this.applyStaticMaterial(gltf.scene);
           this.groups.map.add(gltf.scene);
           this.tiles.set(tile.id, { lod: lod.url, object: gltf.scene });
+          this.failedTiles.delete(tile.id);
+          this.emitProgress();
           this.invalidate();
         })
-        .catch((error) =>
+        .catch((error) => {
+          if (generation !== this.loadGeneration) return;
+          this.failedTiles.add(tile.id);
+          this.emitProgress();
           this.host.dispatchEvent(
             new CustomEvent("asseterror", { detail: String(error) }),
-          ),
-        )
+          );
+        })
         .finally(() => this.pending.delete(tile.id));
     }
   }
@@ -516,6 +709,16 @@ export class SpatialRenderer {
     this.drawRisk(a);
     this.drawTraffic(frame);
     this.drawRGBD(a.gemini_inlay);
+    const pose = frame.scene.sensor_pose_world;
+    if (pose) this.decorative.origin.value.set(pose[0][3], pose[1][3], pose[2][3]);
+    if (!this.introduced && count) {
+      // One-time intro: dolly in from further out on the first populated frame.
+      this.introduced = true;
+      const end = this.camera.position.clone(),
+        target = this.controls.target.clone();
+      this.camera.position.sub(target).multiplyScalar(1.8).add(target);
+      this.flyTo(end, target, 1600);
+    }
     this.updateMs = performance.now() - began;
     this.invalidate();
   }
@@ -639,6 +842,13 @@ export class SpatialRenderer {
       );
       this.markers.setMatrixAt(picks, this.instance);
       this.markers.setColorAt(picks, color);
+      this.instance.compose(
+        this.center.set(track.position[0], track.position[1], 0.012),
+        this.identity,
+        this.scale.setScalar(1),
+      );
+      this.rings.setMatrixAt(picks, this.instance);
+      this.rings.setColorAt(picks, color);
       this.pickIds[picks++] = track.track_id;
       const trajectory = track.predicted_trajectory ?? [];
       for (let k = 0; k + 1 < trajectory.length; k++)
@@ -655,9 +865,9 @@ export class SpatialRenderer {
     this.commit(predicted, counts.predicted);
     predicted.buffer.lineDistances(counts.predicted, true);
     this.commit(paths, counts.paths);
-    for (const mesh of [this.pickMesh, this.markers]) {
+    for (const mesh of [this.pickMesh, this.markers, this.rings]) {
       mesh.count = picks;
-      mesh.visible = picks > 0;
+      mesh.visible = picks > 0 && (mesh !== this.rings || this.motion());
       mesh.instanceMatrix.needsUpdate = true;
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       mesh.boundingSphere = null;
@@ -678,6 +888,7 @@ export class SpatialRenderer {
     this.zoneKey = key;
     const group = this.groups.geofences;
     clearGroup(group);
+    this.breachedFills = [];
     for (const zone of shown) {
       const geometry = new T.BoxGeometry(
         ...(zone.half_extents.map((v) => v * 2) as Vec3),
@@ -692,6 +903,7 @@ export class SpatialRenderer {
           depthWrite: false,
         }),
       );
+      if (zone.is_breached) this.breachedFills.push(fill.material);
       fill.position.fromArray(zone.center);
       if (zone.rotation_matrix) {
         const r = zone.rotation_matrix;
@@ -848,6 +1060,7 @@ export class SpatialRenderer {
     if (this.disposed || this.frozen) return;
     this.raf = requestAnimationFrame(this.animate);
     const now = performance.now();
+    this.stepFlight(now);
     const moved = this.controls.update();
     const continuous = this.resolved !== "performance";
     // Offscreen canvases and settled on-demand scenes skip rendering entirely.
@@ -863,8 +1076,11 @@ export class SpatialRenderer {
     if (continuous && !this.skipInterval) this.intervals.push(now - this.last);
     this.skipInterval = false;
     if (this.intervals.length > 1200) this.intervals.shift();
+    this.decorate(now);
+    this.renderer.info.reset();
     const renderStart = performance.now();
-    this.renderer.render(this.scene, this.camera);
+    if (this.resolved === "cinematic" && this.effects) this.effects.render();
+    else this.renderer.render(this.scene, this.camera);
     this.renderSubmitMs = performance.now() - renderStart;
     this.frames++;
     this.last = now;
@@ -901,8 +1117,13 @@ export class SpatialRenderer {
       qualitySetting: this.quality,
       pixelRatio: this.renderer.getPixelRatio(),
       renderMode: this.resolved === "performance" ? "on-demand" : "continuous",
+      effects: {
+        postprocessing: this.resolved === "cinematic" && this.effects !== null,
+        motion: this.motion(),
+      },
     };
     this.adaptPixelRatio(metrics);
+    this.adaptTier(metrics);
     // Stable hooks for end-to-end assertions and quick inspection.
     Object.assign(this.host.dataset, {
       instances: String(metrics.instances),
@@ -911,6 +1132,8 @@ export class SpatialRenderer {
       qualitySetting: metrics.qualitySetting,
       dpr: metrics.pixelRatio.toFixed(2),
       renderMode: metrics.renderMode,
+      effects: metrics.effects.postprocessing ? "cinematic" : "off",
+      motion: String(metrics.effects.motion),
     });
     this.metricsCallback(metrics);
     this.frames = 0;
@@ -922,7 +1145,38 @@ export class SpatialRenderer {
     this.slowWindows = this.fastWindows = 0;
     this.intervals.length = 0;
     this.applyPixelRatio(this.pixelRatioCap());
+    this.applyTier();
     this.markDirty();
+  }
+  /** Motion effects run only in the cinematic tier and never under reduced motion. */
+  private motion() {
+    return this.resolved === "cinematic" && !this.reducedMotion.matches;
+  }
+  private applyTier() {
+    const cinematic = this.resolved === "cinematic";
+    this.scene.fog = cinematic ? this.fog : null;
+    if (!cinematic || this.effects || this.effectsLoading) return;
+    this.effectsLoading = true;
+    void import("./effects")
+      .then(({ CinematicEffects }) => {
+        if (this.disposed) return;
+        this.effects = new CinematicEffects(this.renderer, this.scene, this.camera);
+        this.resizeViewport();
+      })
+      .catch((error) =>
+        this.host.dispatchEvent(new CustomEvent("asseterror", { detail: String(error) })),
+      )
+      .finally(() => (this.effectsLoading = false));
+  }
+  private decorate(now: number) {
+    const motion = this.motion(),
+      seconds = (now - this.epoch) / 1000;
+    this.decorative.time.value = seconds;
+    this.decorative.strength.value = motion ? 1 : 0;
+    this.dashOffset.value = motion ? seconds * 0.35 : 0;
+    this.rings.visible = motion && this.rings.count > 0;
+    const glow = motion ? 0.07 * (0.5 + 0.5 * Math.sin(seconds * 4)) : 0;
+    for (const material of this.breachedFills) material.opacity = 0.055 + glow;
   }
   private pixelRatioCap() {
     return this.options.pixelRatio ?? PIXEL_RATIO_CAP[this.resolved]();
@@ -931,6 +1185,34 @@ export class SpatialRenderer {
     if (Math.abs(ratio - this.renderer.getPixelRatio()) < 0.01) return;
     this.renderer.setPixelRatio(ratio);
     this.resizeViewport();
+  }
+  /**
+   * `auto` moves to cinematic after 10 s with frame p95 at or under 16.7 ms
+   * (60 Hz budget) at full pixel ratio, and back to balanced after 3 s over
+   * 25 ms. Thresholds are a starting point, see docs/REVIEW_AND_ROADMAP.md.
+   */
+  private adaptTier(metrics: RenderMetrics) {
+    if (this.quality !== "auto" || !this.frames) return;
+    const atCap = metrics.pixelRatio >= this.pixelRatioCap() - 0.01;
+    if (this.resolved === "balanced") {
+      this.headroomWindows =
+        atCap && metrics.frameMsP95 > 0 && metrics.frameMsP95 <= 16.7
+          ? this.headroomWindows + 1
+          : 0;
+      // A demotion is final for the session, so auto never oscillates.
+      if (this.headroomWindows >= 10 && !this.autoDemoted) this.switchAutoTier("cinematic");
+    } else if (this.resolved === "cinematic") {
+      this.overBudgetWindows = metrics.frameMsP95 > 25 ? this.overBudgetWindows + 1 : 0;
+      if (this.overBudgetWindows >= 3) this.switchAutoTier("balanced");
+    }
+  }
+  private switchAutoTier(tier: ResolvedQuality) {
+    this.resolved = tier;
+    if (tier === "balanced") this.autoDemoted = true;
+    this.headroomWindows = this.overBudgetWindows = 0;
+    this.intervals.length = 0;
+    this.applyTier();
+    this.markDirty();
   }
   /**
    * Frame-rate driven resolution scaling with hysteresis: continuous tiers
@@ -980,6 +1262,10 @@ export class SpatialRenderer {
     this.resize.disconnect();
     this.visibility.disconnect();
     this.controls.removeEventListener("change", this.invalidate);
+    this.controls.removeEventListener("start", this.cancelFlight);
+    this.reducedMotion.removeEventListener("change", this.invalidate);
+    this.effects?.dispose();
+    this.effects = null;
     document.removeEventListener("visibilitychange", this.markDirty);
     this.controls.dispose();
     this.renderer.domElement.removeEventListener(
