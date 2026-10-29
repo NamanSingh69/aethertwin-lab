@@ -2863,8 +2863,8 @@
       "sha256": "119f6b68ce8cfa0a2ab78f3e76bce317c11a90348564a732b1e2d53a93a79430"
     },
     "hardware_halo/controller.py": {
-      "bytes": 6348,
-      "sha256": "3eb13b7320e2abe90e7df8216277a38a73062f2b87c5567ee3952ef8725c885f"
+      "bytes": 7177,
+      "sha256": "09683409a32dd786284bb0cdc1d387496daeeeffd5e7f5925d714d5e8744b571"
     },
     "hardware_halo/firmware/aether_halo/aether_halo.ino": {
       "bytes": 6306,
@@ -3559,8 +3559,8 @@
       "sha256": "42ed11b57014ef41ac43b738a7472fc140e8dd7bc63b7d10eefe6b604c423a8f"
     },
     "tests/test_hardware_halo.py": {
-      "bytes": 10132,
-      "sha256": "c0a8b3447fa780b41f897e4138d38af790e14b0b3c8dfefaa0bfc3f51171874f"
+      "bytes": 11871,
+      "sha256": "171626b76dc9f19b861b2ebf1064e613d50d08b36c894aa3191f70876c0a3c37"
     },
     "tests/test_hybrid_3d_network.py": {
       "bytes": 6972,
