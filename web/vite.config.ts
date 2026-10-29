@@ -20,7 +20,8 @@ export default defineConfig({
       input: { index: "index.html", benchmark: "benchmark.html" },
       output:{codeSplitting:{groups:[
         {name:'spatial-contracts',test:/[\\/]src[\\/](lib[\\/](types|geometry)|scene[\\/]assets)\.ts$/,priority:30},
-        {name:'three-vendor',test:/[\\/]node_modules[\\/]three[\\/]/,priority:20},
+        // Post-processing, shader and decoder modules stay with their lazy importers.
+        {name:'three-vendor',test:/[\\/]node_modules[\\/]three[\\/](?!examples[\\/]jsm[\\/](postprocessing|shaders|libs)[\\/])/,priority:20},
         {name:'react-vendor',test:/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,priority:20},
       ]}},
     },

@@ -187,6 +187,11 @@ start.onclick = () => {
     document.querySelector<HTMLSelectElement>("#mode")!.value === "streaming";
   const began = performance.now();
   const windows: RenderMetrics[] = [];
+  // Renderer-side failures (e.g. effects that could not start) must be visible in the report.
+  const assetErrors: string[] = [];
+  const failed = (event: Event) =>
+    assetErrors.push(String((event as CustomEvent).detail).slice(0, 300));
+  host.addEventListener("asseterror", failed);
   const updateSamples: number[] = [];
   let done = false,
     ticker = 0;
@@ -214,6 +219,8 @@ start.onclick = () => {
           css_canvas: [host.clientWidth, host.clientHeight],
           pixel_ratio: 1,
           quality: metrics.quality,
+          effects: metrics.effects,
+          renderer_errors: assetErrors,
           elapsed_seconds: elapsed,
           warmup_seconds: 5,
           sampled_one_second_windows: windows.length,

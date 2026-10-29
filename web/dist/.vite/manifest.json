@@ -1,16 +1,21 @@
 {
-  "_SpatialRenderer-DCok71Z5.js": {
-    "file": "assets/SpatialRenderer-DCok71Z5.js",
+  "_SpatialRenderer-7plb7GdA.js": {
+    "file": "assets/SpatialRenderer-7plb7GdA.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
+      "_preload-helper-CFijIu3R.js",
       "_spatial-contracts-33vaUxT7.js",
-      "_three-vendor-6QXwi0w9.js"
+      "_three-vendor-BQRTTvu7.js"
+    ],
+    "dynamicImports": [
+      "node_modules/three/examples/jsm/libs/meshopt_decoder.module.js",
+      "src/scene/effects.ts"
     ]
   },
-  "_modulepreload-polyfill-P2Xu9kJm.js": {
-    "file": "assets/modulepreload-polyfill-P2Xu9kJm.js",
-    "name": "modulepreload-polyfill"
+  "_preload-helper-CFijIu3R.js": {
+    "file": "assets/preload-helper-CFijIu3R.js",
+    "name": "preload-helper"
   },
   "_react-vendor-Br0ptrPz.js": {
     "file": "assets/react-vendor-Br0ptrPz.js",
@@ -27,38 +32,53 @@
     "file": "assets/spatial-contracts-33vaUxT7.js",
     "name": "spatial-contracts"
   },
-  "_three-vendor-6QXwi0w9.js": {
-    "file": "assets/three-vendor-6QXwi0w9.js",
+  "_three-vendor-BQRTTvu7.js": {
+    "file": "assets/three-vendor-BQRTTvu7.js",
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-B_b_Zerr.js",
+    "file": "assets/benchmark-xKaSWCk8.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
-      "_modulepreload-polyfill-P2Xu9kJm.js",
-      "_SpatialRenderer-DCok71Z5.js"
+      "_preload-helper-CFijIu3R.js",
+      "_SpatialRenderer-7plb7GdA.js"
     ]
   },
   "index.html": {
-    "file": "assets/index-CaMdXkWv.js",
+    "file": "assets/index-C3_ttpZx.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_modulepreload-polyfill-P2Xu9kJm.js",
+      "_preload-helper-CFijIu3R.js",
       "_react-vendor-Br0ptrPz.js",
       "_spatial-contracts-33vaUxT7.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-DCok71Z5.js"
+      "_SpatialRenderer-7plb7GdA.js"
     ],
     "css": [
       "assets/index-CebD2Odz.css"
     ],
     "assets": [
       "assets/decode.worker-CC-RLjVq.js"
+    ]
+  },
+  "node_modules/three/examples/jsm/libs/meshopt_decoder.module.js": {
+    "file": "assets/meshopt_decoder.module-DXTYc6wn.js",
+    "name": "meshopt_decoder.module",
+    "src": "node_modules/three/examples/jsm/libs/meshopt_decoder.module.js",
+    "isDynamicEntry": true
+  },
+  "src/scene/effects.ts": {
+    "file": "assets/effects-CmfXBmxo.js",
+    "name": "effects",
+    "src": "src/scene/effects.ts",
+    "isDynamicEntry": true,
+    "imports": [
+      "_three-vendor-BQRTTvu7.js"
     ]
   }
 }
