@@ -1,0 +1,58 @@
+{
+  "scope": "Phase A bounded commissioning and paged map foundations",
+  "data_source": "analytic and simulated observations",
+  "hardware_validation": "not_tested",
+  "jetson_hardware_benchmarked": false,
+  "interfaces_documented": "docs/BOUNDED_COMMISSIONING.md",
+  "test_suites": {
+    "Windows": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "59",
+      "time": "68.514",
+      "timestamp": "2026-10-28T23:00:56.488321+05:30"
+    },
+    "Ubuntu24.04 WSL2": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "59",
+      "time": "64.596",
+      "timestamp": "2026-10-28T17:32:20.983051+00:00"
+    }
+  },
+  "checks": [
+    "Actual CLI build-twin on a raw translating/rotating recording publishes and reloads corrected ray authority",
+    "Raw recordings are preserved while prepared RGB-D observations replay from disk",
+    "Orphan recording chunks and active/interrupted leases cannot be overwritten",
+    "Full measured point/occupancy histories survive tile LRU eviction and process reopening",
+    "Byte/page/disk/point/grid budgets fail explicitly rather than silently dropping history",
+    "Camera exposure poses and Brown rectification are used for tiled TSDF, while navigation uses original measured rays",
+    "Every persisted TSDF tile can be exported without a full-world mesh merge; IDs and bounds include distant tiles",
+    "Synthetic provenance overrides independently measured calibration and raw-file corruption fails integrity verification",
+    "Requested planning regions retain unknown cells and distinguish resource exhaustion from physical no-path",
+    "Exact full-store nearest queries find surfaces omitted from a capped preview, including regions10km apart",
+    "Expired evidence becomes unknown immediately without whole-cache writes on ordinary query/update"
+  ],
+  "limits": [
+    "Sliding pose-graph window is globally anchored; no unbounded retired-keyframe loop optimization is claimed",
+    "TSDF optical-depth limit is explicitly6m; previews have separate point/mesh caps",
+    "Global exact nearest-distance search is memory bounded but can be slow; default2m search is exact within radius and returns inf beyond it",
+    "Cache byte budgets exclude separately bounded observation, codec, native geometry and SQLite working buffers"
+  ],
+  "source_sha256": {
+    "ingestion/recorder_replayer.py": "3ab6940c5bf5a23a49e53f0a433e7af00c5696f83ca854f281d751b408e2f791",
+    "slam_and_twin/static_twin_builder.py": "d94f34a403eb02e545777d4cb7b9f028be373f8bb34dc921a813e2e277952d71",
+    "slam_and_twin/tiled_map.py": "2f571ef099ee6e7122284dfc1c58dfe2e2e01645d760f467d954d2cc0caa39fd",
+    "slam_and_twin/tiled_reconstruction.py": "95712b0146d75971f16bdf37dd3ac0ff074ab4a7392f3443eb19f4f2c5f1c325",
+    "slam_and_twin/planning_region.py": "f616f19255997a116701ef8af5d9ff026f94f2e1140106ca705ef75ddb1b7cb4",
+    "tracking_and_navigation/observed_navigation.py": "af79af84145fb58e3b82fa350b436178a9d2428b7d69e19a4503b041987475e2",
+    "command_center/assets.py": "e2886789f55467cbdc644fb8852536a9891a1673a11a17cff967bd9846dbc579",
+    "tests/test_bounded_commissioning.py": "26ef5a538680c5e79cdcb5f2d3397ae0d4cb35d14c4ae5e0ce82d67e0c437ecb",
+    "docs/BOUNDED_COMMISSIONING.md": "4d817be7b2989cd8eaff2a34890b8cdc409a2eef7cf3ba1495a70f43096781c0",
+    "core/pipeline.py:commissioning_prefix": "ed46d408066ddff9d57ffbacd4cd3d266a65a512b53ce21a6ac2feba50e782b6"
+  }
+}

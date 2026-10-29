@@ -1,0 +1,5 @@
+# Current physical target confirmed by the user. Keep bounded runtime budgets.
+extends: jetson_orin_nx_16gb.yaml
+hardware:
+  edge_module: Jetson Orin Nano 8GB
+  memory_gb: 8

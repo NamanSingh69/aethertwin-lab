@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "environment": "Windows, native Chrome and Codex browser tools",
+  "checks": {
+    "pause_resume_and_stale": true,
+    "layers": true,
+    "changed_goals_and_no_path": true,
+    "csv_download_21_rows": true,
+    "geofence_edit_applied": true,
+    "source_switch_replay": true,
+    "causal_seek_and_step": true,
+    "entity_descriptors_uncertainty": true,
+    "pipeline_shapes_and_timing": true,
+    "commissioning_discovery_job": true,
+    "semantic_colors_actual_gpu": true,
+    "reconnect": true
+  },
+  "final_controls": {
+    "revision": 5,
+    "applied_revision": 5,
+    "pending": 0,
+    "history": [
+      {
+        "request_id": "0ec02f8f-9c89-4aed-afc3-81251cc7c945",
+        "revision": 1,
+        "action": "select_source",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793214635.876955
+      },
+      {
+        "request_id": "36f1c913-4f64-43fb-b9e2-6a26b85f99b8",
+        "revision": 2,
+        "action": "seek",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793214789.9761882
+      },
+      {
+        "request_id": "11579ef7-fe1d-4423-8e4e-b6d0d02c6fb6",
+        "revision": 3,
+        "action": "step",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793214934.657148
+      },
+      {
+        "request_id": "f95082ec-eb40-4d2f-9885-9f032ae7e62a",
+        "revision": 4,
+        "action": "set_geofences",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793251545.94352
+      },
+      {
+        "request_id": "bf5eb201-a145-46ca-bd00-3927ba50e7e5",
+        "revision": 5,
+        "action": "step",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793251546.2088118
+      }
+    ]
+  },
+  "observed_geofence_names": [
+    "Pilot review zone",
+    "Server rack"
+  ],
+  "replay": {
+    "frame_count": 12,
+    "current_frame": 2,
+    "current_time": 0.30000000000000004,
+    "seeking": false
+  },
+  "trajectory_export": "artifacts/browser_acceptance/trajectory_export.json",
+  "commissioning_ui": "artifacts/browser_acceptance/commissioning_ui.txt",
+  "stress": "artifacts/browser_stress_1080p_100k.json",
+  "physical_hardware_tested": false
+}

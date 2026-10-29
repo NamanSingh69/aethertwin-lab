@@ -1,0 +1,12 @@
+{
+  "build_completed_utc": "2026-10-28 18:43:58 UTC",
+  "change": "Frontend sensor indicators and observation/localization warnings only",
+  "main_entry": "assets/index-D_L5Z4vF.js",
+  "renderer_entry": "assets/SpatialRenderer-DkAAyosm.js",
+  "tests_passed": 40,
+  "optional_service_test_skipped": 1,
+  "production_build_and_benchmark_startup": "passed",
+  "pipeline_changed": false,
+  "client_reload_utc": null,
+  "client_reload_status": "Parent task records the permitted interactive reload separately"
+}

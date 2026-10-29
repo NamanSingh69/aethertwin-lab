@@ -1,0 +1,20 @@
+{
+  "controls": {
+    "revision": 1,
+    "applied_revision": 1,
+    "pending": 0,
+    "history": [
+      {
+        "request_id": "f21d5354-e19a-47a1-8ff2-009975670030",
+        "revision": 1,
+        "action": "pause",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793213305.086249
+      }
+    ]
+  },
+  "frame": 369,
+  "paused": true,
+  "observed_utc": "2026-10-28T18:48:52.0147108Z"
+}

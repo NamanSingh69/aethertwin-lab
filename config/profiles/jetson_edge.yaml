@@ -1,0 +1,2 @@
+# Historical Jetson alias; current deployment is Pi capture + Windows processing.
+extends: jetson_orin_nano_8gb.yaml

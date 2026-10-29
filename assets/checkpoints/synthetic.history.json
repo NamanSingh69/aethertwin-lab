@@ -1,0 +1,2690 @@
+[
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.758531635175852,
+    "per_class_iou": [
+      0.9298316771445955,
+      0.9725265017667845,
+      0.713527851458886,
+      0.9769585253456221,
+      0.7180851063829787,
+      0.3076923076923077,
+      0.6910994764397905
+    ],
+    "confusion_matrix": [
+      [
+        4585,
+        26,
+        9,
+        2,
+        11,
+        0,
+        0
+      ],
+      [
+        278,
+        11009,
+        3,
+        0,
+        0,
+        3,
+        1
+      ],
+      [
+        0,
+        0,
+        269,
+        0,
+        0,
+        15,
+        3
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        17,
+        0,
+        24,
+        0,
+        135,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        54,
+        0,
+        0,
+        0,
+        132
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.11627640470897035,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.09128841941256031,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.5069013088941574,
+    "epoch": 1,
+    "training_loss": 1.0150068435404036,
+    "elapsed_seconds": 51.84521549999772
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.894155155858427,
+    "per_class_iou": [
+      0.9322634431012922,
+      0.9750437828371279,
+      0.8338983050847457,
+      0.8,
+      0.8518518518518519,
+      1.0,
+      0.8660287081339713
+    ],
+    "confusion_matrix": [
+      [
+        4473,
+        109,
+        3,
+        36,
+        12,
+        0,
+        0
+      ],
+      [
+        159,
+        11135,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        17,
+        246,
+        1,
+        0,
+        0,
+        23
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0,
+        13,
+        161,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        5,
+        0,
+        0,
+        0,
+        181
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.10699143480254515,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.07444764501916104,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.33275911460320157,
+    "epoch": 2,
+    "training_loss": 0.6501106483240923,
+    "elapsed_seconds": 102.9342461999986
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.8661349435352054,
+    "per_class_iou": [
+      0.9612822647793505,
+      0.9858419608884169,
+      0.8787878787878788,
+      0.9769585253456221,
+      0.912568306010929,
+      0.4444444444444444,
+      0.9030612244897959
+    ],
+    "confusion_matrix": [
+      [
+        4618,
+        7,
+        1,
+        1,
+        6,
+        0,
+        0
+      ],
+      [
+        153,
+        11141,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        6,
+        0,
+        261,
+        0,
+        0,
+        10,
+        10
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        9,
+        0,
+        0,
+        1,
+        167,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        9,
+        0,
+        0,
+        0,
+        177
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.0856350932525432,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.07533467390325915,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.2745201277236144,
+    "epoch": 3,
+    "training_loss": 0.5106739848852158,
+    "elapsed_seconds": 151.31793900000048
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.8373440414358272,
+    "per_class_iou": [
+      0.977673825217946,
+      0.9920543833318619,
+      0.7916666666666666,
+      0.8185328185328186,
+      0.329608938547486,
+      1.0,
+      0.9518716577540107
+    ],
+    "confusion_matrix": [
+      [
+        4598,
+        31,
+        2,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        53,
+        11237,
+        2,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        285,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        14,
+        0,
+        62,
+        42,
+        59,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        1,
+        7,
+        0,
+        0,
+        0,
+        178
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.03241794101822528,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.05191660571130979,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.22388418453435102,
+    "epoch": 4,
+    "training_loss": 0.3877384025189612,
+    "elapsed_seconds": 203.47984169999836
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.904705781195125,
+    "per_class_iou": [
+      0.9750528541226215,
+      0.9877143362206117,
+      0.8132183908045977,
+      0.9464285714285714,
+      0.6894736842105263,
+      1.0,
+      0.9210526315789473
+    ],
+    "confusion_matrix": [
+      [
+        4612,
+        20,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        74,
+        11175,
+        32,
+        0,
+        13,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        283,
+        0,
+        0,
+        0,
+        4
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        20,
+        0,
+        17,
+        9,
+        131,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        11,
+        0,
+        0,
+        0,
+        175
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.029262879611245202,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.041756894858275724,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.1528893131762743,
+    "epoch": 5,
+    "training_loss": 0.3623677533533838,
+    "elapsed_seconds": 255.59798669999873
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.962023931898936,
+    "per_class_iou": [
+      0.9818608621425523,
+      0.9934663605862617,
+      0.9792387543252595,
+      0.9298245614035088,
+      0.8813559322033898,
+      1.0,
+      0.968421052631579
+    ],
+    "confusion_matrix": [
+      [
+        4601,
+        32,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        42,
+        11252,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        283,
+        0,
+        0,
+        0,
+        4
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        8,
+        0,
+        0,
+        13,
+        156,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        184
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.028646595142081857,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.03168962573107569,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.07665857238074143,
+    "epoch": 6,
+    "training_loss": 0.3005158096137974,
+    "elapsed_seconds": 306.7726842999982
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.921471526060159,
+    "per_class_iou": [
+      0.9769214482320558,
+      0.9907260201377849,
+      0.7665505226480837,
+      0.986046511627907,
+      0.9550561797752809,
+      1.0,
+      0.775
+    ],
+    "confusion_matrix": [
+      [
+        4614,
+        19,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        76,
+        11217,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        4,
+        9,
+        220,
+        0,
+        0,
+        0,
+        54
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        0,
+        0,
+        170,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.02043814712913618,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.03042357612913289,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.12228053202852607,
+    "epoch": 7,
+    "training_loss": 0.2963093931062354,
+    "elapsed_seconds": 349.28867999999784
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9385692244707898,
+    "per_class_iou": [
+      0.9831556503198294,
+      0.9939902783915157,
+      0.8327526132404182,
+      0.9815668202764977,
+      0.9662921348314607,
+      1.0,
+      0.8122270742358079
+    ],
+    "confusion_matrix": [
+      [
+        4611,
+        20,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        46,
+        11247,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        4,
+        1,
+        239,
+        0,
+        0,
+        0,
+        43
+      ],
+      [
+        2,
+        0,
+        0,
+        213,
+        0,
+        0,
+        0
+      ],
+      [
+        5,
+        0,
+        0,
+        0,
+        172,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.023104542018582357,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.03252025946151035,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.1073318727624913,
+    "epoch": 8,
+    "training_loss": 0.26503212708565926,
+    "elapsed_seconds": 394.9419431999995
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.953551798493039,
+    "per_class_iou": [
+      0.9771513986760624,
+      0.9922473790855432,
+      0.9198606271777003,
+      0.986046511627907,
+      0.9096045197740112,
+      1.0,
+      0.8899521531100478
+    ],
+    "confusion_matrix": [
+      [
+        4576,
+        57,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        31,
+        11263,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        264,
+        0,
+        0,
+        0,
+        23
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        16,
+        0,
+        0,
+        0,
+        161,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.016039005545951245,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.028636525331280263,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.07324002434810002,
+    "epoch": 9,
+    "training_loss": 0.2724308278411627,
+    "elapsed_seconds": 446.40914519999933
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9691672996400963,
+    "per_class_iou": [
+      0.9853035143769968,
+      0.9946907353331563,
+      0.9450171821305842,
+      0.986046511627907,
+      0.9438202247191011,
+      1.0,
+      0.9292929292929293
+    ],
+    "confusion_matrix": [
+      [
+        4626,
+        7,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        50,
+        11241,
+        2,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        275,
+        0,
+        0,
+        0,
+        12
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        9,
+        0,
+        0,
+        0,
+        168,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        184
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.021758383939283834,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.03348348948263203,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.06067169985423485,
+    "epoch": 10,
+    "training_loss": 0.23626844729814264,
+    "elapsed_seconds": 497.64083799999935
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9682080789769901,
+    "per_class_iou": [
+      0.9809160305343512,
+      0.9938943456331298,
+      0.9860627177700348,
+      0.958139534883721,
+      0.8743169398907104,
+      1.0,
+      0.9841269841269841
+    ],
+    "confusion_matrix": [
+      [
+        4626,
+        7,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        62,
+        11232,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        283,
+        0,
+        0,
+        0,
+        3
+      ],
+      [
+        3,
+        0,
+        0,
+        206,
+        6,
+        0,
+        0
+      ],
+      [
+        17,
+        0,
+        0,
+        0,
+        160,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.018297171055765785,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.028685860583499312,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.06369787671913703,
+    "epoch": 11,
+    "training_loss": 0.24893798078927729,
+    "elapsed_seconds": 548.5931229999987
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9764980673754982,
+    "per_class_iou": [
+      0.9851000425713069,
+      0.9949553057792725,
+      0.9825783972125436,
+      0.9724770642201835,
+      0.9265536723163842,
+      1.0,
+      0.9738219895287958
+    ],
+    "confusion_matrix": [
+      [
+        4628,
+        5,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        52,
+        11242,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        282,
+        0,
+        0,
+        0,
+        5
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        10,
+        0,
+        0,
+        3,
+        164,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.015684193208953295,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.02303166607945816,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.04413649129370848,
+    "epoch": 12,
+    "training_loss": 0.22833869440688026,
+    "elapsed_seconds": 597.6645535999996
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9719217100699665,
+    "per_class_iou": [
+      0.9819762510602206,
+      0.9944228045325779,
+      0.9790940766550522,
+      0.9814814814814815,
+      0.8926553672316384,
+      1.0,
+      0.9738219895287958
+    ],
+    "confusion_matrix": [
+      [
+        4631,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        61,
+        11233,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        281,
+        0,
+        0,
+        0,
+        5
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        18,
+        0,
+        0,
+        1,
+        158,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.01701200910928275,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.028246920007611236,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.0562530173920095,
+    "epoch": 13,
+    "training_loss": 0.21819398014081848,
+    "elapsed_seconds": 646.4867372999979
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9365011249253612,
+    "per_class_iou": [
+      0.9836448598130841,
+      0.9949539660056658,
+      0.8788927335640139,
+      0.9680365296803652,
+      0.8813559322033898,
+      1.0,
+      0.8486238532110092
+    ],
+    "confusion_matrix": [
+      [
+        4631,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        53,
+        11239,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        254,
+        0,
+        0,
+        0,
+        32
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        17,
+        0,
+        0,
+        4,
+        156,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        185
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.012564873171729794,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.027247340134549068,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.09471250946323077,
+    "epoch": 14,
+    "training_loss": 0.23051043930980894,
+    "elapsed_seconds": 695.3799838999985
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.962169715062105,
+    "per_class_iou": [
+      0.9815482502651114,
+      0.994689795557129,
+      0.9527027027027027,
+      0.986046511627907,
+      0.8361581920903954,
+      1.0,
+      0.9840425531914894
+    ],
+    "confusion_matrix": [
+      [
+        4628,
+        5,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        55,
+        11239,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        282,
+        0,
+        0,
+        0,
+        2
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        21,
+        0,
+        8,
+        0,
+        148,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        185
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.017808626296522388,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.02764075365732888,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.0769746561224262,
+    "epoch": 15,
+    "training_loss": 0.22671587082246938,
+    "elapsed_seconds": 744.3189797999985
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.8723120042636513,
+    "per_class_iou": [
+      0.9855103345408055,
+      0.9963726444306821,
+      0.9691780821917808,
+      0.7412587412587412,
+      0.4350282485875706,
+      1.0,
+      0.9788359788359788
+    ],
+    "confusion_matrix": [
+      [
+        4625,
+        8,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        30,
+        11262,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        283,
+        0,
+        0,
+        0,
+        3
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        26,
+        1,
+        2,
+        71,
+        77,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        185
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.013967924753716424,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.028008663696626506,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.16714956363042197,
+    "epoch": 16,
+    "training_loss": 0.16950656577116913,
+    "elapsed_seconds": 793.4123777999994
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9040970881803388,
+    "per_class_iou": [
+      0.9865757511186874,
+      0.9948658936000708,
+      0.9695945945945946,
+      0.8106060606060606,
+      0.6292134831460674,
+      1.0,
+      0.9378238341968912
+    ],
+    "confusion_matrix": [
+      [
+        4630,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        52,
+        11239,
+        2,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        287,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        214,
+        0,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        2,
+        49,
+        112,
+        0,
+        7
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        5,
+        0,
+        0,
+        0,
+        181
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.010672113968258989,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.021184776599363117,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.12111357366666198,
+    "epoch": 17,
+    "training_loss": 0.16050147492852476,
+    "elapsed_seconds": 842.1665121999977
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9949394908754815,
+    "per_class_iou": [
+      0.9924828178694158,
+      0.9973465416592959,
+      1.0,
+      0.986046511627907,
+      0.9887005649717514,
+      1.0,
+      1.0
+    ],
+    "confusion_matrix": [
+      [
+        4621,
+        12,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        18,
+        11276,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        287,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0,
+        175,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.011947891786406954,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.021834848665695385,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.016735707642510533,
+    "epoch": 18,
+    "training_loss": 0.1823261140121354,
+    "elapsed_seconds": 964.7190152000003
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9360157458610027,
+    "per_class_iou": [
+      0.9920634920634921,
+      0.9973456025482216,
+      0.9896551724137931,
+      0.8385826771653543,
+      0.7344632768361582,
+      1.0,
+      1.0
+    ],
+    "confusion_matrix": [
+      [
+        4625,
+        8,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        20,
+        11272,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        287,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        213,
+        0,
+        0,
+        0
+      ],
+      [
+        7,
+        0,
+        1,
+        39,
+        130,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.015328052939574783,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.02240332517823004,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.08375362632796168,
+    "epoch": 19,
+    "training_loss": 0.1594647370899717,
+    "elapsed_seconds": 998.3035770999995
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9038534545867306,
+    "per_class_iou": [
+      0.9907546764136744,
+      0.9964645571857875,
+      0.8724137931034482,
+      0.8365758754863813,
+      0.7853107344632768,
+      1.0,
+      0.8454545454545455
+    ],
+    "confusion_matrix": [
+      [
+        4608,
+        19,
+        0,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        17,
+        11274,
+        3,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        253,
+        0,
+        0,
+        0,
+        34
+      ],
+      [
+        0,
+        0,
+        0,
+        215,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        36,
+        139,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.011607136898353583,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.026718731014154465,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.118801134172827,
+    "epoch": 20,
+    "training_loss": 0.15008614274362722,
+    "elapsed_seconds": 1045.2385976000005
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.8143995403366784,
+    "per_class_iou": [
+      0.9871355060034306,
+      0.9955845990815966,
+      0.7559681697612732,
+      0.6756756756756757,
+      0.29707112970711297,
+      1.0,
+      0.9893617021276596
+    ],
+    "confusion_matrix": [
+      [
+        4604,
+        29,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        20,
+        11274,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        285,
+        0,
+        0,
+        0,
+        2
+      ],
+      [
+        3,
+        0,
+        0,
+        150,
+        62,
+        0,
+        0
+      ],
+      [
+        8,
+        1,
+        90,
+        7,
+        71,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.02658273673803446,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.04225582609730457,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.2854452443619569,
+    "epoch": 21,
+    "training_loss": 0.1850562502319614,
+    "elapsed_seconds": 1083.7541729000004
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9311816892312078,
+    "per_class_iou": [
+      0.9858490566037735,
+      0.9918155416703336,
+      0.9072164948453608,
+      0.9638009049773756,
+      0.8156424581005587,
+      0.875,
+      0.9789473684210527
+    ],
+    "confusion_matrix": [
+      [
+        4598,
+        31,
+        1,
+        1,
+        2,
+        0,
+        0
+      ],
+      [
+        21,
+        11270,
+        3,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        19,
+        264,
+        0,
+        0,
+        0,
+        4
+      ],
+      [
+        2,
+        0,
+        0,
+        213,
+        0,
+        0,
+        0
+      ],
+      [
+        8,
+        18,
+        0,
+        5,
+        146,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0,
+        0,
+        7,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        186
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.015056820814387764,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.024009499625364073,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.09510768825809161,
+    "epoch": 22,
+    "training_loss": 0.16507372715406948,
+    "elapsed_seconds": 1121.4249221999999
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9374998067035643,
+    "per_class_iou": [
+      0.9838917525773195,
+      0.994359742663259,
+      0.9531772575250836,
+      0.8870292887029289,
+      0.8135593220338984,
+      1.0,
+      0.93048128342246
+    ],
+    "confusion_matrix": [
+      [
+        4581,
+        52,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        11,
+        11283,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        285,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        3,
+        0,
+        0,
+        212,
+        0,
+        0,
+        0
+      ],
+      [
+        9,
+        0,
+        0,
+        24,
+        144,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        12,
+        0,
+        0,
+        0,
+        174
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.01216185248307565,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.027035530575873903,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.0868118832198282,
+    "epoch": 23,
+    "training_loss": 0.14871230012633735,
+    "elapsed_seconds": 1172.5904463999977
+  },
+  {
+    "frames": 12,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      101,
+      102
+    ],
+    "scene_ids": [
+      "101",
+      "102"
+    ],
+    "semantic_miou": 0.9842192623978168,
+    "per_class_iou": [
+      0.9927038626609442,
+      0.9962835147332094,
+      0.9694915254237289,
+      0.9906976744186047,
+      0.9617486338797814,
+      1.0,
+      0.9786096256684492
+    ],
+    "confusion_matrix": [
+      [
+        4626,
+        7,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        24,
+        11259,
+        5,
+        0,
+        6,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        286,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        2,
+        0,
+        0,
+        213,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        176,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        183
+      ]
+    ],
+    "majority_class_miou": 0.09603741496598639,
+    "flow_epe_m": 0.013411792589350149,
+    "zero_flow_epe_m": 0.001303149778755683,
+    "dynamic_flow_epe_m": 0.02333454235616433,
+    "dynamic_zero_flow_epe_m": 0.04361138701811847,
+    "loss": 0.030348585452884436,
+    "epoch": 24,
+    "training_loss": 0.13314434296141067,
+    "elapsed_seconds": 1212.3694297999973
+  }
+]

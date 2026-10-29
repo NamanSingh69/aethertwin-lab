@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "collected_at_unix": 1793212683.9717772,
+  "platform": "Windows",
+  "machine": "AMD64",
+  "python": "3.12.14",
+  "software_only": false,
+  "hardware_validation": "not_performed",
+  "sensor_validation": "not_performed",
+  "model": null,
+  "l4t_release": null,
+  "jetpack_package": null,
+  "packages": {
+    "torch": "2.14.1+cpu",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "open3d": "0.19.0",
+    "open3d-cpu": null,
+    "opencv-python": "5.0.0.93",
+    "pyorbbecsdk2": null,
+    "tensorrt": null,
+    "fastapi": "0.162.0",
+    "uvicorn": "0.54.0"
+  },
+  "checks": {
+    "python_312": true,
+    "arm64": false,
+    "orin_nano_detected": false,
+    "cuda_enabled_torch_build": false,
+    "cuda_available": false
+  },
+  "notes": [
+    "This is a runtime smoke test, not a sensor, accuracy, thermal or performance qualification.",
+    "Pin the selected NVIDIA base image by digest and retain the installed JetPack/PyTorch compatibility record."
+  ],
+  "gpu": {
+    "status": "unavailable",
+    "torch_version": "2.14.1+cpu",
+    "torch_cuda_build": null
+  },
+  "required_checks": [
+    "python_312",
+    "arm64",
+    "cuda_enabled_torch_build",
+    "orin_nano_detected",
+    "cuda_available",
+    "orin_sm87",
+    "cuda_math"
+  ],
+  "runtime_checks_passed": false,
+  "missing_requirements": [
+    "arm64",
+    "cuda_enabled_torch_build",
+    "orin_nano_detected",
+    "cuda_available",
+    "orin_sm87",
+    "cuda_math"
+  ]
+}

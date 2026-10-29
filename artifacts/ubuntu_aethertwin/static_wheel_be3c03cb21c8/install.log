@@ -1,0 +1,7 @@
+Using Python 3.12.3 environment at: /var/tmp/lab-twin-venv
+Resolved 1 package in 50ms
+Prepared 1 package in 1.15s
+Uninstalled 1 package in 35ms
+Installed 1 package in 66ms
+ - lidar-lab-digital-twin==2.0.0 (from file:///mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/lidar_lab_digital_twin-2.0.0-py3-none-any.whl)
+ + lidar-lab-digital-twin==2.0.0 (from file:///mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl)

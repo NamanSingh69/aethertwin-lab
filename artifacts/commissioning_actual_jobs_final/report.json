@@ -1,0 +1,1819 @@
+{
+  "schema_version": 1,
+  "source": "actual_spawned_commissioning_jobs",
+  "synthetic": true,
+  "hardware_verified": false,
+  "configuration": {
+    "seed": 7,
+    "device": "cpu",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false,
+      "include_s2": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06,
+      "runtime_tiled": true,
+      "ray_backend": "auto",
+      "max_traversal_cells": 5000000,
+      "tile_budgets": {
+        "max_resident_tiles": 128,
+        "max_resident_bytes": 67108864,
+        "max_disk_bytes": 4294967296
+      }
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt"
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": [
+        -1.375,
+        -4.375,
+        0.625
+      ],
+      "goal": [
+        2.125,
+        4.125,
+        0.625
+      ],
+      "ground": true,
+      "replan_interval": 5,
+      "mppi_samples": 96,
+      "mppi_iterations": 2,
+      "bounds": [
+        -6,
+        6,
+        -5,
+        5,
+        0,
+        3.5
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "recording": {
+      "max_disk_bytes": 17179869184,
+      "chunk_frames": 4,
+      "chunk_bytes": 67108864,
+      "queued_frames": 8,
+      "queued_bytes": 67108864,
+      "required": true
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "live": {
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 1280,
+      "camera_height": 800,
+      "camera_fps": 30,
+      "camera_color_width": null,
+      "camera_color_height": null,
+      "camera_color_fps": null,
+      "camera_align_mode": "auto",
+      "camera_intrinsics_tolerance_px": 1.0,
+      "camera_distortion_tolerance": 0.0001,
+      "calibration": "config/calibration_extrinsics.json",
+      "allow_degraded": false
+    },
+    "acquisition": {
+      "max_frames": 2,
+      "max_bytes": 67108864,
+      "max_age_seconds": 0.5,
+      "imu_history_seconds": 5.0,
+      "max_imu_samples": 8192
+    }
+  },
+  "port8080_untouched": true,
+  "jobs": [
+    {
+      "id": "6bd963c1786d4885a20f8a6e3b2cfee4",
+      "kind": "discovery",
+      "label": "Resource and SDK inventory",
+      "status": "completed",
+      "source_id": null,
+      "twin_id": null,
+      "correspondence_id": null,
+      "created_at_unix": 1793212118.4902039,
+      "started_at_unix": 1793212118.4902039,
+      "finished_at_unix": 1793212119.0981557,
+      "max_frames": 4,
+      "promotion_performed": false,
+      "reason": null,
+      "summary": {
+        "kind": "configured_resource_inventory",
+        "source": "read_only_discovery",
+        "sdk_packages": {
+          "lab_sensors_native": false,
+          "pyorbbecsdk": false
+        },
+        "sources": [
+          {
+            "id": "static-sim",
+            "mode": "sim",
+            "registered": true,
+            "recording_available": false
+          }
+        ],
+        "twins": [
+          {
+            "id": "active",
+            "reference_available": true
+          }
+        ],
+        "hardware_status": "not_tested",
+        "device_readiness": "not_established",
+        "limit": "Configured resources and import specifications are not physical device discovery or successful streaming.",
+        "calibration_promoted": false,
+        "active_map_modified": false
+      },
+      "logs": [
+        {
+          "message": "Reading registered resources and SDK import specifications; no device is opened.",
+          "at_unix": 1793212118.9857907
+        }
+      ],
+      "artifacts": [
+        {
+          "name": "inventory.json",
+          "bytes": 678,
+          "url": "/api/v2/commissioning/jobs/6bd963c1786d4885a20f8a6e3b2cfee4/artifacts/inventory.json"
+        },
+        {
+          "name": "result.json",
+          "bytes": 802,
+          "url": "/api/v2/commissioning/jobs/6bd963c1786d4885a20f8a6e3b2cfee4/artifacts/result.json"
+        }
+      ],
+      "artifact_count": 2,
+      "elapsed_seconds": 0.7969999999986612
+    },
+    {
+      "id": "8983ef18cd884d229bcb88f55538dfc8",
+      "kind": "diagnostics",
+      "label": "Observed pipeline diagnostic",
+      "status": "completed",
+      "source_id": "static-sim",
+      "twin_id": "active",
+      "correspondence_id": null,
+      "created_at_unix": 1793212119.3019373,
+      "started_at_unix": 1793212119.3019373,
+      "finished_at_unix": 1793212144.7770946,
+      "max_frames": 4,
+      "promotion_performed": false,
+      "reason": null,
+      "summary": {
+        "schema_version": 1,
+        "kind": "observed_pipeline_diagnostic_with_separate_virtual_tests",
+        "created_at_unix": 1793212123.8878675,
+        "source": {
+          "requested": "sim",
+          "actual": "sim",
+          "input_path": null,
+          "observed_capabilities": {
+            "sensor_id": "synthetic-lidar",
+            "multi_return": true,
+            "per_point_time": true,
+            "imu": true,
+            "hardware_sync": true,
+            "return_metadata_valid": true
+          }
+        },
+        "settings": {
+          "seed": 7,
+          "device": "cpu",
+          "simulation": {
+            "lidar_points": 2400,
+            "width": 160,
+            "height": 100,
+            "dt": 0.1,
+            "noise_std": 0.008,
+            "mobile": false,
+            "include_s2": false
+          },
+          "mapping": {
+            "voxel_size": 0.18,
+            "decay_rate": 0.98,
+            "twin_voxel_size": 0.08,
+            "tau0": 0.14,
+            "beta": 0.008,
+            "floor_epsilon": 0.06,
+            "runtime_tiled": true,
+            "ray_backend": "auto",
+            "max_traversal_cells": 5000000,
+            "tile_budgets": {
+              "max_resident_tiles": 128,
+              "max_resident_bytes": 67108864,
+              "max_disk_bytes": 4294967296
+            }
+          },
+          "perception": {
+            "max_voxels": 1400,
+            "neighbors": 16,
+            "temporal_neighbors": 12,
+            "rgbd_stride": 3,
+            "range_image_height": 24,
+            "range_image_width": 96,
+            "confidence_threshold": 0.3,
+            "checkpoint": "assets/checkpoints/synthetic.pt"
+          },
+          "tracking": {
+            "model": "ca",
+            "cluster_eps": 0.4,
+            "min_cluster_points": 4
+          },
+          "planning": {
+            "resolution": 0.25,
+            "radius": 0.2,
+            "start": [
+              -1.375,
+              -4.375,
+              0.625
+            ],
+            "goal": [
+              2.125,
+              4.125,
+              0.625
+            ],
+            "ground": true,
+            "replan_interval": 5,
+            "mppi_samples": 96,
+            "mppi_iterations": 2,
+            "bounds": [
+              -6,
+              6,
+              -5,
+              5,
+              0,
+              3.5
+            ]
+          },
+          "telemetry": {
+            "enabled": false,
+            "host": "127.0.0.1",
+            "port": 8765
+          },
+          "recording": {
+            "max_disk_bytes": 17179869184,
+            "chunk_frames": 4,
+            "chunk_bytes": 67108864,
+            "queued_frames": 8,
+            "queued_bytes": 67108864,
+            "required": true
+          },
+          "rendering": {
+            "backend": "auto",
+            "mesa_dir": "assets/rendering/mesa"
+          },
+          "training": {
+            "learning_rate": 0.001,
+            "fine_tune_learning_rate": 0.0001,
+            "epochs": 20,
+            "frames_per_scene": 12,
+            "train_seeds": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "validation_seeds": [
+              101,
+              102
+            ],
+            "test_seeds": [
+              201,
+              202
+            ],
+            "max_points": 1800
+          },
+          "live": {
+            "lidar_ip": "192.168.1.62",
+            "host_ip": "192.168.1.2",
+            "lidar_port": 6101,
+            "host_port": 6201,
+            "camera_width": 1280,
+            "camera_height": 800,
+            "camera_fps": 30,
+            "camera_color_width": null,
+            "camera_color_height": null,
+            "camera_color_fps": null,
+            "camera_align_mode": "auto",
+            "camera_intrinsics_tolerance_px": 1.0,
+            "camera_distortion_tolerance": 0.0001,
+            "calibration": "config/calibration_extrinsics.json",
+            "allow_degraded": false
+          },
+          "acquisition": {
+            "max_frames": 2,
+            "max_bytes": 67108864,
+            "max_age_seconds": 0.5,
+            "imu_history_seconds": 5.0,
+            "max_imu_samples": 8192
+          },
+          "input_mode": "sim"
+        },
+        "limits": {
+          "max_frames": 4,
+          "floor_fit_points_max": 2000,
+          "max_unique_imu_samples": 100000,
+          "max_commissioning_fingerprints": 64,
+          "point_selection": "Evenly spaced current observation voxel centroids when over the explicit point budget",
+          "no_simulator_labels_or_geometry": true,
+          "calibration_promotion": false
+        },
+        "platform": "Windows-11-10.0.26200-SP0",
+        "stages": {
+          "sdk_device_discovery": {
+            "status": "not_tested",
+            "sdk_import_specs": {
+              "lab_sensors_native": false,
+              "pyorbbecsdk": false
+            },
+            "configured_lidar_ip": "192.168.1.62",
+            "configured_s2_port": null,
+            "reason": "No physical device is opened for simulation/replay. SDK availability is not device verification."
+          },
+          "source_initialization": {
+            "status": "passed",
+            "limit": "Selected source only; live failures never substitute simulation"
+          },
+          "pipeline_observations": {
+            "status": "passed",
+            "observed_frames": 4,
+            "processed_frames": 4,
+            "voxel_counts": [
+              1400,
+              1400,
+              1400,
+              1400
+            ],
+            "diagnostic_sample_counts": [
+              1400,
+              1400,
+              1400,
+              1400
+            ],
+            "limit": "Ordinary deployed checkpoint and observation-only perception pipeline, no simulator label inputs"
+          },
+          "imu_observations": {
+            "status": "passed",
+            "sample_count": 84,
+            "sample_budget_exhausted": false,
+            "measured_rate_hz": 199.99999999999983,
+            "sample_gap_seconds": {
+              "count": 83,
+              "mean": 0.004819277108433736,
+              "p50": 0.0050000000000000044,
+              "p95": 0.0050000000000000044,
+              "max": 0.0050000000000000044
+            },
+            "large_gap_count": 0,
+            "frame_coverage": [
+              true,
+              true,
+              true,
+              true
+            ],
+            "gyro_rms_rad_s": 0.0,
+            "specific_force_norm_m_s2": {
+              "count": 84,
+              "mean": 9.806650000000003,
+              "p50": 9.806650000000001,
+              "p95": 9.806650000000001,
+              "max": 9.806650000000001
+            },
+            "stationary_candidate": true,
+            "stationarity_limit": "IMU alone cannot distinguish rest from constant translation; no stationary prior is inferred."
+          },
+          "modality_coverage": {
+            "status": "passed",
+            "frames": 4,
+            "lidar_nonempty": 4,
+            "rgbd_calibrated_nonempty": 4,
+            "calibration_ids": [
+              "simulation-v1"
+            ],
+            "calibration_measured": false,
+            "limit": "Profile/identity/coverage check; no extrinsic or semantic accuracy validation"
+          },
+          "floor_alignment": {
+            "status": "passed",
+            "calibration_written": false,
+            "observable_parameters": [
+              "roll",
+              "pitch",
+              "height"
+            ],
+            "unobservable_parameters": [
+              "x_translation",
+              "y_translation",
+              "yaw"
+            ],
+            "full_six_dof_calibration": false,
+            "point_count": 1400,
+            "support_points": 376,
+            "normal": [
+              -0.0010239282450190913,
+              -0.0010193530128652201,
+              0.9999989562446473
+            ],
+            "offset_m": -0.006454573264188575,
+            "height_m": 0.006454580001191,
+            "information_rank": 3,
+            "support_span_xy_m": [
+              11.721813678741455,
+              9.202521800994873
+            ],
+            "absolute_plane_residual_m": {
+              "count": 376,
+              "mean": 0.0027126625620462488,
+              "p50": 0.001229812835321995,
+              "p95": 0.00757429154330544,
+              "max": 0.05669627311989912
+            },
+            "observable_covariance": [
+              [
+                3.2039755693247385e-08,
+                -1.6042900561229446e-09,
+                3.753604663881578e-08
+              ],
+              [
+                -1.6042900561229446e-09,
+                1.6781163184143837e-08,
+                -6.519246628579481e-09
+              ],
+              [
+                3.753604663881578e-08,
+                -6.519246628579481e-09,
+                1.6351279207119842e-07
+              ]
+            ],
+            "covariance_units": [
+              "rad",
+              "rad",
+              "m"
+            ],
+            "limit": "Gravity-aligned world assumed; diagnostic plane only, no calibration/map promotion."
+          },
+          "map_residuals": {
+            "status": "passed",
+            "nearest_measured_map_distance_m": {
+              "count": 5600,
+              "mean": 0.11884205304452941,
+              "p50": 0.0894069321221227,
+              "p95": 0.3249255588820771,
+              "max": 1.078163438590316
+            },
+            "independent_observations_declared": true,
+            "commissioning_content_reuse_detected": false,
+            "limit": "Descriptive registration-conditioned observation centroids, including dynamics/new obstacles; not world-pose or real-lab accuracy validation."
+          },
+          "floor_repeatability": {
+            "status": "passed",
+            "signed_floor_residual_m": {
+              "count": 1167,
+              "mean": 0.0023207894590911407,
+              "p50": -0.00036987662309949376,
+              "p95": 0.009177502483496455,
+              "max": 0.11684941104809565
+            },
+            "std_m": 0.014686461761774518,
+            "selection": "Later capture centroids within 0.12m of first-capture plane",
+            "limit": "Conditional observed floor repeatability; not whole-lab geometry, neural accuracy or extrinsic calibration accuracy."
+          },
+          "virtual_closed_loop": {
+            "status": "passed",
+            "injected_virtual": true,
+            "active_map_modified": false,
+            "models": {
+              "ca": {
+                "maximum_position_error_m": 4.440892098500626e-16,
+                "stable_identity": true,
+                "entered": true,
+                "exited": true
+              },
+              "cv": {
+                "maximum_position_error_m": 2.220446049250313e-16,
+                "stable_identity": true,
+                "entered": true,
+                "exited": true
+              }
+            },
+            "relative_motion_ttc_seconds": 1.5,
+            "expected_ttc_seconds": 1.5,
+            "blocked_route_status": "no_path",
+            "limit": "Isolated software targets and standalone blocked grid; no physical target, sensor observation or active map is fabricated.",
+            "active_map_digest_before": "7567aa55120de412f1a02d6aeb8746efcb437e42179832fe6bd66d25e421e117",
+            "active_map_digest_after": "7567aa55120de412f1a02d6aeb8746efcb437e42179832fe6bd66d25e421e117"
+          },
+          "independent_extrinsic_calibration": {
+            "status": "not_tested",
+            "reason": "No independent measured calibration targets supplied; floor constrains only three degrees of freedom",
+            "calibration_written": false
+          },
+          "physical_target_accuracy": {
+            "status": "not_tested",
+            "reason": "Virtual closed-loop targets do not establish physical detection/tracking/planning accuracy"
+          }
+        },
+        "software_checks_passed": true,
+        "hardware_checks_passed": false,
+        "pending_real_validation": [
+          "connected-device acquisition and synchronization",
+          "independent measured extrinsic calibration",
+          "independently annotated real-lab semantic/flow accuracy",
+          "physical target/trajectory safety testing"
+        ],
+        "resources": {
+          "twin_path": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\assets\\twin_seed7",
+          "measured_map_sha256": "122bdf02b078ac9281661a93bb306576d40ec6440f3c97453a90ec4f8a1abd8c",
+          "checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a"
+        },
+        "hardware_status": "not_tested",
+        "finished_at_unix": 1793212143.1854033,
+        "integrity": {
+          "algorithm": "sha256",
+          "canonical_report_sha256": "346b7d39df7ac8dfbe2294ba34f5abd98d502aa0054fd3a9b4e03f84c5f9b795",
+          "scope": "Canonical sorted JSON excluding integrity"
+        }
+      },
+      "logs": [],
+      "artifacts": [
+        {
+          "name": "integrity.json",
+          "bytes": 220,
+          "url": "/api/v2/commissioning/jobs/8983ef18cd884d229bcb88f55538dfc8/artifacts/integrity.json"
+        },
+        {
+          "name": "report.json",
+          "bytes": 11247,
+          "url": "/api/v2/commissioning/jobs/8983ef18cd884d229bcb88f55538dfc8/artifacts/report.json"
+        },
+        {
+          "name": "report.md",
+          "bytes": 2078,
+          "url": "/api/v2/commissioning/jobs/8983ef18cd884d229bcb88f55538dfc8/artifacts/report.md"
+        },
+        {
+          "name": "result.json",
+          "bytes": 12073,
+          "url": "/api/v2/commissioning/jobs/8983ef18cd884d229bcb88f55538dfc8/artifacts/result.json"
+        }
+      ],
+      "artifact_count": 4,
+      "elapsed_seconds": 25.48399999999674
+    },
+    {
+      "id": "6012e8890edf4f1b87eddb6a2bb2dcc1",
+      "kind": "calibration_candidate",
+      "label": "Calibration candidate export",
+      "status": "completed",
+      "source_id": null,
+      "twin_id": null,
+      "correspondence_id": "synthetic-targets",
+      "created_at_unix": 1793212144.791655,
+      "started_at_unix": 1793212144.791655,
+      "finished_at_unix": 1793212146.9743278,
+      "max_frames": 4,
+      "promotion_performed": false,
+      "reason": null,
+      "summary": {
+        "schema_version": 2,
+        "K": [
+          [
+            600.0,
+            0.0,
+            320.0
+          ],
+          [
+            0.0,
+            600.0,
+            240.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "distortion": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "T_lidar_camera": [
+          [
+            0.9997500291533905,
+            0.009697701648587574,
+            0.02014531683865337,
+            -0.05049488606099164
+          ],
+          [
+            -0.010297631659593463,
+            0.9995000583515292,
+            0.029893011515955553,
+            0.009613097837321696
+          ],
+          [
+            -0.019845351848684554,
+            -0.030092988187029462,
+            0.9993500758352787,
+            -0.029289156098991364
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "measured": false,
+        "calibration_id": "synthetic-board-v1-438ffd878ed46639",
+        "reprojection_rmse_pixels": 7.401421663287978e-07,
+        "reprojection_point_rmse_pixels": 1.046719089706389e-06,
+        "inliers": 48,
+        "observations": 48,
+        "unique_observations": 48,
+        "duplicate_observations": 0,
+        "geometry": {
+          "lidar_affine_rank": 3,
+          "lidar_centered_singular_values_m": [
+            6.035469921443558,
+            4.451289131775489,
+            3.7975897739005644
+          ],
+          "image_affine_rank": 2,
+          "image_centered_singular_values_pixels": [
+            857.9415541056068,
+            785.5024838300124
+          ]
+        },
+        "inlier_geometry": {
+          "lidar_affine_rank": 3,
+          "lidar_centered_singular_values_m": [
+            6.035469921443558,
+            4.451289131775489,
+            3.7975897739005644
+          ],
+          "image_affine_rank": 2,
+          "image_centered_singular_values_pixels": [
+            857.9415541056068,
+            785.5024838300124
+          ]
+        },
+        "observability": {
+          "parameter_count": 6,
+          "jacobian_rank": 6,
+          "jacobian_singular_values": [
+            4546.418729756581,
+            4510.999401971211,
+            1167.2111737165112,
+            441.9420745736523,
+            306.1973496649002,
+            277.5129007066156
+          ],
+          "jacobian_rank_tolerance": 4.5464187297565815e-06,
+          "jacobian_condition_number_mixed_units": 16.382729300801113,
+          "scaled_jacobian_rank": 6,
+          "scaled_jacobian_singular_values": [
+            6510.466019992511,
+            6473.43843007734,
+            1557.1322180802306,
+            1203.8877859088507,
+            762.6156508098334,
+            735.1671042858292
+          ],
+          "scaled_jacobian_rank_tolerance": 6.510466019992511e-06,
+          "scaled_jacobian_condition_number": 8.855763515584718,
+          "translation_scale_m": 3.66608836082933,
+          "rank_rtol": 1e-09,
+          "jacobian_convention": "left tangent of T_camera_lidar; [rx,ry,rz,tx,ty,tz], radians/metres",
+          "scaling_convention": "J_scaled = J @ diag(1,1,1,L,L,L); L = RMS inlier camera range",
+          "max_scaled_condition_number": 100000000.0
+        },
+        "covariance_se3": [
+          [
+            5.684251769068617e-08,
+            2.3915654178247174e-09,
+            -1.2465494430724962e-08,
+            -7.523810969026263e-09,
+            1.7997330178130375e-07,
+            -2.3751660559168013e-08
+          ],
+          [
+            2.3915654178247174e-09,
+            6.17005398373907e-08,
+            9.039116708567078e-09,
+            -1.9539802674978782e-07,
+            9.692440194098142e-09,
+            -3.9414395570122215e-08
+          ],
+          [
+            -1.2465494430724962e-08,
+            9.039116708567078e-09,
+            5.1416812620719855e-08,
+            -3.426289264172157e-08,
+            -4.1619564516680494e-08,
+            -1.3622586985693086e-09
+          ],
+          [
+            -7.523810969026263e-09,
+            -1.9539802674978782e-07,
+            -3.426289264172157e-08,
+            6.557783586366734e-07,
+            -3.147731650995383e-08,
+            1.4424564460663657e-07
+          ],
+          [
+            1.7997330178130375e-07,
+            9.692440194098142e-09,
+            -4.1619564516680494e-08,
+            -3.147731650995383e-08,
+            6.065247791636089e-07,
+            -9.939521527724677e-08
+          ],
+          [
+            -2.3751660559168013e-08,
+            -3.9414395570122215e-08,
+            -1.3622586985693086e-09,
+            1.4424564460663657e-07,
+            -9.939521527724677e-08,
+            3.950145041974607e-07
+          ]
+        ],
+        "covariance_convention": "left tangent of exported T_lidar_camera; [rx,ry,rz,tx,ty,tz] in LiDAR frame",
+        "covariance_units": [
+          "rad",
+          "rad",
+          "rad",
+          "m",
+          "m",
+          "m"
+        ],
+        "covariance_noise_model": {
+          "residual_variance_pixels2": 5.843311214697448e-13,
+          "degrees_of_freedom": 90,
+          "pixel_noise_std_floor_pixels": 0.25,
+          "used_variance_pixels2": 0.0625,
+          "conditional_on": "fixed K/distortion, independent pixel errors, inlier selection and local PnP solution"
+        },
+        "candidate": {
+          "candidate_id": "board-candidate-93ef8a61d91f296349b796ce",
+          "input_sha256": "93ef8a61d91f296349b796cea249df4a2ee8adf2a5ce66439f07ab48bfa60d1c",
+          "status": "validated",
+          "measured_declaration": false,
+          "method": "OpenCV solvePnPRansac + solvePnPRefineLM",
+          "active_promotion": false
+        },
+        "publication": {
+          "status": "not_written",
+          "active_promotion": false
+        },
+        "kind": "camera_lidar_calibration_candidate",
+        "candidate_only": true,
+        "active": false,
+        "promotion_permitted": false,
+        "hardware_status": "not_tested",
+        "physical_verified": false,
+        "correspondence_id": "synthetic-targets",
+        "correspondence_archive_sha256": "2619917e9bfda6183f90463e0dbd64b3899a3abc855358f5a3c0b246a5ca2c52",
+        "provenance_is_declaration": true,
+        "supplementary_rodrigues_rank": {
+          "fitted_jacobian_rank": 6,
+          "parameters": 6,
+          "limit": "Local Rodrigues/translation Jacobian rank is not independent real-lab calibration validation."
+        },
+        "validation": {
+          "status": "not_tested",
+          "independent_declared": false,
+          "observations": 16,
+          "point_reprojection_rmse_pixels": 6.972084037113515e-07,
+          "all_targets_in_front": true,
+          "threshold_pixels": 2.0,
+          "reason": "Descriptive held-out error; independence must be declared separately"
+        }
+      },
+      "logs": [
+        {
+          "message": "Fitting a new candidate from registered 3D/2D correspondences.",
+          "at_unix": 1793212146.6414988
+        }
+      ],
+      "artifacts": [
+        {
+          "name": "calibration_candidate.json",
+          "bytes": 5849,
+          "url": "/api/v2/commissioning/jobs/6012e8890edf4f1b87eddb6a2bb2dcc1/artifacts/calibration_candidate.json"
+        },
+        {
+          "name": "result.json",
+          "bytes": 6355,
+          "url": "/api/v2/commissioning/jobs/6012e8890edf4f1b87eddb6a2bb2dcc1/artifacts/result.json"
+        }
+      ],
+      "artifact_count": 2,
+      "elapsed_seconds": 2.2030000000013388
+    },
+    {
+      "id": "9c737735f4d3481bbf795d720e2d1b7f",
+      "kind": "build_twin",
+      "label": "Bounded static scan / candidate twin",
+      "status": "completed",
+      "source_id": "static-sim",
+      "twin_id": null,
+      "correspondence_id": null,
+      "created_at_unix": 1793212147.00508,
+      "started_at_unix": 1793212147.00508,
+      "finished_at_unix": 1793212187.5297468,
+      "max_frames": 4,
+      "promotion_performed": false,
+      "reason": null,
+      "summary": {
+        "kind": "candidate_twin_review",
+        "actual_frames": 4,
+        "source_id": "static-sim",
+        "source_mode": "sim",
+        "static_scene_declared": true,
+        "active_map_modified": false,
+        "promoted": false,
+        "candidate_manifest": "candidate_twin/bundle_manifest.json",
+        "hardware_status": "not_tested",
+        "reconstruction": {
+          "stations": 4,
+          "measured_points": 8450,
+          "display_mesh_source": "tsdf_preview",
+          "total_measured_surface_voxels": 8450,
+          "preview_complete": true,
+          "tsdf_frames": 4,
+          "tsdf_triangles": 24246,
+          "mesh_triangles": 24246,
+          "pose_graph_edges": 6,
+          "poisson_triangles": 24945,
+          "watertight": false,
+          "unknown_space_inferred_free": false,
+          "floor_fit": {
+            "normal": [
+              0.0002796468164017081,
+              5.512441930404324e-05,
+              0.9999999593794774
+            ],
+            "offset": 8.15244311260153e-05,
+            "support_points": 1518,
+            "height_before_alignment": -8.152443443758043e-05
+          },
+          "watertight_visual_mesh": true,
+          "watertight_visual_method": "uncropped_screened_poisson",
+          "watertight_visual_scale": 1.1,
+          "watertight_visual_closure_inferred": true,
+          "watertight_visual_is_collision_authority": false,
+          "coarse_registration": [
+            {
+              "station": 1,
+              "prior_declared": true,
+              "method": "pose_prior",
+              "fpfh_ransac_fitness": 0.5739577384351799
+            },
+            {
+              "station": 2,
+              "prior_declared": true,
+              "method": "pose_prior",
+              "fpfh_ransac_fitness": 0.5755627009646302
+            },
+            {
+              "station": 3,
+              "prior_declared": true,
+              "method": "pose_prior",
+              "fpfh_ransac_fitness": 0.5986198964922369
+            }
+          ],
+          "commissioning": {
+            "requested_mode": "auto",
+            "frames": [
+              {
+                "frame_id": 0,
+                "mode": "independent_station",
+                "per_return_origins": true,
+                "camera_pose_timed": true,
+                "pointwise_deskew_applied": true
+              },
+              {
+                "frame_id": 0,
+                "mode": "independent_station",
+                "per_return_origins": true,
+                "camera_pose_timed": true,
+                "pointwise_deskew_applied": true
+              },
+              {
+                "frame_id": 0,
+                "mode": "independent_station",
+                "per_return_origins": true,
+                "camera_pose_timed": true,
+                "pointwise_deskew_applied": true
+              },
+              {
+                "frame_id": 0,
+                "mode": "independent_station",
+                "per_return_origins": true,
+                "camera_pose_timed": true,
+                "pointwise_deskew_applied": true
+              }
+            ],
+            "mode_counts": {
+              "independent_station": 4
+            },
+            "initial_velocity_world_mps": null,
+            "initial_velocity_source": "known_zero_at_independent_station_starts",
+            "constant_velocity_observable_from_imu": false,
+            "raw_observations_preserved": true
+          },
+          "tsdf_rectification": [],
+          "storage": {
+            "mode": "disk_backed",
+            "budgets": {
+              "max_frames": 4,
+              "max_in_memory_frames": 32,
+              "max_in_memory_bytes": 134217728,
+              "frame_buffer_bytes": 33554432,
+              "frame_disk_bytes": 62909647,
+              "max_keyframes": 32,
+              "registration_points": 5000,
+              "reconstruction_points": 120000,
+              "tile_size": 16,
+              "max_resident_tiles": 32,
+              "max_resident_bytes": 67108864,
+              "max_disk_bytes": 62909647,
+              "sqlite_cache_bytes": 2097152,
+              "tsdf_tile_resolution": 48,
+              "mesh_preview_vertices": 120000,
+              "mesh_preview_triangles": 240000,
+              "tsdf_disk_bytes": 62909647
+            },
+            "pose_graph": "sliding_window_globally_anchored",
+            "retired_keyframes": 0,
+            "prepared_frame_storage": "prepared_frames",
+            "frame_buffer_peak_bytes": 1033396,
+            "surface_tiles": {
+              "cells": 8450,
+              "resident_tiles": 32,
+              "resident_cells": 1202,
+              "resident_bytes": 443368,
+              "peak_resident_bytes": 540836,
+              "evictions": 889,
+              "max_resident_tiles": 32,
+              "max_resident_bytes": 67108864,
+              "page_reads": 1168,
+              "page_writes": 921,
+              "streamed_reads": 247,
+              "max_disk_bytes": 62909647,
+              "sqlite_cache_bytes": 2097152,
+              "tile_codec_max_uncompressed_bytes": 229376,
+              "tile_query_lookup_max_bytes": 16384,
+              "database_bytes": 630784
+            },
+            "tsdf_tiles": {
+              "mode": "disk_indexed_uniform_tiles",
+              "frames": 4,
+              "nonempty_tiles": 12,
+              "total_vertices": 13496,
+              "total_triangles": 24246,
+              "preview_vertices": 13496,
+              "preview_triangles": 24246,
+              "preview_complete": true,
+              "tile_resolution": 48,
+              "resident_tile_voxels": 110592,
+              "tile_length_m": 3.84,
+              "mesh_bytes": 1007346,
+              "max_disk_bytes": 62909647,
+              "depth_batch_rows": 32,
+              "rectified_tile_observations": 0,
+              "all_observations_processed": true,
+              "max_depth_m": 6.0,
+              "geometry_sha256": "08b0698464bb50d34ae1cea675e272ec294b3dcc9257ac97951518be4197d4ee"
+            }
+          },
+          "graph": {
+            "fitness": 0.7642201834862385,
+            "rmse": 0.05607937604922406,
+            "normal_support": 12,
+            "reliable_target_points": 1961,
+            "information_rank": 6,
+            "retained_keyframes": 4,
+            "dropped_keyframes": 0,
+            "graph_cost": 0.001160992369597825,
+            "graph_success": true
+          },
+          "navigation_storage": {
+            "observed_bounds": [
+              -6.0,
+              6.0,
+              -5.0,
+              5.0,
+              -0.25,
+              3.5
+            ],
+            "local_bounds": [
+              -6.0,
+              6.0,
+              -5.0,
+              5.0,
+              -0.25,
+              3.5
+            ],
+            "full_extent_in_local_grid": true,
+            "max_local_grid_cells": 131072,
+            "unknown_space_is_free": false,
+            "authority": "occupancy_tiles",
+            "tile_cache": {
+              "cells": 26611,
+              "resident_tiles": 32,
+              "resident_cells": 26611,
+              "resident_bytes": 10182004,
+              "peak_resident_bytes": 10182004,
+              "evictions": 0,
+              "max_resident_tiles": 128,
+              "max_resident_bytes": 67108864,
+              "page_reads": 32,
+              "page_writes": 32,
+              "streamed_reads": 0,
+              "max_disk_bytes": 62909647,
+              "sqlite_cache_bytes": 2097152,
+              "tile_codec_max_uncompressed_bytes": 196608,
+              "tile_query_lookup_max_bytes": 16384,
+              "database_bytes": 172032
+            }
+          },
+          "source_provenance": {
+            "frame_count": 4,
+            "any_synthetic": true,
+            "source_modes": [
+              "sim"
+            ],
+            "sensor_ids": [
+              "synthetic-lidar"
+            ],
+            "unknown_source_frames": 0,
+            "calibrations": [
+              {
+                "calibration_id": "simulation-v1",
+                "measured": false,
+                "matrix_sha256": "5ccf6462c43b6e7dcd5742532353ad5f10d4ba27246e005de3ca75b5bf40575a"
+              }
+            ],
+            "all_camera_calibrations_measured": false,
+            "live_reference_eligible": false,
+            "declaration_only": true,
+            "hardware_validation": "not_tested"
+          }
+        }
+      },
+      "logs": [
+        {
+          "message": "Streaming raw commissioning scans through pointwise preparation and bounded reconstruction...",
+          "at_unix": 1793212155.3909743
+        },
+        {
+          "message": "Commissioning acquisition 1; registered static source static-sim.",
+          "at_unix": 1793212155.3970792
+        },
+        {
+          "message": "Commissioning acquisition 2; registered static source static-sim.",
+          "at_unix": 1793212155.4568608
+        },
+        {
+          "message": "Commissioning acquisition 3; registered static source static-sim.",
+          "at_unix": 1793212155.8311784
+        },
+        {
+          "message": "Commissioning acquisition 4; registered static source static-sim.",
+          "at_unix": 1793212156.3119867
+        },
+        {
+          "message": "Carving prepared navigation observations: 1/4",
+          "at_unix": 1793212182.5697567
+        },
+        {
+          "message": "Carving prepared navigation observations: 2/4",
+          "at_unix": 1793212183.1593802
+        },
+        {
+          "message": "Carving prepared navigation observations: 3/4",
+          "at_unix": 1793212183.6876523
+        },
+        {
+          "message": "Carving prepared navigation observations: 4/4",
+          "at_unix": 1793212184.227312
+        },
+        {
+          "message": "Commissioning complete: 26611 measured evidence cells; bounded preview 8450 surface points",
+          "at_unix": 1793212186.279402
+        }
+      ],
+      "artifacts": [
+        {
+          "name": "build_review.json",
+          "bytes": 7248,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/build_review.json"
+        },
+        {
+          "name": "candidate_twin/bundle_manifest.json",
+          "bytes": 2904,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/bundle_manifest.json"
+        },
+        {
+          "name": "candidate_twin/commissioning/chunk_000000.npz",
+          "bytes": 222569,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/commissioning/chunk_000000.npz"
+        },
+        {
+          "name": "candidate_twin/commissioning/manifest.json",
+          "bytes": 577,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/commissioning/manifest.json"
+        },
+        {
+          "name": "candidate_twin/measured_map.npz",
+          "bytes": 194471,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/measured_map.npz"
+        },
+        {
+          "name": "candidate_twin/mesh.ply",
+          "bytes": 1003818,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/mesh.ply"
+        },
+        {
+          "name": "candidate_twin/occupancy_tiles/manifest.json",
+          "bytes": 984,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/occupancy_tiles/manifest.json"
+        },
+        {
+          "name": "candidate_twin/occupancy_tiles/tiles.sqlite",
+          "bytes": 172032,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/occupancy_tiles/tiles.sqlite"
+        },
+        {
+          "name": "candidate_twin/planning_grid.npz",
+          "bytes": 5093,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/planning_grid.npz"
+        },
+        {
+          "name": "candidate_twin/poisson_mesh.ply",
+          "bytes": 992097,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/poisson_mesh.ply"
+        },
+        {
+          "name": "candidate_twin/prepared_frames/chunk_000000.npz",
+          "bytes": 225063,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/prepared_frames/chunk_000000.npz"
+        },
+        {
+          "name": "candidate_twin/prepared_frames/manifest.json",
+          "bytes": 581,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/prepared_frames/manifest.json"
+        },
+        {
+          "name": "candidate_twin/reconstruction.json",
+          "bytes": 6465,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/reconstruction.json"
+        },
+        {
+          "name": "candidate_twin/surface_tiles/points.json",
+          "bytes": 1041,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/surface_tiles/points.json"
+        },
+        {
+          "name": "candidate_twin/surface_tiles/tiles.sqlite",
+          "bytes": 630784,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/surface_tiles/tiles.sqlite"
+        },
+        {
+          "name": "candidate_twin/tsdf_mesh.ply",
+          "bytes": 1003818,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_mesh.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/index.sqlite",
+          "bytes": 12288,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/index.sqlite"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/manifest.json",
+          "bytes": 592,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/manifest.json"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_-1_-1_0.ply",
+          "bytes": 157222,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_-1_-1_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_-1_-2_0.ply",
+          "bytes": 65346,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_-1_-2_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_-1_0_0.ply",
+          "bytes": 211683,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_-1_0_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_-1_1_0.ply",
+          "bytes": 60465,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_-1_1_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_-2_-1_0.ply",
+          "bytes": 21968,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_-2_-1_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_-2_0_0.ply",
+          "bytes": 21968,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_-2_0_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_0_-1_0.ply",
+          "bytes": 123208,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_0_-1_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_0_-2_0.ply",
+          "bytes": 63357,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_0_-2_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_0_0_0.ply",
+          "bytes": 173766,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_0_0_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_0_1_0.ply",
+          "bytes": 60388,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_0_1_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_1_-1_0.ply",
+          "bytes": 20300,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_1_-1_0.ply"
+        },
+        {
+          "name": "candidate_twin/tsdf_tiles/tile_1_0_0.ply",
+          "bytes": 27675,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/tsdf_tiles/tile_1_0_0.ply"
+        },
+        {
+          "name": "candidate_twin/watertight_mesh.ply",
+          "bytes": 1107994,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/candidate_twin/watertight_mesh.ply"
+        },
+        {
+          "name": "result.json",
+          "bytes": 7794,
+          "url": "/api/v2/commissioning/jobs/9c737735f4d3481bbf795d720e2d1b7f/artifacts/result.json"
+        }
+      ],
+      "artifact_count": 32,
+      "elapsed_seconds": 40.68699999999808
+    },
+    {
+      "id": "17a1a9b9407f4dd2ab379e656dcb71af",
+      "kind": "coverage",
+      "label": "Measured coverage review",
+      "status": "completed",
+      "source_id": null,
+      "twin_id": "active",
+      "correspondence_id": null,
+      "created_at_unix": 1793212187.7110639,
+      "started_at_unix": 1793212187.7110639,
+      "finished_at_unix": 1793212188.8117366,
+      "max_frames": 4,
+      "promotion_performed": false,
+      "reason": null,
+      "summary": {
+        "kind": "measured_occupancy_coverage_review",
+        "twin_id": "active",
+        "known_cells": 26639,
+        "occupied_cells": 4877,
+        "free_cells": 21422,
+        "ambiguous_evidence_cells": 340,
+        "observed_bounds": [
+          -6.0,
+          6.0,
+          -5.0,
+          5.0,
+          -0.25,
+          3.5
+        ],
+        "voxel_size_m": 0.25,
+        "registered_review_bounds": null,
+        "roi_known_cells": null,
+        "roi_total_cells": null,
+        "coverage_fraction": null,
+        "whole_lab_completeness_claimed": false,
+        "unknown_is_free": false,
+        "hardware_status": "not_tested",
+        "active_map_modified": false,
+        "limit": "Coverage fraction requires a separately registered surveyed ROI. Observed extents alone do not establish whole-lab completeness."
+      },
+      "logs": [
+        {
+          "message": "Reading measured occupancy without clearing unknown space.",
+          "at_unix": 1793212188.5698109
+        }
+      ],
+      "artifacts": [
+        {
+          "name": "coverage_review.json",
+          "bytes": 717,
+          "url": "/api/v2/commissioning/jobs/17a1a9b9407f4dd2ab379e656dcb71af/artifacts/coverage_review.json"
+        },
+        {
+          "name": "result.json",
+          "bytes": 839,
+          "url": "/api/v2/commissioning/jobs/17a1a9b9407f4dd2ab379e656dcb71af/artifacts/result.json"
+        }
+      ],
+      "artifact_count": 2,
+      "elapsed_seconds": 1.2029999999940628
+    },
+    {
+      "id": "9e937f4ec487435c8b17ce4f6ffae2b3",
+      "kind": "relocalization",
+      "label": "Fixed-position relocalization review",
+      "status": "completed",
+      "source_id": "static-sim",
+      "twin_id": "active",
+      "correspondence_id": null,
+      "created_at_unix": 1793212188.9300067,
+      "started_at_unix": 1793212188.9310052,
+      "finished_at_unix": 1793212194.2249408,
+      "max_frames": 4,
+      "promotion_performed": false,
+      "reason": null,
+      "summary": {
+        "kind": "fixed_position_relocalization_review",
+        "source_id": "static-sim",
+        "twin_id": "active",
+        "fixed_position_declared": true,
+        "actual_frames": 4,
+        "reference_points_used": 8446,
+        "initialization": "carried_input_pose",
+        "global_initialization_failure": null,
+        "hypothesis_policy": {
+          "selection": "higher constrained overlap, then lower residual",
+          "ambiguity_translation_m": 0.5,
+          "ambiguity_rotation_rad": 0.35,
+          "fitness_margin": 0.05,
+          "rmse_margin_m": 0.03
+        },
+        "reference_sha256": "122bdf02b078ac9281661a93bb306576d40ec6440f3c97453a90ec4f8a1abd8c",
+        "records": [
+          {
+            "frame_id": 0,
+            "timestamp": 0.0,
+            "fitness": 0.9915164369034994,
+            "rmse_m": 0.028977204359704495,
+            "information_rank": 6,
+            "translation_change_from_first_m": 0.0,
+            "rotation_change_from_first_rad": 0.0,
+            "review_gate_passed": true,
+            "covariance_rot_xyz_trans_xyz": [
+              [
+                8.863240724184581e-07,
+                -1.219436877897609e-08,
+                1.6962757676604895e-08,
+                -2.932314228556417e-08,
+                1.5657398039433918e-06,
+                1.7637806174159358e-06
+              ],
+              [
+                -1.2194368778975617e-08,
+                4.735711327563925e-07,
+                4.761078015775603e-09,
+                -8.217789962728978e-07,
+                -2.63857166068827e-08,
+                -8.771035170629321e-08
+              ],
+              [
+                1.696275767660519e-08,
+                4.76107801577545e-09,
+                1.1217508017345435e-06,
+                -1.7679535511216272e-06,
+                -1.1482634000697348e-08,
+                4.7953346754403956e-08
+              ],
+              [
+                -2.9323142285562096e-08,
+                -8.217789962728978e-07,
+                -1.7679535511216306e-06,
+                1.8203788004490234e-05,
+                2.2093277121325384e-09,
+                1.7823117908777782e-08
+              ],
+              [
+                1.5657398039433929e-06,
+                -2.638571660688377e-08,
+                -1.1482634000697568e-08,
+                2.209327712124042e-09,
+                6.774699991712272e-06,
+                3.1168886839206074e-06
+              ],
+              [
+                1.7637806174159354e-06,
+                -8.771035170629494e-08,
+                4.7953346754402626e-08,
+                1.782311790877355e-08,
+                3.1168886839206036e-06,
+                6.651172327904157e-06
+              ]
+            ]
+          },
+          {
+            "frame_id": 1,
+            "timestamp": 0.1,
+            "fitness": 0.9850984566258648,
+            "rmse_m": 0.03683658598188516,
+            "information_rank": 6,
+            "translation_change_from_first_m": 0.005247504403083308,
+            "rotation_change_from_first_rad": 0.001313526389472246,
+            "review_gate_passed": true,
+            "covariance_rot_xyz_trans_xyz": [
+              [
+                1.4464938877229947e-06,
+                7.702112618030335e-09,
+                2.6445926908179664e-08,
+                -6.09371880536967e-08,
+                2.55570324854493e-06,
+                2.9370150674886793e-06
+              ],
+              [
+                7.702112618031647e-09,
+                7.668811129975676e-07,
+                5.203325169497745e-09,
+                -1.2603986727159517e-06,
+                1.1835011567393444e-08,
+                -5.300388391168912e-08
+              ],
+              [
+                2.6445926908181854e-08,
+                5.203325169498476e-09,
+                1.8216780515672152e-06,
+                -2.6320787428606426e-06,
+                -1.2584123294435237e-08,
+                5.8700768002367917e-08
+              ],
+              [
+                -6.093718805369706e-08,
+                -1.2603986727159521e-06,
+                -2.6320787428606405e-06,
+                3.071921790869483e-05,
+                1.6087730998309422e-09,
+                -6.769401367286646e-09
+              ],
+              [
+                2.555703248544927e-06,
+                1.1835011567388663e-08,
+                -1.2584123294437645e-08,
+                1.60877309982601e-09,
+                1.1193514902871716e-05,
+                5.212716829571963e-06
+              ],
+              [
+                2.9370150674886793e-06,
+                -5.3003883911692215e-08,
+                5.8700768002359175e-08,
+                -6.769401367282417e-09,
+                5.212716829571973e-06,
+                1.1067647265643848e-05
+              ]
+            ]
+          },
+          {
+            "frame_id": 2,
+            "timestamp": 0.2,
+            "fitness": 0.9857444561774024,
+            "rmse_m": 0.03277963256981362,
+            "information_rank": 6,
+            "translation_change_from_first_m": 0.002286574236370468,
+            "rotation_change_from_first_rad": 0.0011303131611446358,
+            "review_gate_passed": true,
+            "covariance_rot_xyz_trans_xyz": [
+              [
+                1.1101922232904627e-06,
+                -2.8951681000904202e-08,
+                2.0942591604506308e-08,
+                -2.4862425249407803e-08,
+                1.967300989602584e-06,
+                2.239447499199198e-06
+              ],
+              [
+                -2.8951681000904592e-08,
+                5.873664478902739e-07,
+                2.7226546945356603e-09,
+                -9.741660718597702e-07,
+                -5.6141287009195563e-08,
+                -1.0032597947161681e-07
+              ],
+              [
+                2.0942591604505596e-08,
+                2.7226546945344593e-09,
+                1.5949177287987545e-06,
+                -2.7372460319583344e-06,
+                -7.105758318921347e-08,
+                6.249713754360571e-08
+              ],
+              [
+                -2.4862425249404137e-08,
+                -9.741660718597607e-07,
+                -2.7372460319583356e-06,
+                2.5698846395533196e-05,
+                1.5247541242388184e-07,
+                -1.8690470949465775e-08
+              ],
+              [
+                1.9673009896025846e-06,
+                -5.61412870091939e-08,
+                -7.105758318920802e-08,
+                1.5247541242384508e-07,
+                8.714893100886894e-06,
+                3.97051977542697e-06
+              ],
+              [
+                2.2394474991991986e-06,
+                -1.0032597947161598e-07,
+                6.249713754360554e-08,
+                -1.8690470949459197e-08,
+                3.970519775426972e-06,
+                8.55118539086607e-06
+              ]
+            ]
+          },
+          {
+            "frame_id": 3,
+            "timestamp": 0.30000000000000004,
+            "fitness": 0.9877919320594479,
+            "rmse_m": 0.03959554274778148,
+            "information_rank": 6,
+            "translation_change_from_first_m": 0.00503858440279014,
+            "rotation_change_from_first_rad": 0.0011691113357303372,
+            "review_gate_passed": true,
+            "covariance_rot_xyz_trans_xyz": [
+              [
+                1.6423132800788156e-06,
+                -6.009266501087147e-10,
+                2.985052181963477e-08,
+                -6.438850089370897e-08,
+                2.8674968062512826e-06,
+                3.237593652040278e-06
+              ],
+              [
+                -6.009266501090274e-10,
+                9.074854193574153e-07,
+                6.707275298312333e-09,
+                -1.4858527906155101e-06,
+                -3.358981290561141e-10,
+                -9.371173552497648e-08
+              ],
+              [
+                2.985052181963443e-08,
+                6.707275298311717e-09,
+                2.0846487274829144e-06,
+                -3.007593574472971e-06,
+                -7.05682317080869e-08,
+                6.245408470512786e-08
+              ],
+              [
+                -6.438850089369691e-08,
+                -1.4858527906155114e-06,
+                -3.007593574472976e-06,
+                3.5224770120623814e-05,
+                1.414072568444153e-07,
+                2.6207659818745196e-08
+              ],
+              [
+                2.8674968062512826e-06,
+                -3.3589812905565193e-10,
+                -7.056823170808564e-08,
+                1.4140725684438636e-07,
+                1.2700599070096393e-05,
+                5.665359577391286e-06
+              ],
+              [
+                3.2375936520402806e-06,
+                -9.371173552497493e-08,
+                6.245408470512851e-08,
+                2.6207659818705405e-08,
+                5.665359577391292e-06,
+                1.2383427659142743e-05
+              ]
+            ]
+          }
+        ],
+        "review_status": "passed",
+        "candidate_poses_world": [
+          [
+            [
+              -8.824238623894587e-05,
+              -0.9999999138421503,
+              -0.0004056217130771802,
+              -0.0014937937615452745
+            ],
+            [
+              0.9999996567548571,
+              -8.790818382997826e-05,
+              -0.0008238703290131383,
+              -4.002675138252903
+            ],
+            [
+              0.0008238346005621235,
+              -0.000405694274133281,
+              0.9999995783542646,
+              1.6009016152058666
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          [
+            [
+              -0.00022474794498239525,
+              -0.9999999363001246,
+              0.00027728704912117667,
+              0.0021449346862642297
+            ],
+            [
+              0.999999932760855,
+              -0.00022466757743697924,
+              0.00028983230545687075,
+              -4.005702210567771
+            ],
+            [
+              -0.00028976998958500633,
+              0.0002773521696916798,
+              0.9999999195545604,
+              1.5986360488431122
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          [
+            [
+              -0.000799215628771277,
+              -0.9999996683072617,
+              -0.00015697052469774243,
+              0.0007061207808415029
+            ],
+            [
+              0.9999996804495448,
+              -0.0007992185771158744,
+              1.8720963032521892e-05,
+              -4.003298513031647
+            ],
+            [
+              -1.8846410582312444e-05,
+              -0.00015695551245149852,
+              0.9999999875048899,
+              1.6009158148486133
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          [
+            [
+              -0.0002876195443584084,
+              -0.999999894263785,
+              0.0003588139020492136,
+              0.002087085104685942
+            ],
+            [
+              0.9999999579220619,
+              -0.0002876059528281042,
+              3.793007472382816e-05,
+              -4.005482462498768
+            ],
+            [
+              -3.7826873699058936e-05,
+              0.00035882479638187347,
+              0.9999999349069445,
+              1.5987374595025958
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
+        ],
+        "candidate_published": true,
+        "hardware_status": "not_tested",
+        "active_pose_modified": false,
+        "limit": "Registration-conditioned repeatability against a bounded measured reference; not independent world-pose accuracy or proof of physical stationarity."
+      },
+      "logs": [
+        {
+          "message": "Relocalization review observation 1; candidate pose will not be applied.",
+          "at_unix": 1793212191.6804004
+        },
+        {
+          "message": "Relocalization review observation 2; candidate pose will not be applied.",
+          "at_unix": 1793212192.6390908
+        },
+        {
+          "message": "Relocalization review observation 3; candidate pose will not be applied.",
+          "at_unix": 1793212193.1809843
+        },
+        {
+          "message": "Relocalization review observation 4; candidate pose will not be applied.",
+          "at_unix": 1793212193.627102
+        }
+      ],
+      "artifacts": [
+        {
+          "name": "relocalization_review.json",
+          "bytes": 10078,
+          "url": "/api/v2/commissioning/jobs/9e937f4ec487435c8b17ce4f6ffae2b3/artifacts/relocalization_review.json"
+        },
+        {
+          "name": "result.json",
+          "bytes": 10890,
+          "url": "/api/v2/commissioning/jobs/9e937f4ec487435c8b17ce4f6ffae2b3/artifacts/result.json"
+        }
+      ],
+      "artifact_count": 2,
+      "elapsed_seconds": 5.4060000000026776
+    }
+  ],
+  "active_reference_unchanged": true,
+  "elapsed_seconds": 75.89100000000326,
+  "checks": {
+    "all_six_workers_completed": true,
+    "no_promotion": true
+  }
+}

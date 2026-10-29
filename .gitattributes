@@ -1,0 +1,11 @@
+# Preserve exact bytes: SPEC.md, recording checksums and release evidence are hashed.
+* -text
+*.png binary
+*.jpg binary
+*.npz binary
+*.pt binary
+*.pt2 binary
+*.dll binary
+*.so binary
+*.glb binary
+*.sqlite binary

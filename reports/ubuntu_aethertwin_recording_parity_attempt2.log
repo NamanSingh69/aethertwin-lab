@@ -1,0 +1,7 @@
+{
+  "frame_id": 2,
+  "occupancy_cells": 47906,
+  "occupancy_bit_exact": true,
+  "failures": [],
+  "passed": true
+}

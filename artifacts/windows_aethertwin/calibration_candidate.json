@@ -1,0 +1,202 @@
+{
+  "schema_version": 2,
+  "K": [
+    [
+      500.0,
+      0.0,
+      320.0
+    ],
+    [
+      0.0,
+      500.0,
+      240.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "T_lidar_camera": [
+    [
+      0.9966023796209211,
+      0.018373130295421647,
+      0.08028776380660249,
+      -0.10071479102641478
+    ],
+    [
+      -0.021570890635478998,
+      0.9990006999081217,
+      0.03914458149316685,
+      0.031344223546933676
+    ],
+    [
+      -0.07948832374072015,
+      -0.04074346163779455,
+      0.9960027995556338,
+      -0.013193505280890755
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "measured": false,
+  "calibration_id": "synthetic-board-v1-bede66a112b08579",
+  "reprojection_rmse_pixels": 6.885746353935772e-07,
+  "reprojection_point_rmse_pixels": 9.737915880797059e-07,
+  "inliers": 60,
+  "observations": 60,
+  "unique_observations": 60,
+  "duplicate_observations": 0,
+  "geometry": {
+    "lidar_affine_rank": 3,
+    "lidar_centered_singular_values_m": [
+      6.232550900613469,
+      4.580754539231442,
+      4.250441045205456
+    ],
+    "image_affine_rank": 2,
+    "image_centered_singular_values_pixels": [
+      567.9692300780971,
+      511.10675487310476
+    ]
+  },
+  "inlier_geometry": {
+    "lidar_affine_rank": 3,
+    "lidar_centered_singular_values_m": [
+      6.232550900613469,
+      4.580754539231442,
+      4.250441045205456
+    ],
+    "image_affine_rank": 2,
+    "image_centered_singular_values_pixels": [
+      567.9692300780971,
+      511.10675487310476
+    ]
+  },
+  "observability": {
+    "parameter_count": 6,
+    "jacobian_rank": 6,
+    "jacobian_singular_values": [
+      4104.980441957262,
+      4075.175809288912,
+      764.6043418602794,
+      196.2244187492882,
+      155.90727956365387,
+      149.4615036613897
+    ],
+    "jacobian_rank_tolerance": 4.104980441957263e-06,
+    "jacobian_condition_number_mixed_units": 27.465135445560882,
+    "scaled_jacobian_rank": 6,
+    "scaled_jacobian_singular_values": [
+      5821.275835261912,
+      5779.218126404078,
+      887.8719375272727,
+      768.8467138990699,
+      511.29251821077935,
+      481.46970005503755
+    ],
+    "scaled_jacobian_rank_tolerance": 5.821275835261912e-06,
+    "scaled_jacobian_condition_number": 12.090637966618612,
+    "translation_scale_m": 4.589417711982087,
+    "rank_rtol": 1e-09,
+    "jacobian_convention": "left tangent of T_camera_lidar; [rx,ry,rz,tx,ty,tz], radians/metres",
+    "scaling_convention": "J_scaled = J @ diag(1,1,1,L,L,L); L = RMS inlier camera range",
+    "max_scaled_condition_number": 100000000.0
+  },
+  "covariance_se3": [
+    [
+      1.2887409752929927e-07,
+      -4.681945183212362e-09,
+      -8.24088736902676e-09,
+      2.113967171332294e-08,
+      5.470228869645666e-07,
+      -2.633889820127275e-08
+    ],
+    [
+      -4.681945183212362e-09,
+      1.380495392166624e-07,
+      1.630561337981811e-08,
+      -5.896123700180074e-07,
+      -1.8732988100409727e-08,
+      -2.5469140602268943e-08
+    ],
+    [
+      -8.24088736902676e-09,
+      1.630561337981811e-08,
+      1.1103733018507402e-07,
+      -9.426608701484764e-08,
+      -3.551489426181174e-08,
+      -9.681954055153734e-10
+    ],
+    [
+      2.113967171332294e-08,
+      -5.896123700180074e-07,
+      -9.426608701484764e-08,
+      2.598108773299319e-06,
+      8.188126601331357e-08,
+      1.450388776742868e-07
+    ],
+    [
+      5.470228869645666e-07,
+      -1.8732988100409727e-08,
+      -3.551489426181174e-08,
+      8.188126601331357e-08,
+      2.4033187507141347e-06,
+      -2.2932236626622042e-07
+    ],
+    [
+      -2.633889820127275e-08,
+      -2.5469140602268943e-08,
+      -9.681954055153734e-10,
+      1.450388776742868e-07,
+      -2.2932236626622042e-07,
+      1.6882066507849456e-06
+    ]
+  ],
+  "covariance_convention": "left tangent of exported T_lidar_camera; [rx,ry,rz,tx,ty,tz] in LiDAR frame",
+  "covariance_units": [
+    "rad",
+    "rad",
+    "rad",
+    "m",
+    "m",
+    "m"
+  ],
+  "covariance_noise_model": {
+    "residual_variance_pixels2": 4.990895036919975e-13,
+    "degrees_of_freedom": 114,
+    "pixel_noise_std_floor_pixels": 0.25,
+    "used_variance_pixels2": 0.0625,
+    "conditional_on": "fixed K/distortion, independent pixel errors, inlier selection and local PnP solution"
+  },
+  "candidate": {
+    "candidate_id": "board-candidate-fd8f3641d44c802086fcabb7",
+    "input_sha256": "fd8f3641d44c802086fcabb7dfb41019dc0b996bf42411564596697af599266c",
+    "status": "validated",
+    "measured_declaration": false,
+    "method": "OpenCV solvePnPRansac + solvePnPRefineLM",
+    "active_promotion": false
+  },
+  "publication": {
+    "status": "exported",
+    "output_path": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\artifacts\\windows_aethertwin\\calibration_candidate.json",
+    "atomic_replace": true,
+    "active_promotion": false,
+    "previous_output": null
+  },
+  "image_size": [
+    640,
+    480
+  ]
+}

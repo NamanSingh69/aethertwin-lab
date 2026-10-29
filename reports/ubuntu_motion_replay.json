@@ -1,0 +1,22 @@
+{
+  "platform": "Ubuntu 24.04 WSL2",
+  "frames": 3,
+  "seed": 7,
+  "mobile": true,
+  "raw_recording": "artifacts/ubuntu_motion_recording",
+  "simulation_output": "artifacts/ubuntu_motion_sim",
+  "replay_output": "artifacts/ubuntu_motion_replay",
+  "perception_state_matches": true,
+  "occupancy_exactly_matches": true,
+  "occupancy_cells": 48394,
+  "tolerance": {
+    "rtol": 1e-05,
+    "atol": 1e-06
+  },
+  "comparison_excludes": [
+    "wall timing",
+    "memory diagnostics",
+    "fps"
+  ],
+  "physical_sensor_validation": false
+}

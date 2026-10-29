@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "format": "lidar-lab-npz",
+  "frame_count": 4,
+  "chunks": [
+    {
+      "file": "chunk_000000.npz",
+      "frames": 4,
+      "sha256": "6490628f76b19b88c4116d3168c0caf583e01db33a31ddc0f984b6512f1aa923",
+      "bytes": 225063
+    }
+  ],
+  "units": "SI",
+  "time_domain": "common_monotonic_seconds",
+  "metadata": {
+    "coordinate_reference": "lidar_sweep_end"
+  },
+  "storage_budgets": {
+    "max_buffer_bytes": 33554432,
+    "peak_buffer_bytes": 1033396,
+    "max_disk_bytes": 62909647,
+    "compressed_chunk_bytes": 225063
+  }
+}

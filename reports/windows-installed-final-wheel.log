@@ -1,0 +1,6 @@
+Processing c:\users\kiit\documents\codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\dist\final\lidar_lab_digital_twin-2.0.0-py3-none-any.whl
+Installing collected packages: lidar-lab-digital-twin
+Successfully installed lidar-lab-digital-twin-2.0.0
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.2
+[notice] To update, run: C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\work\aether_release_venv\Scripts\python.exe -m pip install --upgrade pip

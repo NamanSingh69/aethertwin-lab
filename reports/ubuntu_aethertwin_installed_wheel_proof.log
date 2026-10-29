@@ -1,0 +1,12 @@
+aethertwin-diagnose_help: exit0
+aethertwin-gateway_help: exit0
+aethertwin-serve_help: exit0
+lab-twin_help: exit0
+installed_sim: exit0
+installed_replay: exit0
+installed_diagnostics: exit0
+{
+  "passed": true,
+  "report": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/report.json",
+  "shipped_replay": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/shipped_replay"
+}

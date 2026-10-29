@@ -1,0 +1,114 @@
+[
+  {
+    "frames": 4,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "camera_feature_height": null,
+      "camera_feature_width": null
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      501
+    ],
+    "scene_ids": [
+      "501"
+    ],
+    "semantic_miou": 0.2540141304343867,
+    "per_class_iou": [
+      0.5811648079306072,
+      0.8519699385105899,
+      0.10679611650485436,
+      0.0,
+      0.20642201834862386,
+      0.0,
+      0.031746031746031744
+    ],
+    "confusion_matrix": [
+      [
+        938,
+        485,
+        0,
+        0,
+        95,
+        0,
+        0
+      ],
+      [
+        8,
+        3741,
+        0,
+        0,
+        31,
+        0,
+        0
+      ],
+      [
+        14,
+        72,
+        11,
+        0,
+        6,
+        0,
+        0
+      ],
+      [
+        24,
+        24,
+        0,
+        0,
+        24,
+        0,
+        0
+      ],
+      [
+        17,
+        0,
+        0,
+        0,
+        45,
+        0,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        33,
+        28,
+        0,
+        0,
+        0,
+        0,
+        2
+      ]
+    ],
+    "majority_class_miou": 0.09642857142857143,
+    "flow_epe_m": 0.11495902841871222,
+    "zero_flow_epe_m": 0.001442025066637273,
+    "dynamic_flow_epe_m": 0.09469083550785269,
+    "dynamic_zero_flow_epe_m": 0.045904334813926,
+    "loss": 1.0737545788288116,
+    "epoch": 1,
+    "training_loss": 1.6567382514476776,
+    "elapsed_seconds": 4.492037568999997
+  }
+]

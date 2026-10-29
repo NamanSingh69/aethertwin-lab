@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "backend": "mesa_llvmpipe_filament19",
+  "display_name": "Software graphics (Mesa LLVMpipe)",
+  "mesa_version": "26.2.4",
+  "release_url": "https://github.com/pal1000/mesa-dist-win/releases/download/26.2.4/mesa3d-26.2.4-release-msvc.7z",
+  "archive_sha256": "351fc8c8b695878ffb3eaa044b3ead08672a48b1a045e3c3e3975811df0f6695",
+  "files": {
+    "opengl32.dll": "79d4e7d0b25c3c83a8445b5959bbdfa55e4711e8132a0552ebc6d1d8c5eb9411",
+    "opengl32_mesa.dll": "75b295fc80df0eaa8f1264c28663f6932c8b72d36513eb092556608858b7f5e0",
+    "libgallium_wgl.dll": "53e49adf87590d5b0cab8553b1e98084812040cc1fca8c487695b17b7af3702e"
+  },
+  "adapter_sources": {
+    "wgl_compat.c": "e51602db6c9cceab87efb6bbb65f39a0023538afe6d7ecac5e0a8695575bf351",
+    "win32_minimal.h": "cda1954a563081ddcf5a627a46016e9d92ce06c0125dc36dc469fe6d2281851e",
+    "kernel32.def": "9bc874645e1918e64024d62fcab114f3918e5c7640f9a587ae901a19a0c26840",
+    "gdi32.def": "d6d3a3f48de2914d12fb57a84f0b708ee02a281ef430b174e7862a23dd8227a1",
+    "build.py": "51b666dc54678d64c94118cf411a9ad00f1b41d732bf1e68467bbfadd455067b"
+  },
+  "original_exports": 379,
+  "forwarded_exports": 378,
+  "wrapped_exports": [
+    "wglGetProcAddress"
+  ],
+  "custom_exports": [
+    "LabWglCompatibilityFixCount",
+    "LabWglNormalizeAttributes",
+    "LabWglFramebufferFilterCount",
+    "LabWglApplyFramebufferPolicy",
+    "LabWglPixelFormatDescriptorSize"
+  ],
+  "context_policy": "Only FLAGS_ARB=0x9126 is corrected to zero; other attributes stay unchanged.",
+  "framebuffer_policy": "Restrict window-capable formats to Filament's native 32-bit color/depth24 descriptor.",
+  "compiler": "MSVC 14.44.35207",
+  "binary_reproducible_link": true
+}

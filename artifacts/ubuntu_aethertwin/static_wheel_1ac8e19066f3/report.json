@@ -1,0 +1,256 @@
+{
+  "scope": "Frontend-only package refresh; neural/runtime proof retained for byte-identical Python",
+  "wheel_sha256": "1ac8e19066f3fbab289704f6d897ea978ac1614340bf5078513c6507be6e4d86",
+  "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+  "previous_wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+  "previous_wheel_sha256": "be3c03cb21c887189ea90d1b76a14dc681a0e3b837d437847df26fea8b240d8d",
+  "cwd": "/var/tmp/aethertwin-static-installed-2is50nsl",
+  "physical_hardware_tested": false,
+  "commands": [
+    {
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "/var/tmp/lab-twin-venv/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.9949368779999972
+    },
+    {
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/lab-twin",
+        "--help"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.397474502999998
+    },
+    {
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+        "--help"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.13086896699999784
+    },
+    {
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+        "--help"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.8365731160000038
+    },
+    {
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-gateway",
+        "--help"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.3852255629999988
+    },
+    {
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-I",
+        "-c",
+        "from command_center.service import create_app;import uvicorn;uvicorn.run(create_app(None,host=\"127.0.0.1\",frontend_root='/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/web/dist'),host=\"127.0.0.1\",port=50477,access_log=False)"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.575234909999999
+    }
+  ],
+  "existing_python_sources_unchanged": true,
+  "runtime_python_source_unchanged": true,
+  "python_files_compared": 80,
+  "python_file_additions": {},
+  "initial_preflight_note": "Complete packaged Python file inventory unchanged, including readable deployment resources.",
+  "entrypoints_unchanged": true,
+  "archive_changed_paths": [
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/.vite/manifest.json",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-BGgNbCOT.js",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-BGgNbCOT.js.map",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-DkAAyosm.js",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-DkAAyosm.js.map",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CBQ7YI1y.js",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CBQ7YI1y.js.map",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CRjvq6BN.js",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CRjvq6BN.js.map",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-BP_v25uK.js",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-BP_v25uK.js.map",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js.map",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/benchmark.html",
+    "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/index.html",
+    "lidar_lab_digital_twin-2.0.0.dist-info/RECORD"
+  ],
+  "installed_python_modules_verified": [
+    "main",
+    "core.resources",
+    "core.pipeline",
+    "core.contracts",
+    "diagnostics.runner",
+    "command_center.runtime",
+    "command_center.service",
+    "command_center.protocol",
+    "command_center.commissioning",
+    "tracking_and_navigation.kalman_9dof_tracker",
+    "ingestion.calibration",
+    "slam_and_twin.tiled_map"
+  ],
+  "installed_resource_root": "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin",
+  "frontend_file_hashes": {
+    "index.html": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6",
+    "benchmark.html": "cdf8eb4c99d23144375c799a2cee08e95d1e7b88ba557b7fe57dca2fef99caca",
+    ".vite/manifest.json": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f",
+    "assets/decode.worker-CC-RLjVq.js": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+    "assets/SpatialRenderer-BGgNbCOT.js": "c44759c2b32d6247f3353c84fcc71b2e24d89270415cf53513d739bc8c6e4e4e",
+    "assets/benchmark-CRjvq6BN.js.map": "186e5456f63fa55b8609b94106c70e52a65ee060ae3a2d2609d66f2cb935fc37",
+    "assets/rolldown-runtime-4tVxZq34.js": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+    "assets/benchmark-CRjvq6BN.js": "1430c3693c325ac74f197b077a01f9f00cd788d397e3de7adfc9436543078234",
+    "assets/spatial-contracts-33vaUxT7.js": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+    "assets/react-vendor-Br0ptrPz.js.map": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+    "assets/decode.worker-CC-RLjVq.js.map": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+    "assets/index-CebD2Odz.css": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+    "assets/three-vendor-Bc4s0MDm.js.map": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+    "assets/SpatialRenderer-BGgNbCOT.js.map": "8316c7e7cf1f6d3af0a823f85653fdac3b5eb6b4c29e89566f5fd2485be7bd69",
+    "assets/index-BP_v25uK.js": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e",
+    "assets/modulepreload-polyfill-P2Xu9kJm.js": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+    "assets/spatial-contracts-33vaUxT7.js.map": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+    "assets/react-vendor-Br0ptrPz.js": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+    "assets/index-BP_v25uK.js.map": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092",
+    "assets/three-vendor-Bc4s0MDm.js": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b"
+  },
+  "installed_distribution_version": "2.0.0",
+  "passed": true,
+  "http_served_frontend": [
+    {
+      "path": "/.vite/manifest.json",
+      "size_bytes": 1648,
+      "sha256": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f",
+      "status": 200
+    },
+    {
+      "path": "/assets/SpatialRenderer-BGgNbCOT.js",
+      "size_bytes": 14033,
+      "sha256": "c44759c2b32d6247f3353c84fcc71b2e24d89270415cf53513d739bc8c6e4e4e",
+      "status": 200
+    },
+    {
+      "path": "/assets/SpatialRenderer-BGgNbCOT.js.map",
+      "size_bytes": 46458,
+      "sha256": "8316c7e7cf1f6d3af0a823f85653fdac3b5eb6b4c29e89566f5fd2485be7bd69",
+      "status": 200
+    },
+    {
+      "path": "/assets/benchmark-CRjvq6BN.js",
+      "size_bytes": 2720,
+      "sha256": "1430c3693c325ac74f197b077a01f9f00cd788d397e3de7adfc9436543078234",
+      "status": 200
+    },
+    {
+      "path": "/assets/benchmark-CRjvq6BN.js.map",
+      "size_bytes": 8069,
+      "sha256": "186e5456f63fa55b8609b94106c70e52a65ee060ae3a2d2609d66f2cb935fc37",
+      "status": 200
+    },
+    {
+      "path": "/assets/decode.worker-CC-RLjVq.js",
+      "size_bytes": 5717,
+      "sha256": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+      "status": 200
+    },
+    {
+      "path": "/assets/decode.worker-CC-RLjVq.js.map",
+      "size_bytes": 18095,
+      "sha256": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+      "status": 200
+    },
+    {
+      "path": "/assets/index-BP_v25uK.js",
+      "size_bytes": 64235,
+      "sha256": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e",
+      "status": 200
+    },
+    {
+      "path": "/assets/index-BP_v25uK.js.map",
+      "size_bytes": 186321,
+      "sha256": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092",
+      "status": 200
+    },
+    {
+      "path": "/assets/index-CebD2Odz.css",
+      "size_bytes": 32641,
+      "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+      "status": 200
+    },
+    {
+      "path": "/assets/modulepreload-polyfill-P2Xu9kJm.js",
+      "size_bytes": 670,
+      "sha256": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+      "status": 200
+    },
+    {
+      "path": "/assets/react-vendor-Br0ptrPz.js",
+      "size_bytes": 218797,
+      "sha256": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+      "status": 200
+    },
+    {
+      "path": "/assets/react-vendor-Br0ptrPz.js.map",
+      "size_bytes": 1043926,
+      "sha256": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+      "status": 200
+    },
+    {
+      "path": "/assets/rolldown-runtime-4tVxZq34.js",
+      "size_bytes": 237,
+      "sha256": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+      "status": 200
+    },
+    {
+      "path": "/assets/spatial-contracts-33vaUxT7.js",
+      "size_bytes": 1933,
+      "sha256": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+      "status": 200
+    },
+    {
+      "path": "/assets/spatial-contracts-33vaUxT7.js.map",
+      "size_bytes": 10532,
+      "sha256": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+      "status": 200
+    },
+    {
+      "path": "/assets/three-vendor-Bc4s0MDm.js",
+      "size_bytes": 635726,
+      "sha256": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b",
+      "status": 200
+    },
+    {
+      "path": "/assets/three-vendor-Bc4s0MDm.js.map",
+      "size_bytes": 3190283,
+      "sha256": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+      "status": 200
+    },
+    {
+      "path": "/benchmark.html",
+      "size_bytes": 2412,
+      "sha256": "cdf8eb4c99d23144375c799a2cee08e95d1e7b88ba557b7fe57dca2fef99caca",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "size_bytes": 917,
+      "sha256": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6",
+      "status": 200
+    }
+  ],
+  "normal_shutdown": true,
+  "neural_tests_repeated": false
+}

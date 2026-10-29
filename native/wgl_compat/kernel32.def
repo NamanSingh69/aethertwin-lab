@@ -1,0 +1,11 @@
+LIBRARY KERNEL32.dll
+EXPORTS
+    GetModuleFileNameW
+    LoadLibraryExW
+    GetProcAddress
+    InitOnceExecuteOnce
+    DisableThreadLibraryCalls
+    SetLastError
+    GetProcessHeap
+    HeapAlloc
+    HeapFree

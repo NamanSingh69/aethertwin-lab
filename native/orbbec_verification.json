@@ -1,0 +1,98 @@
+{
+  "sdk_package": "pyorbbecsdk2",
+  "sdk_version": "2.1.2",
+  "python": "3.12.3",
+  "wheel": "pyorbbecsdk2-2.1.2-cp312-cp312-manylinux_2_27_x86_64.whl",
+  "sha256": "9baac79e3ac24496847aa595267a6f21a2fb4fddf672493052e65ee48398566b",
+  "native_import_succeeded": true,
+  "Pipeline_methods": {
+    "get_stream_profile_list": true,
+    "enable_frame_sync": true,
+    "start": true,
+    "stop": true,
+    "wait_for_frames": true
+  },
+  "color_formats": {
+    "RGB": true,
+    "BGR": true,
+    "MJPG": true,
+    "YUYV": true
+  },
+  "video_profile_api": {
+    "get_width": true,
+    "get_height": true,
+    "get_fps": true,
+    "get_format": true
+  },
+  "context_api": true,
+  "physical_device_tested": false,
+  "validation_scope": "Native import/API presence and SDK-shaped fixtures, without connected camera or physical acquisition",
+  "mixed_profile_api": {
+    "Pipeline": {
+      "get_d2c_depth_profile_list": true
+    },
+    "Config": {
+      "set_align_mode": true,
+      "set_depth_scale_require": true
+    },
+    "Frame": {
+      "get_stream_profile": true,
+      "get_timestamp_us": true,
+      "get_system_timestamp_us": true,
+      "get_global_timestamp_us": true
+    },
+    "VideoStreamProfile": {
+      "get_intrinsic": true,
+      "get_distortion": true,
+      "get_width": true,
+      "get_height": true,
+      "get_fps": true
+    },
+    "AlignFilter": {
+      "process": true,
+      "set_align_to_stream_profile": true,
+      "set_match_target_resolution": true
+    },
+    "OBAlignMode": {
+      "HW_MODE": true,
+      "SW_MODE": true,
+      "DISABLE": true
+    },
+    "OBStreamType": {
+      "COLOR_STREAM": true
+    }
+  },
+  "source_references": [
+    "https://github.com/orbbec/pyorbbecsdk/blob/v2.1.2/examples/beginner/03_color_and_depth_aligned.py",
+    "https://github.com/orbbec/OrbbecSDK_v2/blob/v2.9.3/src/pipeline/Pipeline.cpp"
+  ],
+  "driver_sha256": "0fddbcf8cfc2ae92c1d3f32b714f698257e69d1fce7073259e02968657144a13",
+  "sdk_shaped_test_suites": {
+    "Windows": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "44",
+      "time": "2.851",
+      "timestamp": "2026-10-28T17:55:50.225899+05:30"
+    },
+    "Ubuntu": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "44",
+      "time": "8.179",
+      "timestamp": "2026-10-28T12:26:02.271825+00:00"
+    }
+  },
+  "sdk_shaped_test_scope": [
+    "Mixed1920x1080 color/1280x800 depth with independently validated aligned output",
+    "Independent color cadence and explicit alignment mode",
+    "SDK-supported HW/SW pair query and no unapproved fallback",
+    "Unchanged measured calibration and delivered-profile shape/intrinsic/distortion validation",
+    "Raw device/system/global timestamps with availability and immutable frame diagnostics",
+    "Initialization/acquisition failure cleanup and idempotent normal shutdown"
+  ]
+}

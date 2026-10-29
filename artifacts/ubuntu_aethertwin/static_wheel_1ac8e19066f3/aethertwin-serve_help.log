@@ -1,0 +1,46 @@
+usage: aethertwin-serve [-h] [--mode {sim,replay,live}] [--config CONFIG]
+                        [--input INPUT] [--twin TWIN]
+                        [--checkpoint CHECKPOINT] [--record RECORD]
+                        [--commissioning-static-recording COMMISSIONING_STATIC_RECORDING]
+                        [--calibration-correspondences CALIBRATION_CORRESPONDENCES]
+                        [--output OUTPUT] [--host HOST] [--port PORT]
+                        [--device {cpu,cuda,auto}] [--threads THREADS]
+                        [--max-frames MAX_FRAMES] [--seed SEED]
+                        [--duration DURATION] [--ssl-certfile SSL_CERTFILE]
+                        [--ssl-keyfile SSL_KEYFILE]
+                        [--allowed-origin ALLOWED_ORIGIN] [--access-log]
+                        [--open-browser]
+
+Run the AetherTwin local/private browser command center.
+
+options:
+  -h, --help            show this help message and exit
+  --mode {sim,replay,live}
+  --config CONFIG
+  --input INPUT
+  --twin TWIN
+  --checkpoint CHECKPOINT
+  --record RECORD       Record raw source segments under a new session
+                        directory
+  --commissioning-static-recording COMMISSIONING_STATIC_RECORDING
+                        Declare an explicitly static recording for
+                        commissioning jobs
+  --calibration-correspondences CALIBRATION_CORRESPONDENCES
+                        Register measured correspondence NPZ for candidate
+                        export
+  --output OUTPUT
+  --host HOST
+  --port PORT
+  --device {cpu,cuda,auto}
+  --threads THREADS
+  --max-frames MAX_FRAMES
+  --seed SEED
+  --duration DURATION   Bound processing by wall-clock seconds; keep the
+                        viewer available
+  --ssl-certfile SSL_CERTFILE
+  --ssl-keyfile SSL_KEYFILE
+  --allowed-origin ALLOWED_ORIGIN
+                        Explicit trusted HTTPS gateway origin; may repeat
+  --access-log          Log each HTTP request (off by default)
+  --open-browser        Open the local command center after the server is
+                        ready

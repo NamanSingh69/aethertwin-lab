@@ -1,0 +1,909 @@
+{
+  "schema_version": 1,
+  "source": "actual_sample_recording_LabPipeline",
+  "hardware_verified": false,
+  "started_at_unix": 1793211454.9103723,
+  "loopback_only": true,
+  "untouched_endurance_port": 8080,
+  "configuration": {
+    "seed": 7,
+    "device": "cpu",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false,
+      "include_s2": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06,
+      "runtime_tiled": true,
+      "ray_backend": "auto",
+      "max_traversal_cells": 5000000,
+      "tile_budgets": {
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "max_disk_bytes": 4294967296
+      }
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt"
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": [
+        -1.375,
+        -4.375,
+        0.625
+      ],
+      "goal": [
+        2.125,
+        4.125,
+        0.625
+      ],
+      "ground": true,
+      "replan_interval": 5,
+      "mppi_samples": 96,
+      "mppi_iterations": 2,
+      "bounds": [
+        -6,
+        6,
+        -5,
+        5,
+        0,
+        3.5
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "recording": {
+      "max_disk_bytes": 17179869184,
+      "chunk_frames": 4,
+      "chunk_bytes": 67108864,
+      "queued_frames": 8,
+      "queued_bytes": 67108864,
+      "required": true
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "live": {
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 1280,
+      "camera_height": 800,
+      "camera_fps": 30,
+      "camera_color_width": null,
+      "camera_color_height": null,
+      "camera_color_fps": null,
+      "camera_align_mode": "auto",
+      "camera_intrinsics_tolerance_px": 1.0,
+      "camera_distortion_tolerance": 0.0001,
+      "calibration": "config/calibration_extrinsics.json",
+      "allow_degraded": false
+    },
+    "acquisition": {
+      "max_frames": 2,
+      "max_bytes": 67108864,
+      "max_age_seconds": 0.5,
+      "imu_history_seconds": 5.0,
+      "max_imu_samples": 8192
+    }
+  },
+  "torch_threads": 2,
+  "gateway_python": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\work\\.gateway-venv\\Scripts\\python.exe",
+  "concurrency": "Runs concurrently with the parent-owned port8080 30-minute endurance; timings are not an isolated throughput benchmark.",
+  "checks": {
+    "configured_CA_authentication": true,
+    "revisioned_pause_resume_set_goal_acknowledged_and_applied": true,
+    "trajectory_csv_exact_to_local_validated_path": true,
+    "edge_websocket_disconnect_and_same_source_reconnect": true,
+    "local_perception_and_raw_recording_continue_without_gateway": true,
+    "minimal_gateway_restart_current_keyframe": true,
+    "bounded_four_frame_actual_pipeline": true,
+    "one_upstream_stream": true,
+    "raw_recording_reopens_and_matches_original_observations": true
+  },
+  "snapshots": [
+    {
+      "label": "frame1_keyframe",
+      "sequence": 1,
+      "kind": "keyframe",
+      "stream_id": "49970db8118e438193b1bdeb761261a4",
+      "voxels": 1400,
+      "tracks": 4,
+      "trajectory_status": "ok",
+      "exact_voxels_tracks_identity_and_auxiliary_arrays": true,
+      "packet_bytes": 182896,
+      "packet_sha256": "7a1bf6e40624f4d359fd5f6d7793eeecabe093fe53d211e96824baf15388528b",
+      "processing_ms": 4374.059200003103
+    },
+    {
+      "label": "frame2_delta",
+      "sequence": 2,
+      "kind": "delta",
+      "stream_id": "49970db8118e438193b1bdeb761261a4",
+      "voxels": 1400,
+      "tracks": 4,
+      "trajectory_status": "ok",
+      "exact_voxels_tracks_identity_and_auxiliary_arrays": true,
+      "packet_bytes": 196812,
+      "packet_sha256": "4990774dff13a7deb866798c244ffceb034d8eb76c30050005353ee13cca4ad5",
+      "processing_ms": 3638.604400002805
+    },
+    {
+      "label": "frame3_recovered_keyframe",
+      "sequence": 3,
+      "kind": "keyframe",
+      "stream_id": "49970db8118e438193b1bdeb761261a4",
+      "voxels": 1400,
+      "tracks": 4,
+      "trajectory_status": "ok",
+      "exact_voxels_tracks_identity_and_auxiliary_arrays": true,
+      "packet_bytes": 184560,
+      "packet_sha256": "24f0799d2d553b766a15af618c6e81e159768d3f3ee135102dead2425c338720",
+      "processing_ms": 3441.9720000005327
+    },
+    {
+      "label": "frame4_keyframe",
+      "sequence": 4,
+      "kind": "keyframe",
+      "stream_id": "49970db8118e438193b1bdeb761261a4",
+      "voxels": 1400,
+      "tracks": 6,
+      "trajectory_status": "ok",
+      "exact_voxels_tracks_identity_and_auxiliary_arrays": true,
+      "packet_bytes": 189344,
+      "packet_sha256": "df9f81b0ec43f49c9db3d117d0d5f0386f90e07c69b93eece8d1d98a04837bee",
+      "processing_ms": 3073.790399997961
+    }
+  ],
+  "commands": [
+    {
+      "request": {
+        "request_id": "actual-1-step",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 0,
+        "action": "step",
+        "payload": {}
+      },
+      "ack": {
+        "request_id": "actual-1-step",
+        "status": "accepted",
+        "revision": 1,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-1-step",
+        "revision": 1,
+        "action": "step",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211465.064442
+      },
+      "via": "gateway"
+    },
+    {
+      "request": {
+        "request_id": "actual-2-pause",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 1,
+        "action": "pause",
+        "payload": {}
+      },
+      "ack": {
+        "request_id": "actual-2-pause",
+        "status": "accepted",
+        "revision": 2,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-2-pause",
+        "revision": 2,
+        "action": "pause",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211470.2246532
+      },
+      "via": "gateway"
+    },
+    {
+      "request": {
+        "request_id": "actual-3-set_start_goal",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 2,
+        "action": "set_start_goal",
+        "payload": {
+          "start": [
+            -1.375,
+            -4.375,
+            0.625
+          ],
+          "goal": [
+            -2.375,
+            -4.375,
+            0.625
+          ]
+        }
+      },
+      "ack": {
+        "request_id": "actual-3-set_start_goal",
+        "status": "accepted",
+        "revision": 3,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-3-set_start_goal",
+        "revision": 3,
+        "action": "set_start_goal",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211470.257522
+      },
+      "via": "gateway"
+    },
+    {
+      "request": {
+        "request_id": "actual-4-resume",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 3,
+        "action": "resume",
+        "payload": {}
+      },
+      "ack": {
+        "request_id": "actual-4-resume",
+        "status": "accepted",
+        "revision": 4,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-4-resume",
+        "revision": 4,
+        "action": "resume",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211470.3026028
+      },
+      "via": "gateway"
+    },
+    {
+      "request": {
+        "request_id": "actual-5-pause",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 4,
+        "action": "pause",
+        "payload": {}
+      },
+      "ack": {
+        "request_id": "actual-5-pause",
+        "status": "accepted",
+        "revision": 5,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-5-pause",
+        "revision": 5,
+        "action": "pause",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211473.9545007
+      },
+      "via": "gateway"
+    },
+    {
+      "request": {
+        "request_id": "actual-6-step",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 5,
+        "action": "step",
+        "payload": {}
+      },
+      "ack": {
+        "request_id": "actual-6-step",
+        "status": "accepted",
+        "revision": 6,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-6-step",
+        "revision": 6,
+        "action": "step",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211475.4898117
+      },
+      "via": "edge_direct_during_gateway_outage"
+    },
+    {
+      "request": {
+        "request_id": "actual-7-resume",
+        "map_revision": "122bdf02b078ac9281661a93",
+        "expected_revision": 6,
+        "action": "resume",
+        "payload": {}
+      },
+      "ack": {
+        "request_id": "actual-7-resume",
+        "status": "accepted",
+        "revision": 7,
+        "reason": "Queued for processing boundary"
+      },
+      "applied": {
+        "request_id": "actual-7-resume",
+        "revision": 7,
+        "action": "resume",
+        "status": "applied",
+        "reason": "",
+        "at_unix": 1793211483.6256797
+      },
+      "via": "gateway"
+    }
+  ],
+  "limits": [
+    "Replay uses synthetic observations previously recorded by the ordinary sensor simulator.",
+    "No physical sensor, robot, external service, firewall or calibration change.",
+    "Browser wire behavior is checked with the reference accumulator and a real authenticated WebSocket, not visual browser interaction.",
+    "Edge-process crash and hardware reconnection are not exercised; gateway outage/restart is exercised."
+  ],
+  "gateway_environment": {
+    "torch": false,
+    "open3d": false,
+    "mujoco": false,
+    "cv2": false,
+    "numpy": true,
+    "fastapi": true,
+    "httpx": true,
+    "websockets": true
+  },
+  "selected_observed_start_goal": [
+    [
+      -1.375,
+      -4.375,
+      0.625
+    ],
+    [
+      -2.375,
+      -4.375,
+      0.625
+    ]
+  ],
+  "gateway_outage_recording": {
+    "before": 2,
+    "after": 3
+  },
+  "edge_error": null,
+  "edge_hub": {
+    "encoded_frames": 4,
+    "coalesced_snapshots": 0,
+    "queue_capacity": 1,
+    "queue_depth": 0,
+    "clients": 1,
+    "error": null
+  },
+  "gateway_status": {
+    "mode": "private_relay",
+    "upstream_origin": "https://127.0.0.1:55351",
+    "connected": true,
+    "upstream_role": "operator",
+    "frames_relayed": 2,
+    "reconnects": 0,
+    "resync_requests": 0,
+    "last_packet_age_seconds": 0.38379836082458496,
+    "source_age_seconds": 0.5126364231109619,
+    "stale": false,
+    "upstream_health": {
+      "telemetry": {
+        "encoded_frames": 3,
+        "coalesced_snapshots": 0,
+        "queue_capacity": 1,
+        "queue_depth": 0,
+        "clients": 1,
+        "error": null
+      },
+      "controls": {
+        "revision": 7,
+        "applied_revision": 7,
+        "pending": 0,
+        "history": [
+          {
+            "request_id": "actual-1-step",
+            "revision": 1,
+            "action": "step",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211465.064442
+          },
+          {
+            "request_id": "actual-2-pause",
+            "revision": 2,
+            "action": "pause",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211470.2246532
+          },
+          {
+            "request_id": "actual-3-set_start_goal",
+            "revision": 3,
+            "action": "set_start_goal",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211470.257522
+          },
+          {
+            "request_id": "actual-4-resume",
+            "revision": 4,
+            "action": "resume",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211470.3026028
+          },
+          {
+            "request_id": "actual-5-pause",
+            "revision": 5,
+            "action": "pause",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211473.9545007
+          },
+          {
+            "request_id": "actual-6-step",
+            "revision": 6,
+            "action": "step",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211475.4898117
+          },
+          {
+            "request_id": "actual-7-resume",
+            "revision": 7,
+            "action": "resume",
+            "status": "applied",
+            "reason": "",
+            "at_unix": 1793211483.6256797
+          }
+        ]
+      },
+      "runtime": {
+        "identity": {
+          "lab_id": "lab-default",
+          "rig_id": "rig-01",
+          "map_revision": "122bdf02b078ac9281661a93",
+          "calibration_id": "simulation-v1"
+        },
+        "source_mode": "replay",
+        "paused": false,
+        "completed": false,
+        "error": null,
+        "source_active": true,
+        "available_sources": [
+          {
+            "id": "simulation",
+            "source": "sim",
+            "label": "Simulation"
+          },
+          {
+            "id": "sample",
+            "source": "replay",
+            "recording_id": "sample",
+            "label": "Sample recording"
+          },
+          {
+            "id": "input",
+            "source": "replay",
+            "recording_id": "input",
+            "label": "Input recording"
+          },
+          {
+            "id": "live",
+            "source": "live",
+            "label": "Live rig (requires connected devices)"
+          }
+        ],
+        "capabilities": {
+          "pause": true,
+          "resume": true,
+          "step": true,
+          "seek": true,
+          "set_start_goal": true,
+          "set_geofences": true,
+          "select_source": true
+        },
+        "replay": {
+          "frame_count": 12,
+          "current_frame": 2,
+          "current_time": 0.30000000000000004,
+          "seeking": false
+        },
+        "session_id": "fd48761a9bb940ccac2691a463b35aa3",
+        "hardware_verified": false,
+        "halo": {
+          "pixel_count": 24,
+          "source": "replay",
+          "nearest_track_id": 1,
+          "distance_m": 4.282396734391105,
+          "azimuth_degrees": 16.680000000000007,
+          "severity": "warning",
+          "stale": true,
+          "watchdog": true,
+          "disconnected": false,
+          "source_age_ms": 9957.602483627852,
+          "processing_latency_ms": 3441.9720000005327,
+          "acquisition_age_ms": 0.0,
+          "brightness": 64,
+          "risk_scale": 170,
+          "pixels": [
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ],
+            [
+              64,
+              0,
+              47
+            ],
+            [
+              9,
+              0,
+              7
+            ]
+          ],
+          "virtual": true,
+          "physical_verified": false,
+          "reason": null,
+          "state_name": "watchdog"
+        },
+        "halo_transport": {
+          "enabled": false,
+          "connected": false,
+          "compatible": false,
+          "port": null,
+          "status_hz": 30.0,
+          "source_update_hz": 0.0,
+          "packets_sent": 0,
+          "status_ticks": 653,
+          "next_sequence": 0,
+          "last_error": null,
+          "virtual": {
+            "pixel_count": 24,
+            "source": "replay",
+            "nearest_track_id": 1,
+            "distance_m": 4.282396734391105,
+            "azimuth_degrees": 16.680000000000007,
+            "severity": "warning",
+            "stale": true,
+            "watchdog": true,
+            "disconnected": false,
+            "source_age_ms": 9957.602483627852,
+            "processing_latency_ms": 3441.9720000005327,
+            "acquisition_age_ms": 0.0,
+            "brightness": 64,
+            "risk_scale": 170,
+            "pixels": [
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ],
+              [
+                64,
+                0,
+                47
+              ],
+              [
+                9,
+                0,
+                7
+              ]
+            ],
+            "virtual": true,
+            "physical_verified": false,
+            "reason": null,
+            "state_name": "watchdog"
+          },
+          "hardware_verified": false
+        },
+        "recording": {
+          "written_frames": 4,
+          "dropped_frames": 0,
+          "queued_frames": 0,
+          "queued_bytes": 0,
+          "inflight_bytes": 0,
+          "capacity_frames": 8,
+          "capacity_bytes": 67108864,
+          "peak_bytes": 204388,
+          "complete": true,
+          "error": null,
+          "recorder_chunk_budget_bytes": 67108864
+        }
+      },
+      "hardware_verified": false
+    },
+    "http_operation_capacity": 4,
+    "http_in_flight": 0,
+    "upstream_streams": 1
+  },
+  "passed": true,
+  "edge_thread_stopped": true,
+  "local_recording_status": {
+    "written_frames": 4,
+    "dropped_frames": 0,
+    "queued_frames": 0,
+    "queued_bytes": 0,
+    "inflight_bytes": 0,
+    "capacity_frames": 8,
+    "capacity_bytes": 67108864,
+    "peak_bytes": 204388,
+    "complete": true,
+    "error": null,
+    "recorder_chunk_budget_bytes": 67108864
+  },
+  "elapsed_seconds": 33.26600000000326,
+  "re_recorded_frames": 4,
+  "evidence_sha256": {
+    "frame1_keyframe.atwn": "7a1bf6e40624f4d359fd5f6d7793eeecabe093fe53d211e96824baf15388528b",
+    "frame2_delta.atwn": "4990774dff13a7deb866798c244ffceb034d8eb76c30050005353ee13cca4ad5",
+    "frame3_recovered_keyframe.atwn": "24f0799d2d553b766a15af618c6e81e159768d3f3ee135102dead2425c338720",
+    "frame4_keyframe.atwn": "df9f81b0ec43f49c9db3d117d0d5f0386f90e07c69b93eece8d1d98a04837bee"
+  },
+  "checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a"
+}

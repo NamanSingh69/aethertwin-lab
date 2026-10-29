@@ -1,0 +1,14 @@
+# torch is supplied by the explicitly matched NVIDIA ARM64 CUDA base image.
+# Install with a constraints file captured from that immutable image.
+numpy>=2.0,<3
+scipy>=1.14,<2
+open3d==0.19.0
+opencv-python>=4.10,<6
+scikit-learn>=1.5,<2
+PyYAML>=6,<7
+websockets>=14,<18
+psutil>=6,<8
+pyorbbecsdk2==2.1.2
+pyserial==3.5
+fastapi==0.162.0
+uvicorn==0.54.0

@@ -1,0 +1,227 @@
+{
+  "stations": 4,
+  "measured_points": 8450,
+  "display_mesh_source": "tsdf_preview",
+  "total_measured_surface_voxels": 8450,
+  "preview_complete": true,
+  "tsdf_frames": 4,
+  "tsdf_triangles": 24246,
+  "mesh_triangles": 24246,
+  "pose_graph_edges": 6,
+  "poisson_triangles": 24945,
+  "watertight": false,
+  "unknown_space_inferred_free": false,
+  "floor_fit": {
+    "normal": [
+      0.0002796468164017081,
+      5.512441930404324e-05,
+      0.9999999593794774
+    ],
+    "offset": 8.15244311260153e-05,
+    "support_points": 1518,
+    "height_before_alignment": -8.152443443758043e-05
+  },
+  "watertight_visual_mesh": true,
+  "watertight_visual_method": "uncropped_screened_poisson",
+  "watertight_visual_scale": 1.1,
+  "watertight_visual_closure_inferred": true,
+  "watertight_visual_is_collision_authority": false,
+  "coarse_registration": [
+    {
+      "station": 1,
+      "prior_declared": true,
+      "method": "pose_prior",
+      "fpfh_ransac_fitness": 0.5739577384351799
+    },
+    {
+      "station": 2,
+      "prior_declared": true,
+      "method": "pose_prior",
+      "fpfh_ransac_fitness": 0.5755627009646302
+    },
+    {
+      "station": 3,
+      "prior_declared": true,
+      "method": "pose_prior",
+      "fpfh_ransac_fitness": 0.5986198964922369
+    }
+  ],
+  "commissioning": {
+    "requested_mode": "auto",
+    "frames": [
+      {
+        "frame_id": 0,
+        "mode": "independent_station",
+        "per_return_origins": true,
+        "camera_pose_timed": true,
+        "pointwise_deskew_applied": true
+      },
+      {
+        "frame_id": 0,
+        "mode": "independent_station",
+        "per_return_origins": true,
+        "camera_pose_timed": true,
+        "pointwise_deskew_applied": true
+      },
+      {
+        "frame_id": 0,
+        "mode": "independent_station",
+        "per_return_origins": true,
+        "camera_pose_timed": true,
+        "pointwise_deskew_applied": true
+      },
+      {
+        "frame_id": 0,
+        "mode": "independent_station",
+        "per_return_origins": true,
+        "camera_pose_timed": true,
+        "pointwise_deskew_applied": true
+      }
+    ],
+    "mode_counts": {
+      "independent_station": 4
+    },
+    "initial_velocity_world_mps": null,
+    "initial_velocity_source": "known_zero_at_independent_station_starts",
+    "constant_velocity_observable_from_imu": false,
+    "raw_observations_preserved": true
+  },
+  "tsdf_rectification": [],
+  "storage": {
+    "mode": "disk_backed",
+    "budgets": {
+      "max_frames": 4,
+      "max_in_memory_frames": 32,
+      "max_in_memory_bytes": 134217728,
+      "frame_buffer_bytes": 33554432,
+      "frame_disk_bytes": 62909647,
+      "max_keyframes": 32,
+      "registration_points": 5000,
+      "reconstruction_points": 120000,
+      "tile_size": 16,
+      "max_resident_tiles": 32,
+      "max_resident_bytes": 67108864,
+      "max_disk_bytes": 62909647,
+      "sqlite_cache_bytes": 2097152,
+      "tsdf_tile_resolution": 48,
+      "mesh_preview_vertices": 120000,
+      "mesh_preview_triangles": 240000,
+      "tsdf_disk_bytes": 62909647
+    },
+    "pose_graph": "sliding_window_globally_anchored",
+    "retired_keyframes": 0,
+    "prepared_frame_storage": "prepared_frames",
+    "frame_buffer_peak_bytes": 1033396,
+    "surface_tiles": {
+      "cells": 8450,
+      "resident_tiles": 32,
+      "resident_cells": 1202,
+      "resident_bytes": 443368,
+      "peak_resident_bytes": 540836,
+      "evictions": 889,
+      "max_resident_tiles": 32,
+      "max_resident_bytes": 67108864,
+      "page_reads": 1168,
+      "page_writes": 921,
+      "streamed_reads": 247,
+      "max_disk_bytes": 62909647,
+      "sqlite_cache_bytes": 2097152,
+      "tile_codec_max_uncompressed_bytes": 229376,
+      "tile_query_lookup_max_bytes": 16384,
+      "database_bytes": 630784
+    },
+    "tsdf_tiles": {
+      "mode": "disk_indexed_uniform_tiles",
+      "frames": 4,
+      "nonempty_tiles": 12,
+      "total_vertices": 13496,
+      "total_triangles": 24246,
+      "preview_vertices": 13496,
+      "preview_triangles": 24246,
+      "preview_complete": true,
+      "tile_resolution": 48,
+      "resident_tile_voxels": 110592,
+      "tile_length_m": 3.84,
+      "mesh_bytes": 1007346,
+      "max_disk_bytes": 62909647,
+      "depth_batch_rows": 32,
+      "rectified_tile_observations": 0,
+      "all_observations_processed": true,
+      "max_depth_m": 6.0,
+      "geometry_sha256": "08b0698464bb50d34ae1cea675e272ec294b3dcc9257ac97951518be4197d4ee"
+    }
+  },
+  "graph": {
+    "fitness": 0.7642201834862385,
+    "rmse": 0.05607937604922406,
+    "normal_support": 12,
+    "reliable_target_points": 1961,
+    "information_rank": 6,
+    "retained_keyframes": 4,
+    "dropped_keyframes": 0,
+    "graph_cost": 0.001160992369597825,
+    "graph_success": true
+  },
+  "navigation_storage": {
+    "observed_bounds": [
+      -6.0,
+      6.0,
+      -5.0,
+      5.0,
+      -0.25,
+      3.5
+    ],
+    "local_bounds": [
+      -6.0,
+      6.0,
+      -5.0,
+      5.0,
+      -0.25,
+      3.5
+    ],
+    "full_extent_in_local_grid": true,
+    "max_local_grid_cells": 131072,
+    "unknown_space_is_free": false,
+    "authority": "occupancy_tiles",
+    "tile_cache": {
+      "cells": 26611,
+      "resident_tiles": 32,
+      "resident_cells": 26611,
+      "resident_bytes": 10182004,
+      "peak_resident_bytes": 10182004,
+      "evictions": 0,
+      "max_resident_tiles": 128,
+      "max_resident_bytes": 67108864,
+      "page_reads": 32,
+      "page_writes": 32,
+      "streamed_reads": 0,
+      "max_disk_bytes": 62909647,
+      "sqlite_cache_bytes": 2097152,
+      "tile_codec_max_uncompressed_bytes": 196608,
+      "tile_query_lookup_max_bytes": 16384,
+      "database_bytes": 172032
+    }
+  },
+  "source_provenance": {
+    "frame_count": 4,
+    "any_synthetic": true,
+    "source_modes": [
+      "sim"
+    ],
+    "sensor_ids": [
+      "synthetic-lidar"
+    ],
+    "unknown_source_frames": 0,
+    "calibrations": [
+      {
+        "calibration_id": "simulation-v1",
+        "measured": false,
+        "matrix_sha256": "5ccf6462c43b6e7dcd5742532353ad5f10d4ba27246e005de3ca75b5bf40575a"
+      }
+    ],
+    "all_camera_calibrations_measured": false,
+    "live_reference_eligible": false,
+    "declaration_only": true,
+    "hardware_validation": "not_tested"
+  }
+}

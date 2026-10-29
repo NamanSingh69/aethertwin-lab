@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lidar-lab-digital-twin"
+version = "2.0.0"
+description = "Multimodal lab perception, reconstruction, scene flow and trajectory research platform"
+requires-python = ">=3.12,<3.13"
+dynamic = ["dependencies"]
+
+[project.optional-dependencies]
+camera = ["pyorbbecsdk2==2.1.2"]
+native = ["pybind11>=2.13", "cmake>=3.20", "ninja"]
+edge = ["pyorbbecsdk2==2.1.2", "pyserial==3.5"]
+desktop = ["mujoco>=3.2,<4"]
+simulation = ["mujoco>=3.2,<4"]
+training = ["mujoco>=3.2,<4"]
+web = ["fastapi==0.162.0", "uvicorn==0.54.0"]
+test = ["pytest>=8,<10", "httpx==0.28.1"]
+
+[project.scripts]
+lab-twin = "main:main"
+aethertwin-serve = "command_center.__main__:main"
+aethertwin-diagnose = "diagnostics.__main__:main"
+aethertwin-gateway = "command_center.gateway:main"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements-core.txt"]}
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+include = ["core*", "ingestion*", "slam_and_twin*", "perception_ml*", "tracking_and_navigation*", "visualization*", "command_center*", "hardware_halo*", "native*", "diagnostics*", "maintenance*"]
+
+[tool.setuptools.package-data]
+"native.voxel_rays" = ["lib/*/*.dll", "lib/*/*.so", "lib/*/manifest.json", "*.c", "*.md"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

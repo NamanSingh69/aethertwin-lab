@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "api_version": 1,
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "compiler": "gcc (Ubuntu 13.2.0-23ubuntu4) 13.2.0",
+  "source_sha256": "f15fc0a10aecf47375dc75a27420b0e99b039e7264c928bd266f00fa3112ec05",
+  "binary": "libvoxel_rays.so",
+  "binary_sha256": "744ce59ef6b75c178bc8e541c5d43ea554cd69057e0d8af6cfbd1e6b436993ab",
+  "floating_point": "strict double; no fast-math; absolute 1e-12 tie; no FMA contraction"
+}

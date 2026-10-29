@@ -1,0 +1,106 @@
+{
+  "source": "actual localhost simulator/replay API integration",
+  "hardware_verified": false,
+  "commands": [
+    {
+      "request_id": "338d023e441b4d27be7a632d66031839",
+      "status": "accepted",
+      "revision": 1,
+      "reason": "Queued for processing boundary"
+    },
+    {
+      "request_id": "b6433ded10434e64a66d08cb9130fd47",
+      "status": "accepted",
+      "revision": 2,
+      "reason": "Queued for processing boundary"
+    },
+    {
+      "request_id": "7889c9546fb34008b41e2876384c8d79",
+      "status": "accepted",
+      "revision": 3,
+      "reason": "Queued for processing boundary"
+    },
+    {
+      "request_id": "0ac6370f286b4aaa843eef52fdf6fa7a",
+      "status": "accepted",
+      "revision": 4,
+      "reason": "Queued for processing boundary"
+    },
+    {
+      "request_id": "26e65e72cbec4aaa8d05ce576658bc0b",
+      "status": "accepted",
+      "revision": 5,
+      "reason": "Queued for processing boundary"
+    },
+    {
+      "request_id": "5257e2385b5d4cf29026b39ca1fcf3f1",
+      "status": "accepted",
+      "revision": 6,
+      "reason": "Queued for processing boundary"
+    }
+  ],
+  "final": {
+    "source_mode": "replay",
+    "paused": true,
+    "map_revision": "122bdf02b078ac9281661a93",
+    "control_revision": 6,
+    "replay": {
+      "frame_count": 12,
+      "current_frame": 3,
+      "current_time": 0.4,
+      "seeking": false
+    },
+    "error": null
+  },
+  "command_history": [
+    {
+      "request_id": "338d023e441b4d27be7a632d66031839",
+      "revision": 1,
+      "action": "pause",
+      "status": "applied",
+      "reason": "",
+      "at_unix": 1793206161.0790513
+    },
+    {
+      "request_id": "b6433ded10434e64a66d08cb9130fd47",
+      "revision": 2,
+      "action": "set_start_goal",
+      "status": "applied",
+      "reason": "",
+      "at_unix": 1793206161.5156522
+    },
+    {
+      "request_id": "7889c9546fb34008b41e2876384c8d79",
+      "revision": 3,
+      "action": "step",
+      "status": "applied",
+      "reason": "",
+      "at_unix": 1793206161.6880927
+    },
+    {
+      "request_id": "0ac6370f286b4aaa843eef52fdf6fa7a",
+      "revision": 4,
+      "action": "select_source",
+      "status": "applied",
+      "reason": "",
+      "at_unix": 1793206165.3810341
+    },
+    {
+      "request_id": "26e65e72cbec4aaa8d05ce576658bc0b",
+      "revision": 5,
+      "action": "pause",
+      "status": "applied",
+      "reason": "",
+      "at_unix": 1793206170.9465559
+    },
+    {
+      "request_id": "5257e2385b5d4cf29026b39ca1fcf3f1",
+      "revision": 6,
+      "action": "seek",
+      "status": "applied",
+      "reason": "",
+      "at_unix": 1793206171.595558
+    }
+  ],
+  "passed": true
+}

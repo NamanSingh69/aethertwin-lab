@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "compile_only": true,
+  "flashed": false,
+  "hardware_verified": false,
+  "cli_version": "1.5.1",
+  "esp32_core_version": "3.3.12",
+  "fqbn": "esp32:esp32:esp32",
+  "board_profile": "ESP32_DEVKIT_V1",
+  "gpio": {
+    "ws2812_grb_24": 18,
+    "oled_sda": 21,
+    "oled_scl": 22
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "tool_root": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\work\\halo_toolchain",
+  "compile_log": "firmware_compile.log",
+  "sources": {
+    "aether_halo.ino": "0cf76ade6cc07c22ba95524d053618d8902fbd53de65aac792af19bd1622947b",
+    "halo_protocol.h": "c7095359c7777163cfc5c9e3324bd0204db8c60727d6ce7a710f106d745bfba9"
+  },
+  "source_changed_during_compile": false,
+  "cli_binary_sha256": "1017de89179c3167e6b8a38ca6cc4091fa69a3cf97aafa7810f01423003f5571",
+  "flash_bytes": 312465,
+  "global_ram_bytes": 27652,
+  "binaries": {
+    "aether_halo.ino.bin": "759ee2e08540f72a61186f4c8d11da50c3f70b208fe5d2159421854124080c77",
+    "aether_halo.ino.bootloader.bin": "47bbbfca119fe87190f63a67af9d85adff6433bcf3812ec92a9b9c9416a53ad1",
+    "aether_halo.ino.merged.bin": "fcce84d7eb389913aa813be17991fd03bffbfd672a5e3014489d39555b6a165e",
+    "aether_halo.ino.partitions.bin": "148b959cbff1c38aa8e1d5c0ba9d612c54997b945e56a63f41223eef650653a1"
+  }
+}

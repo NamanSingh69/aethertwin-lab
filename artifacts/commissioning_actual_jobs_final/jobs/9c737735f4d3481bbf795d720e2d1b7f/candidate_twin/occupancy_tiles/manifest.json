@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "format": "lidar-lab-occupancy-tiles",
+  "voxel_size": 0.25,
+  "decay_rate": 1.0,
+  "min_log_odds": -4,
+  "max_log_odds": 4,
+  "max_age": null,
+  "timestamp": 0.1,
+  "updates": 8,
+  "tile_size": 16,
+  "ray_backend": "auto",
+  "max_traversal_cells": 5000000,
+  "expiry_interval_updates": 20,
+  "expiry_tiles_per_update": 1,
+  "observed_bounds": [
+    -6.0,
+    6.0,
+    -5.0,
+    5.0,
+    -0.25,
+    3.5
+  ],
+  "budgets": {
+    "cells": 26611,
+    "resident_tiles": 32,
+    "resident_cells": 26611,
+    "resident_bytes": 10182004,
+    "peak_resident_bytes": 10182004,
+    "evictions": 0,
+    "max_resident_tiles": 128,
+    "max_resident_bytes": 67108864,
+    "page_reads": 32,
+    "page_writes": 32,
+    "streamed_reads": 0,
+    "max_disk_bytes": 62909647,
+    "sqlite_cache_bytes": 2097152,
+    "tile_codec_max_uncompressed_bytes": 196608,
+    "tile_query_lookup_max_bytes": 16384,
+    "database_bytes": 172032
+  }
+}

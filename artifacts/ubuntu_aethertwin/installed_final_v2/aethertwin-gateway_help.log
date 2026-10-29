@@ -1,0 +1,24 @@
+usage: aethertwin-gateway [-h] [--upstream UPSTREAM] [--host HOST]
+                          [--port PORT] [--asset-cache ASSET_CACHE]
+                          [--frontend FRONTEND] [--ca-file CA_FILE]
+                          [--ssl-certfile SSL_CERTFILE]
+                          [--ssl-keyfile SSL_KEYFILE]
+                          [--allowed-origin ALLOWED_ORIGIN]
+
+Private, validation-only edge relay. No sensor or inference modules are
+loaded. One authenticated upstream WebSocket feeds the existing bounded
+SceneHub. HTTP operations run on the relay's private asyncio loop; ASGI uses
+worker threads for the synchronous control/export adapters. Credentials never
+enter browser state.
+
+options:
+  -h, --help            show this help message and exit
+  --upstream UPSTREAM
+  --host HOST
+  --port PORT
+  --asset-cache ASSET_CACHE
+  --frontend FRONTEND
+  --ca-file CA_FILE
+  --ssl-certfile SSL_CERTFILE
+  --ssl-keyfile SSL_KEYFILE
+  --allowed-origin ALLOWED_ORIGIN

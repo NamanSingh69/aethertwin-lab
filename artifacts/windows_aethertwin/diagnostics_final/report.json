@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "kind": "observed_pipeline_diagnostic_with_separate_virtual_tests",
+  "created_at_unix": 1793213255.6045485,
+  "source": {
+    "requested": "sim",
+    "actual": "sim",
+    "input_path": null,
+    "observed_capabilities": {
+      "sensor_id": "synthetic-lidar",
+      "multi_return": true,
+      "per_point_time": true,
+      "imu": true,
+      "hardware_sync": true,
+      "return_metadata_valid": true
+    }
+  },
+  "settings": {
+    "seed": 7,
+    "device": "cpu",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false,
+      "include_s2": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06,
+      "runtime_tiled": true,
+      "ray_backend": "auto",
+      "max_traversal_cells": 5000000,
+      "tile_budgets": {
+        "max_resident_tiles": 128,
+        "max_resident_bytes": 67108864,
+        "max_disk_bytes": 4294967296
+      }
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt"
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": [
+        -1.375,
+        -4.375,
+        0.625
+      ],
+      "goal": [
+        2.125,
+        4.125,
+        0.625
+      ],
+      "ground": true,
+      "replan_interval": 5,
+      "mppi_samples": 96,
+      "mppi_iterations": 2,
+      "bounds": [
+        -6,
+        6,
+        -5,
+        5,
+        0,
+        3.5
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "recording": {
+      "max_disk_bytes": 17179869184,
+      "chunk_frames": 4,
+      "chunk_bytes": 67108864,
+      "queued_frames": 8,
+      "queued_bytes": 67108864,
+      "required": true
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "live": {
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 1280,
+      "camera_height": 800,
+      "camera_fps": 30,
+      "camera_color_width": null,
+      "camera_color_height": null,
+      "camera_color_fps": null,
+      "camera_align_mode": "auto",
+      "camera_intrinsics_tolerance_px": 1.0,
+      "camera_distortion_tolerance": 0.0001,
+      "calibration": "config/calibration_extrinsics.json",
+      "allow_degraded": false
+    },
+    "acquisition": {
+      "max_frames": 2,
+      "max_bytes": 67108864,
+      "max_age_seconds": 0.5,
+      "imu_history_seconds": 5.0,
+      "max_imu_samples": 8192
+    },
+    "input_mode": "sim"
+  },
+  "limits": {
+    "max_frames": 3,
+    "floor_fit_points_max": 2000,
+    "max_unique_imu_samples": 100000,
+    "max_commissioning_fingerprints": 64,
+    "point_selection": "Evenly spaced current observation voxel centroids when over the explicit point budget",
+    "no_simulator_labels_or_geometry": true,
+    "calibration_promotion": false
+  },
+  "platform": "Windows-11-10.0.26200-SP0",
+  "stages": {
+    "sdk_device_discovery": {
+      "status": "not_tested",
+      "sdk_import_specs": {
+        "lab_sensors_native": false,
+        "pyorbbecsdk": false
+      },
+      "configured_lidar_ip": "192.168.1.62",
+      "configured_s2_port": null,
+      "reason": "No physical device is opened for simulation/replay. SDK availability is not device verification."
+    },
+    "source_initialization": {
+      "status": "passed",
+      "limit": "Selected source only; live failures never substitute simulation"
+    },
+    "pipeline_observations": {
+      "status": "passed",
+      "observed_frames": 3,
+      "processed_frames": 3,
+      "voxel_counts": [
+        1400,
+        1400,
+        1400
+      ],
+      "diagnostic_sample_counts": [
+        1400,
+        1400,
+        1400
+      ],
+      "limit": "Ordinary deployed checkpoint and observation-only perception pipeline, no simulator label inputs"
+    },
+    "imu_observations": {
+      "status": "passed",
+      "sample_count": 63,
+      "sample_budget_exhausted": false,
+      "measured_rate_hz": 199.99999999999983,
+      "sample_gap_seconds": {
+        "count": 62,
+        "mean": 0.004838709677419358,
+        "p50": 0.0050000000000000044,
+        "p95": 0.0050000000000000044,
+        "max": 0.0050000000000000044
+      },
+      "large_gap_count": 0,
+      "frame_coverage": [
+        true,
+        true,
+        true
+      ],
+      "gyro_rms_rad_s": 0.0,
+      "specific_force_norm_m_s2": {
+        "count": 63,
+        "mean": 9.806650000000001,
+        "p50": 9.806650000000001,
+        "p95": 9.806650000000001,
+        "max": 9.806650000000001
+      },
+      "stationary_candidate": true,
+      "stationarity_limit": "IMU alone cannot distinguish rest from constant translation; no stationary prior is inferred."
+    },
+    "modality_coverage": {
+      "status": "passed",
+      "frames": 3,
+      "lidar_nonempty": 3,
+      "rgbd_calibrated_nonempty": 3,
+      "calibration_ids": [
+        "simulation-v1"
+      ],
+      "calibration_measured": false,
+      "limit": "Profile/identity/coverage check; no extrinsic or semantic accuracy validation"
+    },
+    "floor_alignment": {
+      "status": "passed",
+      "calibration_written": false,
+      "observable_parameters": [
+        "roll",
+        "pitch",
+        "height"
+      ],
+      "unobservable_parameters": [
+        "x_translation",
+        "y_translation",
+        "yaw"
+      ],
+      "full_six_dof_calibration": false,
+      "point_count": 1400,
+      "support_points": 376,
+      "normal": [
+        -0.0010239282450190913,
+        -0.0010193530128652201,
+        0.9999989562446473
+      ],
+      "offset_m": -0.006454573264188575,
+      "height_m": 0.006454580001191,
+      "information_rank": 3,
+      "support_span_xy_m": [
+        11.721813678741455,
+        9.202521800994873
+      ],
+      "absolute_plane_residual_m": {
+        "count": 376,
+        "mean": 0.0027126625620462488,
+        "p50": 0.001229812835321995,
+        "p95": 0.00757429154330544,
+        "max": 0.05669627311989912
+      },
+      "observable_covariance": [
+        [
+          3.2039755693247385e-08,
+          -1.6042900561229446e-09,
+          3.753604663881578e-08
+        ],
+        [
+          -1.6042900561229446e-09,
+          1.6781163184143837e-08,
+          -6.519246628579481e-09
+        ],
+        [
+          3.753604663881578e-08,
+          -6.519246628579481e-09,
+          1.6351279207119842e-07
+        ]
+      ],
+      "covariance_units": [
+        "rad",
+        "rad",
+        "m"
+      ],
+      "limit": "Gravity-aligned world assumed; diagnostic plane only, no calibration/map promotion."
+    },
+    "map_residuals": {
+      "status": "passed",
+      "nearest_measured_map_distance_m": {
+        "count": 4200,
+        "mean": 0.1104767500519052,
+        "p50": 0.07620848167145304,
+        "p95": 0.33081406036256455,
+        "max": 1.078163438590316
+      },
+      "independent_observations_declared": true,
+      "commissioning_content_reuse_detected": false,
+      "limit": "Descriptive registration-conditioned observation centroids, including dynamics/new obstacles; not world-pose or real-lab accuracy validation."
+    },
+    "floor_repeatability": {
+      "status": "passed",
+      "signed_floor_residual_m": {
+        "count": 775,
+        "mean": 0.0024108535550071033,
+        "p50": -0.0003630587656532347,
+        "p95": 0.009420906413553698,
+        "max": 0.11684941104809565
+      },
+      "std_m": 0.015044617913191964,
+      "selection": "Later capture centroids within 0.12m of first-capture plane",
+      "limit": "Conditional observed floor repeatability; not whole-lab geometry, neural accuracy or extrinsic calibration accuracy."
+    },
+    "virtual_closed_loop": {
+      "status": "passed",
+      "injected_virtual": true,
+      "active_map_modified": false,
+      "models": {
+        "ca": {
+          "maximum_position_error_m": 4.440892098500626e-16,
+          "stable_identity": true,
+          "entered": true,
+          "exited": true
+        },
+        "cv": {
+          "maximum_position_error_m": 2.220446049250313e-16,
+          "stable_identity": true,
+          "entered": true,
+          "exited": true
+        }
+      },
+      "relative_motion_ttc_seconds": 1.5,
+      "expected_ttc_seconds": 1.5,
+      "blocked_route_status": "no_path",
+      "limit": "Isolated software targets and standalone blocked grid; no physical target, sensor observation or active map is fabricated.",
+      "active_map_digest_before": "ce47e4b56028a1ac229413ea056609092f7ec34d5747f1b45d43822ef4807221",
+      "active_map_digest_after": "ce47e4b56028a1ac229413ea056609092f7ec34d5747f1b45d43822ef4807221"
+    },
+    "independent_extrinsic_calibration": {
+      "status": "not_tested",
+      "reason": "No independent measured calibration targets supplied; floor constrains only three degrees of freedom",
+      "calibration_written": false
+    },
+    "physical_target_accuracy": {
+      "status": "not_tested",
+      "reason": "Virtual closed-loop targets do not establish physical detection/tracking/planning accuracy"
+    },
+    "resource_shutdown": {
+      "status": "passed",
+      "limit": "Owned map databases and temporary runtime cache closed"
+    }
+  },
+  "software_checks_passed": true,
+  "hardware_checks_passed": false,
+  "pending_real_validation": [
+    "connected-device acquisition and synchronization",
+    "independent measured extrinsic calibration",
+    "independently annotated real-lab semantic/flow accuracy",
+    "physical target/trajectory safety testing"
+  ],
+  "resources": {
+    "twin_path": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\assets\\twin_seed7",
+    "measured_map_sha256": "122bdf02b078ac9281661a93bb306576d40ec6440f3c97453a90ec4f8a1abd8c",
+    "checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a"
+  },
+  "hardware_status": "not_tested",
+  "finished_at_unix": 1793213266.1037261,
+  "integrity": {
+    "algorithm": "sha256",
+    "canonical_report_sha256": "5388859a95860da4b92dd02258ce8ea0a6331cb4c02469b283700d23b27362bd",
+    "scope": "Canonical sorted JSON excluding integrity"
+  }
+}

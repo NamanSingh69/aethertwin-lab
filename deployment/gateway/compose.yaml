@@ -1,0 +1,29 @@
+services:
+  gateway:
+    build:
+      context: ../..
+      dockerfile: deployment/gateway/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${AETHERTWIN_GATEWAY_BIND:-127.0.0.1}:${AETHERTWIN_GATEWAY_PORT:-8443}:8443"
+    environment:
+      AETHERTWIN_UPSTREAM_URL: ${AETHERTWIN_UPSTREAM_URL:?Set the verified HTTPS edge origin}
+      AETHERTWIN_UPSTREAM_TOKEN: ${AETHERTWIN_UPSTREAM_TOKEN:?Set the server-side upstream credential}
+      AETHERTWIN_OPERATOR_TOKEN: ${AETHERTWIN_OPERATOR_TOKEN:?Set a separate gateway operator credential}
+      AETHERTWIN_VIEWER_TOKEN: ${AETHERTWIN_VIEWER_TOKEN:?Set a separate gateway viewer credential}
+    command: ["--host", "0.0.0.0", "--port", "8443", "--frontend", "/app/web/dist", "--asset-cache", "/var/lib/aethertwin/assets", "--ssl-certfile", "/run/tls/fullchain.pem", "--ssl-keyfile", "/run/tls/privkey.pem", "--ca-file", "/run/tls/upstream-ca.pem"]
+    volumes:
+      - gateway-assets:/var/lib/aethertwin
+      - ${AETHERTWIN_TLS_DIR:-./tls}:/run/tls:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1',8443),2).close()"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+volumes:
+  gateway-assets:
