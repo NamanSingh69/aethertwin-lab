@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "summary": {
+    "kind": "measured_occupancy_coverage_review",
+    "twin_id": "active",
+    "known_cells": 26639,
+    "occupied_cells": 4877,
+    "free_cells": 21422,
+    "ambiguous_evidence_cells": 340,
+    "observed_bounds": [
+      -6.0,
+      6.0,
+      -5.0,
+      5.0,
+      -0.25,
+      3.5
+    ],
+    "voxel_size_m": 0.25,
+    "registered_review_bounds": null,
+    "roi_known_cells": null,
+    "roi_total_cells": null,
+    "coverage_fraction": null,
+    "whole_lab_completeness_claimed": false,
+    "unknown_is_free": false,
+    "hardware_status": "not_tested",
+    "active_map_modified": false,
+    "limit": "Coverage fraction requires a separately registered surveyed ROI. Observed extents alone do not establish whole-lab completeness."
+  },
+  "promotion_performed": false
+}

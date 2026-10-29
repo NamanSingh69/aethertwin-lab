@@ -1,0 +1,16 @@
+{
+  "open3d": "0.19.0",
+  "backend": "Software graphics (Mesa LLVMpipe)",
+  "shape": [
+    240,
+    320,
+    3
+  ],
+  "pixel_std": 22.774482050323666,
+  "foreground_pixels": 4118,
+  "unique_colors": 3323,
+  "test": "generated_geometry_component_not_desktop_capture",
+  "wgl_attribute_fixes": 1,
+  "wgl_framebuffer_filters": 647,
+  "passed": true
+}

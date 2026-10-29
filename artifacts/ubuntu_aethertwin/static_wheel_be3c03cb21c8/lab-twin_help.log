@@ -1,0 +1,41 @@
+usage: lab-twin [-h]
+                [--mode {sim,replay,live,build-twin,pretrain,train,evaluate,calibrate,hil-test}]
+                [--config CONFIG] [--seed SEED] [--input INPUT]
+                [--output OUTPUT] [--checkpoint CHECKPOINT]
+                [--mae-checkpoint MAE_CHECKPOINT] [--device {cpu,cuda,auto}]
+                [--headless] [--max-frames MAX_FRAMES] [--duration DURATION]
+                [--epochs EPOCHS] [--record RECORD] [--twin TWIN] [--mobile]
+                [--rebuild-twin] [--commissioning-mode {auto,mobile,stations}]
+                [--websocket] [--threads THREADS]
+                [--render-backend {auto,native,mesa}] [--mesa-dir MESA_DIR]
+                [--real-time]
+
+Unified, explicit CLI for the lab digital twin.
+
+options:
+  -h, --help            show this help message and exit
+  --mode {sim,replay,live,build-twin,pretrain,train,evaluate,calibrate,hil-test}
+  --config CONFIG
+  --seed SEED
+  --input INPUT
+  --output OUTPUT
+  --checkpoint CHECKPOINT
+  --mae-checkpoint MAE_CHECKPOINT
+  --device {cpu,cuda,auto}
+  --headless
+  --max-frames MAX_FRAMES
+  --duration DURATION   Wall-clock run duration, seconds
+  --epochs EPOCHS
+  --record RECORD
+  --twin TWIN
+  --mobile
+  --rebuild-twin
+  --commissioning-mode {auto,mobile,stations}
+                        Explicitly declare independent at-rest station
+                        captures when timestamps reset
+  --websocket
+  --threads THREADS
+  --render-backend {auto,native,mesa}
+  --mesa-dir MESA_DIR
+  --real-time           Pace replay/simulation at acquisition time when
+                        processing is faster

@@ -1,0 +1,37 @@
+{
+  "scope": "Six-DoF reprojection observability, frame-correct covariance and atomic candidate export",
+  "data_source": "Analytic projected correspondences, Brown camera model",
+  "physical_hardware_tested": false,
+  "tests": {
+    "Windows": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "65",
+      "time": "3.936",
+      "timestamp": "2026-10-28T23:22:39.617717+05:30",
+      "hostname": "Sumedha",
+      "new_calibration_cases": 17,
+      "junit": "reports/windows_calibration_observability_pytest.xml"
+    },
+    "Ubuntu24.04 WSL2": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "65",
+      "time": "11.129",
+      "timestamp": "2026-10-28T17:53:14.840500+00:00",
+      "hostname": "Sumedha",
+      "new_calibration_cases": 17,
+      "junit": "reports/ubuntu_calibration_observability_pytest.xml"
+    }
+  },
+  "source_sha256": {
+    "ingestion/calibration.py": "01f5eb166e0afa127f09f39037a473b8a31d813cb8a4de5586bf72be5cfa5e1b",
+    "tests/test_calibration_observability.py": "56984c1e3272c71f863d137d66630f7147f81fffd88044dc0f96843de6bc408a",
+    "docs/CALIBRATION_OBSERVABILITY.md": "3b4114023961c54b97446692db52e7ec2e0bc7ce367c6a857810460f06a215b7"
+  },
+  "interfaces_documented": "docs/CALIBRATION_OBSERVABILITY.md"
+}

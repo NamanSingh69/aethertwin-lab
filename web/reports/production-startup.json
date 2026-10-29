@@ -1,0 +1,15 @@
+{
+  "test": "production_benchmark_entry_startup",
+  "static_imports": [
+    "benchmark.html",
+    "_modulepreload-polyfill-P2Xu9kJm.js",
+    "_SpatialRenderer-BGgNbCOT.js",
+    "_rolldown-runtime-4tVxZq34.js",
+    "_spatial-contracts-33vaUxT7.js",
+    "_three-vendor-Bc4s0MDm.js"
+  ],
+  "studio_entry_executed": false,
+  "studio_css_inherited": false,
+  "start_handler_bound": true,
+  "webgl_rendering_tested": false
+}

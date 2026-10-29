@@ -1,0 +1,584 @@
+{
+  "schema_version": 1,
+  "source": "actual_sample_recording_full_laptop_pipeline",
+  "frames": 4,
+  "baseline": "Legacy per-cell access methods against unchanged bounded DiskTileStore",
+  "all_algorithms_enabled": true,
+  "before": {
+    "schema_version": 1,
+    "frames": 4,
+    "wall_seconds": 51.0,
+    "end_to_end_fps": 0.0784313725490196,
+    "processing_latency_ms": {
+      "p50": 12328.964199998154,
+      "p95": 13940.637015003449,
+      "max": 14204.215800004022
+    },
+    "mean_processing_fps": 0.0784698309208819,
+    "rss_mb": {
+      "first": 385.98828125,
+      "last": 454.8203125,
+      "max": 454.8203125,
+      "last_half_slope_mb_per_frame": 0.0
+    },
+    "dropped_snapshots": 0,
+    "occupancy_cells": 52787,
+    "presentation_queue": {
+      "capacity": 2,
+      "current_depth": 0,
+      "max_depth": 0
+    },
+    "configuration": {
+      "seed": 7,
+      "device": "cpu",
+      "simulation": {
+        "lidar_points": 2400,
+        "width": 160,
+        "height": 100,
+        "dt": 0.1,
+        "noise_std": 0.008,
+        "mobile": false,
+        "include_s2": false
+      },
+      "mapping": {
+        "voxel_size": 0.18,
+        "decay_rate": 0.98,
+        "twin_voxel_size": 0.08,
+        "tau0": 0.14,
+        "beta": 0.008,
+        "floor_epsilon": 0.06,
+        "runtime_tiled": true,
+        "ray_backend": "auto",
+        "max_traversal_cells": 5000000,
+        "tile_budgets": {
+          "max_resident_tiles": 32,
+          "max_resident_bytes": 67108864,
+          "max_disk_bytes": 4294967296
+        },
+        "runtime_cache_root": "artifacts\\tiled_runtime_batch_final\\.cache"
+      },
+      "perception": {
+        "max_voxels": 1400,
+        "neighbors": 16,
+        "temporal_neighbors": 12,
+        "rgbd_stride": 3,
+        "range_image_height": 24,
+        "range_image_width": 96,
+        "confidence_threshold": 0.3,
+        "checkpoint": "assets/checkpoints/synthetic.pt"
+      },
+      "tracking": {
+        "model": "ca",
+        "cluster_eps": 0.4,
+        "min_cluster_points": 4
+      },
+      "planning": {
+        "resolution": 0.25,
+        "radius": 0.2,
+        "start": [
+          -1.375,
+          -4.375,
+          0.625
+        ],
+        "goal": [
+          2.125,
+          4.125,
+          0.625
+        ],
+        "ground": true,
+        "replan_interval": 5,
+        "mppi_samples": 96,
+        "mppi_iterations": 2,
+        "bounds": [
+          -6,
+          6,
+          -5,
+          5,
+          0,
+          3.5
+        ]
+      },
+      "telemetry": {
+        "enabled": false,
+        "host": "127.0.0.1",
+        "port": 8765
+      },
+      "recording": {
+        "max_disk_bytes": 17179869184,
+        "chunk_frames": 4,
+        "chunk_bytes": 67108864,
+        "queued_frames": 8,
+        "queued_bytes": 67108864,
+        "required": true
+      },
+      "rendering": {
+        "backend": "auto",
+        "mesa_dir": "assets/rendering/mesa"
+      },
+      "training": {
+        "learning_rate": 0.001,
+        "fine_tune_learning_rate": 0.0001,
+        "epochs": 20,
+        "frames_per_scene": 12,
+        "train_seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "validation_seeds": [
+          101,
+          102
+        ],
+        "test_seeds": [
+          201,
+          202
+        ],
+        "max_points": 1800
+      },
+      "live": {
+        "lidar_ip": "192.168.1.62",
+        "host_ip": "192.168.1.2",
+        "lidar_port": 6101,
+        "host_port": 6201,
+        "camera_width": 1280,
+        "camera_height": 800,
+        "camera_fps": 30,
+        "camera_color_width": null,
+        "camera_color_height": null,
+        "camera_color_fps": null,
+        "camera_align_mode": "auto",
+        "camera_intrinsics_tolerance_px": 1.0,
+        "camera_distortion_tolerance": 0.0001,
+        "calibration": "config/calibration_extrinsics.json",
+        "allow_degraded": false
+      },
+      "acquisition": {
+        "max_frames": 2,
+        "max_bytes": 67108864,
+        "max_age_seconds": 0.5,
+        "imu_history_seconds": 5.0,
+        "max_imu_samples": 8192
+      },
+      "input_mode": "replay"
+    },
+    "input_mode": "replay",
+    "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery",
+    "storage": {
+      "cells": 52787,
+      "resident_tiles": 32,
+      "resident_cells": 39615,
+      "resident_bytes": 13290524,
+      "peak_resident_bytes": 17025524,
+      "evictions": 3582,
+      "max_resident_tiles": 32,
+      "max_resident_bytes": 67108864,
+      "page_reads": 3614,
+      "page_writes": 2674,
+      "streamed_reads": 0,
+      "max_disk_bytes": 4294967296,
+      "sqlite_cache_bytes": 2097152,
+      "tile_codec_max_uncompressed_bytes": 196608,
+      "tile_query_lookup_max_bytes": 16384,
+      "database_bytes": 389120
+    },
+    "frame_module_ms": [
+      {
+        "localization": 18.30060000065714,
+        "occupancy": 8089.511900005164,
+        "perception_tracking": 1727.2947000019485,
+        "planning": 2599.568300000101,
+        "risk_fields": 1.2324999988777563
+      },
+      {
+        "localization": 35.127299997839145,
+        "occupancy": 9879.019799998787,
+        "perception_tracking": 1235.2860999963013,
+        "planning": 1054.2276999985916,
+        "risk_fields": 0.8786000034888275
+      },
+      {
+        "localization": 17.042399995261803,
+        "occupancy": 9680.548199998157,
+        "perception_tracking": 1172.5887000065995,
+        "planning": 1231.652499998745,
+        "risk_fields": 0.9026999978232197
+      },
+      {
+        "localization": 19.52770000207238,
+        "occupancy": 11618.29890000081,
+        "perception_tracking": 1063.287399992987,
+        "planning": 1494.5988000035868,
+        "risk_fields": 0.9982000046875328
+      }
+    ],
+    "frame_storage": [
+      {
+        "cells": 31124,
+        "resident_tiles": 32,
+        "resident_cells": 24885,
+        "resident_bytes": 8438340,
+        "peak_resident_bytes": 10320896,
+        "evictions": 843,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 875,
+        "page_writes": 631,
+        "streamed_reads": 0,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 225280
+      },
+      {
+        "cells": 44654,
+        "resident_tiles": 32,
+        "resident_cells": 34261,
+        "resident_bytes": 11521884,
+        "peak_resident_bytes": 14605132,
+        "evictions": 1752,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 1784,
+        "page_writes": 1307,
+        "streamed_reads": 0,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 278528
+      },
+      {
+        "cells": 48892,
+        "resident_tiles": 32,
+        "resident_cells": 37072,
+        "resident_bytes": 12429736,
+        "peak_resident_bytes": 15864748,
+        "evictions": 2660,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 2692,
+        "page_writes": 1983,
+        "streamed_reads": 0,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 335872
+      },
+      {
+        "cells": 52787,
+        "resident_tiles": 32,
+        "resident_cells": 39615,
+        "resident_bytes": 13290524,
+        "peak_resident_bytes": 17025524,
+        "evictions": 3582,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 3614,
+        "page_writes": 2674,
+        "streamed_reads": 0,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 389120
+      }
+    ],
+    "state_sha256": "c84a9ae99a728e15be3823a7d165a8eedda47d5eafb90befc714c8802aed0a0d",
+    "offline_total_seconds": 52.4498115000024
+  },
+  "after": {
+    "schema_version": 1,
+    "frames": 4,
+    "wall_seconds": 11.703000000001339,
+    "end_to_end_fps": 0.3417927027257577,
+    "processing_latency_ms": {
+      "p50": 2919.6159500024805,
+      "p95": 3100.6204649995198,
+      "max": 3116.7869999990216
+    },
+    "mean_processing_fps": 0.34240877519729,
+    "rss_mb": {
+      "first": 468.8203125,
+      "last": 453.015625,
+      "max": 468.8203125,
+      "last_half_slope_mb_per_frame": 0.0
+    },
+    "dropped_snapshots": 0,
+    "occupancy_cells": 52787,
+    "presentation_queue": {
+      "capacity": 2,
+      "current_depth": 0,
+      "max_depth": 0
+    },
+    "configuration": {
+      "seed": 7,
+      "device": "cpu",
+      "simulation": {
+        "lidar_points": 2400,
+        "width": 160,
+        "height": 100,
+        "dt": 0.1,
+        "noise_std": 0.008,
+        "mobile": false,
+        "include_s2": false
+      },
+      "mapping": {
+        "voxel_size": 0.18,
+        "decay_rate": 0.98,
+        "twin_voxel_size": 0.08,
+        "tau0": 0.14,
+        "beta": 0.008,
+        "floor_epsilon": 0.06,
+        "runtime_tiled": true,
+        "ray_backend": "auto",
+        "max_traversal_cells": 5000000,
+        "tile_budgets": {
+          "max_resident_tiles": 32,
+          "max_resident_bytes": 67108864,
+          "max_disk_bytes": 4294967296
+        },
+        "runtime_cache_root": "artifacts\\tiled_runtime_batch_final\\.cache"
+      },
+      "perception": {
+        "max_voxels": 1400,
+        "neighbors": 16,
+        "temporal_neighbors": 12,
+        "rgbd_stride": 3,
+        "range_image_height": 24,
+        "range_image_width": 96,
+        "confidence_threshold": 0.3,
+        "checkpoint": "assets/checkpoints/synthetic.pt"
+      },
+      "tracking": {
+        "model": "ca",
+        "cluster_eps": 0.4,
+        "min_cluster_points": 4
+      },
+      "planning": {
+        "resolution": 0.25,
+        "radius": 0.2,
+        "start": [
+          -1.375,
+          -4.375,
+          0.625
+        ],
+        "goal": [
+          2.125,
+          4.125,
+          0.625
+        ],
+        "ground": true,
+        "replan_interval": 5,
+        "mppi_samples": 96,
+        "mppi_iterations": 2,
+        "bounds": [
+          -6,
+          6,
+          -5,
+          5,
+          0,
+          3.5
+        ]
+      },
+      "telemetry": {
+        "enabled": false,
+        "host": "127.0.0.1",
+        "port": 8765
+      },
+      "recording": {
+        "max_disk_bytes": 17179869184,
+        "chunk_frames": 4,
+        "chunk_bytes": 67108864,
+        "queued_frames": 8,
+        "queued_bytes": 67108864,
+        "required": true
+      },
+      "rendering": {
+        "backend": "auto",
+        "mesa_dir": "assets/rendering/mesa"
+      },
+      "training": {
+        "learning_rate": 0.001,
+        "fine_tune_learning_rate": 0.0001,
+        "epochs": 20,
+        "frames_per_scene": 12,
+        "train_seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "validation_seeds": [
+          101,
+          102
+        ],
+        "test_seeds": [
+          201,
+          202
+        ],
+        "max_points": 1800
+      },
+      "live": {
+        "lidar_ip": "192.168.1.62",
+        "host_ip": "192.168.1.2",
+        "lidar_port": 6101,
+        "host_port": 6201,
+        "camera_width": 1280,
+        "camera_height": 800,
+        "camera_fps": 30,
+        "camera_color_width": null,
+        "camera_color_height": null,
+        "camera_color_fps": null,
+        "camera_align_mode": "auto",
+        "camera_intrinsics_tolerance_px": 1.0,
+        "camera_distortion_tolerance": 0.0001,
+        "calibration": "config/calibration_extrinsics.json",
+        "allow_degraded": false
+      },
+      "acquisition": {
+        "max_frames": 2,
+        "max_bytes": 67108864,
+        "max_age_seconds": 0.5,
+        "imu_history_seconds": 5.0,
+        "max_imu_samples": 8192
+      },
+      "input_mode": "replay"
+    },
+    "input_mode": "replay",
+    "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery",
+    "storage": {
+      "cells": 52787,
+      "resident_tiles": 32,
+      "resident_cells": 48020,
+      "resident_bytes": 16691472,
+      "peak_resident_bytes": 16941600,
+      "evictions": 299,
+      "max_resident_tiles": 32,
+      "max_resident_bytes": 67108864,
+      "page_reads": 674,
+      "page_writes": 299,
+      "streamed_reads": 343,
+      "max_disk_bytes": 4294967296,
+      "sqlite_cache_bytes": 2097152,
+      "tile_codec_max_uncompressed_bytes": 196608,
+      "tile_query_lookup_max_bytes": 16384,
+      "database_bytes": 376832
+    },
+    "frame_module_ms": [
+      {
+        "localization": 20.397000000230037,
+        "occupancy": 1329.9313000024995,
+        "perception_tracking": 232.21680000278866,
+        "planning": 1239.0155000030063,
+        "risk_fields": 1.2952000033692457
+      },
+      {
+        "localization": 15.322899998864159,
+        "occupancy": 2065.513000001374,
+        "perception_tracking": 432.41090000083204,
+        "planning": 205.85440000286326,
+        "risk_fields": 1.4563999939127825
+      },
+      {
+        "localization": 15.838200000871439,
+        "occupancy": 2384.2040999952587,
+        "perception_tracking": 456.0445000024629,
+        "planning": 252.18580000364454,
+        "risk_fields": 0.9151999984169379
+      },
+      {
+        "localization": 18.561500000942033,
+        "occupancy": 2332.1335000000545,
+        "perception_tracking": 413.1489999999758,
+        "planning": 232.1827000050689,
+        "risk_fields": 1.6767000051913783
+      }
+    ],
+    "frame_storage": [
+      {
+        "cells": 31124,
+        "resident_tiles": 32,
+        "resident_cells": 28961,
+        "resident_bytes": 10410676,
+        "peak_resident_bytes": 10538460,
+        "evictions": 51,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 168,
+        "page_writes": 51,
+        "streamed_reads": 85,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 151552
+      },
+      {
+        "cells": 44654,
+        "resident_tiles": 32,
+        "resident_cells": 40968,
+        "resident_bytes": 14394992,
+        "peak_resident_bytes": 14596380,
+        "evictions": 134,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 337,
+        "page_writes": 134,
+        "streamed_reads": 171,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 258048
+      },
+      {
+        "cells": 48892,
+        "resident_tiles": 32,
+        "resident_cells": 44654,
+        "resident_bytes": 15576328,
+        "peak_resident_bytes": 15809056,
+        "evictions": 217,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 506,
+        "page_writes": 217,
+        "streamed_reads": 257,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 307200
+      },
+      {
+        "cells": 52787,
+        "resident_tiles": 32,
+        "resident_cells": 48020,
+        "resident_bytes": 16691472,
+        "peak_resident_bytes": 16941600,
+        "evictions": 299,
+        "max_resident_tiles": 32,
+        "max_resident_bytes": 67108864,
+        "page_reads": 674,
+        "page_writes": 299,
+        "streamed_reads": 343,
+        "max_disk_bytes": 4294967296,
+        "sqlite_cache_bytes": 2097152,
+        "tile_codec_max_uncompressed_bytes": 196608,
+        "tile_query_lookup_max_bytes": 16384,
+        "database_bytes": 376832
+      }
+    ],
+    "state_sha256": "c84a9ae99a728e15be3823a7d165a8eedda47d5eafb90befc714c8802aed0a0d",
+    "offline_total_seconds": 13.340357600005518
+  },
+  "exact_map_and_snapshot_parity": true,
+  "maximum_snapshot_error": 0.0,
+  "limits": "Offline processing; no8080 process, source or settings were stopped/changed. Both use identical32-tile/64MiB budgets."
+}

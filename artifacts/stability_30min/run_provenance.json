@@ -1,0 +1,17 @@
+{
+  "checkpoint_sha256": "551fcab06c7e73d0181173e71bfc52df1696c2bdc32554c1eafdbee657b956c9",
+  "reference_source_archive_sha256": "700baa55dc88b45bede246e4dc3ea238153ddeb159617dd04855bbb7c45be47e",
+  "checkpoint_label_definition": "initial noisy-observation-transport synthetic targets; canonical clean-material training is a subsequent run",
+  "runtime_inputs_have_labels": false,
+  "sampling_at_run": {
+    "range_image_height": 24,
+    "range_image_width": 96,
+    "mppi_samples": 96,
+    "mppi_iterations": 2,
+    "pointnet_fps_cap": 256,
+    "pointnet_radii_m": [
+      0.6,
+      1.2
+    ]
+  }
+}

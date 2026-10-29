@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "data_source": "synthetic_example_annotations",
+  "notes": "Simulator truth sidecars demonstrate annotation format. This is not measured real-lab evidence.",
+  "splits": {
+    "train": [
+      {
+        "scene_id": "scene_31",
+        "recording": "scene_31/recording",
+        "labels": "scene_31/labels",
+        "twin": "scene_31/twin",
+        "mobile": false
+      }
+    ],
+    "validation": [
+      {
+        "scene_id": "scene_32",
+        "recording": "scene_32/recording",
+        "labels": "scene_32/labels",
+        "twin": "scene_32/twin",
+        "mobile": false
+      }
+    ],
+    "test": [
+      {
+        "scene_id": "scene_33",
+        "recording": "scene_33/recording",
+        "labels": "scene_33/labels",
+        "twin": "scene_33/twin",
+        "mobile": false
+      }
+    ]
+  }
+}

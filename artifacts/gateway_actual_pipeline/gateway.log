@@ -1,0 +1,14 @@
+INFO:     Started server process [7712]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on https://127.0.0.1:55352 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59104 - "WebSocket /ws/v2/scene" [accepted]
+INFO:     connection open
+INFO:     Started server process [42004]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on https://127.0.0.1:55352 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62276 - "WebSocket /ws/v2/scene" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:61458 - "WebSocket /ws/v2/scene" [accepted]
+INFO:     connection open

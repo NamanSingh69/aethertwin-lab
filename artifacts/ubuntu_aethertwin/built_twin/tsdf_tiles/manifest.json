@@ -1,0 +1,20 @@
+{
+  "mode": "disk_indexed_uniform_tiles",
+  "frames": 4,
+  "nonempty_tiles": 12,
+  "total_vertices": 13496,
+  "total_triangles": 24246,
+  "preview_vertices": 13496,
+  "preview_triangles": 24246,
+  "preview_complete": true,
+  "tile_resolution": 48,
+  "resident_tile_voxels": 110592,
+  "tile_length_m": 3.84,
+  "mesh_bytes": 1007346,
+  "max_disk_bytes": 2147483648,
+  "depth_batch_rows": 32,
+  "rectified_tile_observations": 0,
+  "all_observations_processed": true,
+  "max_depth_m": 6.0,
+  "geometry_sha256": "cafce4a1d29d5c86f73bdc76c28365a84b51c9e3e8ede80774df90e1caad7c66"
+}

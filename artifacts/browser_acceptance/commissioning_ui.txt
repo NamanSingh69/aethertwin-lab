@@ -1,0 +1,206 @@
+Browser tab: 3, Title: "AetherTwin · Spatial command center", URL: "http://127.0.0.1:8080/".
+1 AXWebArea AetherTwin · Spatial command center, URL: 127.0.0.1:8080/
+	2 container
+		3 link Description: AetherTwin command center, Value: 127.0.0.1:8080/#
+		4 text REPLAY
+		5 container
+			6 text Active data source
+			7 pop up button (collapsed, settable) Active data source, Value: Recorded data, Secondary Actions: Expand
+				8 menu
+					9 (disabled) Recorded data
+					105 (disabled) Simulation
+					106 (disabled) Sample recording
+		10 container Workspace
+			11 button Explore
+			12 button Live
+			13 button Replay
+			14 button Commission
+		15 text Hardware not tested
+		16 text OPERATOR
+		17 text Sensors REPLAY 3D LiDAR
+		18 image Description: 3D LiDAR: stale or disconnected observations, Help: 3D LiDAR: 2409 reported points; observation age 36558.16 s; browser transport streaming; stale or disconnected observations. Observation availability does not establish physical hardware verification.
+		19 text Depth camera
+		20 image Description: Depth camera: stale or disconnected observations, Help: Depth camera: 1168 reported points; observation age 36558.16 s; browser transport streaming; stale or disconnected observations. Observation availability does not establish physical hardware verification.
+		21 button (expanded) Virtual halo watchdog, Secondary Actions: Collapse
+			22 text Virtual halo
+			23 text watchdog
+		24 container Virtual telemetry halo mirror
+			25 container 24-pixel software mirror: watchdog. Index zero is rig forward, positive Y is left.
+			26 text Watchdog
+			27 text Source age 36558863 ms Target #1 · 4.4 m Physical output not verified
+		28 text Observations stale or disconnected; retained data may remain visible. Layers 7
+		29 container
+			30 checkbox (settable, integer) Description: Measured twin, Value: 1
+			31 text Measured twin
+		32 container
+			33 checkbox (settable, integer) Description: Semantic voxels, Value: 1
+			34 text Semantic voxels
+		35 container
+			36 checkbox (settable, integer) Description: Tracked entities, Value: 1
+			37 text Tracked entities
+		38 container
+			39 checkbox (settable, integer) Description: Safe trajectory, Value: 1
+			40 text Safe trajectory
+		41 container
+			42 checkbox (settable, integer) Description: Scene flow, Value: 1
+			43 text Scene flow
+		44 container
+			45 checkbox (settable, integer) Description: Protected zones, Value: 1
+			46 text Protected zones
+		47 container
+			48 checkbox (settable, integer) Description: Risk hotspots, Value: 1
+			49 text Risk hotspots
+		50 container
+			51 checkbox (settable, integer) Description: Traffic history, Value: 0
+			52 text Traffic history
+		53 container
+			54 checkbox (settable, integer) Description: RGB-D points, Value: 0
+			55 text RGB-D points
+		56 container
+			57 text Cutaway view
+			58 switch (settable, boolean) Description: Cutaway view, Value: 1
+		59 text Display layers only. All backend algorithms remain active.
+		60 text Workspace tools
+		61 button Plan a safe route
+		62 button Protected zones 2
+			63 text Protected zones
+			107 text 2
+		64 button Pipeline measurements
+		65 text WORLD COORDINATES
+		66 text X
+		67 text Y
+		68 text Z
+		69 text Right-handed · Z up · m Map 122bdf02b078
+		108 image Interactive 3D lab. Drag to orbit, scroll to zoom. Select tracks from the adjacent list.
+		70 container
+			71 text COMMISSIONING WORKSPACE
+			72 heading Know your reference., Value: 1
+				73 text Know your reference.
+			74 text Z Y X Camera preset
+			75 pop up button (collapsed, settable) Camera preset, Value: Isometric, Secondary Actions: Expand
+				76 menu
+					77 (selected) Isometric
+					78 Top view
+					79 Sensor view
+		80 container
+			81 text Frame 00001 Observation age 36558.2 s Render 60  fps
+		167 text Observations stale or disconnected; retained data may remain visible.
+		232 container Guided commissioning
+			233 container
+				234 text COMMISSION / REVIEW
+				235 heading Build confidence from evidence., Value: 2
+					236 text Build confidence from evidence.
+				237 button Close commissioning
+			238 container
+				239 text Candidate outputs remain separate. This workspace never activates calibration, maps or poses. Physical device validation is not_tested .
+			240 text Active map 122bdf02b078 Calibration  simulation-v1
+			241 container Commissioning stages
+				242 checkbox 01 Discover resources, Value: 1
+				243 checkbox 02 Run diagnostics, Value: 0
+				244 checkbox 03 Export calibration, Value: 0
+				245 checkbox 04 Scan a candidate twin, Value: 0
+				246 checkbox 05 Review coverage, Value: 0
+				247 checkbox 06 Review fixed position, Value: 0
+			248 text Read configured inputs and SDK availability. No device is opened.
+			249 button Start bounded job
+			250 container
+				251 text One worker ·  300 s time limit · 2  queued maximum
+				252 text 0.0 / 512 MiB retained evidence
+			253 text Live jobs require exclusive rig ownership. Close active acquisition and use the console workflow before physical diagnostics; pausing alone does not release sensors.
+			254 heading Job evidence, Value: 3
+				255 text Job evidence
+			256 text 1  retained in history
+			257 container
+				258 text Review job
+				259 pop up button (collapsed, settable) Review job, Value: Resource and SDK inventory · completed · d0a35e13, Secondary Actions: Expand
+					260 menu
+						261 (selected) Resource and SDK inventory · completed · d0a35e13
+			262 container Resource and SDK inventory result
+				263 text Resource and SDK inventory
+				264 text completed
+				265 text 10/29/2026, 8:22:46 AM
+				267 definition list
+					268 container Hardware Status
+						269 text Hardware Status
+					270 text not tested
+					271 container Source
+						272 text Source
+					273 text read only discovery
+				274 text Configured resources and import specifications are not physical device discovery or successful streaming.
+				275 text Job completion means the report was produced. Review each check separately.
+				276 button (collapsed) Progress log (1), Secondary Actions: Expand
+					277 text Progress log (
+					278 text 1
+					279 text )
+				280 button (collapsed) Download evidence (2), Secondary Actions: Expand
+					281 text Download evidence (
+					282 text 2
+					283 text )
+				266 text Evidence only · No active map, pose or calibration promotion
+		86 text Drag to orbit · Scroll to zoom · Click a track to inspect
+		87 container Entity inspector
+			88 text Selected entity #1
+			168 button Clear selected entity
+			169 heading Person, Value: 2
+				170 text Person
+			171 text Tracked object ·  100 % confidence
+			172 button Focus on selected entity
+			173 tab group
+				174 tab (selectable, settable, boolean) Details, Value: 0
+				175 tab (selected, settable, boolean) Descriptors, Value: 1
+				176 tab (selectable, settable, boolean) Motion, Value: 0
+			211 text Local geometry measurements. These do not explain the neural network’s decision.
+			212 text Linearity
+			213 text 0.7792
+			214 text Planarity
+			215 text 0.2026
+			216 text Scattering
+			217 text 0.0181
+			218 text Omnivariance
+			219 text 0.0290
+			220 text Anisotropy
+			221 text 0.9819
+			222 text Eigenentropy
+			223 text 0.5421
+			224 text Surface variation
+			225 text 0.0146
+			226 text Verticality
+			227 text 0.9640
+			228 text Eigenvalue sum
+			229 text 0.2267
+			230 text Height deviation
+			231 text 0.4132
+			92 text Nearby entities 4
+			151 button Person #1 Inside protected zone
+				152 container
+					153 text Person # 1
+				154 text Inside protected zone
+			155 button Person #2 0.6 m/s
+				156 container
+					157 text Person # 2
+				158 text 0.6 m/s
+			159 button Robot cart #3 0.2 m/s
+				160 container
+					161 text Robot cart # 3
+				162 text 0.2 m/s
+			163 button New obstacle #4 0.3 m/s
+				164 container
+					165 text New obstacle # 4
+				166 text 0.3 m/s
+			94 text Processing latency 1152.3 ms
+			146 image Last 85 measured processing latencies
+			147 text Actual frame measurements 85  samples
+		95 text Replay
+		96 text 00:00
+		97 button Resume processing
+		98 button Process one frame
+		99 container
+			100 slider (settable, integer) Description: Replay frame, Value: 1
+			101 text Seek a recorded frame 2 / 12 frames
+		102 button 7 events
+			103 text 7
+			104 text  events
+		148 text TypeError: Failed to fetch
+		149 button Dismiss message
+
+The focused UI element is 1 AXWebArea AetherTwin · Spatial command center, URL: 127.0.0.1:8080/

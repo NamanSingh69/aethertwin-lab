@@ -1,0 +1,47 @@
+{
+  "scope": "per-acquisition LiDAR ray origins and auxiliary capture-time motion compensation",
+  "evidence_tests": "tests/test_sensing_mapping.py",
+  "checks": [
+    "Known constant-velocity LiDAR origins in the sweep-end and world frames",
+    "A moving-origin DDA ray leaves an untraversed cell unknown",
+    "Per-ray batched DDA agrees with scalar Amanatides-Woo traversal",
+    "Multi-return groups retain a common origin and never clear beyond final returns",
+    "Capture-time RGB-D and S2 transforms include rotation and translation",
+    "Positive camera offset waits for measured future IMU coverage without advancing carried LiDAR state",
+    "Calibrated projection/backprojection use effective timed camera pose",
+    "Recorder/replayer preserves origins and camera pose exactly",
+    "Deskewed recording coordinates are explicit and re-deskewing is rejected",
+    "Auxiliary capture trajectory history is re-anchored and bounded to four intervals",
+    "Empty LiDAR frames with all-invalid camera depth are accepted",
+    "A 200 ms dropped-LiDAR gap integrates continuous measured IMU rather than resetting or rejecting cadence",
+    "Uncovered inter-sweep gaps still fail explicitly",
+    "Synchronizer retains IMU continuity from last emitted sweep end after dropped LiDAR frames"
+  ],
+  "raw_reference": "Per-return LiDAR acquisition coordinates; missing origins mean zero at each return time",
+  "deskew_reference": "LiDAR at sweep end, declared diagnostics.coordinate_reference=lidar_sweep_end",
+  "time_policy": "Interpolate only observed IMU intervals; unsupported capture timestamps fail explicitly",
+  "calibration_policy": "Measured rigid extrinsics remain unchanged; effective capture pose is separate",
+  "limitations": [
+    "S2 SDK provides one scan capture timestamp, without per-beam acquisition timestamps",
+    "Color/depth frameset gap is retained; physical exposure synchronization is unverified",
+    "All regressions are analytic/synthetic; no physical sensor was connected"
+  ],
+  "source_sha256": {
+    "core/contracts.py": "77e77de0ef28ccd407fdedbc30532dcde23e5b91d961993ae4ee209c13ad88a8",
+    "slam_and_twin/imu_deskew.py": "193c5558b209b895ab983eddb7be4b18dcffac56c620c54e9af94af644b2adf9",
+    "slam_and_twin/log_odds_octomap.py": "ea6f9672412a648f3d801c3170b0cde73c6c7db50ac403b422704b12f94bc146",
+    "ingestion/sensor_synchronizer.py": "8830213602d0332794fb7b703e45fd47b6f0ec57743462b1052e8910c950741d",
+    "ingestion/live_source.py": "311f3a99ba38c4e6e09b8907403db1318465d3c19dcf62899e8cd2543e2fc3af",
+    "ingestion/recorder_replayer.py": "27b786f6ab6b51bf1f5462cf747a406c5d5094e7c3c7254b80d9594f3d2cdef6",
+    "tests/test_sensing_mapping.py": "5b80bd8809448073a06711135bd4dde760acffbb80f7008b296d6b5d7464148e"
+  },
+  "linux_followup_tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "58",
+    "time": "23.584",
+    "timestamp": "2026-10-28T12:05:37.078475+00:00"
+  }
+}

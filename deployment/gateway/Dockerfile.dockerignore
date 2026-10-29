@@ -1,0 +1,17 @@
+**
+!deployment/
+!deployment/gateway/
+!deployment/gateway/requirements-linux.lock
+!command_center/
+!command_center/__init__.py
+!command_center/auth.py
+!command_center/controls.py
+!command_center/protocol.py
+!command_center/service.py
+!command_center/gateway.py
+!visualization/
+!visualization/__init__.py
+!visualization/websocket_broadcaster.py
+!web/
+!web/dist/
+!web/dist/**

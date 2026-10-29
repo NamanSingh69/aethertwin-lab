@@ -1,0 +1,16 @@
+usage: aethertwin-diagnose [-h] [--config CONFIG] [--source {sim,replay,live}]
+                           [--input INPUT] [--twin TWIN]
+                           [--max-frames MAX_FRAMES] [--output OUTPUT]
+                           [--threads THREADS]
+
+Observed pipeline diagnostics; no calibration or hardware promotion
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --source {sim,replay,live}
+  --input INPUT
+  --twin TWIN
+  --max-frames MAX_FRAMES
+  --output OUTPUT
+  --threads THREADS

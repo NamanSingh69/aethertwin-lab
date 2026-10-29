@@ -1,0 +1,15 @@
+extends: ../system_config.yaml
+mapping:
+  runtime_tiled: true
+  ray_backend: auto
+  max_traversal_cells: 5000000
+  tile_budgets:
+    max_resident_tiles: 128
+    max_resident_bytes: 67108864
+    max_disk_bytes: 4294967296
+acquisition:
+  max_frames: 2
+  max_bytes: 67108864
+  max_age_seconds: 0.5
+  imu_history_seconds: 5.0
+  max_imu_samples: 8192

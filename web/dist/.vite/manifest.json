@@ -1,0 +1,64 @@
+{
+  "_SpatialRenderer-BGgNbCOT.js": {
+    "file": "assets/SpatialRenderer-BGgNbCOT.js",
+    "name": "SpatialRenderer",
+    "imports": [
+      "_rolldown-runtime-4tVxZq34.js",
+      "_spatial-contracts-33vaUxT7.js",
+      "_three-vendor-Bc4s0MDm.js"
+    ]
+  },
+  "_modulepreload-polyfill-P2Xu9kJm.js": {
+    "file": "assets/modulepreload-polyfill-P2Xu9kJm.js",
+    "name": "modulepreload-polyfill"
+  },
+  "_react-vendor-Br0ptrPz.js": {
+    "file": "assets/react-vendor-Br0ptrPz.js",
+    "name": "react-vendor",
+    "imports": [
+      "_rolldown-runtime-4tVxZq34.js"
+    ]
+  },
+  "_rolldown-runtime-4tVxZq34.js": {
+    "file": "assets/rolldown-runtime-4tVxZq34.js",
+    "name": "rolldown-runtime"
+  },
+  "_spatial-contracts-33vaUxT7.js": {
+    "file": "assets/spatial-contracts-33vaUxT7.js",
+    "name": "spatial-contracts"
+  },
+  "_three-vendor-Bc4s0MDm.js": {
+    "file": "assets/three-vendor-Bc4s0MDm.js",
+    "name": "three-vendor"
+  },
+  "benchmark.html": {
+    "file": "assets/benchmark-CRjvq6BN.js",
+    "name": "benchmark",
+    "src": "benchmark.html",
+    "isEntry": true,
+    "imports": [
+      "_modulepreload-polyfill-P2Xu9kJm.js",
+      "_SpatialRenderer-BGgNbCOT.js"
+    ]
+  },
+  "index.html": {
+    "file": "assets/index-BP_v25uK.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_modulepreload-polyfill-P2Xu9kJm.js",
+      "_react-vendor-Br0ptrPz.js",
+      "_spatial-contracts-33vaUxT7.js"
+    ],
+    "dynamicImports": [
+      "_SpatialRenderer-BGgNbCOT.js"
+    ],
+    "css": [
+      "assets/index-CebD2Odz.css"
+    ],
+    "assets": [
+      "assets/decode.worker-CC-RLjVq.js"
+    ]
+  }
+}

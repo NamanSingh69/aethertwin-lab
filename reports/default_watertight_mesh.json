@@ -1,0 +1,21 @@
+{
+  "source": "assets/twin_seed7/measured_map.npz",
+  "source_sha256": "122bdf02b078ac9281661a93bb306576d40ec6440f3c97453a90ec4f8a1abd8c",
+  "source_points": 8446,
+  "method": "uncropped_screened_poisson",
+  "scale": 1.1,
+  "depth": 7,
+  "native_threads": 1,
+  "vertices": 13947,
+  "triangles": 27890,
+  "watertight": true,
+  "closed_edge_manifold": true,
+  "vertex_manifold": true,
+  "self_intersecting": false,
+  "mesh_sha256": "63e02ada092fed1e2e8db7e3a7615510ec74bbdbc7112fee2cc0c5873ccc4d9a",
+  "closure_infers_unobserved_regions": true,
+  "visualization_only": true,
+  "collision_authority": false,
+  "measured_source_unchanged": true,
+  "synthetic_observations": true
+}

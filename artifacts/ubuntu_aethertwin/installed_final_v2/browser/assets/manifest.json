@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "geometry_export_version": 2,
+  "map_revision": "122bdf02b078ac9281661a93",
+  "coordinate_frame": "world_z_up",
+  "units": "m",
+  "bounds": [
+    -5.72,
+    -4.988403164218842,
+    -0.040772394233372686,
+    5.640000000000001,
+    4.972025915578195,
+    3.48
+  ],
+  "tile_size_m": 4.0,
+  "max_tile_triangles": 100000,
+  "max_manifest_tiles": 100000,
+  "navigation_authority": false,
+  "geometry_source": "legacy_or_bounded_preview",
+  "source_meshes": 1,
+  "tiles": [
+    {
+      "id": "tile_7e4ccbd5fe0e_0_-2_-1_0",
+      "bounds": [
+        -5.64,
+        -1.72,
+        -0.026904905430359803,
+        -3.96,
+        -0.04,
+        3.458173162866476
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-2_-1_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-2_-1_0_lod0.glb",
+          "distance": 0,
+          "triangles": 464
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-2_-1_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-2_-1_0_lod1.glb",
+          "distance": 8,
+          "triangles": 207
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-2_-1_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-2_-1_0_lod2.glb",
+          "distance": 18,
+          "triangles": 69
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_-2_0_0",
+      "bounds": [
+        -5.72,
+        -0.04,
+        -0.030589959775625564,
+        -3.96,
+        1.8800000000000001,
+        3.476774699927995
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-2_0_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-2_0_0_lod0.glb",
+          "distance": 0,
+          "triangles": 735
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-2_0_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-2_0_0_lod1.glb",
+          "distance": 8,
+          "triangles": 330
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-2_0_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-2_0_0_lod2.glb",
+          "distance": 18,
+          "triangles": 110
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_-1_-2_0",
+      "bounds": [
+        -1.88,
+        -4.988403164218842,
+        -0.04,
+        -0.04,
+        -3.96,
+        3.444865499376835
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_-2_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_-2_0_lod0.glb",
+          "distance": 0,
+          "triangles": 1732
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_-2_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_-2_0_lod1.glb",
+          "distance": 8,
+          "triangles": 779
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_-2_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_-2_0_lod2.glb",
+          "distance": 18,
+          "triangles": 259
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_-1_-1_0",
+      "bounds": [
+        -4.04,
+        -4.04,
+        -0.04,
+        0.04,
+        0.04,
+        3.4609494719881466
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_-1_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_-1_0_lod0.glb",
+          "distance": 0,
+          "triangles": 7408
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_-1_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_-1_0_lod1.glb",
+          "distance": 8,
+          "triangles": 3332
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_-1_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_-1_0_lod2.glb",
+          "distance": 18,
+          "triangles": 1110
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_-1_0_0",
+      "bounds": [
+        -4.04,
+        -0.04,
+        -0.040772394233372686,
+        0.04,
+        4.04,
+        3.476773216342159
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_0_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_0_0_lod0.glb",
+          "distance": 0,
+          "triangles": 8788
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_0_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_0_0_lod1.glb",
+          "distance": 8,
+          "triangles": 3954
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_0_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_0_0_lod2.glb",
+          "distance": 18,
+          "triangles": 1317
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_-1_1_0",
+      "bounds": [
+        -1.9792792527545924,
+        3.96,
+        -0.038633533652275204,
+        -0.12,
+        4.937522298759676,
+        3.4631835026841657
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_1_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_1_0_lod0.glb",
+          "distance": 0,
+          "triangles": 1888
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_1_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_1_0_lod1.glb",
+          "distance": 8,
+          "triangles": 849
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_-1_1_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_-1_1_0_lod2.glb",
+          "distance": 18,
+          "triangles": 283
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_0_-2_0",
+      "bounds": [
+        0.12,
+        -4.967824881785124,
+        -0.035088098433536705,
+        1.96,
+        -3.96,
+        3.457265783026567
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_-2_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_-2_0_lod0.glb",
+          "distance": 0,
+          "triangles": 1863
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_-2_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_-2_0_lod1.glb",
+          "distance": 8,
+          "triangles": 837
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_-2_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_-2_0_lod2.glb",
+          "distance": 18,
+          "triangles": 279
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_0_-1_0",
+      "bounds": [
+        -0.04,
+        -4.04,
+        -0.034871909748062604,
+        4.04,
+        0.04,
+        3.4702981951911656
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_-1_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_-1_0_lod0.glb",
+          "distance": 0,
+          "triangles": 6810
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_-1_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_-1_0_lod1.glb",
+          "distance": 8,
+          "triangles": 3064
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_-1_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_-1_0_lod2.glb",
+          "distance": 18,
+          "triangles": 1020
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_0_0_0",
+      "bounds": [
+        -0.04,
+        -0.04,
+        -0.035069415574505866,
+        4.04,
+        4.04,
+        3.48
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_0_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_0_0_lod0.glb",
+          "distance": 0,
+          "triangles": 7566
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_0_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_0_0_lod1.glb",
+          "distance": 8,
+          "triangles": 3404
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_0_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_0_0_lod2.glb",
+          "distance": 18,
+          "triangles": 1134
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_0_1_0",
+      "bounds": [
+        0.12,
+        3.96,
+        -0.03452137834672197,
+        1.9463165860003038,
+        4.972025915578195,
+        3.463897262881028
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_1_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_1_0_lod0.glb",
+          "distance": 0,
+          "triangles": 1755
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_1_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_1_0_lod1.glb",
+          "distance": 8,
+          "triangles": 789
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_0_1_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_0_1_0_lod2.glb",
+          "distance": 18,
+          "triangles": 262
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_1_-1_0",
+      "bounds": [
+        3.96,
+        -1.72,
+        -0.008657921783585987,
+        5.5600000000000005,
+        -0.12,
+        3.472242198037634
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_1_-1_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_1_-1_0_lod0.glb",
+          "distance": 0,
+          "triangles": 439
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_1_-1_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_1_-1_0_lod1.glb",
+          "distance": 8,
+          "triangles": 196
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_1_-1_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_1_-1_0_lod2.glb",
+          "distance": 18,
+          "triangles": 65
+        }
+      ]
+    },
+    {
+      "id": "tile_7e4ccbd5fe0e_0_1_0_0",
+      "bounds": [
+        3.96,
+        0.04,
+        -0.016395809767281708,
+        5.640000000000001,
+        1.8800000000000001,
+        3.48
+      ],
+      "lods": [
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_1_0_0_lod0.glb",
+          "file": "tile_7e4ccbd5fe0e_0_1_0_0_lod0.glb",
+          "distance": 0,
+          "triangles": 816
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_1_0_0_lod1.glb",
+          "file": "tile_7e4ccbd5fe0e_0_1_0_0_lod1.glb",
+          "distance": 8,
+          "triangles": 366
+        },
+        {
+          "url": "/api/v2/assets/122bdf02b078ac9281661a93/tile_7e4ccbd5fe0e_0_1_0_0_lod2.glb",
+          "file": "tile_7e4ccbd5fe0e_0_1_0_0_lod2.glb",
+          "distance": 18,
+          "triangles": 122
+        }
+      ]
+    }
+  ]
+}

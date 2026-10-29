@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "summary": {
+    "kind": "configured_resource_inventory",
+    "source": "read_only_discovery",
+    "sdk_packages": {
+      "lab_sensors_native": false,
+      "pyorbbecsdk": false
+    },
+    "sources": [
+      {
+        "id": "static-sim",
+        "mode": "sim",
+        "registered": true,
+        "recording_available": false
+      }
+    ],
+    "twins": [
+      {
+        "id": "active",
+        "reference_available": true
+      }
+    ],
+    "hardware_status": "not_tested",
+    "device_readiness": "not_established",
+    "limit": "Configured resources and import specifications are not physical device discovery or successful streaming.",
+    "calibration_promoted": false,
+    "active_map_modified": false
+  },
+  "promotion_performed": false
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "Pinned Open3D ARM64 wheel recipe and structural/provenance installation gates",
+  "tests": {
+    "Windows": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "17",
+      "time": "0.610",
+      "timestamp": "2026-10-28T23:41:21.450178+05:30",
+      "hostname": "Sumedha",
+      "junit": "reports/windows_edge_open3d_wheel_pytest.xml"
+    },
+    "Ubuntu24.04 WSL2": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "17",
+      "time": "0.765",
+      "timestamp": "2026-10-28T18:11:23.986034+00:00",
+      "hostname": "Sumedha",
+      "junit": "reports/ubuntu_edge_open3d_wheel_pytest.xml"
+    }
+  },
+  "test_data": "Synthetic ZIP/metadata/ELF-header fixtures and mocked pre-existing Docker runner; not runnable Open3D binaries",
+  "upstream_source_commit": "1e7b17438687a0b0c1e5a7187321ac7044afe275",
+  "upstream_build_target": "openblas-arm64-py312",
+  "arm64_wheel_built": false,
+  "jetson_container_built": false,
+  "physical_hardware_tested": false,
+  "operating_system_or_qemu_changed": false,
+  "source_sha256": {
+    "deployment/edge/open3d_wheel.py": "13332dce26cfb51c6e35b250cf34c9342d09b199c6366e22da5a4ee82c3582ab",
+    "deployment/edge/Dockerfile": "cc690094b408f1507c6b64b41c0117b9a3a9ed8ce6164ed56a187ba139c2808e",
+    "deployment/edge/README.md": "9df048e975c54d69a3513459215d9e1221a36ca660b0bb88c30770990f5cd655",
+    "tests/test_edge_open3d_wheel.py": "f43cf0d232cd02263808a235aa4284ea0b7aa3e6b05af96167ee17c3dc756040"
+  }
+}

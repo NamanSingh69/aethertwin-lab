@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "data_source": "synthetic_exact_material_ground_truth",
+  "seed": 17,
+  "units": "metres_seconds",
+  "flow_direction": "past_to_current",
+  "notes": "Truth-only clean mesh material pairs; never part of runtime sensor frames. Camera arrays are row-major flattened.",
+  "recording": "recording",
+  "labels": "labels",
+  "frames": [
+    {
+      "frame_id": 0,
+      "label_file": "000000.npz",
+      "lidar_pairs": 1205,
+      "valid_lidar_pairs": 0,
+      "camera_shape": [
+        50,
+        80
+      ],
+      "valid_camera_pairs": 0
+    },
+    {
+      "frame_id": 1,
+      "label_file": "000001.npz",
+      "lidar_pairs": 1204,
+      "valid_lidar_pairs": 1204,
+      "camera_shape": [
+        50,
+        80
+      ],
+      "valid_camera_pairs": 2466
+    }
+  ]
+}

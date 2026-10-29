@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "calibration_id": "simulation-v1-NOT-MEASURED",
+  "measured": false,
+  "image_size": [160,100],
+  "notes": "Simulation fixture only. Live fusion rejects this calibration until an offline measured calibration is supplied.",
+  "K": [[115.0, 0.0, 79.5], [0.0, 115.0, 49.5], [0.0, 0.0, 1.0]],
+  "distortion": [0, 0, 0, 0, 0],
+  "T_lidar_camera": [[0,0,1,0],[-1,0,0,0],[0,-1,0,0],[0,0,0,1]],
+  "T_lidar_imu": [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],
+  "T_lidar_s2": [[1,0,0,0],[0,1,0,0],[0,0,1,-0.8],[0,0,0,1]]
+}

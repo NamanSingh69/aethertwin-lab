@@ -1,0 +1,2562 @@
+{
+  "schema_version": 1,
+  "scope": "Ubuntu24.04 x86_64 WSL2 software acceptance",
+  "physical_hardware_tested": false,
+  "jetson_hardware_benchmarked": false,
+  "commands": [
+    {
+      "name": "locked_environment",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "uv",
+        "pip",
+        "sync",
+        "--python",
+        "/var/tmp/lab-twin-venv/bin/python",
+        "--require-hashes",
+        "requirements-ubuntu.lock"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T17:57:45.123794+00:00",
+      "log": "reports/ubuntu_aethertwin_locked_environment.log",
+      "source_set_sha256": "dad17f44558d25e64cde82ffd566c5529214e2b2cce4bdb5152c983b7622e52e",
+      "exit_code": 0,
+      "elapsed_seconds": 2.0300419330596924,
+      "source_changes_during_command": [],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "dependency_check",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "uv",
+        "pip",
+        "check",
+        "--python",
+        "/var/tmp/lab-twin-venv/bin/python"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T17:58:05.650027+00:00",
+      "log": "reports/ubuntu_aethertwin_dependency_check.log",
+      "source_set_sha256": "dad17f44558d25e64cde82ffd566c5529214e2b2cce4bdb5152c983b7622e52e",
+      "exit_code": 0,
+      "elapsed_seconds": 0.17066311836242676,
+      "source_changes_during_command": [],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "pretrain",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "pretrain",
+        "--max-frames",
+        "2",
+        "--epochs",
+        "1",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/pretrain.pt"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:01:41.527751+00:00",
+      "log": "reports/ubuntu_aethertwin_pretrain.log",
+      "source_set_sha256": "1e115e35f7fbad9275e489bb6ca066861ccea3f17b777a1751c1282ade4004df",
+      "exit_code": 0,
+      "elapsed_seconds": 12.46850323677063,
+      "source_changes_during_command": [],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "train",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "train",
+        "--epochs",
+        "1",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/training_smoke.pt"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:01:55.885559+00:00",
+      "log": "reports/ubuntu_aethertwin_train.log",
+      "source_set_sha256": "1e115e35f7fbad9275e489bb6ca066861ccea3f17b777a1751c1282ade4004df",
+      "exit_code": 0,
+      "elapsed_seconds": 20.976531982421875,
+      "source_changes_during_command": [],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "evaluate",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "evaluate",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/evaluation.json"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:02:15.010459+00:00",
+      "log": "reports/ubuntu_aethertwin_evaluate.log",
+      "source_set_sha256": "1e115e35f7fbad9275e489bb6ca066861ccea3f17b777a1751c1282ade4004df",
+      "exit_code": 0,
+      "elapsed_seconds": 10.513410091400146,
+      "source_changes_during_command": [],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "calibrate",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "calibrate",
+        "--input",
+        "assets/calibration/synthetic_pairs.npz",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/synthetic_calibration.json"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:02:26.916684+00:00",
+      "log": "reports/ubuntu_aethertwin_calibrate.log",
+      "source_set_sha256": "1e115e35f7fbad9275e489bb6ca066861ccea3f17b777a1751c1282ade4004df",
+      "exit_code": 0,
+      "elapsed_seconds": 3.8856189250946045,
+      "source_changes_during_command": [],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "pytest",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "--junitxml=reports/ubuntu-aethertwin.xml"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:12:22.801405+00:00",
+      "log": "reports/ubuntu_aethertwin_pytest.log",
+      "source_set_sha256": "cef0e5f16d8e00ce2edc279aad11740772f8c6bea85215b43c79180da72f29f3",
+      "exit_code": 0,
+      "elapsed_seconds": 207.36597776412964,
+      "source_changes_during_command": [
+        "tests/test_commissioning.py",
+        "command_center/commissioning.py"
+      ],
+      "elapsed_clock": "time.time wall clock; WSL clock adjustments can affect duration"
+    },
+    {
+      "name": "sim_record",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "sim",
+        "--max-frames",
+        "3",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/sim",
+        "--record",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recording"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:17:25.159330+00:00",
+      "log": "reports/ubuntu_aethertwin_sim_record.log",
+      "source_set_sha256": "78664ad1fa02579c1b0afc8f5fd55a7edaa9feb0c2669c9ea45fbcb0fd2381ec",
+      "exit_code": 0,
+      "elapsed_seconds": 20.711757693,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 20.711763858795166,
+      "source_changes_during_command": [
+        "config/profiles/laptop.yaml",
+        "config/profiles/jetson_edge.yaml"
+      ]
+    },
+    {
+      "name": "recorded_replay",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "replay",
+        "--max-frames",
+        "3",
+        "--input",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recording",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recorded_replay"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:17:48.178902+00:00",
+      "log": "reports/ubuntu_aethertwin_recorded_replay.log",
+      "source_set_sha256": "a6d989a4bd5a5e7e8fe45327a052a0601f37f8d2864b9c247df51b311e1b35bc",
+      "exit_code": 0,
+      "elapsed_seconds": 14.087490932999998,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 14.090078592300415,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "recording_parity",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "tools/compare_replay.py",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/sim",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recorded_replay",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recording_parity.json"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:18:03.567499+00:00",
+      "log": "reports/ubuntu_aethertwin_recording_parity.log",
+      "source_set_sha256": "a6d989a4bd5a5e7e8fe45327a052a0601f37f8d2864b9c247df51b311e1b35bc",
+      "exit_code": 1,
+      "elapsed_seconds": 0.42221872500000046,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 0.4222218990325928,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "shipped_replay",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "replay",
+        "--max-frames",
+        "3",
+        "--input",
+        "assets/sample_recording",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/shipped_replay"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:18:05.278444+00:00",
+      "log": "reports/ubuntu_aethertwin_shipped_replay.log",
+      "source_set_sha256": "a6d989a4bd5a5e7e8fe45327a052a0601f37f8d2864b9c247df51b311e1b35bc",
+      "exit_code": 0,
+      "elapsed_seconds": 11.669760288000006,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 11.669764280319214,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "build_twin",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "build-twin",
+        "--input",
+        "assets/twin_seed7/commissioning",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/built_twin"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:18:19.754470+00:00",
+      "log": "reports/ubuntu_aethertwin_build_twin.log",
+      "source_set_sha256": "a6d989a4bd5a5e7e8fe45327a052a0601f37f8d2864b9c247df51b311e1b35bc",
+      "exit_code": 0,
+      "elapsed_seconds": 56.632701358999995,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 56.63270545005798,
+      "source_changes_during_command": [
+        "config/profiles/laptop_cache128.yaml"
+      ]
+    },
+    {
+      "name": "hil_test",
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "main.py",
+        "--headless",
+        "--device",
+        "cpu",
+        "--config",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/smoke_config.yaml",
+        "--mode",
+        "hil-test",
+        "--max-frames",
+        "3",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/diagnostics"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:19:20.893488+00:00",
+      "log": "reports/ubuntu_aethertwin_hil_test.log",
+      "source_set_sha256": "0f9cd57f79b54a23e751f39b474ccfcea2fe55612e1fda4f6e7ab13e19e28479",
+      "exit_code": 0,
+      "elapsed_seconds": 8.551529079999995,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 5.539079427719116,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "commissioning_observed",
+      "attempt": 1,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_commissioning.py",
+        "tests/test_observed_navigation_integration.py",
+        "-q",
+        "--junitxml=reports/ubuntu-aethertwin-supplement.xml"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:20:44.000686+00:00",
+      "log": "reports/ubuntu_aethertwin_commissioning_observed.log",
+      "source_set_sha256": "852e828a3206271fd16aa15c06e847872f90a7f1baa39e50f58b2d9d8febbf83",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 20.350882644999984,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 20.350891590118408,
+      "source_changes_during_command": [
+        "tools/compare_replay.py",
+        "main.py"
+      ]
+    },
+    {
+      "name": "recording_parity",
+      "attempt": 2,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "tools/compare_replay.py",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/sim",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recorded_replay",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recording_parity.json",
+        "--allow-source-mode-difference"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:22:27.114281+00:00",
+      "log": "reports/ubuntu_aethertwin_recording_parity_attempt2.log",
+      "source_set_sha256": "2e402b11d27be3670bd2ddeff78bb37b1d34d22f492bda8003dee7f498b532ff",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": null
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 0.6721866309999882,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 0.6721956729888916,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "install_wheel",
+      "attempt": 1,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "/var/tmp/lab-twin-venv/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/lidar_lab_digital_twin-2.0.0-py3-none-any.whl"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:43:39.013809+00:00",
+      "log": "reports/ubuntu_aethertwin_install_wheel.log",
+      "source_set_sha256": "c759c4456efecdce4b4926e6cd3cd9ecc66db90e544276e1f7a03174b40c76e9",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": null
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 1.4823788390000008,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 1.482386589050293,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "installed_wheel_proof",
+      "attempt": 1,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-I",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/work/probe_installed_v2.py",
+        "--checkout",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:43:42.765622+00:00",
+      "log": "reports/ubuntu_aethertwin_installed_wheel_proof.log",
+      "source_set_sha256": "c759c4456efecdce4b4926e6cd3cd9ecc66db90e544276e1f7a03174b40c76e9",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": null
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 59.53740263,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 59.51420855522156,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "final_frozen_pytest",
+      "attempt": 1,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_tracking_navigation.py",
+        "tests/test_kalman_and_planner.py",
+        "tests/test_scene_protocol_v2.py",
+        "tests/test_diagnostics.py",
+        "tests/test_browser_runtime_recording.py",
+        "tests/test_commissioning.py",
+        "tests/test_telemetry.py",
+        "-q",
+        "--junitxml=reports/ubuntu-aethertwin-final.xml"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:45:17.474748+00:00",
+      "log": "reports/ubuntu_aethertwin_final_frozen_pytest.log",
+      "source_set_sha256": "c759c4456efecdce4b4926e6cd3cd9ecc66db90e544276e1f7a03174b40c76e9",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": null
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 117.949671034,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 112.47851228713989,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "dependency_check",
+      "attempt": 2,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "uv",
+        "pip",
+        "check",
+        "--python",
+        "/var/tmp/lab-twin-venv/bin/python"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:54:13.243216+00:00",
+      "log": "reports/ubuntu_aethertwin_dependency_check_attempt2.log",
+      "source_set_sha256": "c759c4456efecdce4b4926e6cd3cd9ecc66db90e544276e1f7a03174b40c76e9",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": null
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 0.6235428619999936,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 0.6235513687133789,
+      "source_changes_during_command": []
+    },
+    {
+      "name": "release_pytest",
+      "attempt": 1,
+      "command": [
+        "/var/tmp/lab-twin-venv/bin/python",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "--junitxml=reports/ubuntu-aethertwin-release.xml"
+      ],
+      "cwd": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin",
+      "started_at_utc": "2026-10-28T18:58:52.595485+00:00",
+      "log": "reports/ubuntu_aethertwin_release_pytest.log",
+      "source_set_sha256": "c759c4456efecdce4b4926e6cd3cd9ecc66db90e544276e1f7a03174b40c76e9",
+      "environment": {
+        "OMP_NUM_THREADS": "4",
+        "MKL_NUM_THREADS": "4",
+        "RUN_OBSERVED_INTEGRATION": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 169.958860439,
+      "elapsed_clock": "time.perf_counter monotonic",
+      "wall_elapsed_seconds": 166.37635946273804,
+      "source_changes_during_command": []
+    }
+  ],
+  "source_sha256": {
+    "command_center/__init__.py": "a1d27299bde8a31454cb3f9cae8aeda1b6e73fb49432d0fff5de4ae5fa4999db",
+    "command_center/__main__.py": "85e1d8205fc1a22a001f7fdf69de82a3e782f6dfea2d74cbb49a737e0cbf50a1",
+    "command_center/assets.py": "e2886789f55467cbdc644fb8852536a9891a1673a11a17cff967bd9846dbc579",
+    "command_center/auth.py": "e4e9ca5af6891e6182eeb043ba3f18818958b2640cc6a0226592efd7b5416653",
+    "command_center/commissioning.py": "23bf5426706b4a936734eb592b27f0e413d3eb92f3a50ce2d4f6737d31cd6bec",
+    "command_center/controls.py": "9d73bed60295b93ddda2eee2a8326453e1445d18e196018c1ed72143bfbbe7ed",
+    "command_center/gateway.py": "3d1f8c402d7cb3a9487ab740cffbe744974fe0535802f4486bf0d4c8bd627668",
+    "command_center/protocol.py": "a30762972b96d32bf9adb0714d1b0dc1d9e71eb6c0d05b38652fb42fc7c124f3",
+    "command_center/runtime.py": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf",
+    "command_center/service.py": "f8ae606086d2b5eff884245e10fa3cb5f3660757337e71be9a8dcab8a5f6d418",
+    "config/calibration_extrinsics.json": "8e0ee3d8d8078ad23fb3f827b77df2238bb3791957a1478bea2fd276366b4fe9",
+    "config/profiles/jetson_edge.yaml": "f80ae159d0e59f23da3ee322336e571d2337599165bb1a59c081564e1114a7e0",
+    "config/profiles/laptop.yaml": "e667a67b5513e49fdadd3b7db4ab2e85fe87e6e61657912526c92728dfb58f03",
+    "config/system_config.yaml": "66770c6704a6f2fc1e651313681f28c8b544ae1f4e46818c4f343f8bd4dc4675",
+    "core/__init__.py": "ded4d8324b9cf64c72de097094a11bdaa82075fda218da4b7281c0266ce8d2b2",
+    "core/async_recording.py": "749e010a41c6658785b5ee42620e92fdc1d3196a293fc98571367c6e8df6945c",
+    "core/bounded_acquisition.py": "f3e4dc10ac5bc22feb6440dcf3032545289acd1b72f3a61372a92ce2719a1dd6",
+    "core/configuration.py": "b6d000fbcab7b38f8f65524e659dc7351e4c241ecc239596ce6198a00c43ffbf",
+    "core/contracts.py": "b428b1fff9ce997fb586b4268705edc9bd6b51b573e2d8f344a2366d03d77b0c",
+    "core/pipeline.py": "b5ab404535d46a3c7f1d2033da5bca90be5bb47102b3528e85a9bda82546b8bb",
+    "core/recording.py": "982b23da09034a95585741ac56bc23ee743b03809872cdbb53173c6db0b0fe8a",
+    "core/resources.py": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7",
+    "core/se3_math.py": "8874842f1b079f7b335974145163845dbe1d2a291e6f726e65906be2f84f13b2",
+    "deployment/edge/Dockerfile": "cc690094b408f1507c6b64b41c0117b9a3a9ed8ce6164ed56a187ba139c2808e",
+    "deployment/edge/entrypoint.py": "d393d97a041e6fa5348d8067d262cced898a15171df7410d56df4b114f7c5720",
+    "deployment/edge/open3d_wheel.py": "13332dce26cfb51c6e35b250cf34c9342d09b199c6366e22da5a4ee82c3582ab",
+    "deployment/edge/requirements-runtime.txt": "22f32b9123c12291be652e3c12f7820f87c7203985351a00425e23e91d74bc9b",
+    "deployment/gateway/lock_profile.py": "7bbce0b215814a37760ac7d64d94529766eb233f00b5d3217f61f52a1875e7d8",
+    "diagnostics/__init__.py": "51c4dae98a847fdbb934c5e15df8d8b9d5c80c8ae907a0dd73e1d7c3c33b01c3",
+    "diagnostics/__main__.py": "1d2eae67cc89bbfce46ab1a1abb5e2de3213087a6628d03a1345102610b194e3",
+    "diagnostics/audits.py": "7543f1365688d5e26acd74ee312514464d2399dfa372fb1f0d754627d9041d45",
+    "diagnostics/runner.py": "1e2284f23fa537bd101241b7bba280fca97b20fc6ee0bfeb457b7192049cbf23",
+    "diagnostics/virtual_targets.py": "645ce4f19c60616b6d37dff039fe02e8fe9f75fbc8d238d2d7dd34715ae26ea6",
+    "hardware_halo/__init__.py": "e86cd4a56ccd5cbf85735577a0a844d80e636eb3f89ad53d271c16139b72a522",
+    "hardware_halo/build_firmware.py": "119f6b68ce8cfa0a2ab78f3e76bce317c11a90348564a732b1e2d53a93a79430",
+    "hardware_halo/controller.py": "3eb13b7320e2abe90e7df8216277a38a73062f2b87c5567ee3952ef8725c885f",
+    "hardware_halo/protocol.py": "a1edc36507ccb32eb6ae81a5c5c733ccc61dad2fb864fb7255fa62ead921bf1c",
+    "hardware_halo/state.py": "2115f5a1b567ad933019db600c45dfa69bd034b8c99f1adc3600451b829511ac",
+    "ingestion/__init__.py": "af0da96a387a59577e44abb15533f11e639beebc9b77715619249f3419c353b4",
+    "ingestion/calibration.py": "01f5eb166e0afa127f09f39037a473b8a31d813cb8a4de5586bf72be5cfa5e1b",
+    "ingestion/gemini_333l_driver.py": "0fddbcf8cfc2ae92c1d3f32b714f698257e69d1fce7073259e02968657144a13",
+    "ingestion/lidar_l2_driver.py": "205a583e6472ea40419d6cd3d8bb1734a85cef37382e46212f4951cabd062cca",
+    "ingestion/live_source.py": "954129e28a4b55b45c3589327dd87649e67b88ce8bf4e19396872de16425403f",
+    "ingestion/recorder_replayer.py": "9da879402b5f1ef7c6605019a91905a394a8983ff5bf3169639edec48b967ae2",
+    "ingestion/rplidar_s2_driver.py": "f6625cec604a7557d01b2bde1636328382c95e5a81f881e1bfa89583ad090a3f",
+    "ingestion/sensor_synchronizer.py": "2b4b1f307c7dfd423c96016b269ead3efac2c8bee5c7aafce2afb0d999c5dbff",
+    "ingestion/synthetic_lab_simulator.py": "c0b1967bc9e5ba752ef9b9dddfd5951c4cdf559c61502bf0e70c8e6d7dd08e96",
+    "main.py": "be58bfa19bf73661802f33330bde1ee503d04f0533153cf05b5f845dfa801d51",
+    "native/__init__.py": "d941226bce633b4a776fe39eaebc9d8fb3823d973ed2df25a4b02c7e38105a70",
+    "native/voxel_rays/__init__.py": "307ed0768a2f879035f468f1701286b7a1c452d52ebf67eb37adc69bf3149936",
+    "native/voxel_rays/benchmark.py": "b0d8d77d759b4298d5adaf001e92c8ba470a3ae2113d63621b1f535aafbe74c9",
+    "native/voxel_rays/build.py": "3e7a1c7ae3f268a4061e4e0757b0e07ffcd90be48efb724bdda3e301e28d024e",
+    "native/wgl_compat/build.py": "51b666dc54678d64c94118cf411a9ad00f1b41d732bf1e68467bbfadd455067b",
+    "perception_ml/__init__.py": "d0b5dab1fd961443f6c1b6f15579117870e4990d728e377379ab136c63d05a48",
+    "perception_ml/benchmark_preprocessing.py": "20ebfcbf0067f941dc13387febbeeb4df8fe898b049f853912d7f3323ce7bbaa",
+    "perception_ml/depth_cache.py": "2a6e661bcba4d912460b3787fcbe96a11766588371fd73f11514450b8035c89d",
+    "perception_ml/eigen_descriptors.py": "ebfb559010444491f6b73763b0bdca4c6f92eeedfd705889b41bcc46373bd306",
+    "perception_ml/hybrid_3d_network.py": "9b2af4c91140a3544a4975be38cf2005afb2587664c06d261777f48b827d83cf",
+    "perception_ml/inference_engine.py": "3edc1e5f8c2bc2e6118bb22da0da7512fdb627d55e44c1cfabeba164fa269130",
+    "perception_ml/point_mae_pretrain.py": "dc8a39455dd5af2a1047d5814d36904c2928240a84d4c14b48e546951f7b6936",
+    "perception_ml/recorded_dataset.py": "35c2db600a5e1b3ae37ed6da38fb6f6df034e83681444ee16a6d44b18c2fb8f4",
+    "perception_ml/spatial_indices.py": "6e3deb69f3d8a178a3f1652ab8c8d6c1fead344d628c4e3f266f8dbab7ba8d71",
+    "perception_ml/tensor_export.py": "8fd733199387772089b697745910bc73a4b91b66b8dd482aa9c06ee3d24aedb9",
+    "perception_ml/training.py": "caefb9149f35f2a78ab7ccd90ca7e09d784849bce1a3a24ea4c7dd834d233f88",
+    "pyproject.toml": "7fc2e3fae7c1ed0ed12951d600042fc7b8cc0053f3ebb9e264c8768d1e430bf2",
+    "requirements-ubuntu.lock": "d0f2c9526f4da2b47dbda645d22d2f1005faa3fe0331b08e475ddaf886cd8c35",
+    "slam_and_twin/__init__.py": "288717adad38e7e01a1e10f312272a344b357fcb4329dc91ce0d10f49d04c627",
+    "slam_and_twin/icp_pose_graph.py": "7dcbfaf661a581e722ad09a4d39c583ade67eebcdcd79befd843020ed97dcdbc",
+    "slam_and_twin/imu_deskew.py": "44a7f33b2320e44022a37963d3fc1c10d6d81317be63355e97eb4060d51653a0",
+    "slam_and_twin/log_odds_octomap.py": "974c08462eca2f764918f45f51b8c3dd4d1f88349ac65441783b4aea2edda5e5",
+    "slam_and_twin/planning_region.py": "f616f19255997a116701ef8af5d9ff026f94f2e1140106ca705ef75ddb1b7cb4",
+    "slam_and_twin/spatial_diff_engine.py": "0094a692715994c32e0e318e2f2bc734214b7fc04b2bd4420cd23b462b593d1b",
+    "slam_and_twin/static_twin_builder.py": "d94f34a403eb02e545777d4cb7b9f028be373f8bb34dc921a813e2e277952d71",
+    "slam_and_twin/tiled_map.py": "ce97cd0ce0788b22b79b285759bc1f13623b2e026324a8857d1c3eaf09a7c286",
+    "slam_and_twin/tiled_reconstruction.py": "95712b0146d75971f16bdf37dd3ac0ff074ab4a7392f3443eb19f4f2c5f1c325",
+    "tests/run_commissioning_evidence.py": "1f554b1c9a32773837b42a4a1156916c9d8f0a78e69c161e679bc178552b18da",
+    "tests/test_async_recording.py": "70fa7c467ea9e561eb6232b037eb70acdda78cf2284c44908a1ead63a81992ff",
+    "tests/test_batched_deskew.py": "2dd15d063237910fe443c5a205a5de42d2cff38be7b0473eb4da6e09ad64e9c3",
+    "tests/test_batched_rays.py": "584f22f301cfc6928c5aac791f5d2d115752dfd6e858a00ea470ff108d56a5a2",
+    "tests/test_bounded_acquisition.py": "9f4b517812143346462171064fa9ab8888993489cbf4676cc3712a284eb10d9e",
+    "tests/test_bounded_commissioning.py": "26ef5a538680c5e79cdcb5f2d3397ae0d4cb35d14c4ae5e0ce82d67e0c437ecb",
+    "tests/test_browser_runtime_recording.py": "87e40e7ac45aa59fa011d09d0bcd22e77d2a96aec5d18c9decb84e5f5da269d9",
+    "tests/test_calibration_observability.py": "56984c1e3272c71f863d137d66630f7147f81fffd88044dc0f96843de6bc408a",
+    "tests/test_commissioning.py": "1717fd092992f403d323862d998b69b387095bf20b400af6741369e2c60bb1a0",
+    "tests/test_contract_validation.py": "42d29c57ab1831bd3359bdaf35b5274891c29a89c511996ab2fd5f993883201b",
+    "tests/test_diagnostics.py": "787327d8e178c283df5626568b5b665670ab0fde482c39baab9e9eb4489242c0",
+    "tests/test_edge_open3d_wheel.py": "f43cf0d232cd02263808a235aa4284ea0b7aa3e6b05af96167ee17c3dc756040",
+    "tests/test_gateway.py": "f64d4c2dfde179ea3387c464d26f1c352a05604f38e5750ba40c0fb60a0678e7",
+    "tests/test_gemini_profiles.py": "71cbd444324df9e3ed07e91673004936d51395853ade50032d5fa68ada24bc15",
+    "tests/test_ground_corridor_and_csv.py": "42ed11b57014ef41ac43b738a7472fc140e8dd7bc63b7d10eefe6b604c423a8f",
+    "tests/test_hardware_halo.py": "c0a8b3447fa780b41f897e4138d38af790e14b0b3c8dfefaa0bfc3f51171874f",
+    "tests/test_hybrid_3d_network.py": "58fd6d2dd9c8919fde7a8a0a53fce5ea5552eeeb8e25c5ab2c455481237684b1",
+    "tests/test_kalman_and_planner.py": "e174adc3df4c34ec5dce367cea7edd29f28a3641c3fcbdcd7e66f7f3e9decd84",
+    "tests/test_moving_commissioning.py": "b955beea2bc9fcd245f390c97f6c99fcb212cc2e516301744797e8c1dee7b578",
+    "tests/test_native_voxel_rays.py": "defccf8039d1bdabdd9b4acf31665eab57241c235d0eda7fc73a26c2c4da8a43",
+    "tests/test_observed_navigation_integration.py": "052e8fbd21070fbef6fc7eb496add9b4013a9cb0a8bd71e8f304fd92d9f518f5",
+    "tests/test_perception_preprocessing.py": "9afef8de1fd9f3140c683f23f7b2b62d7d1399d78711108c26b704e67edcfdfd",
+    "tests/test_recorded_training_data.py": "7d6132e8305d84e4154205a101bf8aeff2ee37cf35891b951dbe90a364378064",
+    "tests/test_render_backend.py": "d512265058a5008044653d7bcb1cae3620378d705ce16bd76be156dbd53c1c58",
+    "tests/test_scene_protocol_v2.py": "df59c003dade2c133acfd617107479f9b7ddd7ea04acf4cbf74e1d90c4f49f7b",
+    "tests/test_se3_and_deskew.py": "f653e092014cad6bc9fc77c0c3287680239fb0853d696e623a4807f88bbd3b84",
+    "tests/test_sensing_mapping.py": "b5c020d889c22ee8c588f57fd0788fa50c3897e9869aa58cc094efed968c9121",
+    "tests/test_simulator_correspondences.py": "010384e9ea16356aa4277415af0a6b4bf76b01646d6dff8f50e7e3946a65898a",
+    "tests/test_telemetry.py": "84687b70c782bfd724849cbc91546df28f06b2199228bd3a603802ff930fb3e6",
+    "tests/test_tiled_batch.py": "5a4f023c53ddb350dcc9d3a3e9b395a2ca3206ac6a8fca1fcd5b1a947ffb1183",
+    "tests/test_tracking_navigation.py": "c5e0febd6e4a25f41eb70d8008c225ab56708b90980d17c1047bc0e556d3cce4",
+    "tests/test_training_splits.py": "fd13576b803cf8d7dc8d2962b26f53130e9a1fce3d05a0f95424cf175c611c2f",
+    "tests/test_voxel_hash_and_octomap.py": "6003d3b0b9358c6a4128f0bb7808684aa40c98f68d62c8414925e580e13028a7",
+    "tests/test_world_origin_invariance.py": "a98d0718167971360d75e829aac5b77c66a06880b24dff64d4d157e588c842bc",
+    "tests/tiled_runtime_benchmark.py": "86d8047968745297ceaa01dffe3643c85d779aba7fe27edb0df0f1b73ad9c790",
+    "tools/compare_replay.py": "43e33d1232a6368bcc56e442c29090ccdce2b8d75aa0af7474510d3060f0eea0",
+    "tracking_and_navigation/__init__.py": "df581448d95c17da55339881e9d6b8464e969706f870006f1456e6d2256e530a",
+    "tracking_and_navigation/geometry.py": "e4801d489e54ba709b724bbef22ed240b3bf86833584e77919c982081273dcdc",
+    "tracking_and_navigation/kalman_9dof_tracker.py": "aac9fde1664647c157b68a49545770f86789949ba500e7f14ec0b93c5c306a88",
+    "tracking_and_navigation/observed_navigation.py": "af79af84145fb58e3b82fa350b436178a9d2428b7d69e19a4503b041987475e2",
+    "tracking_and_navigation/risk_and_geofence.py": "00cf19fe240bd51c82c185f23f5a30c610c4701baff6c8ed846cad40c7fc7fc3",
+    "tracking_and_navigation/safe_corridor_planner.py": "3221bcf8d71a8c8f896bfe4ea0c88c2e9e7835b297c1d8756725374842844d58",
+    "tracking_and_navigation/traffic_heatmap.py": "b6743f9b0cb6ecbea7af73b05bc1b310d50f91bb48d08e990209544da38ee0d8",
+    "visualization/__init__.py": "705858ee0213555464c80cfdaad8fc15ddd83d6339f06150b97458b8b6214387",
+    "visualization/open3d_command_center.py": "83b3b472821d0097c8d7e67d7e9f8e5e2679e360a31162e6fc89e4bbc4075442",
+    "visualization/opencv_telemetry_hud.py": "e12253fe0b7d3b103f4e4da63a22af482b22e3f6aed9fd84c96ec9624a337538",
+    "visualization/render_backend.py": "cb08e246112d68f16de0105af95d6203395e86f7086d7a83b99814977cc8bd9c",
+    "visualization/sensor_status.py": "04dc0bb9f6a3f3f4ba1607f54a54570695066571d20a9ee518b41c49deb46c99",
+    "visualization/websocket_broadcaster.py": "4e97fe4adb0bc23979e1f850c451f56f081db99dd5fe6a41d52e6a7d3236134d"
+  },
+  "updated_at_utc": "2026-10-28T19:01:40.466054+00:00",
+  "environment": {
+    "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "python": "3.12.3 (main, Apr 10 2024, 05:33:47) [GCC 13.2.0]",
+    "executable": "/var/tmp/lab-twin-venv/bin/python",
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "installed_versions": {
+      "lidar-lab-digital-twin": "2.0.0",
+      "Flask": "3.1.3",
+      "etils": "1.14.0",
+      "wcwidth": "0.9.4",
+      "networkx": "3.7",
+      "scipy": "1.18.1",
+      "pandas": "3.1.0",
+      "executing": "2.3.0",
+      "uvicorn": "0.54.0",
+      "mpmath": "1.3.0",
+      "nbformat": "5.11.1",
+      "filelock": "4.2.4",
+      "pillow": "13.0.0",
+      "fsspec": "2026.9.0",
+      "httpcore": "1.0.9",
+      "jedi": "0.20.1",
+      "dash": "4.2.0",
+      "ipywidgets": "8.1.9",
+      "jupyter_core": "5.9.1",
+      "urllib3": "2.8.0",
+      "comm": "0.2.3",
+      "annotated-types": "0.8.0",
+      "ipython_pygments_lexers": "1.1.1",
+      "blinker": "1.9.0",
+      "fonttools": "4.68.0",
+      "parso": "0.8.7",
+      "nest-asyncio": "1.6.0",
+      "open3d-cpu": "0.19.0",
+      "retrying": "1.4.2",
+      "absl-py": "2.5.1",
+      "typing_extensions": "4.16.0",
+      "tzdata": "2026.5",
+      "referencing": "0.37.0",
+      "pydantic_core": "2.50.1",
+      "ipython": "9.17.1",
+      "janus": "2.0.0",
+      "cloudpickle": "3.1.2",
+      "matplotlib-inline": "0.2.2",
+      "httpx": "0.28.1",
+      "importlib_metadata": "10.1.0",
+      "asttokens": "3.0.2",
+      "pyserial": "3.5",
+      "pexpect": "4.9.0",
+      "certifi": "2026.10.23",
+      "prompt_toolkit": "3.0.53",
+      "cycler": "0.12.1",
+      "narwhals": "2.28.0",
+      "charset-normalizer": "3.5.2",
+      "rpds-py": "2026.9.1",
+      "pyquaternion": "0.9.9",
+      "matplotlib": "3.11.2",
+      "pytest": "9.1.1",
+      "platformdirs": "4.13.6",
+      "websockets": "17.3",
+      "jsonschema-specifications": "2025.9.1",
+      "PyYAML": "6.0.3",
+      "pure_eval": "0.2.4",
+      "jupyterlab_widgets": "3.0.17",
+      "zipp": "4.1.2",
+      "torch": "2.14.1+cpu",
+      "joblib": "1.6.0",
+      "fastapi": "0.162.0",
+      "pyparsing": "3.3.3",
+      "contourpy": "1.4.0",
+      "jsonschema": "4.26.0",
+      "six": "1.17.0",
+      "annotated-doc": "0.0.5",
+      "Werkzeug": "3.1.9",
+      "glfw": "2.11.0",
+      "scikit-learn": "1.9.1",
+      "tqdm": "4.70.1",
+      "Jinja2": "3.1.6",
+      "python-dateutil": "3.0.0",
+      "fastjsonschema": "2.22.2",
+      "requests": "2.34.2",
+      "psutil": "7.2.2",
+      "MarkupSafe": "3.0.4",
+      "iniconfig": "2.3.1",
+      "addict": "2.4.0",
+      "pluggy": "1.7.0",
+      "packaging": "26.3",
+      "opentelemetry-api": "1.45.1",
+      "h11": "0.16.0",
+      "Pygments": "2.21.0",
+      "mujoco": "3.17.0",
+      "threadpoolctl": "3.7.0",
+      "PyOpenGL": "3.1.10",
+      "stack-data": "0.6.3",
+      "itsdangerous": "2.2.0",
+      "ConfigArgParse": "1.8.0",
+      "kiwisolver": "1.5.1",
+      "sympy": "1.14.0",
+      "plotly": "7.1.0",
+      "pydantic": "2.14.1",
+      "setuptools": "84.2.1",
+      "numpy": "2.5.4",
+      "traitlets": "5.16.1",
+      "click": "8.5.0",
+      "anyio": "4.15.1",
+      "starlette": "1.10.0",
+      "typing-inspection": "0.4.4",
+      "widgetsnbextension": "4.0.16",
+      "idna": "3.20",
+      "attrs": "26.1.0",
+      "opencv-python": "5.0.0.93",
+      "pip": "26.2.2",
+      "uv": "0.13.6",
+      "ptyprocess": "0.7.0"
+    },
+    "lock_sha256": "d0f2c9526f4da2b47dbda645d22d2f1005faa3fe0331b08e475ddaf886cd8c35"
+  },
+  "canonical_checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a",
+  "calibration_fixture_is_synthetic": true,
+  "small_training_checkpoint_is_canonical": false,
+  "canonical_checkpoint_unchanged": true,
+  "evaluation": {
+    "frames": 8,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "camera_feature_height": null,
+      "camera_feature_width": null
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "scene_seeds": [
+      201,
+      202
+    ],
+    "scene_ids": [
+      "201",
+      "202"
+    ],
+    "semantic_miou": 0.9909610238636802,
+    "per_class_iou": [
+      0.98921920940869,
+      0.9957811470006592,
+      0.9898477157360406,
+      0.9858156028368794,
+      0.9920634920634921,
+      1.0,
+      0.984
+    ],
+    "confusion_matrix": [
+      [
+        3028,
+        6,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        23,
+        7553,
+        1,
+        0,
+        0,
+        0,
+        2
+      ],
+      [
+        0,
+        0,
+        195,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        139,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        125,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        123
+      ]
+    ],
+    "majority_class_miou": 0.09667091836734694,
+    "flow_epe_m": 0.01242371712869499,
+    "zero_flow_epe_m": 0.0013745377660076689,
+    "dynamic_flow_epe_m": 0.023942754768844072,
+    "dynamic_zero_flow_epe_m": 0.04563080171282677,
+    "loss": 0.022695316467434168,
+    "synthetic_only": true,
+    "checkpoint_metadata": {
+      "schema_version": 1,
+      "synthetic_only": true,
+      "data_source": "procedural_simulator",
+      "seed": 7,
+      "recipe": {
+        "source_sha256": {
+          "core/__init__.py": "ded4d8324b9cf64c72de097094a11bdaa82075fda218da4b7281c0266ce8d2b2",
+          "core/contracts.py": "70c69eb35035c625822d3d8621f798937dbac05819f5b4ece6f5371e94ce62f8",
+          "core/pipeline.py": "5abce7a7e79e4e68fb5c77e7aad80e7bc3a9eb6d181e1124df92143670ffb3ee",
+          "core/resources.py": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7",
+          "core/se3_math.py": "7e7d6d6a3caf90f6af3300a936b26398f36bac88818485a510e13b83cb6efb30",
+          "perception_ml/__init__.py": "d0b5dab1fd961443f6c1b6f15579117870e4990d728e377379ab136c63d05a48",
+          "perception_ml/eigen_descriptors.py": "c6412cf502f10c766e0c4f8c5a75c9f6cb29a471d55bb3d8249616fd2bf8a479",
+          "perception_ml/hybrid_3d_network.py": "7525107014495afe8a2d8d4714ef56aa9173aaa6b56e3b5bf6236a71367dd2e7",
+          "perception_ml/inference_engine.py": "7371f3225ab7569f633f7599b4dc17a7a5e4ff374613d73c3875d5b619c93378",
+          "perception_ml/point_mae_pretrain.py": "dc8a39455dd5af2a1047d5814d36904c2928240a84d4c14b48e546951f7b6936",
+          "perception_ml/recorded_dataset.py": "35c2db600a5e1b3ae37ed6da38fb6f6df034e83681444ee16a6d44b18c2fb8f4",
+          "perception_ml/training.py": "a6a8e5f02c66e21f092d3dddbbf20de913f7a800da926ffdb4d6f1c73d6f6f51",
+          "slam_and_twin/__init__.py": "288717adad38e7e01a1e10f312272a344b357fcb4329dc91ce0d10f49d04c627",
+          "slam_and_twin/icp_pose_graph.py": "7dcbfaf661a581e722ad09a4d39c583ade67eebcdcd79befd843020ed97dcdbc",
+          "slam_and_twin/imu_deskew.py": "193c5558b209b895ab983eddb7be4b18dcffac56c620c54e9af94af644b2adf9",
+          "slam_and_twin/log_odds_octomap.py": "ea6f9672412a648f3d801c3170b0cde73c6c7db50ac403b422704b12f94bc146",
+          "slam_and_twin/spatial_diff_engine.py": "240d3463e1f265ed34f01eeac1ffb51273436fbfb9c3c1dcd143b67267ec1ea6",
+          "slam_and_twin/static_twin_builder.py": "2130eba9ca56254d4ff80f70e4dc9e6208961f1cb5255617b6900ceb8a5f7529",
+          "ingestion/synthetic_lab_simulator.py": "37d37d816b54a63fd55cca517911499664190a2e51d4bc89ebe3a5f2b500b0d4",
+          "ingestion/sensor_synchronizer.py": "5006930ad47b601ceeccfebb46da78fcca06158c010ea6863d80675d45c66ac6"
+        },
+        "configuration": {
+          "seed": 7,
+          "device": "cpu",
+          "simulation": {
+            "lidar_points": 2400,
+            "width": 160,
+            "height": 100,
+            "dt": 0.1,
+            "noise_std": 0.008,
+            "mobile": false
+          },
+          "mapping": {
+            "voxel_size": 0.18,
+            "decay_rate": 0.98,
+            "twin_voxel_size": 0.08,
+            "tau0": 0.14,
+            "beta": 0.008,
+            "floor_epsilon": 0.06
+          },
+          "perception": {
+            "max_voxels": 1400,
+            "neighbors": 16,
+            "temporal_neighbors": 12,
+            "rgbd_stride": 3,
+            "range_image_height": 24,
+            "range_image_width": 96,
+            "confidence_threshold": 0.3,
+            "checkpoint": "assets/checkpoints/synthetic.pt"
+          },
+          "tracking": {
+            "model": "ca",
+            "cluster_eps": 0.4,
+            "min_cluster_points": 4
+          },
+          "planning": {
+            "resolution": 0.25,
+            "radius": 0.2,
+            "start": [
+              -1.375,
+              -4.375,
+              0.625
+            ],
+            "goal": [
+              2.125,
+              4.125,
+              0.625
+            ],
+            "ground": true,
+            "replan_interval": 5,
+            "mppi_samples": 96,
+            "mppi_iterations": 2,
+            "bounds": [
+              -6,
+              6,
+              -5,
+              5,
+              0,
+              3.5
+            ]
+          },
+          "telemetry": {
+            "enabled": false,
+            "host": "127.0.0.1",
+            "port": 8765
+          },
+          "rendering": {
+            "backend": "auto",
+            "mesa_dir": "assets/rendering/mesa"
+          },
+          "training": {
+            "learning_rate": 0.001,
+            "fine_tune_learning_rate": 0.0001,
+            "epochs": 20,
+            "frames_per_scene": 12,
+            "train_seeds": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "validation_seeds": [
+              101,
+              102
+            ],
+            "test_seeds": [
+              201,
+              202
+            ],
+            "max_points": 1800
+          },
+          "live": {
+            "lidar_ip": "192.168.1.62",
+            "host_ip": "192.168.1.2",
+            "lidar_port": 6101,
+            "host_port": 6201,
+            "camera_width": 1280,
+            "camera_height": 800,
+            "camera_fps": 30,
+            "camera_color_width": null,
+            "camera_color_height": null,
+            "camera_color_fps": null,
+            "camera_align_mode": "auto",
+            "camera_intrinsics_tolerance_px": 1.0,
+            "camera_distortion_tolerance": 0.0001,
+            "calibration": "config/calibration_extrinsics.json",
+            "allow_degraded": false,
+            "s2_port": null,
+            "s2_baudrate": 1000000,
+            "s2_transport": "serial",
+            "s2_udp_port": 8089,
+            "s2_max_age": 0.15,
+            "s2_pitch_file": null
+          },
+          "input_mode": "train"
+        },
+        "epochs_requested": 24,
+        "ground_truth_version": "clean_material_world_v1",
+        "environment": {
+          "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+          "platform": "Windows-11-10.0.26200-SP0",
+          "torch": "2.14.1+cpu",
+          "numpy": "2.5.4"
+        },
+        "mae_checkpoint_sha256": "5a7475f35f614170ff1e71619b12d7f0947c64d49df15c63f397113176cfca75"
+      },
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "epoch": 18,
+      "train_scene_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "validation_scene_ids": [
+        "101",
+        "102"
+      ],
+      "train_recordings": [],
+      "validation_recordings": [],
+      "dataset_manifest": null,
+      "initial_checkpoint": null,
+      "learning_rate": 0.001,
+      "dense_rgbd_fusion": true,
+      "mae_initialization": "assets\\checkpoints\\point_mae.pt",
+      "voxel_size": 0.18,
+      "sampling": {
+        "max_voxels": 1400,
+        "neighbors": 16,
+        "temporal_neighbors": 12,
+        "rgbd_stride": 3,
+        "range_image_height": 24,
+        "range_image_width": 96
+      },
+      "sampling_constants": {
+        "pointnet_fps_cap": 256,
+        "pointnet_radii_m": [
+          0.6,
+          1.2
+        ],
+        "mae_patch_points": 16,
+        "mae_center_cap": 96
+      },
+      "descriptor_order": "8 specified + eigenvalue_sum + height_std"
+    },
+    "semantic_beats_baseline": true,
+    "dynamic_flow_beats_baseline": true
+  },
+  "pytest": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "2",
+    "tests": "311",
+    "time": "218.611",
+    "timestamp": "2026-10-28T18:12:24.951609+00:00",
+    "hostname": "Sumedha",
+    "skipped_cases": [
+      {
+        "name": "tests.test_observed_navigation_integration.test_observed_commissioning_produces_supported_collision_checked_route",
+        "reason": "Enable RUN_OBSERVED_INTEGRATION=1 for dense commissioning ray integration"
+      },
+      {
+        "name": "tests.test_render_backend.test_native_flags_and_framebuffer_policy_contracts",
+        "reason": "Executes an x64 Windows DLL"
+      }
+    ],
+    "duration_clock": "pytest/JUnit monotonic test-suite timer; authoritative duration"
+  },
+  "diagnostics": {
+    "software_checks_passed": true,
+    "hardware_checks_passed": false,
+    "hardware_status": "not_tested",
+    "source": {
+      "requested": "sim",
+      "actual": "sim",
+      "input_path": null,
+      "observed_capabilities": {
+        "sensor_id": "synthetic-lidar",
+        "multi_return": true,
+        "per_point_time": true,
+        "imu": true,
+        "hardware_sync": true,
+        "return_metadata_valid": true
+      }
+    },
+    "pending_real_validation": [
+      "connected-device acquisition and synchronization",
+      "independent measured extrinsic calibration",
+      "independently annotated real-lab semantic/flow accuracy",
+      "physical target/trajectory safety testing"
+    ]
+  },
+  "supplemental_pytest": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "9",
+    "time": "17.071",
+    "timestamp": "2026-10-28T18:20:45.997168+00:00",
+    "hostname": "Sumedha"
+  },
+  "recording_parity": {
+    "schema_version": 1,
+    "left": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/sim",
+    "right": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/recorded_replay",
+    "frame_id": 2,
+    "rtol": 1e-05,
+    "atol": 2e-05,
+    "excluded": [
+      "wall timing",
+      "memory diagnostics",
+      "processing fps",
+      "module timing",
+      "processed_at_unix (wall clock)",
+      "halo (wall-clock age and latency-derived stale display)"
+    ],
+    "occupancy_cells": 47906,
+    "occupancy_bit_exact": true,
+    "source_modes": {
+      "left": "sim",
+      "right": "replay"
+    },
+    "source_mode_difference_explicitly_allowed": true,
+    "max_absolute_differences": {
+      "sensor_pose_world": 0.0,
+      "tracks[0].class_probs": 0.0,
+      "tracks[0].position": 0.0,
+      "tracks[0].velocity": 0.0,
+      "tracks[0].acceleration": 0.0,
+      "tracks[0].obb_corners": 0.0,
+      "tracks[0].eigen_invariants": 0.0,
+      "tracks[0].covariance": 0.0,
+      "tracks[0].predicted_trajectory": 0.0,
+      "tracks[1].class_probs": 0.0,
+      "tracks[1].position": 0.0,
+      "tracks[1].velocity": 0.0,
+      "tracks[1].acceleration": 0.0,
+      "tracks[1].obb_corners": 0.0,
+      "tracks[1].eigen_invariants": 0.0,
+      "tracks[1].covariance": 0.0,
+      "tracks[1].predicted_trajectory": 0.0,
+      "tracks[2].class_probs": 0.0,
+      "tracks[2].position": 0.0,
+      "tracks[2].velocity": 0.0,
+      "tracks[2].acceleration": 0.0,
+      "tracks[2].obb_corners": 0.0,
+      "tracks[2].eigen_invariants": 0.0,
+      "tracks[2].covariance": 0.0,
+      "tracks[2].predicted_trajectory": 0.0,
+      "tracks[3].class_probs": 0.0,
+      "tracks[3].position": 0.0,
+      "tracks[3].velocity": 0.0,
+      "tracks[3].acceleration": 0.0,
+      "tracks[3].obb_corners": 0.0,
+      "tracks[3].eigen_invariants": 0.0,
+      "tracks[3].covariance": 0.0,
+      "tracks[3].predicted_trajectory": 0.0,
+      "geofences[0].center": 0.0,
+      "geofences[0].rotation_matrix": 0.0,
+      "geofences[0].half_extents": 0.0,
+      "geofences[0].breaching_track_ids": 0.0,
+      "geofences[1].center": 0.0,
+      "geofences[1].rotation_matrix": 0.0,
+      "geofences[1].half_extents": 0.0,
+      "voxels.centers": 0.0,
+      "voxels.colors": 0.0,
+      "voxels.flow": 0.0,
+      "floor_risk.centers": 0.0,
+      "floor_risk.risk": 0.0,
+      "floor_risk.colors": 0.0,
+      "floor_risk.source_indices": 0.0,
+      "traffic_heatmap.values": 0.0,
+      "traffic_heatmap.source_shape": 0.0,
+      "traffic_heatmap.shape": 0.0,
+      "traffic_heatmap.source_row_edges": 0.0,
+      "traffic_heatmap.source_column_edges": 0.0,
+      "traffic_heatmap.bounds_xy": 0.0,
+      "path": 0.0,
+      "diagnostics.robot_position": 0.0,
+      "diagnostics.robot_velocity": 0.0,
+      "occupancy.coords": 0.0,
+      "occupancy.values": 0.0,
+      "saved_traffic.bounds": 0.0,
+      "saved_traffic.values": 0.0
+    },
+    "failures": [],
+    "passed": true
+  },
+  "installed_wheel": {
+    "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+    "wheel_sha256": "1ac8e19066f3fbab289704f6d897ea978ac1614340bf5078513c6507be6e4d86",
+    "exit_code": 0,
+    "proof_report": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/static_wheel_1ac8e19066f3/report.json",
+    "proof": {
+      "scope": "Frontend-only package refresh; neural/runtime proof retained for byte-identical Python",
+      "wheel_sha256": "1ac8e19066f3fbab289704f6d897ea978ac1614340bf5078513c6507be6e4d86",
+      "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+      "previous_wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+      "previous_wheel_sha256": "be3c03cb21c887189ea90d1b76a14dc681a0e3b837d437847df26fea8b240d8d",
+      "cwd": "/var/tmp/aethertwin-static-installed-2is50nsl",
+      "physical_hardware_tested": false,
+      "commands": [
+        {
+          "argv": [
+            "/var/tmp/lab-twin-venv/bin/python",
+            "-m",
+            "uv",
+            "pip",
+            "install",
+            "--python",
+            "/var/tmp/lab-twin-venv/bin/python",
+            "--no-deps",
+            "--reinstall",
+            "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.9949368779999972
+        },
+        {
+          "argv": [
+            "/var/tmp/lab-twin-venv/bin/lab-twin",
+            "--help"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 3.397474502999998
+        },
+        {
+          "argv": [
+            "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+            "--help"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 0.13086896699999784
+        },
+        {
+          "argv": [
+            "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+            "--help"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.8365731160000038
+        },
+        {
+          "argv": [
+            "/var/tmp/lab-twin-venv/bin/aethertwin-gateway",
+            "--help"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.3852255629999988
+        },
+        {
+          "argv": [
+            "/var/tmp/lab-twin-venv/bin/python",
+            "-I",
+            "-c",
+            "from command_center.service import create_app;import uvicorn;uvicorn.run(create_app(None,host=\"127.0.0.1\",frontend_root='/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/web/dist'),host=\"127.0.0.1\",port=50477,access_log=False)"
+          ],
+          "exit_code": 0,
+          "elapsed_seconds": 1.575234909999999
+        }
+      ],
+      "existing_python_sources_unchanged": true,
+      "runtime_python_source_unchanged": true,
+      "python_files_compared": 80,
+      "python_file_additions": {},
+      "initial_preflight_note": "Complete packaged Python file inventory unchanged, including readable deployment resources.",
+      "entrypoints_unchanged": true,
+      "archive_changed_paths": [
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/.vite/manifest.json",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-BGgNbCOT.js",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-BGgNbCOT.js.map",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-DkAAyosm.js",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-DkAAyosm.js.map",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CBQ7YI1y.js",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CBQ7YI1y.js.map",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CRjvq6BN.js",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CRjvq6BN.js.map",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-BP_v25uK.js",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-BP_v25uK.js.map",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js.map",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/benchmark.html",
+        "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/index.html",
+        "lidar_lab_digital_twin-2.0.0.dist-info/RECORD"
+      ],
+      "installed_python_modules_verified": [
+        "main",
+        "core.resources",
+        "core.pipeline",
+        "core.contracts",
+        "diagnostics.runner",
+        "command_center.runtime",
+        "command_center.service",
+        "command_center.protocol",
+        "command_center.commissioning",
+        "tracking_and_navigation.kalman_9dof_tracker",
+        "ingestion.calibration",
+        "slam_and_twin.tiled_map"
+      ],
+      "installed_resource_root": "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin",
+      "frontend_file_hashes": {
+        "index.html": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6",
+        "benchmark.html": "cdf8eb4c99d23144375c799a2cee08e95d1e7b88ba557b7fe57dca2fef99caca",
+        ".vite/manifest.json": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f",
+        "assets/decode.worker-CC-RLjVq.js": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+        "assets/SpatialRenderer-BGgNbCOT.js": "c44759c2b32d6247f3353c84fcc71b2e24d89270415cf53513d739bc8c6e4e4e",
+        "assets/benchmark-CRjvq6BN.js.map": "186e5456f63fa55b8609b94106c70e52a65ee060ae3a2d2609d66f2cb935fc37",
+        "assets/rolldown-runtime-4tVxZq34.js": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+        "assets/benchmark-CRjvq6BN.js": "1430c3693c325ac74f197b077a01f9f00cd788d397e3de7adfc9436543078234",
+        "assets/spatial-contracts-33vaUxT7.js": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+        "assets/react-vendor-Br0ptrPz.js.map": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+        "assets/decode.worker-CC-RLjVq.js.map": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+        "assets/index-CebD2Odz.css": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+        "assets/three-vendor-Bc4s0MDm.js.map": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+        "assets/SpatialRenderer-BGgNbCOT.js.map": "8316c7e7cf1f6d3af0a823f85653fdac3b5eb6b4c29e89566f5fd2485be7bd69",
+        "assets/index-BP_v25uK.js": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e",
+        "assets/modulepreload-polyfill-P2Xu9kJm.js": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+        "assets/spatial-contracts-33vaUxT7.js.map": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+        "assets/react-vendor-Br0ptrPz.js": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+        "assets/index-BP_v25uK.js.map": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092",
+        "assets/three-vendor-Bc4s0MDm.js": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b"
+      },
+      "installed_distribution_version": "2.0.0",
+      "passed": true,
+      "http_served_frontend": [
+        {
+          "path": "/.vite/manifest.json",
+          "size_bytes": 1648,
+          "sha256": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f",
+          "status": 200
+        },
+        {
+          "path": "/assets/SpatialRenderer-BGgNbCOT.js",
+          "size_bytes": 14033,
+          "sha256": "c44759c2b32d6247f3353c84fcc71b2e24d89270415cf53513d739bc8c6e4e4e",
+          "status": 200
+        },
+        {
+          "path": "/assets/SpatialRenderer-BGgNbCOT.js.map",
+          "size_bytes": 46458,
+          "sha256": "8316c7e7cf1f6d3af0a823f85653fdac3b5eb6b4c29e89566f5fd2485be7bd69",
+          "status": 200
+        },
+        {
+          "path": "/assets/benchmark-CRjvq6BN.js",
+          "size_bytes": 2720,
+          "sha256": "1430c3693c325ac74f197b077a01f9f00cd788d397e3de7adfc9436543078234",
+          "status": 200
+        },
+        {
+          "path": "/assets/benchmark-CRjvq6BN.js.map",
+          "size_bytes": 8069,
+          "sha256": "186e5456f63fa55b8609b94106c70e52a65ee060ae3a2d2609d66f2cb935fc37",
+          "status": 200
+        },
+        {
+          "path": "/assets/decode.worker-CC-RLjVq.js",
+          "size_bytes": 5717,
+          "sha256": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+          "status": 200
+        },
+        {
+          "path": "/assets/decode.worker-CC-RLjVq.js.map",
+          "size_bytes": 18095,
+          "sha256": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-BP_v25uK.js",
+          "size_bytes": 64235,
+          "sha256": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-BP_v25uK.js.map",
+          "size_bytes": 186321,
+          "sha256": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092",
+          "status": 200
+        },
+        {
+          "path": "/assets/index-CebD2Odz.css",
+          "size_bytes": 32641,
+          "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+          "status": 200
+        },
+        {
+          "path": "/assets/modulepreload-polyfill-P2Xu9kJm.js",
+          "size_bytes": 670,
+          "sha256": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+          "status": 200
+        },
+        {
+          "path": "/assets/react-vendor-Br0ptrPz.js",
+          "size_bytes": 218797,
+          "sha256": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+          "status": 200
+        },
+        {
+          "path": "/assets/react-vendor-Br0ptrPz.js.map",
+          "size_bytes": 1043926,
+          "sha256": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+          "status": 200
+        },
+        {
+          "path": "/assets/rolldown-runtime-4tVxZq34.js",
+          "size_bytes": 237,
+          "sha256": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+          "status": 200
+        },
+        {
+          "path": "/assets/spatial-contracts-33vaUxT7.js",
+          "size_bytes": 1933,
+          "sha256": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+          "status": 200
+        },
+        {
+          "path": "/assets/spatial-contracts-33vaUxT7.js.map",
+          "size_bytes": 10532,
+          "sha256": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+          "status": 200
+        },
+        {
+          "path": "/assets/three-vendor-Bc4s0MDm.js",
+          "size_bytes": 635726,
+          "sha256": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b",
+          "status": 200
+        },
+        {
+          "path": "/assets/three-vendor-Bc4s0MDm.js.map",
+          "size_bytes": 3190283,
+          "sha256": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+          "status": 200
+        },
+        {
+          "path": "/benchmark.html",
+          "size_bytes": 2412,
+          "sha256": "cdf8eb4c99d23144375c799a2cee08e95d1e7b88ba557b7fe57dca2fef99caca",
+          "status": 200
+        },
+        {
+          "path": "/",
+          "size_bytes": 917,
+          "sha256": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6",
+          "status": 200
+        }
+      ],
+      "normal_shutdown": true,
+      "neural_tests_repeated": false
+    }
+  },
+  "final_frozen_pytest": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "88",
+    "time": "114.671",
+    "timestamp": "2026-10-28T18:45:18.837896+00:00",
+    "hostname": "Sumedha"
+  },
+  "installed_wheel_revisions": [
+    {
+      "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+      "wheel_sha256": "2f22d027f283445aed48f7f12402ea46ba33e1028340b5790e92a3bb0a8cc21a",
+      "exit_code": 0,
+      "proof_report": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/report.json",
+      "proof": {
+        "created_at_utc": "2026-10-28T18:43:42.908269+00:00",
+        "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+        "source_checkout_not_on_pythonpath": true,
+        "physical_hardware_tested": false,
+        "jetson_hardware_tested": false,
+        "checks": {
+          "installed_source": {
+            "passed": true,
+            "modules": {
+              "main": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/main.py",
+                "sha256": "be58bfa19bf73661802f33330bde1ee503d04f0533153cf05b5f845dfa801d51"
+              },
+              "core.resources": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/core/resources.py",
+                "sha256": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7"
+              },
+              "core.pipeline": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/core/pipeline.py",
+                "sha256": "b5ab404535d46a3c7f1d2033da5bca90be5bb47102b3528e85a9bda82546b8bb"
+              },
+              "core.contracts": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/core/contracts.py",
+                "sha256": "b428b1fff9ce997fb586b4268705edc9bd6b51b573e2d8f344a2366d03d77b0c"
+              },
+              "diagnostics.runner": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/diagnostics/runner.py",
+                "sha256": "1e2284f23fa537bd101241b7bba280fca97b20fc6ee0bfeb457b7192049cbf23"
+              },
+              "command_center.runtime": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/runtime.py",
+                "sha256": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf"
+              },
+              "command_center.service": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/service.py",
+                "sha256": "f8ae606086d2b5eff884245e10fa3cb5f3660757337e71be9a8dcab8a5f6d418"
+              },
+              "command_center.protocol": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/protocol.py",
+                "sha256": "a30762972b96d32bf9adb0714d1b0dc1d9e71eb6c0d05b38652fb42fc7c124f3"
+              },
+              "command_center.commissioning": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/commissioning.py",
+                "sha256": "23bf5426706b4a936734eb592b27f0e413d3eb92f3a50ce2d4f6737d31cd6bec"
+              },
+              "tracking_and_navigation.kalman_9dof_tracker": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/tracking_and_navigation/kalman_9dof_tracker.py",
+                "sha256": "aac9fde1664647c157b68a49545770f86789949ba500e7f14ec0b93c5c306a88"
+              },
+              "ingestion.calibration": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/ingestion/calibration.py",
+                "sha256": "01f5eb166e0afa127f09f39037a473b8a31d813cb8a4de5586bf72be5cfa5e1b"
+              },
+              "slam_and_twin.tiled_map": {
+                "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/slam_and_twin/tiled_map.py",
+                "sha256": "ce97cd0ce0788b22b79b285759bc1f13623b2e026324a8857d1c3eaf09a7c286"
+              }
+            },
+            "distribution_version": "2.0.0"
+          },
+          "packaged_resources": {
+            "passed": true,
+            "resource_root": "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin",
+            "sha256": {
+              "config/system_config.yaml": "66770c6704a6f2fc1e651313681f28c8b544ae1f4e46818c4f343f8bd4dc4675",
+              "config/profiles/laptop.yaml": "e667a67b5513e49fdadd3b7db4ab2e85fe87e6e61657912526c92728dfb58f03",
+              "config/profiles/jetson_edge.yaml": "f80ae159d0e59f23da3ee322336e571d2337599165bb1a59c081564e1114a7e0",
+              "assets/checkpoints/synthetic.pt": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a",
+              "assets/sample_recording/manifest.json": "1409c5a256292bc3e18cda59bf48cd837318435e872250f1c65e538dd022b04a",
+              "web/dist/index.html": "0674be476315d76381f79af8953d800b796618a782eb42eef7af8191998610ee",
+              "assets/sample_recording/chunk_000000.npz": "8451e8f33017e7df40b5385838bba6d7924a0e00036c4dd76965598e17a42cf9"
+            }
+          },
+          "entrypoints": {
+            "passed": true,
+            "entries": {
+              "aethertwin-diagnose": "diagnostics.__main__:main",
+              "aethertwin-gateway": "command_center.gateway:main",
+              "aethertwin-serve": "command_center.__main__:main",
+              "lab-twin": "main:main"
+            }
+          },
+          "diagnostics": {
+            "software_checks_passed": true,
+            "hardware_checks_passed": false,
+            "hardware_status": "not_tested",
+            "resource_shutdown": {
+              "status": "passed",
+              "limit": "Owned map databases and temporary runtime cache closed"
+            }
+          },
+          "browser": {
+            "passed": true,
+            "frontend_assets": [
+              {
+                "path": "/assets/index-C-ZJVSjn.js",
+                "size_bytes": 62345,
+                "sha256": "055ae3b0083830884df437f5d1601b6f048cf37be84115d8cee998548f8afb62",
+                "content_type": "text/javascript; charset=utf-8"
+              },
+              {
+                "path": "/assets/index-CebD2Odz.css",
+                "size_bytes": 32641,
+                "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+                "content_type": "text/css; charset=utf-8"
+              },
+              {
+                "path": "/assets/modulepreload-polyfill-P2Xu9kJm.js",
+                "size_bytes": 670,
+                "sha256": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+                "content_type": "text/javascript; charset=utf-8"
+              },
+              {
+                "path": "/assets/react-vendor-Br0ptrPz.js",
+                "size_bytes": 218797,
+                "sha256": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+                "content_type": "text/javascript; charset=utf-8"
+              },
+              {
+                "path": "/assets/rolldown-runtime-4tVxZq34.js",
+                "size_bytes": 237,
+                "sha256": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+                "content_type": "text/javascript; charset=utf-8"
+              },
+              {
+                "path": "/assets/spatial-contracts-33vaUxT7.js",
+                "size_bytes": 1933,
+                "sha256": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+                "content_type": "text/javascript; charset=utf-8"
+              }
+            ],
+            "frame_id": 2,
+            "source_mode": "replay",
+            "tracks": 4,
+            "track_state_fields_present": true,
+            "module_shapes": {
+              "localization": {
+                "raw_lidar": [
+                  2409,
+                  7
+                ],
+                "deskewed_lidar": [
+                  2409,
+                  7
+                ],
+                "pose": [
+                  4,
+                  4
+                ]
+              },
+              "occupancy": {
+                "lidar_rays": [
+                  2409,
+                  7
+                ],
+                "depth_points": [
+                  1170,
+                  6
+                ]
+              },
+              "perception_tracking": {
+                "voxel_centers": [
+                  1400,
+                  3
+                ],
+                "semantic_probabilities": [
+                  1400,
+                  7
+                ],
+                "scene_flow": [
+                  1400,
+                  3
+                ],
+                "embeddings": [
+                  1400,
+                  256
+                ],
+                "track_count": 4
+              },
+              "planning": {
+                "grid": [
+                  48,
+                  40,
+                  14
+                ],
+                "path": [
+                  69,
+                  3
+                ]
+              },
+              "risk_fields": {
+                "points": [
+                  1920,
+                  3
+                ],
+                "risk": [
+                  1920
+                ]
+              }
+            },
+            "map_tile_count": 12,
+            "websocket": {
+              "packet_bytes": 185728,
+              "protocol_version": 2,
+              "kind": "keyframe",
+              "voxel_count": 1400
+            },
+            "hardware_status": "not_tested"
+          }
+        },
+        "commands": [
+          {
+            "name": "aethertwin-diagnose_help",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+              "--help"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 1.6277372129999996,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/aethertwin-diagnose_help.log"
+          },
+          {
+            "name": "aethertwin-gateway_help",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-gateway",
+              "--help"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 1.183380579999998,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/aethertwin-gateway_help.log"
+          },
+          {
+            "name": "aethertwin-serve_help",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+              "--help"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 0.12086478100000164,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/aethertwin-serve_help.log"
+          },
+          {
+            "name": "lab-twin_help",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/lab-twin",
+              "--help"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 2.684789705,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/lab-twin_help.log"
+          },
+          {
+            "name": "installed_sim",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/lab-twin",
+              "--mode",
+              "sim",
+              "--headless",
+              "--device",
+              "cpu",
+              "--max-frames",
+              "1",
+              "--output",
+              "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/sim"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 7.400371169000003,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_sim.log"
+          },
+          {
+            "name": "installed_replay",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/lab-twin",
+              "--mode",
+              "replay",
+              "--headless",
+              "--device",
+              "cpu",
+              "--max-frames",
+              "3",
+              "--input",
+              "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/assets/sample_recording",
+              "--output",
+              "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/shipped_replay"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 9.163919571000001,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_replay.log"
+          },
+          {
+            "name": "installed_diagnostics",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+              "--source",
+              "sim",
+              "--max-frames",
+              "3",
+              "--threads",
+              "4",
+              "--output",
+              "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/diagnostics"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 10.924878831000001,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_diagnostics.log"
+          },
+          {
+            "name": "installed_browser",
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+              "--mode",
+              "replay",
+              "--input",
+              "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/assets/sample_recording",
+              "--device",
+              "cpu",
+              "--max-frames",
+              "3",
+              "--threads",
+              "4",
+              "--host",
+              "127.0.0.1",
+              "--port",
+              "52635",
+              "--output",
+              "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/browser"
+            ],
+            "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+            "exit_code": 0,
+            "elapsed_seconds": 15.298710993,
+            "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_browser.log"
+          }
+        ],
+        "passed": true
+      },
+      "retained_wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/work/wheel_evidence/2f22d027f283445aed48f7f12402ea46ba33e1028340b5790e92a3bb0a8cc21a/lidar_lab_digital_twin-2.0.0-py3-none-any.whl"
+    },
+    {
+      "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+      "wheel_sha256": "be3c03cb21c887189ea90d1b76a14dc681a0e3b837d437847df26fea8b240d8d",
+      "exit_code": 0,
+      "proof_report": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/static_wheel_be3c03cb21c8/report.json",
+      "proof": {
+        "scope": "Frontend-only package refresh; neural/runtime proof retained for byte-identical Python",
+        "wheel_sha256": "be3c03cb21c887189ea90d1b76a14dc681a0e3b837d437847df26fea8b240d8d",
+        "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+        "previous_wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/work/wheel_evidence/2f22d027f283445aed48f7f12402ea46ba33e1028340b5790e92a3bb0a8cc21a/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+        "previous_wheel_sha256": "2f22d027f283445aed48f7f12402ea46ba33e1028340b5790e92a3bb0a8cc21a",
+        "cwd": "/var/tmp/aethertwin-static-installed-292u4fsr",
+        "physical_hardware_tested": false,
+        "commands": [
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/python",
+              "-m",
+              "uv",
+              "pip",
+              "install",
+              "--python",
+              "/var/tmp/lab-twin-venv/bin/python",
+              "--no-deps",
+              "--reinstall",
+              "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 1.5853960189999867
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/lab-twin",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 3.431845178000003
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 0.13804709899999068
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 2.0887649780000004
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-gateway",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 0.9416409730000055
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/python",
+              "-I",
+              "-c",
+              "from command_center.service import create_app;import uvicorn;uvicorn.run(create_app(None,host=\"127.0.0.1\",frontend_root='/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/web/dist'),host=\"127.0.0.1\",port=41707,access_log=False)"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 1.4914899550000058
+          }
+        ],
+        "existing_python_sources_unchanged": true,
+        "runtime_python_source_unchanged": true,
+        "python_files_compared": 77,
+        "python_file_additions": {
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/entrypoint.py": "d393d97a041e6fa5348d8067d262cced898a15171df7410d56df4b114f7c5720",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/open3d_wheel.py": "13332dce26cfb51c6e35b250cf34c9342d09b199c6366e22da5a4ee82c3582ab",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/lock_profile.py": "7bbce0b215814a37760ac7d64d94529766eb233f00b5d3217f61f52a1875e7d8"
+        },
+        "initial_preflight_note": "Strict full-file-set equality rejected three declared readable deployment resources before installation; all77 existing Python files unchanged. Added resources explicitly verified against frozen sources.",
+        "entrypoints_unchanged": true,
+        "archive_changed_paths": [
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/Dockerfile",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/README.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/entrypoint.py",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/open3d_wheel.py",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/edge/requirements-runtime.txt",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/.env.example",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/.gitignore",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/Dockerfile",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/Dockerfile.dockerignore",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/README.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/compose.yaml",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/lock_profile.py",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/requirements-linux.lock",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/requirements-windows.lock",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/requirements.in",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/deployment/gateway/verification.json",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/docs/AETHERTWIN_ARCHITECTURE.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/docs/BOUNDED_COMMISSIONING.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/docs/CALIBRATION_OBSERVABILITY.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/docs/PHYSICAL_COMMISSIONING.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/docs/TELEMETRY_V2.md",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/.vite/manifest.json",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-C-ZJVSjn.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-C-ZJVSjn.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/spatial-contracts-33vaUxT7.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/index.html",
+          "lidar_lab_digital_twin-2.0.0.dist-info/RECORD"
+        ],
+        "installed_python_modules_verified": [
+          "main",
+          "core.resources",
+          "core.pipeline",
+          "core.contracts",
+          "diagnostics.runner",
+          "command_center.runtime",
+          "command_center.service",
+          "command_center.protocol",
+          "command_center.commissioning",
+          "tracking_and_navigation.kalman_9dof_tracker",
+          "ingestion.calibration",
+          "slam_and_twin.tiled_map"
+        ],
+        "installed_resource_root": "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin",
+        "frontend_file_hashes": {
+          "index.html": "d55a7a586f2c809c352fd06daa49452527f79e0adc917ff23ade4da2004484bc",
+          "benchmark.html": "806a26a80b2a69453fb96da6085888fb45a55691416d54ae7d58658c44c17613",
+          ".vite/manifest.json": "ff1e87b427c8605300eea10037da4f19fa67099f597f337c5b7762357196be99",
+          "assets/decode.worker-CC-RLjVq.js": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+          "assets/SpatialRenderer-DkAAyosm.js.map": "076fa9cee7cc887d2249201c25002655060d3edc5e7fa636a8a0011058461b3f",
+          "assets/rolldown-runtime-4tVxZq34.js": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+          "assets/spatial-contracts-33vaUxT7.js": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+          "assets/react-vendor-Br0ptrPz.js.map": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+          "assets/decode.worker-CC-RLjVq.js.map": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+          "assets/SpatialRenderer-DkAAyosm.js": "a6a800ced9e87089514d72f39f58b654fe65dc9ec728e4d006acb404fbd27612",
+          "assets/index-CebD2Odz.css": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+          "assets/three-vendor-Bc4s0MDm.js.map": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+          "assets/index-D_L5Z4vF.js": "f54582491c1024ccfc0928b599d565b3ca322dd73e04ee66b399c43bc89c48ca",
+          "assets/modulepreload-polyfill-P2Xu9kJm.js": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+          "assets/spatial-contracts-33vaUxT7.js.map": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+          "assets/react-vendor-Br0ptrPz.js": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+          "assets/benchmark-CBQ7YI1y.js.map": "b7b2568484bf8b74e53920418f0528e567bc22b380345331d75fbf4cd4ee9348",
+          "assets/benchmark-CBQ7YI1y.js": "95f05efded16eca4aec750fb59bbc6992779ff2363eecc3f2c92488d56415392",
+          "assets/index-D_L5Z4vF.js.map": "42b0757cecc612e819185ec68e7eccd4b8d62fbee20d7bffe282b708a903bd35",
+          "assets/three-vendor-Bc4s0MDm.js": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b"
+        },
+        "installed_distribution_version": "2.0.0",
+        "passed": true,
+        "http_served_frontend": [
+          {
+            "path": "/.vite/manifest.json",
+            "size_bytes": 1648,
+            "sha256": "ff1e87b427c8605300eea10037da4f19fa67099f597f337c5b7762357196be99",
+            "status": 200
+          },
+          {
+            "path": "/assets/SpatialRenderer-DkAAyosm.js",
+            "size_bytes": 14017,
+            "sha256": "a6a800ced9e87089514d72f39f58b654fe65dc9ec728e4d006acb404fbd27612",
+            "status": 200
+          },
+          {
+            "path": "/assets/SpatialRenderer-DkAAyosm.js.map",
+            "size_bytes": 46218,
+            "sha256": "076fa9cee7cc887d2249201c25002655060d3edc5e7fa636a8a0011058461b3f",
+            "status": 200
+          },
+          {
+            "path": "/assets/benchmark-CBQ7YI1y.js",
+            "size_bytes": 2720,
+            "sha256": "95f05efded16eca4aec750fb59bbc6992779ff2363eecc3f2c92488d56415392",
+            "status": 200
+          },
+          {
+            "path": "/assets/benchmark-CBQ7YI1y.js.map",
+            "size_bytes": 8069,
+            "sha256": "b7b2568484bf8b74e53920418f0528e567bc22b380345331d75fbf4cd4ee9348",
+            "status": 200
+          },
+          {
+            "path": "/assets/decode.worker-CC-RLjVq.js",
+            "size_bytes": 5717,
+            "sha256": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+            "status": 200
+          },
+          {
+            "path": "/assets/decode.worker-CC-RLjVq.js.map",
+            "size_bytes": 18095,
+            "sha256": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+            "status": 200
+          },
+          {
+            "path": "/assets/index-CebD2Odz.css",
+            "size_bytes": 32641,
+            "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+            "status": 200
+          },
+          {
+            "path": "/assets/index-D_L5Z4vF.js",
+            "size_bytes": 64235,
+            "sha256": "f54582491c1024ccfc0928b599d565b3ca322dd73e04ee66b399c43bc89c48ca",
+            "status": 200
+          },
+          {
+            "path": "/assets/index-D_L5Z4vF.js.map",
+            "size_bytes": 186321,
+            "sha256": "42b0757cecc612e819185ec68e7eccd4b8d62fbee20d7bffe282b708a903bd35",
+            "status": 200
+          },
+          {
+            "path": "/assets/modulepreload-polyfill-P2Xu9kJm.js",
+            "size_bytes": 670,
+            "sha256": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+            "status": 200
+          },
+          {
+            "path": "/assets/react-vendor-Br0ptrPz.js",
+            "size_bytes": 218797,
+            "sha256": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+            "status": 200
+          },
+          {
+            "path": "/assets/react-vendor-Br0ptrPz.js.map",
+            "size_bytes": 1043926,
+            "sha256": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+            "status": 200
+          },
+          {
+            "path": "/assets/rolldown-runtime-4tVxZq34.js",
+            "size_bytes": 237,
+            "sha256": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+            "status": 200
+          },
+          {
+            "path": "/assets/spatial-contracts-33vaUxT7.js",
+            "size_bytes": 1933,
+            "sha256": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+            "status": 200
+          },
+          {
+            "path": "/assets/spatial-contracts-33vaUxT7.js.map",
+            "size_bytes": 10532,
+            "sha256": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+            "status": 200
+          },
+          {
+            "path": "/assets/three-vendor-Bc4s0MDm.js",
+            "size_bytes": 635726,
+            "sha256": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b",
+            "status": 200
+          },
+          {
+            "path": "/assets/three-vendor-Bc4s0MDm.js.map",
+            "size_bytes": 3190283,
+            "sha256": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+            "status": 200
+          },
+          {
+            "path": "/benchmark.html",
+            "size_bytes": 2412,
+            "sha256": "806a26a80b2a69453fb96da6085888fb45a55691416d54ae7d58658c44c17613",
+            "status": 200
+          },
+          {
+            "path": "/",
+            "size_bytes": 917,
+            "sha256": "d55a7a586f2c809c352fd06daa49452527f79e0adc917ff23ade4da2004484bc",
+            "status": 200
+          }
+        ],
+        "normal_shutdown": true,
+        "neural_tests_repeated": false
+      }
+    },
+    {
+      "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+      "wheel_sha256": "1ac8e19066f3fbab289704f6d897ea978ac1614340bf5078513c6507be6e4d86",
+      "exit_code": 0,
+      "proof_report": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/static_wheel_1ac8e19066f3/report.json",
+      "proof": {
+        "scope": "Frontend-only package refresh; neural/runtime proof retained for byte-identical Python",
+        "wheel_sha256": "1ac8e19066f3fbab289704f6d897ea978ac1614340bf5078513c6507be6e4d86",
+        "wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+        "previous_wheel_path": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/final/lidar_lab_digital_twin-2.0.0-py3-none-any.whl",
+        "previous_wheel_sha256": "be3c03cb21c887189ea90d1b76a14dc681a0e3b837d437847df26fea8b240d8d",
+        "cwd": "/var/tmp/aethertwin-static-installed-2is50nsl",
+        "physical_hardware_tested": false,
+        "commands": [
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/python",
+              "-m",
+              "uv",
+              "pip",
+              "install",
+              "--python",
+              "/var/tmp/lab-twin-venv/bin/python",
+              "--no-deps",
+              "--reinstall",
+              "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/dist/release/lidar_lab_digital_twin-2.0.0-py3-none-any.whl"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 1.9949368779999972
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/lab-twin",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 3.397474502999998
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 0.13086896699999784
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 1.8365731160000038
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/aethertwin-gateway",
+              "--help"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 1.3852255629999988
+          },
+          {
+            "argv": [
+              "/var/tmp/lab-twin-venv/bin/python",
+              "-I",
+              "-c",
+              "from command_center.service import create_app;import uvicorn;uvicorn.run(create_app(None,host=\"127.0.0.1\",frontend_root='/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/web/dist'),host=\"127.0.0.1\",port=50477,access_log=False)"
+            ],
+            "exit_code": 0,
+            "elapsed_seconds": 1.575234909999999
+          }
+        ],
+        "existing_python_sources_unchanged": true,
+        "runtime_python_source_unchanged": true,
+        "python_files_compared": 80,
+        "python_file_additions": {},
+        "initial_preflight_note": "Complete packaged Python file inventory unchanged, including readable deployment resources.",
+        "entrypoints_unchanged": true,
+        "archive_changed_paths": [
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/.vite/manifest.json",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-BGgNbCOT.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-BGgNbCOT.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-DkAAyosm.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/SpatialRenderer-DkAAyosm.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CBQ7YI1y.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CBQ7YI1y.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CRjvq6BN.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/benchmark-CRjvq6BN.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-BP_v25uK.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-BP_v25uK.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/assets/index-D_L5Z4vF.js.map",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/benchmark.html",
+          "lidar_lab_digital_twin-2.0.0.data/data/share/lidar-lab-digital-twin/web/dist/index.html",
+          "lidar_lab_digital_twin-2.0.0.dist-info/RECORD"
+        ],
+        "installed_python_modules_verified": [
+          "main",
+          "core.resources",
+          "core.pipeline",
+          "core.contracts",
+          "diagnostics.runner",
+          "command_center.runtime",
+          "command_center.service",
+          "command_center.protocol",
+          "command_center.commissioning",
+          "tracking_and_navigation.kalman_9dof_tracker",
+          "ingestion.calibration",
+          "slam_and_twin.tiled_map"
+        ],
+        "installed_resource_root": "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin",
+        "frontend_file_hashes": {
+          "index.html": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6",
+          "benchmark.html": "cdf8eb4c99d23144375c799a2cee08e95d1e7b88ba557b7fe57dca2fef99caca",
+          ".vite/manifest.json": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f",
+          "assets/decode.worker-CC-RLjVq.js": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+          "assets/SpatialRenderer-BGgNbCOT.js": "c44759c2b32d6247f3353c84fcc71b2e24d89270415cf53513d739bc8c6e4e4e",
+          "assets/benchmark-CRjvq6BN.js.map": "186e5456f63fa55b8609b94106c70e52a65ee060ae3a2d2609d66f2cb935fc37",
+          "assets/rolldown-runtime-4tVxZq34.js": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+          "assets/benchmark-CRjvq6BN.js": "1430c3693c325ac74f197b077a01f9f00cd788d397e3de7adfc9436543078234",
+          "assets/spatial-contracts-33vaUxT7.js": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+          "assets/react-vendor-Br0ptrPz.js.map": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+          "assets/decode.worker-CC-RLjVq.js.map": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+          "assets/index-CebD2Odz.css": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+          "assets/three-vendor-Bc4s0MDm.js.map": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+          "assets/SpatialRenderer-BGgNbCOT.js.map": "8316c7e7cf1f6d3af0a823f85653fdac3b5eb6b4c29e89566f5fd2485be7bd69",
+          "assets/index-BP_v25uK.js": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e",
+          "assets/modulepreload-polyfill-P2Xu9kJm.js": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+          "assets/spatial-contracts-33vaUxT7.js.map": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+          "assets/react-vendor-Br0ptrPz.js": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+          "assets/index-BP_v25uK.js.map": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092",
+          "assets/three-vendor-Bc4s0MDm.js": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b"
+        },
+        "installed_distribution_version": "2.0.0",
+        "passed": true,
+        "http_served_frontend": [
+          {
+            "path": "/.vite/manifest.json",
+            "size_bytes": 1648,
+            "sha256": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f",
+            "status": 200
+          },
+          {
+            "path": "/assets/SpatialRenderer-BGgNbCOT.js",
+            "size_bytes": 14033,
+            "sha256": "c44759c2b32d6247f3353c84fcc71b2e24d89270415cf53513d739bc8c6e4e4e",
+            "status": 200
+          },
+          {
+            "path": "/assets/SpatialRenderer-BGgNbCOT.js.map",
+            "size_bytes": 46458,
+            "sha256": "8316c7e7cf1f6d3af0a823f85653fdac3b5eb6b4c29e89566f5fd2485be7bd69",
+            "status": 200
+          },
+          {
+            "path": "/assets/benchmark-CRjvq6BN.js",
+            "size_bytes": 2720,
+            "sha256": "1430c3693c325ac74f197b077a01f9f00cd788d397e3de7adfc9436543078234",
+            "status": 200
+          },
+          {
+            "path": "/assets/benchmark-CRjvq6BN.js.map",
+            "size_bytes": 8069,
+            "sha256": "186e5456f63fa55b8609b94106c70e52a65ee060ae3a2d2609d66f2cb935fc37",
+            "status": 200
+          },
+          {
+            "path": "/assets/decode.worker-CC-RLjVq.js",
+            "size_bytes": 5717,
+            "sha256": "f2ab8ff719af1de5cdd150855e76a994c56f333934a9a944c15b9e20d3f05639",
+            "status": 200
+          },
+          {
+            "path": "/assets/decode.worker-CC-RLjVq.js.map",
+            "size_bytes": 18095,
+            "sha256": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b",
+            "status": 200
+          },
+          {
+            "path": "/assets/index-BP_v25uK.js",
+            "size_bytes": 64235,
+            "sha256": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e",
+            "status": 200
+          },
+          {
+            "path": "/assets/index-BP_v25uK.js.map",
+            "size_bytes": 186321,
+            "sha256": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092",
+            "status": 200
+          },
+          {
+            "path": "/assets/index-CebD2Odz.css",
+            "size_bytes": 32641,
+            "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+            "status": 200
+          },
+          {
+            "path": "/assets/modulepreload-polyfill-P2Xu9kJm.js",
+            "size_bytes": 670,
+            "sha256": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+            "status": 200
+          },
+          {
+            "path": "/assets/react-vendor-Br0ptrPz.js",
+            "size_bytes": 218797,
+            "sha256": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+            "status": 200
+          },
+          {
+            "path": "/assets/react-vendor-Br0ptrPz.js.map",
+            "size_bytes": 1043926,
+            "sha256": "9c71aa088ba6e1cf21f98f65f7e92e017c37d2a5784d580aa9861598cab3de94",
+            "status": 200
+          },
+          {
+            "path": "/assets/rolldown-runtime-4tVxZq34.js",
+            "size_bytes": 237,
+            "sha256": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+            "status": 200
+          },
+          {
+            "path": "/assets/spatial-contracts-33vaUxT7.js",
+            "size_bytes": 1933,
+            "sha256": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+            "status": 200
+          },
+          {
+            "path": "/assets/spatial-contracts-33vaUxT7.js.map",
+            "size_bytes": 10532,
+            "sha256": "91fa7285a1c8674496d939e16355f7150c3a446aee817a814ce6f63704f97353",
+            "status": 200
+          },
+          {
+            "path": "/assets/three-vendor-Bc4s0MDm.js",
+            "size_bytes": 635726,
+            "sha256": "7b50966f377b9542bb41de2169e1a25867fdd62315033f6da8ca30e3b306d35b",
+            "status": 200
+          },
+          {
+            "path": "/assets/three-vendor-Bc4s0MDm.js.map",
+            "size_bytes": 3190283,
+            "sha256": "f77c3a6542874d965e7305c1f28ceafefd9856ac495d012e598e935e6d7e3e1a",
+            "status": 200
+          },
+          {
+            "path": "/benchmark.html",
+            "size_bytes": 2412,
+            "sha256": "cdf8eb4c99d23144375c799a2cee08e95d1e7b88ba557b7fe57dca2fef99caca",
+            "status": 200
+          },
+          {
+            "path": "/",
+            "size_bytes": 917,
+            "sha256": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6",
+            "status": 200
+          }
+        ],
+        "normal_shutdown": true,
+        "neural_tests_repeated": false
+      }
+    }
+  ],
+  "release_pytest": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "1",
+    "tests": "323",
+    "time": "165.790",
+    "timestamp": "2026-10-28T18:58:54.120521+00:00",
+    "hostname": "Sumedha",
+    "skipped_cases": [
+      {
+        "name": "tests.test_render_backend.test_native_flags_and_framebuffer_policy_contracts",
+        "reason": "Executes an x64 Windows DLL"
+      }
+    ]
+  },
+  "release_source_sha256": {
+    "command_center/__init__.py": "a1d27299bde8a31454cb3f9cae8aeda1b6e73fb49432d0fff5de4ae5fa4999db",
+    "command_center/__main__.py": "85e1d8205fc1a22a001f7fdf69de82a3e782f6dfea2d74cbb49a737e0cbf50a1",
+    "command_center/assets.py": "e2886789f55467cbdc644fb8852536a9891a1673a11a17cff967bd9846dbc579",
+    "command_center/auth.py": "e4e9ca5af6891e6182eeb043ba3f18818958b2640cc6a0226592efd7b5416653",
+    "command_center/commissioning.py": "23bf5426706b4a936734eb592b27f0e413d3eb92f3a50ce2d4f6737d31cd6bec",
+    "command_center/controls.py": "9d73bed60295b93ddda2eee2a8326453e1445d18e196018c1ed72143bfbbe7ed",
+    "command_center/gateway.py": "3d1f8c402d7cb3a9487ab740cffbe744974fe0535802f4486bf0d4c8bd627668",
+    "command_center/protocol.py": "a30762972b96d32bf9adb0714d1b0dc1d9e71eb6c0d05b38652fb42fc7c124f3",
+    "command_center/runtime.py": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf",
+    "command_center/service.py": "f8ae606086d2b5eff884245e10fa3cb5f3660757337e71be9a8dcab8a5f6d418",
+    "config/calibration_extrinsics.json": "8e0ee3d8d8078ad23fb3f827b77df2238bb3791957a1478bea2fd276366b4fe9",
+    "config/profiles/jetson_edge.yaml": "f80ae159d0e59f23da3ee322336e571d2337599165bb1a59c081564e1114a7e0",
+    "config/profiles/laptop.yaml": "e667a67b5513e49fdadd3b7db4ab2e85fe87e6e61657912526c92728dfb58f03",
+    "config/system_config.yaml": "66770c6704a6f2fc1e651313681f28c8b544ae1f4e46818c4f343f8bd4dc4675",
+    "core/__init__.py": "ded4d8324b9cf64c72de097094a11bdaa82075fda218da4b7281c0266ce8d2b2",
+    "core/async_recording.py": "749e010a41c6658785b5ee42620e92fdc1d3196a293fc98571367c6e8df6945c",
+    "core/bounded_acquisition.py": "f3e4dc10ac5bc22feb6440dcf3032545289acd1b72f3a61372a92ce2719a1dd6",
+    "core/configuration.py": "b6d000fbcab7b38f8f65524e659dc7351e4c241ecc239596ce6198a00c43ffbf",
+    "core/contracts.py": "b428b1fff9ce997fb586b4268705edc9bd6b51b573e2d8f344a2366d03d77b0c",
+    "core/pipeline.py": "b5ab404535d46a3c7f1d2033da5bca90be5bb47102b3528e85a9bda82546b8bb",
+    "core/recording.py": "982b23da09034a95585741ac56bc23ee743b03809872cdbb53173c6db0b0fe8a",
+    "core/resources.py": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7",
+    "core/se3_math.py": "8874842f1b079f7b335974145163845dbe1d2a291e6f726e65906be2f84f13b2",
+    "deployment/edge/Dockerfile": "cc690094b408f1507c6b64b41c0117b9a3a9ed8ce6164ed56a187ba139c2808e",
+    "deployment/edge/entrypoint.py": "d393d97a041e6fa5348d8067d262cced898a15171df7410d56df4b114f7c5720",
+    "deployment/edge/open3d_wheel.py": "13332dce26cfb51c6e35b250cf34c9342d09b199c6366e22da5a4ee82c3582ab",
+    "deployment/edge/requirements-runtime.txt": "22f32b9123c12291be652e3c12f7820f87c7203985351a00425e23e91d74bc9b",
+    "deployment/gateway/lock_profile.py": "7bbce0b215814a37760ac7d64d94529766eb233f00b5d3217f61f52a1875e7d8",
+    "diagnostics/__init__.py": "51c4dae98a847fdbb934c5e15df8d8b9d5c80c8ae907a0dd73e1d7c3c33b01c3",
+    "diagnostics/__main__.py": "1d2eae67cc89bbfce46ab1a1abb5e2de3213087a6628d03a1345102610b194e3",
+    "diagnostics/audits.py": "7543f1365688d5e26acd74ee312514464d2399dfa372fb1f0d754627d9041d45",
+    "diagnostics/runner.py": "1e2284f23fa537bd101241b7bba280fca97b20fc6ee0bfeb457b7192049cbf23",
+    "diagnostics/virtual_targets.py": "645ce4f19c60616b6d37dff039fe02e8fe9f75fbc8d238d2d7dd34715ae26ea6",
+    "hardware_halo/__init__.py": "e86cd4a56ccd5cbf85735577a0a844d80e636eb3f89ad53d271c16139b72a522",
+    "hardware_halo/build_firmware.py": "119f6b68ce8cfa0a2ab78f3e76bce317c11a90348564a732b1e2d53a93a79430",
+    "hardware_halo/controller.py": "3eb13b7320e2abe90e7df8216277a38a73062f2b87c5567ee3952ef8725c885f",
+    "hardware_halo/protocol.py": "a1edc36507ccb32eb6ae81a5c5c733ccc61dad2fb864fb7255fa62ead921bf1c",
+    "hardware_halo/state.py": "2115f5a1b567ad933019db600c45dfa69bd034b8c99f1adc3600451b829511ac",
+    "ingestion/__init__.py": "af0da96a387a59577e44abb15533f11e639beebc9b77715619249f3419c353b4",
+    "ingestion/calibration.py": "01f5eb166e0afa127f09f39037a473b8a31d813cb8a4de5586bf72be5cfa5e1b",
+    "ingestion/gemini_333l_driver.py": "0fddbcf8cfc2ae92c1d3f32b714f698257e69d1fce7073259e02968657144a13",
+    "ingestion/lidar_l2_driver.py": "205a583e6472ea40419d6cd3d8bb1734a85cef37382e46212f4951cabd062cca",
+    "ingestion/live_source.py": "954129e28a4b55b45c3589327dd87649e67b88ce8bf4e19396872de16425403f",
+    "ingestion/recorder_replayer.py": "9da879402b5f1ef7c6605019a91905a394a8983ff5bf3169639edec48b967ae2",
+    "ingestion/rplidar_s2_driver.py": "f6625cec604a7557d01b2bde1636328382c95e5a81f881e1bfa89583ad090a3f",
+    "ingestion/sensor_synchronizer.py": "2b4b1f307c7dfd423c96016b269ead3efac2c8bee5c7aafce2afb0d999c5dbff",
+    "ingestion/synthetic_lab_simulator.py": "c0b1967bc9e5ba752ef9b9dddfd5951c4cdf559c61502bf0e70c8e6d7dd08e96",
+    "main.py": "be58bfa19bf73661802f33330bde1ee503d04f0533153cf05b5f845dfa801d51",
+    "native/__init__.py": "d941226bce633b4a776fe39eaebc9d8fb3823d973ed2df25a4b02c7e38105a70",
+    "native/voxel_rays/__init__.py": "307ed0768a2f879035f468f1701286b7a1c452d52ebf67eb37adc69bf3149936",
+    "native/voxel_rays/benchmark.py": "b0d8d77d759b4298d5adaf001e92c8ba470a3ae2113d63621b1f535aafbe74c9",
+    "native/voxel_rays/build.py": "3e7a1c7ae3f268a4061e4e0757b0e07ffcd90be48efb724bdda3e301e28d024e",
+    "native/wgl_compat/build.py": "51b666dc54678d64c94118cf411a9ad00f1b41d732bf1e68467bbfadd455067b",
+    "perception_ml/__init__.py": "d0b5dab1fd961443f6c1b6f15579117870e4990d728e377379ab136c63d05a48",
+    "perception_ml/benchmark_preprocessing.py": "20ebfcbf0067f941dc13387febbeeb4df8fe898b049f853912d7f3323ce7bbaa",
+    "perception_ml/depth_cache.py": "2a6e661bcba4d912460b3787fcbe96a11766588371fd73f11514450b8035c89d",
+    "perception_ml/eigen_descriptors.py": "ebfb559010444491f6b73763b0bdca4c6f92eeedfd705889b41bcc46373bd306",
+    "perception_ml/hybrid_3d_network.py": "9b2af4c91140a3544a4975be38cf2005afb2587664c06d261777f48b827d83cf",
+    "perception_ml/inference_engine.py": "3edc1e5f8c2bc2e6118bb22da0da7512fdb627d55e44c1cfabeba164fa269130",
+    "perception_ml/point_mae_pretrain.py": "dc8a39455dd5af2a1047d5814d36904c2928240a84d4c14b48e546951f7b6936",
+    "perception_ml/recorded_dataset.py": "35c2db600a5e1b3ae37ed6da38fb6f6df034e83681444ee16a6d44b18c2fb8f4",
+    "perception_ml/spatial_indices.py": "6e3deb69f3d8a178a3f1652ab8c8d6c1fead344d628c4e3f266f8dbab7ba8d71",
+    "perception_ml/tensor_export.py": "8fd733199387772089b697745910bc73a4b91b66b8dd482aa9c06ee3d24aedb9",
+    "perception_ml/training.py": "caefb9149f35f2a78ab7ccd90ca7e09d784849bce1a3a24ea4c7dd834d233f88",
+    "pyproject.toml": "7fc2e3fae7c1ed0ed12951d600042fc7b8cc0053f3ebb9e264c8768d1e430bf2",
+    "requirements-ubuntu.lock": "d0f2c9526f4da2b47dbda645d22d2f1005faa3fe0331b08e475ddaf886cd8c35",
+    "slam_and_twin/__init__.py": "288717adad38e7e01a1e10f312272a344b357fcb4329dc91ce0d10f49d04c627",
+    "slam_and_twin/icp_pose_graph.py": "7dcbfaf661a581e722ad09a4d39c583ade67eebcdcd79befd843020ed97dcdbc",
+    "slam_and_twin/imu_deskew.py": "44a7f33b2320e44022a37963d3fc1c10d6d81317be63355e97eb4060d51653a0",
+    "slam_and_twin/log_odds_octomap.py": "974c08462eca2f764918f45f51b8c3dd4d1f88349ac65441783b4aea2edda5e5",
+    "slam_and_twin/planning_region.py": "f616f19255997a116701ef8af5d9ff026f94f2e1140106ca705ef75ddb1b7cb4",
+    "slam_and_twin/spatial_diff_engine.py": "0094a692715994c32e0e318e2f2bc734214b7fc04b2bd4420cd23b462b593d1b",
+    "slam_and_twin/static_twin_builder.py": "d94f34a403eb02e545777d4cb7b9f028be373f8bb34dc921a813e2e277952d71",
+    "slam_and_twin/tiled_map.py": "ce97cd0ce0788b22b79b285759bc1f13623b2e026324a8857d1c3eaf09a7c286",
+    "slam_and_twin/tiled_reconstruction.py": "95712b0146d75971f16bdf37dd3ac0ff074ab4a7392f3443eb19f4f2c5f1c325",
+    "tests/run_commissioning_evidence.py": "1f554b1c9a32773837b42a4a1156916c9d8f0a78e69c161e679bc178552b18da",
+    "tests/test_async_recording.py": "70fa7c467ea9e561eb6232b037eb70acdda78cf2284c44908a1ead63a81992ff",
+    "tests/test_batched_deskew.py": "2dd15d063237910fe443c5a205a5de42d2cff38be7b0473eb4da6e09ad64e9c3",
+    "tests/test_batched_rays.py": "584f22f301cfc6928c5aac791f5d2d115752dfd6e858a00ea470ff108d56a5a2",
+    "tests/test_bounded_acquisition.py": "9f4b517812143346462171064fa9ab8888993489cbf4676cc3712a284eb10d9e",
+    "tests/test_bounded_commissioning.py": "26ef5a538680c5e79cdcb5f2d3397ae0d4cb35d14c4ae5e0ce82d67e0c437ecb",
+    "tests/test_browser_runtime_recording.py": "87e40e7ac45aa59fa011d09d0bcd22e77d2a96aec5d18c9decb84e5f5da269d9",
+    "tests/test_calibration_observability.py": "56984c1e3272c71f863d137d66630f7147f81fffd88044dc0f96843de6bc408a",
+    "tests/test_commissioning.py": "1717fd092992f403d323862d998b69b387095bf20b400af6741369e2c60bb1a0",
+    "tests/test_contract_validation.py": "42d29c57ab1831bd3359bdaf35b5274891c29a89c511996ab2fd5f993883201b",
+    "tests/test_diagnostics.py": "787327d8e178c283df5626568b5b665670ab0fde482c39baab9e9eb4489242c0",
+    "tests/test_edge_open3d_wheel.py": "f43cf0d232cd02263808a235aa4284ea0b7aa3e6b05af96167ee17c3dc756040",
+    "tests/test_gateway.py": "f64d4c2dfde179ea3387c464d26f1c352a05604f38e5750ba40c0fb60a0678e7",
+    "tests/test_gemini_profiles.py": "71cbd444324df9e3ed07e91673004936d51395853ade50032d5fa68ada24bc15",
+    "tests/test_ground_corridor_and_csv.py": "42ed11b57014ef41ac43b738a7472fc140e8dd7bc63b7d10eefe6b604c423a8f",
+    "tests/test_hardware_halo.py": "c0a8b3447fa780b41f897e4138d38af790e14b0b3c8dfefaa0bfc3f51171874f",
+    "tests/test_hybrid_3d_network.py": "58fd6d2dd9c8919fde7a8a0a53fce5ea5552eeeb8e25c5ab2c455481237684b1",
+    "tests/test_kalman_and_planner.py": "e174adc3df4c34ec5dce367cea7edd29f28a3641c3fcbdcd7e66f7f3e9decd84",
+    "tests/test_moving_commissioning.py": "b955beea2bc9fcd245f390c97f6c99fcb212cc2e516301744797e8c1dee7b578",
+    "tests/test_native_voxel_rays.py": "defccf8039d1bdabdd9b4acf31665eab57241c235d0eda7fc73a26c2c4da8a43",
+    "tests/test_observed_navigation_integration.py": "052e8fbd21070fbef6fc7eb496add9b4013a9cb0a8bd71e8f304fd92d9f518f5",
+    "tests/test_perception_preprocessing.py": "9afef8de1fd9f3140c683f23f7b2b62d7d1399d78711108c26b704e67edcfdfd",
+    "tests/test_recorded_training_data.py": "7d6132e8305d84e4154205a101bf8aeff2ee37cf35891b951dbe90a364378064",
+    "tests/test_render_backend.py": "d512265058a5008044653d7bcb1cae3620378d705ce16bd76be156dbd53c1c58",
+    "tests/test_scene_protocol_v2.py": "df59c003dade2c133acfd617107479f9b7ddd7ea04acf4cbf74e1d90c4f49f7b",
+    "tests/test_se3_and_deskew.py": "f653e092014cad6bc9fc77c0c3287680239fb0853d696e623a4807f88bbd3b84",
+    "tests/test_sensing_mapping.py": "b5c020d889c22ee8c588f57fd0788fa50c3897e9869aa58cc094efed968c9121",
+    "tests/test_simulator_correspondences.py": "010384e9ea16356aa4277415af0a6b4bf76b01646d6dff8f50e7e3946a65898a",
+    "tests/test_telemetry.py": "84687b70c782bfd724849cbc91546df28f06b2199228bd3a603802ff930fb3e6",
+    "tests/test_tiled_batch.py": "5a4f023c53ddb350dcc9d3a3e9b395a2ca3206ac6a8fca1fcd5b1a947ffb1183",
+    "tests/test_tracking_navigation.py": "c5e0febd6e4a25f41eb70d8008c225ab56708b90980d17c1047bc0e556d3cce4",
+    "tests/test_training_splits.py": "fd13576b803cf8d7dc8d2962b26f53130e9a1fce3d05a0f95424cf175c611c2f",
+    "tests/test_voxel_hash_and_octomap.py": "6003d3b0b9358c6a4128f0bb7808684aa40c98f68d62c8414925e580e13028a7",
+    "tests/test_world_origin_invariance.py": "a98d0718167971360d75e829aac5b77c66a06880b24dff64d4d157e588c842bc",
+    "tests/tiled_runtime_benchmark.py": "86d8047968745297ceaa01dffe3643c85d779aba7fe27edb0df0f1b73ad9c790",
+    "tools/compare_replay.py": "43e33d1232a6368bcc56e442c29090ccdce2b8d75aa0af7474510d3060f0eea0",
+    "tracking_and_navigation/__init__.py": "df581448d95c17da55339881e9d6b8464e969706f870006f1456e6d2256e530a",
+    "tracking_and_navigation/geometry.py": "e4801d489e54ba709b724bbef22ed240b3bf86833584e77919c982081273dcdc",
+    "tracking_and_navigation/kalman_9dof_tracker.py": "aac9fde1664647c157b68a49545770f86789949ba500e7f14ec0b93c5c306a88",
+    "tracking_and_navigation/observed_navigation.py": "af79af84145fb58e3b82fa350b436178a9d2428b7d69e19a4503b041987475e2",
+    "tracking_and_navigation/risk_and_geofence.py": "00cf19fe240bd51c82c185f23f5a30c610c4701baff6c8ed846cad40c7fc7fc3",
+    "tracking_and_navigation/safe_corridor_planner.py": "3221bcf8d71a8c8f896bfe4ea0c88c2e9e7835b297c1d8756725374842844d58",
+    "tracking_and_navigation/traffic_heatmap.py": "b6743f9b0cb6ecbea7af73b05bc1b310d50f91bb48d08e990209544da38ee0d8",
+    "visualization/__init__.py": "705858ee0213555464c80cfdaad8fc15ddd83d6339f06150b97458b8b6214387",
+    "visualization/open3d_command_center.py": "83b3b472821d0097c8d7e67d7e9f8e5e2679e360a31162e6fc89e4bbc4075442",
+    "visualization/opencv_telemetry_hud.py": "e12253fe0b7d3b103f4e4da63a22af482b22e3f6aed9fd84c96ec9624a337538",
+    "visualization/render_backend.py": "cb08e246112d68f16de0105af95d6203395e86f7086d7a83b99814977cc8bd9c",
+    "visualization/sensor_status.py": "04dc0bb9f6a3f3f4ba1607f54a54570695066571d20a9ee518b41c49deb46c99",
+    "visualization/websocket_broadcaster.py": "4e97fe4adb0bc23979e1f850c451f56f081db99dd5fe6a41d52e6a7d3236134d"
+  },
+  "release_lock_matches_verified_environment": true
+}

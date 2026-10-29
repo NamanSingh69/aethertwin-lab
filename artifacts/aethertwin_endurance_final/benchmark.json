@@ -1,0 +1,519 @@
+{
+  "schema_version": 1,
+  "frames": 741,
+  "wall_seconds": 1803.625,
+  "end_to_end_fps": 0.4108392820015247,
+  "processing_latency_ms": {
+    "p50": 1734.913400003279,
+    "p95": 3042.7061000009417,
+    "max": 5432.385899999645
+  },
+  "mean_processing_fps": 0.5288168672531026,
+  "rss_mb": {
+    "first": 459.6015625,
+    "last": 531.02734375,
+    "max": 590.95703125,
+    "last_half_slope_mb_per_frame": -0.05349102923923187
+  },
+  "dropped_snapshots": 0,
+  "occupancy_cells": 74429,
+  "presentation_queue": {
+    "capacity": 2,
+    "current_depth": 0,
+    "max_depth": 0
+  },
+  "configuration": {
+    "seed": 7,
+    "device": "cpu",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false,
+      "include_s2": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06,
+      "runtime_tiled": true,
+      "ray_backend": "auto",
+      "max_traversal_cells": 5000000,
+      "tile_budgets": {
+        "max_resident_tiles": 128,
+        "max_resident_bytes": 67108864,
+        "max_disk_bytes": 4294967296
+      },
+      "runtime_cache_root": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\artifacts\\aethertwin_endurance_final\\.runtime_cache"
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt"
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": [
+        -1.375,
+        -4.375,
+        0.625
+      ],
+      "goal": [
+        2.125,
+        4.125,
+        0.625
+      ],
+      "ground": true,
+      "replan_interval": 5,
+      "mppi_samples": 96,
+      "mppi_iterations": 2,
+      "bounds": [
+        -6.0,
+        6.0,
+        -5.0,
+        5.0,
+        0.0,
+        3.5
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "recording": {
+      "max_disk_bytes": 17179869184,
+      "chunk_frames": 4,
+      "chunk_bytes": 67108864,
+      "queued_frames": 8,
+      "queued_bytes": 67108864,
+      "required": true
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "live": {
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 1280,
+      "camera_height": 800,
+      "camera_fps": 30,
+      "camera_color_width": null,
+      "camera_color_height": null,
+      "camera_color_fps": null,
+      "camera_align_mode": "auto",
+      "camera_intrinsics_tolerance_px": 1.0,
+      "camera_distortion_tolerance": 0.0001,
+      "calibration": "config/calibration_extrinsics.json",
+      "allow_degraded": false
+    },
+    "acquisition": {
+      "max_frames": 2,
+      "max_bytes": 67108864,
+      "max_age_seconds": 0.5,
+      "imu_history_seconds": 5.0,
+      "max_imu_samples": 8192
+    },
+    "input_mode": "sim",
+    "identity": {
+      "map_revision": "122bdf02b078ac9281661a93"
+    }
+  },
+  "input_mode": "sim",
+  "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery",
+  "browser_runtime": {
+    "identity": {
+      "lab_id": "lab-default",
+      "rig_id": "rig-01",
+      "map_revision": "122bdf02b078ac9281661a93",
+      "calibration_id": "simulation-v1"
+    },
+    "source_mode": "sim",
+    "paused": true,
+    "completed": true,
+    "error": null,
+    "source_active": true,
+    "available_sources": [
+      {
+        "id": "simulation",
+        "source": "sim",
+        "label": "Simulation"
+      },
+      {
+        "id": "sample",
+        "source": "replay",
+        "recording_id": "sample",
+        "label": "Sample recording"
+      }
+    ],
+    "capabilities": {
+      "pause": true,
+      "resume": true,
+      "step": true,
+      "seek": false,
+      "set_start_goal": true,
+      "set_geofences": true,
+      "select_source": true
+    },
+    "replay": {
+      "frame_count": null,
+      "current_frame": 740,
+      "current_time": 74.10000000000007,
+      "seeking": false
+    },
+    "session_id": "b3e77d43c02b4f79b7dc2c5509714d9e",
+    "hardware_verified": false,
+    "halo": {
+      "pixel_count": 24,
+      "source": "sim",
+      "nearest_track_id": 77,
+      "distance_m": 3.926196834289222,
+      "azimuth_degrees": 4.930000000000007,
+      "severity": "warning",
+      "stale": true,
+      "watchdog": false,
+      "disconnected": false,
+      "source_age_ms": 2284.1496579931118,
+      "processing_latency_ms": 1983.3273999975063,
+      "acquisition_age_ms": 0.0,
+      "brightness": 64,
+      "risk_scale": 170,
+      "pixels": [
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ],
+        [
+          64,
+          37,
+          0
+        ],
+        [
+          9,
+          5,
+          0
+        ]
+      ],
+      "virtual": true,
+      "physical_verified": false,
+      "reason": null,
+      "state_name": "stale"
+    },
+    "halo_transport": {
+      "enabled": false,
+      "connected": false,
+      "compatible": false,
+      "port": null,
+      "status_hz": 30.0,
+      "source_update_hz": 0.46035342093339376,
+      "packets_sent": 0,
+      "status_ticks": 46410,
+      "next_sequence": 0,
+      "last_error": null,
+      "virtual": {
+        "pixel_count": 24,
+        "source": "sim",
+        "nearest_track_id": 77,
+        "distance_m": 3.926196834289222,
+        "azimuth_degrees": 4.930000000000007,
+        "severity": "warning",
+        "stale": true,
+        "watchdog": false,
+        "disconnected": false,
+        "source_age_ms": 2284.1496579931118,
+        "processing_latency_ms": 1983.3273999975063,
+        "acquisition_age_ms": 0.0,
+        "brightness": 64,
+        "risk_scale": 170,
+        "pixels": [
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ],
+          [
+            64,
+            37,
+            0
+          ],
+          [
+            9,
+            5,
+            0
+          ]
+        ],
+        "virtual": true,
+        "physical_verified": false,
+        "reason": null,
+        "state_name": "stale"
+      },
+      "hardware_verified": false
+    },
+    "recording": {
+      "written_frames": 741,
+      "dropped_frames": 0,
+      "queued_frames": 0,
+      "queued_bytes": 0,
+      "inflight_bytes": 0,
+      "capacity_frames": 8,
+      "capacity_bytes": 67108864,
+      "peak_bytes": 202336,
+      "complete": true,
+      "error": null,
+      "recorder_chunk_budget_bytes": 67108864
+    }
+  }
+}

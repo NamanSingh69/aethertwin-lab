@@ -1,0 +1,27 @@
+{
+  "platform": "Ubuntu 24.04 under WSL2",
+  "python": "3.12.3",
+  "compiler": "GNU C++ 13.2.0",
+  "cmake": "4.4.4",
+  "pybind11": "3.1.0",
+  "unitree_revision": "0e3c51f512e6b8ff60b8c32f160b412cb48445c2",
+  "slamtec_revision": "99478e5fb90de3b4a6db0080acacd373f8b36869",
+  "unitree_library": "official prebuilt x86_64 libunilidar_sdk2.a",
+  "slamtec_library": "official source built with CXXEXTRA=-fPIC CEXTRA=-fPIC",
+  "configuration": {
+    "WITH_UNITREE": true,
+    "WITH_SLAMTEC": true
+  },
+  "compiled": true,
+  "module_imported": true,
+  "L2Reader_exported": true,
+  "S2Reader_exported": true,
+  "physical_device_acquisition_tested": false,
+  "device_configuration_changed_during_verification": false,
+  "vendor_binaries_in_deliverable": false,
+  "S2_transports_compiled": [
+    "serial",
+    "udp"
+  ],
+  "binding_source_sha256": "12f1a10bf2c6f388fcc9063210a8a5e2dae10952a91a1fb9c903d41e25eef329"
+}

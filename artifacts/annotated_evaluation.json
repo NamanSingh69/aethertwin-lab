@@ -1,0 +1,303 @@
+{
+  "frames": 3,
+  "sampling": {
+    "max_voxels": 1400,
+    "neighbors": 16,
+    "temporal_neighbors": 12,
+    "rgbd_stride": 3,
+    "range_image_height": 24,
+    "range_image_width": 96
+  },
+  "sampling_constants": {
+    "pointnet_fps_cap": 256,
+    "pointnet_radii_m": [
+      0.6,
+      1.2
+    ],
+    "mae_patch_points": 16,
+    "mae_center_cap": 96
+  },
+  "scene_seeds": [],
+  "scene_ids": [
+    "scene_33"
+  ],
+  "semantic_miou": 0.9911739405804258,
+  "per_class_iou": [
+    0.9948347107438017,
+    0.9989384288747346,
+    1.0,
+    1.0,
+    0.9444444444444444,
+    1.0,
+    1.0
+  ],
+  "confusion_matrix": [
+    [
+      963,
+      1,
+      0,
+      0,
+      2,
+      0,
+      0
+    ],
+    [
+      2,
+      2823,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      61,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      65,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      34,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      48
+    ]
+  ],
+  "majority_class_miou": 0.10086764023279894,
+  "flow_epe_m": 0.007061631675447137,
+  "zero_flow_epe_m": 0.0012697604066739523,
+  "dynamic_flow_epe_m": 0.01174124921043773,
+  "dynamic_zero_flow_epe_m": 0.0403199316436705,
+  "loss": 0.016213001838574808,
+  "synthetic_only": null,
+  "checkpoint_metadata": {
+    "schema_version": 1,
+    "synthetic_only": null,
+    "data_source": "annotated_recordings",
+    "seed": 7,
+    "recipe": {
+      "source_sha256": {
+        "core/__init__.py": "ded4d8324b9cf64c72de097094a11bdaa82075fda218da4b7281c0266ce8d2b2",
+        "core/contracts.py": "70c69eb35035c625822d3d8621f798937dbac05819f5b4ece6f5371e94ce62f8",
+        "core/pipeline.py": "5abce7a7e79e4e68fb5c77e7aad80e7bc3a9eb6d181e1124df92143670ffb3ee",
+        "core/resources.py": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7",
+        "core/se3_math.py": "7e7d6d6a3caf90f6af3300a936b26398f36bac88818485a510e13b83cb6efb30",
+        "perception_ml/__init__.py": "d0b5dab1fd961443f6c1b6f15579117870e4990d728e377379ab136c63d05a48",
+        "perception_ml/eigen_descriptors.py": "c6412cf502f10c766e0c4f8c5a75c9f6cb29a471d55bb3d8249616fd2bf8a479",
+        "perception_ml/hybrid_3d_network.py": "7525107014495afe8a2d8d4714ef56aa9173aaa6b56e3b5bf6236a71367dd2e7",
+        "perception_ml/inference_engine.py": "7371f3225ab7569f633f7599b4dc17a7a5e4ff374613d73c3875d5b619c93378",
+        "perception_ml/point_mae_pretrain.py": "dc8a39455dd5af2a1047d5814d36904c2928240a84d4c14b48e546951f7b6936",
+        "perception_ml/recorded_dataset.py": "35c2db600a5e1b3ae37ed6da38fb6f6df034e83681444ee16a6d44b18c2fb8f4",
+        "perception_ml/training.py": "a6a8e5f02c66e21f092d3dddbbf20de913f7a800da926ffdb4d6f1c73d6f6f51",
+        "slam_and_twin/__init__.py": "288717adad38e7e01a1e10f312272a344b357fcb4329dc91ce0d10f49d04c627",
+        "slam_and_twin/icp_pose_graph.py": "7dcbfaf661a581e722ad09a4d39c583ade67eebcdcd79befd843020ed97dcdbc",
+        "slam_and_twin/imu_deskew.py": "193c5558b209b895ab983eddb7be4b18dcffac56c620c54e9af94af644b2adf9",
+        "slam_and_twin/log_odds_octomap.py": "ea6f9672412a648f3d801c3170b0cde73c6c7db50ac403b422704b12f94bc146",
+        "slam_and_twin/spatial_diff_engine.py": "240d3463e1f265ed34f01eeac1ffb51273436fbfb9c3c1dcd143b67267ec1ea6",
+        "slam_and_twin/static_twin_builder.py": "2130eba9ca56254d4ff80f70e4dc9e6208961f1cb5255617b6900ceb8a5f7529",
+        "ingestion/synthetic_lab_simulator.py": "37d37d816b54a63fd55cca517911499664190a2e51d4bc89ebe3a5f2b500b0d4",
+        "ingestion/sensor_synchronizer.py": "5006930ad47b601ceeccfebb46da78fcca06158c010ea6863d80675d45c66ac6"
+      },
+      "configuration": {
+        "seed": 7,
+        "device": "cpu",
+        "simulation": {
+          "lidar_points": 2400,
+          "width": 160,
+          "height": 100,
+          "dt": 0.1,
+          "noise_std": 0.008,
+          "mobile": false
+        },
+        "mapping": {
+          "voxel_size": 0.18,
+          "decay_rate": 0.98,
+          "twin_voxel_size": 0.08,
+          "tau0": 0.14,
+          "beta": 0.008,
+          "floor_epsilon": 0.06
+        },
+        "perception": {
+          "max_voxels": 1400,
+          "neighbors": 16,
+          "temporal_neighbors": 12,
+          "rgbd_stride": 3,
+          "range_image_height": 24,
+          "range_image_width": 96,
+          "confidence_threshold": 0.3,
+          "checkpoint": "assets/checkpoints/synthetic.pt"
+        },
+        "tracking": {
+          "model": "ca",
+          "cluster_eps": 0.4,
+          "min_cluster_points": 4
+        },
+        "planning": {
+          "resolution": 0.25,
+          "radius": 0.2,
+          "start": [
+            -1.375,
+            -4.375,
+            0.625
+          ],
+          "goal": [
+            2.125,
+            4.125,
+            0.625
+          ],
+          "ground": true,
+          "replan_interval": 5,
+          "mppi_samples": 96,
+          "mppi_iterations": 2,
+          "bounds": [
+            -6,
+            6,
+            -5,
+            5,
+            0,
+            3.5
+          ]
+        },
+        "telemetry": {
+          "enabled": false,
+          "host": "127.0.0.1",
+          "port": 8765
+        },
+        "rendering": {
+          "backend": "auto",
+          "mesa_dir": "assets/rendering/mesa"
+        },
+        "training": {
+          "learning_rate": 0.001,
+          "fine_tune_learning_rate": 0.0001,
+          "epochs": 20,
+          "frames_per_scene": 12,
+          "train_seeds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "validation_seeds": [
+            101,
+            102
+          ],
+          "test_seeds": [
+            201,
+            202
+          ],
+          "max_points": 1800
+        },
+        "live": {
+          "lidar_ip": "192.168.1.62",
+          "host_ip": "192.168.1.2",
+          "lidar_port": 6101,
+          "host_port": 6201,
+          "camera_width": 1280,
+          "camera_height": 800,
+          "camera_fps": 30,
+          "camera_color_width": null,
+          "camera_color_height": null,
+          "camera_color_fps": null,
+          "camera_align_mode": "auto",
+          "camera_intrinsics_tolerance_px": 1.0,
+          "camera_distortion_tolerance": 0.0001,
+          "calibration": "config/calibration_extrinsics.json",
+          "allow_degraded": false,
+          "s2_port": null,
+          "s2_baudrate": 1000000,
+          "s2_transport": "serial",
+          "s2_udp_port": 8089,
+          "s2_max_age": 0.15,
+          "s2_pitch_file": null
+        },
+        "input_mode": "train"
+      },
+      "epochs_requested": 5,
+      "ground_truth_version": "annotated_recording_v1",
+      "environment": {
+        "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "torch": "2.14.1+cpu",
+        "numpy": "2.5.4"
+      },
+      "mae_checkpoint_sha256": null
+    },
+    "train_seeds": [],
+    "validation_seeds": [],
+    "epoch": 5,
+    "train_scene_ids": [
+      "scene_31"
+    ],
+    "validation_scene_ids": [
+      "scene_32"
+    ],
+    "train_recordings": [
+      "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\assets\\supervised_example\\scene_31\\recording"
+    ],
+    "validation_recordings": [
+      "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\assets\\supervised_example\\scene_32\\recording"
+    ],
+    "dataset_manifest": "assets\\supervised_example\\dataset.json",
+    "initial_checkpoint": "assets\\checkpoints\\synthetic.pt",
+    "learning_rate": 0.0001,
+    "dense_rgbd_fusion": true,
+    "mae_initialization": null,
+    "voxel_size": 0.18,
+    "sampling": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96
+    },
+    "sampling_constants": {
+      "pointnet_fps_cap": 256,
+      "pointnet_radii_m": [
+        0.6,
+        1.2
+      ],
+      "mae_patch_points": 16,
+      "mae_center_cap": 96
+    },
+    "descriptor_order": "8 specified + eigenvalue_sum + height_std"
+  },
+  "semantic_beats_baseline": true,
+  "dynamic_flow_beats_baseline": true
+}

@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "frames": 5,
+  "wall_seconds": 11.5,
+  "processing_latency_ms": {
+    "p50": 1572.8362000008929,
+    "p95": 2749.3133000003577,
+    "max": 3038.9637000007497
+  },
+  "mean_processing_fps": 0.5516816470298991,
+  "rss_mb": {
+    "first": 571.02734375,
+    "last": 703.21484375,
+    "max": 715.6875,
+    "last_half_slope_mb_per_frame": -6.236328124999849
+  },
+  "dropped_snapshots": 0,
+  "occupancy_cells": 56206,
+  "presentation_queue": {
+    "capacity": 2,
+    "current_depth": 1,
+    "max_depth": 1
+  },
+  "configuration": {
+    "seed": 7,
+    "device": "cpu",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt"
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": [
+        -1.375,
+        -4.375,
+        0.625
+      ],
+      "goal": [
+        2.125,
+        4.125,
+        0.625
+      ],
+      "ground": true,
+      "replan_interval": 5,
+      "bounds": [
+        -6,
+        6,
+        -5,
+        5,
+        0,
+        3.5
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "live": {
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 1280,
+      "camera_height": 800,
+      "camera_fps": 30,
+      "calibration": "config/calibration_extrinsics.json",
+      "allow_degraded": false,
+      "s2_port": null,
+      "s2_baudrate": 1000000,
+      "s2_transport": "serial",
+      "s2_udp_port": 8089,
+      "s2_max_age": 0.15,
+      "s2_pitch_file": null
+    },
+    "input_mode": "sim",
+    "active_rendering": {
+      "requested": "mesa",
+      "name": "Software graphics (Mesa LLVMpipe)",
+      "mesa_version": "26.2.4",
+      "mesa_dir": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\assets\\rendering\\mesa"
+    }
+  },
+  "input_mode": "sim",
+  "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+}

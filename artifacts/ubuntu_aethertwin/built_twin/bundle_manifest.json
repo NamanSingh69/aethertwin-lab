@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "type": "commissioned-lab-twin",
+  "raw_recording": "commissioning",
+  "prepared_recording": "prepared_frames",
+  "surface_tiles": "surface_tiles",
+  "occupancy_tiles": "occupancy_tiles",
+  "tsdf_tiles": "tsdf_tiles",
+  "preview": "measured_map.npz",
+  "planning_grid": "planning_grid.npz",
+  "planning_window": {
+    "observed_bounds": [
+      -6.0,
+      6.0,
+      -5.0,
+      5.0,
+      -0.25,
+      3.5
+    ],
+    "local_bounds": [
+      -6.0,
+      6.0,
+      -5.0,
+      5.0,
+      -0.25,
+      3.5
+    ],
+    "full_extent_in_local_grid": true,
+    "max_local_grid_cells": 131072,
+    "unknown_space_is_free": false
+  },
+  "hardware_validation": "not_tested",
+  "source_provenance": {
+    "frame_count": 4,
+    "any_synthetic": true,
+    "source_modes": [
+      "sim"
+    ],
+    "sensor_ids": [
+      "synthetic-lidar"
+    ],
+    "unknown_source_frames": 0,
+    "calibrations": [
+      {
+        "calibration_id": "simulation-v1",
+        "measured": false,
+        "matrix_sha256": "5ccf6462c43b6e7dcd5742532353ad5f10d4ba27246e005de3ca75b5bf40575a"
+      }
+    ],
+    "all_camera_calibrations_measured": false,
+    "live_reference_eligible": false,
+    "declaration_only": true,
+    "hardware_validation": "not_tested"
+  },
+  "authority_sha256": {
+    "occupancy_tiles/tiles.sqlite": "7a407ed47bdfb001d909f9c373d023ba25273d25b932dd6b44009814f4d155e1",
+    "occupancy_tiles/manifest.json": "deb0aa114dd3352b81495983a78cd24e64bf6b02a8c131279c61e025f82f8103",
+    "surface_tiles/tiles.sqlite": "14bd7426b14cd47e02428c5406623911df83e267654bdd0c51656d880bdcfa4e",
+    "surface_tiles/points.json": "365866d355fb9530ed7c96f669ecd0103afc63b434a7239af72fd9902d227375",
+    "measured_map.npz": "8b8431e248d1da9e55bcc6931180882ae2fb1c39b2a74c6ff368a4ea435c85fd",
+    "planning_grid.npz": "49edacbbd7064ca5f0ad7d028822bab56fe59d0a359214534a7207e0f9325a5a",
+    "commissioning/manifest.json": "de2251d9586fb8cc8c75d23be0b233ffa4f85e449f465ce212577746d710bc65",
+    "prepared_frames/manifest.json": "35a38f79c20404c62122027161b8848e51cd7409c6799acf52a48fad191b117b",
+    "tsdf_tiles/index.sqlite": "a4cf3379ae3bb99ff15a81349e18444115a89f745ca44150c275c93a0b7fc7af",
+    "tsdf_tiles/manifest.json": "350c3b9947c0ecb6aa11b17f7440b81f1be833a54f2f3eea5b6e86a873889132",
+    "reconstruction.json": "2bde65ed2332060ab9bccc01de4de543a8fc9a8ff64393ec6e2feb193afbb97b",
+    "mesh.ply": "5c5b271867380fd7e1219c9d79282ed9521fd57b23532d13cd08a7ff258a8782",
+    "tsdf_mesh.ply": "5c5b271867380fd7e1219c9d79282ed9521fd57b23532d13cd08a7ff258a8782",
+    "poisson_mesh.ply": "1abb0a480a1761e596a2bf7f7a0bb1dc78a8727913e14ce5cb6f1c360926d8b9",
+    "watertight_mesh.ply": "d5a239ad59387653318a6eae0ff7586622c85a604af53c744897e7a897f26fb1"
+  },
+  "map_revision": "6bc25cd71d3f823fa9e3262a4516476730578bc1bfc5e987c4bc80fff63afb64"
+}

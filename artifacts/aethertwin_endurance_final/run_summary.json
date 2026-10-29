@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "wall_seconds": 1805.5469999999987,
+  "active_seconds": 1805.542111900002,
+  "suspended_seconds": 0.004888099996605888,
+  "interrupted_by_suspend": false,
+  "power_settings_changed": false,
+  "source_changes_during_run": [
+    "web/dist/assets/index-C-ZJVSjn.js",
+    "web/dist/assets/benchmark-CRjvq6BN.js",
+    "web/dist/index.html",
+    "web/dist/.vite/manifest.json",
+    "web/dist/benchmark.html",
+    "web/dist/assets/SpatialRenderer-DkAAyosm.js",
+    "web/dist/assets/SpatialRenderer-BGgNbCOT.js",
+    "web/dist/assets/benchmark-CBQ7YI1y.js",
+    "web/dist/assets/index-BP_v25uK.js"
+  ],
+  "samples": 1764,
+  "runtime_error": null,
+  "completed": true,
+  "final_telemetry": {
+    "encoded_frames": 741,
+    "coalesced_snapshots": 0,
+    "queue_capacity": 1,
+    "queue_depth": 0,
+    "clients": 0,
+    "error": null
+  },
+  "recording": {
+    "written_frames": 741,
+    "dropped_frames": 0,
+    "queued_frames": 0,
+    "queued_bytes": 0,
+    "inflight_bytes": 0,
+    "capacity_frames": 8,
+    "capacity_bytes": 67108864,
+    "peak_bytes": 202336,
+    "complete": true,
+    "error": null,
+    "recorder_chunk_budget_bytes": 67108864
+  },
+  "hardware_verified": false
+}

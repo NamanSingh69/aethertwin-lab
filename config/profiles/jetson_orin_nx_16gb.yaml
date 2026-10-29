@@ -1,0 +1,56 @@
+# ARM64 environment must match the installed NVIDIA JetPack runtime.
+extends: ../system_config.yaml
+hardware:
+  edge_module: Jetson Orin NX 16GB
+  memory_gb: 16
+  lidar: Unitree 4D LiDAR L2
+  depth_camera: Orbbec Gemini 335L
+  peripheral: ESP32
+  raspberry_pi: false
+  lidar_2d: false
+device: cuda
+identity:
+  lab_id: lab-default
+  rig_id: rig-01
+simulation:
+  include_s2: false
+mapping:
+  ray_backend: auto
+  runtime_tiled: true
+  max_traversal_cells: 5000000
+  tile_budgets:
+    tile_size: 16
+    max_resident_tiles: 128
+    max_resident_bytes: 67108864
+    max_disk_bytes: 4294967296
+    sqlite_cache_bytes: 2097152
+perception:
+  camera_feature_height: 200
+  camera_feature_width: 320
+  rgbd_stride: 3
+planning:
+  start: null
+  goal: null
+  bounds_mode: observed
+  max_local_grid_cells: 131072
+  use_configured_endpoints: false
+acquisition:
+  max_frames: 2
+  max_bytes: 67108864
+  max_age_seconds: 0.5
+  imu_history_seconds: 5.0
+  max_imu_samples: 8192
+live:
+  sync_capacity: 8
+  camera_buffer_bytes: 67108864
+  camera_history_seconds: 0.75
+  imu_capacity: 8192
+  allow_degraded: false
+hardware_halo:
+  enabled: false
+  port: null
+  baudrate: 115200
+  publish_hz: 30
+  stale_after_ms: 1000
+  watchdog_ms: 2000
+  brightness: 0.25

@@ -1,0 +1,14 @@
+{
+  "written_frames": 4,
+  "dropped_frames": 0,
+  "queued_frames": 0,
+  "queued_bytes": 0,
+  "inflight_bytes": 0,
+  "capacity_frames": 8,
+  "capacity_bytes": 67108864,
+  "peak_bytes": 204388,
+  "complete": true,
+  "error": null,
+  "recorder_chunk_budget_bytes": 67108864,
+  "schema_version": 1
+}

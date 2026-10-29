@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>AetherTwin · Renderer measurement</title>
+    <style>
+      body {
+        margin: 0;
+        background: #09111d;
+        color: #c3d7ef;
+        font:
+          13px "Segoe UI",
+          sans-serif;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 19px;
+        font-weight: 500;
+        margin: 7px 0;
+      }
+      p {
+        font-size: 11px;
+        color: #829cb8;
+        line-height: 1.7;
+      }
+      .fixture {
+        color: #f0bd79;
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+      .canvas {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #070d15;
+        border: 1px solid #2b445f;
+        margin: 18px 0;
+      }
+      .canvas canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      pre {
+        font:
+          11px Consolas,
+          monospace;
+        white-space: pre-wrap;
+        padding: 15px;
+        background: #0d1b2c;
+        border: 1px solid #2b445f;
+        border-radius: 5px;
+      }
+      button {
+        color: #cee6ff;
+        background: #225785;
+        border: 1px solid #4c8cc4;
+        padding: 10px 14px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.4;
+      }
+      a {
+        color: #80b9ed;
+      }
+      label {
+        font-size: 11px;
+      }
+      select {
+        margin-left: 8px;
+        color: #c7dff5;
+        background: #10243a;
+        padding: 7px;
+        border: 1px solid #315373;
+      }
+    </style>
+  </head>
+  <body>
+    <span class="fixture"
+      >EXPLICIT SYNTHETIC RENDER STRESS FIXTURE · NOT SENSOR OUTPUT</span
+    >
+    <h1>100,000 instances. Measured in your browser.</h1>
+    <p>
+      Fixed 1920 × 1080 drawing buffer, pixel ratio 1. The displayed canvas may
+      be scaled to fit. This is a static GPU scene test; it does not benchmark
+      perception or claim fresh observations.
+    </p>
+    <label
+      >Measurement window<select id="duration">
+        <option value="60">60 seconds</option>
+        <option value="15">15 seconds · quick check</option>
+      </select></label
+    >
+    <button id="start">Start measurement</button>
+    <button id="export" disabled>Export JSON</button>
+    <a href="/">Back to studio</a>
+    <div class="canvas" id="canvas"></div>
+    <pre id="results" aria-live="polite">Ready. No benchmark has run.</pre>
+    <script type="module" src="/src/benchmark.ts"></script>
+  </body>
+</html>

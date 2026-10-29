@@ -1,0 +1,21 @@
+{
+  "verified_at_utc": "2026-10-28T18:32:01.974652+00:00",
+  "python": "3.12.14",
+  "platform": "win32",
+  "gateway_tests_passed": 16,
+  "gateway_test_elapsed_seconds": 15.62,
+  "test_source": "isolated authenticated TLS fixture edge on random loopback port",
+  "hardware_verified": false,
+  "minimal_runtime_packages": 19,
+  "minimal_windows_install": "hash-locked install and pip check passed",
+  "linux_lock": "offline hash-verified resolver dry run passed; container not executed",
+  "ml_and_sensor_import_guard": "passed",
+  "docker_execution": "unverified: Docker Desktop Linux engine pipe unavailable; no engine start or host changes attempted",
+  "files_sha256": {
+    "command_center/gateway.py": "3d1f8c402d7cb3a9487ab740cffbe744974fe0535802f4486bf0d4c8bd627668",
+    "tests/test_gateway.py": "f64d4c2dfde179ea3387c464d26f1c352a05604f38e5750ba40c0fb60a0678e7",
+    "deployment/gateway/requirements-windows.lock": "254b7c1b8c4a5a3bd3bdcad5ed6db521c76d96168218ec0be8bb5b59f62c41f8",
+    "deployment/gateway/requirements-linux.lock": "ade6b84c292f20b4b052e5e06116762c24f0535b6dc6db3eb9c4bc8902720373"
+  },
+  "actual_pipeline_relay_evidence": "artifacts/gateway_actual_pipeline/report.json"
+}

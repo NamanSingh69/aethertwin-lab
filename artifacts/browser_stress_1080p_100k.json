@@ -1,0 +1,38 @@
+{
+  "test": "explicit_static_100000_instance_render_fixture",
+  "source": "synthetic_test_injection",
+  "runtime_perception_benchmarked": false,
+  "drawing_buffer": [
+    1920,
+    1080
+  ],
+  "css_canvas": [
+    1225,
+    689
+  ],
+  "pixel_ratio": 1,
+  "elapsed_seconds": 60.65520000000298,
+  "warmup_seconds": 5,
+  "sampled_one_second_windows": 56,
+  "mean_render_fps": 59.45732354279496,
+  "minimum_window_fps": 52.57817544499737,
+  "frame_interval_ms_last_1200": {
+    "p50": 16.69999999552965,
+    "p95": 22.5,
+    "p99": 27.899999998509884
+  },
+  "instances": 100000,
+  "draw_calls": 3,
+  "triangles": 1200000,
+  "gpu_geometries": 3,
+  "last_update_cpu_ms": 42.29999999701977,
+  "last_render_submit_cpu_ms": 0.20000000298023224,
+  "device": {
+    "vendor": "Google Inc. (AMD)",
+    "renderer": "ANGLE (AMD, AMD Radeon(TM) Graphics (0x00001900) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+  },
+  "completed": true,
+  "page_visibility": "visible",
+  "hidden_during_measurement": false
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "backend": "torch.export",
+  "precision": "fp32",
+  "device": "cpu",
+  "fp16": {
+    "status": "unsupported",
+    "reason": "CPU remains FP32; CUDA FP16 requires its own numerical and latency gates"
+  },
+  "tensorrt": {
+    "status": "unsupported",
+    "reason": "No TensorRT/Jetson deployment or numerical/latency measurement is available"
+  },
+  "profile": {
+    "current_voxels": 1400,
+    "previous_voxels": 1400,
+    "points": 2013,
+    "temporal": true,
+    "camera_input_shape": [
+      1,
+      4,
+      100,
+      160
+    ]
+  },
+  "checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a",
+  "limits": "Profiled nonempty counts; raw RGB-D, spatial indices and empty/history gating remain outside the graph",
+  "status": "passed",
+  "max_absolute_error": 0.0,
+  "second_input_error": 0.0,
+  "tolerance": 2e-05,
+  "eager_latency": {
+    "median_ms": 211.56930000142893,
+    "p95_ms": 213.54086000355892,
+    "repeats": 5
+  },
+  "export_latency": {
+    "median_ms": 193.86719999602064,
+    "p95_ms": 218.8592200021958,
+    "repeats": 5
+  },
+  "camera_max_absolute_error": 0.0
+}

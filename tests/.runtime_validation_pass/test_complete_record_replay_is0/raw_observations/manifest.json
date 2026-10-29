@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "format": "lidar-lab-npz",
+  "frame_count": 3,
+  "chunks": [
+    {
+      "file": "chunk_000000.npz",
+      "frames": 2
+    },
+    {
+      "file": "chunk_000001.npz",
+      "frames": 1
+    }
+  ],
+  "units": "SI",
+  "time_domain": "common_monotonic_seconds"
+}

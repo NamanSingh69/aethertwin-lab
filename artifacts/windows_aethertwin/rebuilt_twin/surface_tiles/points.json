@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "voxel_size": 0.08,
+  "transform": [
+    [
+      0.9999999608988283,
+      -7.70768434320738e-09,
+      -0.0002796468164829429,
+      0.0
+    ],
+    [
+      -7.70768434320738e-09,
+      0.9999999984806491,
+      -5.5124419320056355e-05,
+      0.0
+    ],
+    [
+      0.0002796468164829429,
+      5.5124419320056355e-05,
+      0.9999999593794774,
+      8.15244311260153e-05
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "tile_size": 16,
+  "budgets": {
+    "cells": 8450,
+    "resident_tiles": 32,
+    "resident_cells": 1202,
+    "resident_bytes": 443368,
+    "peak_resident_bytes": 540836,
+    "evictions": 889,
+    "max_resident_tiles": 32,
+    "max_resident_bytes": 67108864,
+    "page_reads": 1168,
+    "page_writes": 921,
+    "streamed_reads": 247,
+    "max_disk_bytes": 4294967296,
+    "sqlite_cache_bytes": 2097152,
+    "tile_codec_max_uncompressed_bytes": 229376,
+    "tile_query_lookup_max_bytes": 16384,
+    "database_bytes": 630784
+  }
+}

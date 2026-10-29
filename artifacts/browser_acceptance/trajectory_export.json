@@ -1,0 +1,18 @@
+{
+  "downloaded_path": "C:\\Users\\KIIT\\Downloads\\trajectory.csv",
+  "rows": 21,
+  "columns": [
+    "time_s",
+    "x_m",
+    "y_m",
+    "z_m"
+  ],
+  "finite": true,
+  "strict_time_order": true,
+  "endpoint": [
+    2.125,
+    -4.375,
+    0.625
+  ],
+  "sha256": "1a346122bebc1d36e0e6896ccc992d7edd9f7a64f07ae7e9f53ef188d00b7ef6"
+}

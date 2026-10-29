@@ -1,0 +1,57 @@
+{
+  "stations": 4,
+  "measured_points": 4374,
+  "tsdf_frames": 4,
+  "tsdf_triangles": 18214,
+  "mesh_triangles": 18214,
+  "pose_graph_edges": 6,
+  "poisson_triangles": 13114,
+  "watertight": false,
+  "unknown_space_inferred_free": false,
+  "floor_fit": {
+    "normal": [
+      -0.00011031384166673944,
+      0.0005084413480230485,
+      0.9999998646591168
+    ],
+    "offset": 0.0016448726221727427,
+    "support_points": 700,
+    "height_before_alignment": -0.0016448728447912863
+  },
+  "watertight_visual_mesh": true,
+  "watertight_visual_method": "uncropped_screened_poisson",
+  "watertight_visual_scale": 1.1,
+  "watertight_visual_closure_inferred": true,
+  "watertight_visual_is_collision_authority": false,
+  "coarse_registration": [
+    {
+      "station": 1,
+      "prior_declared": true,
+      "method": "pose_prior",
+      "fpfh_ransac_fitness": 0.5068368277119416
+    },
+    {
+      "station": 2,
+      "prior_declared": true,
+      "method": "pose_prior",
+      "fpfh_ransac_fitness": 0.46852425180598556
+    },
+    {
+      "station": 3,
+      "prior_declared": true,
+      "method": "pose_prior",
+      "fpfh_ransac_fitness": 0.499546690843155
+    }
+  ],
+  "graph": {
+    "fitness": 0.6801375752364575,
+    "rmse": 0.05719970496713019,
+    "normal_support": 12,
+    "reliable_target_points": 1065,
+    "information_rank": 6,
+    "retained_keyframes": 4,
+    "dropped_keyframes": 0,
+    "graph_cost": 0.0015884445863638182,
+    "graph_success": true
+  }
+}

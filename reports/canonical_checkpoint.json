@@ -1,0 +1,10 @@
+{
+  "canonical_checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a",
+  "selected_epoch": 18,
+  "ground_truth_version": "clean_material_world_v1",
+  "training_epochs": 24,
+  "evaluation_frames": 24,
+  "semantic_miou": 0.9851104105912601,
+  "dynamic_flow_epe_m": 0.02192651832451697,
+  "synthetic_only": true
+}

@@ -1,0 +1,34 @@
+{
+  "test": "generated_room_component_not_desktop_capture",
+  "backend": "Software graphics (Mesa LLVMpipe)",
+  "mesh_source": "C:\\Users\\KIIT\\Documents\\Codex\\2026-10-27\\new-chat\\outputs\\lidar_lab_digital_twin\\assets\\twin_seed7\\mesh.ply",
+  "measured_triangles": 40264,
+  "display_triangles": 21081,
+  "cutaway": true,
+  "fixture_overlays": false,
+  "state_source": "artifacts\\final_viewer\\last_state.json",
+  "runtime_frame_id": 5,
+  "runtime_trajectory_status": "ok",
+  "missing_layers": [],
+  "route_collision_validated": null,
+  "route_note": "Component renderer does not revalidate a runtime route.",
+  "perception_accuracy_claimed": false,
+  "shape": [
+    800,
+    1280,
+    3
+  ],
+  "pixel_std": 36.3559439083173,
+  "render_geometry": [
+    "Geofences",
+    "Planned route",
+    "Risk floor",
+    "Scene flow",
+    "Semantic voxels",
+    "Static twin",
+    "Tracks",
+    "grid"
+  ],
+  "normal_shutdown": true,
+  "passed": true
+}

@@ -1,0 +1,24 @@
+Streaming raw commissioning scans through pointwise preparation and bounded reconstruction...
+Traceback (most recent call last):
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\main.py", line 257, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\main.py", line 113, in main
+    try:build_commissioned_assets(source,output,config)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\core\pipeline.py", line 39, in build_commissioned_assets
+    result=_build_assets_into(frames,stage,config,progress)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\core\pipeline.py", line 108, in _build_assets_into
+    try:twin.build(raw_stream())
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\slam_and_twin\static_twin_builder.py", line 140, in build
+    f=carried.deskew_frame(raw)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\slam_and_twin\imu_deskew.py", line 70, in deskew_frame
+    points=self.deskew_sweep(frame.lidar_points,frame.imu_samples,frame.timestamp,frame.sweep_duration,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KIIT\Documents\Codex\2026-10-27\new-chat\outputs\lidar_lab_digital_twin\slam_and_twin\imu_deskew.py", line 112, in deskew_sweep
+    if gap< -1e-6:raise ValueError('Overlapping sweeps require trajectory history; cannot integrate a future state twice')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Overlapping sweeps require trajectory history; cannot integrate a future state twice

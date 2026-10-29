@@ -1,0 +1,25 @@
+{
+  "stations": 4,
+  "measured_points": 8446,
+  "tsdf_frames": 4,
+  "tsdf_triangles": 40264,
+  "mesh_triangles": 40264,
+  "pose_graph_edges": 6,
+  "poisson_triangles": 24951,
+  "watertight": false,
+  "unknown_space_inferred_free": false,
+  "graph": {
+    "fitness": 0.7741788321167883,
+    "rmse": 0.11130484522120766,
+    "graph_cost": 0.27788104374012174,
+    "graph_success": true
+  },
+  "watertight_visual_mesh": true,
+  "watertight_visual_method": "uncropped_screened_poisson",
+  "watertight_visual_scale": 1.1,
+  "watertight_visual_closure_inferred": true,
+  "watertight_visual_is_collision_authority": false,
+  "watertight_visual_source": "measured_map.npz",
+  "watertight_visual_vertices": 13947,
+  "watertight_visual_triangles": 27890
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-29T15:11:25.970809+00:00",
+  "scope": "GitHub source snapshot; local Windows software verification only",
+  "windows": {
+    "passed": 332,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 143.081,
+    "dense_observed_commissioning_enabled": true,
+    "evidence": "reports/github_snapshot_windows.xml"
+  },
+  "browser": {
+    "passed": 41,
+    "failed": 0,
+    "skipped": 1,
+    "evidence": "web/reports/github-snapshot-vitest.json",
+    "production_build_passed": true
+  },
+  "original_spec_sha256": "e08b6064ccfaf68246c84d92e2d50a3433249126e713d1f42ce90714927a9a36",
+  "canonical_checkpoint_sha256": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a",
+  "publication_checks": {
+    "credential_pattern_findings": [],
+    "scope": "Tracked UTF-8 files up to 5MB; known credential formats. Local secrets/key extensions and environments excluded separately.",
+    "largest_file_bytes": 61868032,
+    "all_files_under_github_100_mib_limit": true
+  },
+  "fresh_clone_smoke": "pending",
+  "hardware_verified": false,
+  "pi_raw_sensor_bridge": "pending",
+  "a2000_cuda_verified": false,
+  "historical_release_evidence": "reports/release_validation.json"
+}

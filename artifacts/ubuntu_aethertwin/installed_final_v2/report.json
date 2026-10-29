@@ -1,0 +1,343 @@
+{
+  "created_at_utc": "2026-10-28T18:43:42.908269+00:00",
+  "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+  "source_checkout_not_on_pythonpath": true,
+  "physical_hardware_tested": false,
+  "jetson_hardware_tested": false,
+  "checks": {
+    "installed_source": {
+      "passed": true,
+      "modules": {
+        "main": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/main.py",
+          "sha256": "be58bfa19bf73661802f33330bde1ee503d04f0533153cf05b5f845dfa801d51"
+        },
+        "core.resources": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/core/resources.py",
+          "sha256": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7"
+        },
+        "core.pipeline": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/core/pipeline.py",
+          "sha256": "b5ab404535d46a3c7f1d2033da5bca90be5bb47102b3528e85a9bda82546b8bb"
+        },
+        "core.contracts": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/core/contracts.py",
+          "sha256": "b428b1fff9ce997fb586b4268705edc9bd6b51b573e2d8f344a2366d03d77b0c"
+        },
+        "diagnostics.runner": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/diagnostics/runner.py",
+          "sha256": "1e2284f23fa537bd101241b7bba280fca97b20fc6ee0bfeb457b7192049cbf23"
+        },
+        "command_center.runtime": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/runtime.py",
+          "sha256": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf"
+        },
+        "command_center.service": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/service.py",
+          "sha256": "f8ae606086d2b5eff884245e10fa3cb5f3660757337e71be9a8dcab8a5f6d418"
+        },
+        "command_center.protocol": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/protocol.py",
+          "sha256": "a30762972b96d32bf9adb0714d1b0dc1d9e71eb6c0d05b38652fb42fc7c124f3"
+        },
+        "command_center.commissioning": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/command_center/commissioning.py",
+          "sha256": "23bf5426706b4a936734eb592b27f0e413d3eb92f3a50ce2d4f6737d31cd6bec"
+        },
+        "tracking_and_navigation.kalman_9dof_tracker": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/tracking_and_navigation/kalman_9dof_tracker.py",
+          "sha256": "aac9fde1664647c157b68a49545770f86789949ba500e7f14ec0b93c5c306a88"
+        },
+        "ingestion.calibration": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/ingestion/calibration.py",
+          "sha256": "01f5eb166e0afa127f09f39037a473b8a31d813cb8a4de5586bf72be5cfa5e1b"
+        },
+        "slam_and_twin.tiled_map": {
+          "installed_path": "/var/tmp/lab-twin-venv/lib/python3.12/site-packages/slam_and_twin/tiled_map.py",
+          "sha256": "ce97cd0ce0788b22b79b285759bc1f13623b2e026324a8857d1c3eaf09a7c286"
+        }
+      },
+      "distribution_version": "2.0.0"
+    },
+    "packaged_resources": {
+      "passed": true,
+      "resource_root": "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin",
+      "sha256": {
+        "config/system_config.yaml": "66770c6704a6f2fc1e651313681f28c8b544ae1f4e46818c4f343f8bd4dc4675",
+        "config/profiles/laptop.yaml": "e667a67b5513e49fdadd3b7db4ab2e85fe87e6e61657912526c92728dfb58f03",
+        "config/profiles/jetson_edge.yaml": "f80ae159d0e59f23da3ee322336e571d2337599165bb1a59c081564e1114a7e0",
+        "assets/checkpoints/synthetic.pt": "68b4cce92c67e88befe8db746ea7ca0ed517032e22fbddea051a6f336c3a4a7a",
+        "assets/sample_recording/manifest.json": "1409c5a256292bc3e18cda59bf48cd837318435e872250f1c65e538dd022b04a",
+        "web/dist/index.html": "0674be476315d76381f79af8953d800b796618a782eb42eef7af8191998610ee",
+        "assets/sample_recording/chunk_000000.npz": "8451e8f33017e7df40b5385838bba6d7924a0e00036c4dd76965598e17a42cf9"
+      }
+    },
+    "entrypoints": {
+      "passed": true,
+      "entries": {
+        "aethertwin-diagnose": "diagnostics.__main__:main",
+        "aethertwin-gateway": "command_center.gateway:main",
+        "aethertwin-serve": "command_center.__main__:main",
+        "lab-twin": "main:main"
+      }
+    },
+    "diagnostics": {
+      "software_checks_passed": true,
+      "hardware_checks_passed": false,
+      "hardware_status": "not_tested",
+      "resource_shutdown": {
+        "status": "passed",
+        "limit": "Owned map databases and temporary runtime cache closed"
+      }
+    },
+    "browser": {
+      "passed": true,
+      "frontend_assets": [
+        {
+          "path": "/assets/index-C-ZJVSjn.js",
+          "size_bytes": 62345,
+          "sha256": "055ae3b0083830884df437f5d1601b6f048cf37be84115d8cee998548f8afb62",
+          "content_type": "text/javascript; charset=utf-8"
+        },
+        {
+          "path": "/assets/index-CebD2Odz.css",
+          "size_bytes": 32641,
+          "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e",
+          "content_type": "text/css; charset=utf-8"
+        },
+        {
+          "path": "/assets/modulepreload-polyfill-P2Xu9kJm.js",
+          "size_bytes": 670,
+          "sha256": "418c206484b89b68ef5f067277831e583fc9193a62aadf4de269acaaeb12a85f",
+          "content_type": "text/javascript; charset=utf-8"
+        },
+        {
+          "path": "/assets/react-vendor-Br0ptrPz.js",
+          "size_bytes": 218797,
+          "sha256": "11eb7fe98ad1fb483eda724b645117fbc4d8e01e52b82b3ad4c1b658d5d3bfee",
+          "content_type": "text/javascript; charset=utf-8"
+        },
+        {
+          "path": "/assets/rolldown-runtime-4tVxZq34.js",
+          "size_bytes": 237,
+          "sha256": "e1a1c25cf197ccd96571062973f07d34fb794a4745cd7284f8f64c63be00c578",
+          "content_type": "text/javascript; charset=utf-8"
+        },
+        {
+          "path": "/assets/spatial-contracts-33vaUxT7.js",
+          "size_bytes": 1933,
+          "sha256": "e4076cc3065675cd800a9ea22af1ca0e104e700200080cc318d44bc12d76397b",
+          "content_type": "text/javascript; charset=utf-8"
+        }
+      ],
+      "frame_id": 2,
+      "source_mode": "replay",
+      "tracks": 4,
+      "track_state_fields_present": true,
+      "module_shapes": {
+        "localization": {
+          "raw_lidar": [
+            2409,
+            7
+          ],
+          "deskewed_lidar": [
+            2409,
+            7
+          ],
+          "pose": [
+            4,
+            4
+          ]
+        },
+        "occupancy": {
+          "lidar_rays": [
+            2409,
+            7
+          ],
+          "depth_points": [
+            1170,
+            6
+          ]
+        },
+        "perception_tracking": {
+          "voxel_centers": [
+            1400,
+            3
+          ],
+          "semantic_probabilities": [
+            1400,
+            7
+          ],
+          "scene_flow": [
+            1400,
+            3
+          ],
+          "embeddings": [
+            1400,
+            256
+          ],
+          "track_count": 4
+        },
+        "planning": {
+          "grid": [
+            48,
+            40,
+            14
+          ],
+          "path": [
+            69,
+            3
+          ]
+        },
+        "risk_fields": {
+          "points": [
+            1920,
+            3
+          ],
+          "risk": [
+            1920
+          ]
+        }
+      },
+      "map_tile_count": 12,
+      "websocket": {
+        "packet_bytes": 185728,
+        "protocol_version": 2,
+        "kind": "keyframe",
+        "voxel_count": 1400
+      },
+      "hardware_status": "not_tested"
+    }
+  },
+  "commands": [
+    {
+      "name": "aethertwin-diagnose_help",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+        "--help"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 1.6277372129999996,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/aethertwin-diagnose_help.log"
+    },
+    {
+      "name": "aethertwin-gateway_help",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-gateway",
+        "--help"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 1.183380579999998,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/aethertwin-gateway_help.log"
+    },
+    {
+      "name": "aethertwin-serve_help",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+        "--help"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 0.12086478100000164,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/aethertwin-serve_help.log"
+    },
+    {
+      "name": "lab-twin_help",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/lab-twin",
+        "--help"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 2.684789705,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/lab-twin_help.log"
+    },
+    {
+      "name": "installed_sim",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/lab-twin",
+        "--mode",
+        "sim",
+        "--headless",
+        "--device",
+        "cpu",
+        "--max-frames",
+        "1",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/sim"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 7.400371169000003,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_sim.log"
+    },
+    {
+      "name": "installed_replay",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/lab-twin",
+        "--mode",
+        "replay",
+        "--headless",
+        "--device",
+        "cpu",
+        "--max-frames",
+        "3",
+        "--input",
+        "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/assets/sample_recording",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/shipped_replay"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 9.163919571000001,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_replay.log"
+    },
+    {
+      "name": "installed_diagnostics",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-diagnose",
+        "--source",
+        "sim",
+        "--max-frames",
+        "3",
+        "--threads",
+        "4",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/diagnostics"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 10.924878831000001,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_diagnostics.log"
+    },
+    {
+      "name": "installed_browser",
+      "argv": [
+        "/var/tmp/lab-twin-venv/bin/aethertwin-serve",
+        "--mode",
+        "replay",
+        "--input",
+        "/var/tmp/lab-twin-venv/share/lidar-lab-digital-twin/assets/sample_recording",
+        "--device",
+        "cpu",
+        "--max-frames",
+        "3",
+        "--threads",
+        "4",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "52635",
+        "--output",
+        "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/browser"
+      ],
+      "cwd": "/var/tmp/aethertwin-v2-installed-a62hh6ul",
+      "exit_code": 0,
+      "elapsed_seconds": 15.298710993,
+      "log": "/mnt/c/Users/KIIT/Documents/Codex/2026-10-27/new-chat/outputs/lidar_lab_digital_twin/artifacts/ubuntu_aethertwin/installed_final_v2/installed_browser.log"
+    }
+  ],
+  "passed": true
+}
