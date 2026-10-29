@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_utc": "2026-10-29T15:11:25.970809+00:00",
+  "generated_utc": "2026-10-29T15:13:24.644040+00:00",
   "scope": "GitHub source snapshot; local Windows software verification only",
   "windows": {
     "passed": 332,
@@ -26,7 +26,15 @@
     "largest_file_bytes": 61868032,
     "all_files_under_github_100_mib_limit": true
   },
-  "fresh_clone_smoke": "pending",
+  "fresh_clone_smoke": {
+    "passed": true,
+    "frames": 2,
+    "device": "cpu",
+    "source_commit": "b3c42c3d5b1fcc1a9286f07fcb1e6bcad597ea14",
+    "inventory_verified": true,
+    "evidence": "reports/github_clone_smoke.json",
+    "scope": "Fresh Git checkout; existing validated Windows Python environment; no fresh dependency installation or hardware test."
+  },
   "hardware_verified": false,
   "pi_raw_sensor_bridge": "pending",
   "a2000_cuda_verified": false,

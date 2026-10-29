@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "frames": 2,
+  "wall_seconds": 3.0309999999881256,
+  "end_to_end_fps": 0.6598482349085567,
+  "processing_latency_ms": {
+    "p50": 1052.6298500044504,
+    "p95": 1320.3992450085934,
+    "max": 1350.1514000090538
+  },
+  "mean_processing_fps": 0.9500015603735464,
+  "rss_mb": {
+    "first": 442.48828125,
+    "last": 502.13671875,
+    "max": 502.13671875,
+    "last_half_slope_mb_per_frame": 0.0
+  },
+  "dropped_snapshots": 0,
+  "occupancy_cells": 43484,
+  "presentation_queue": {
+    "capacity": 2,
+    "current_depth": 0,
+    "max_depth": 0
+  },
+  "configuration": {
+    "seed": 7,
+    "device": "cpu",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false,
+      "include_s2": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06,
+      "runtime_tiled": true,
+      "ray_backend": "auto",
+      "max_traversal_cells": 5000000,
+      "tile_budgets": {
+        "max_resident_tiles": 128,
+        "max_resident_bytes": 67108864,
+        "max_disk_bytes": 4294967296
+      }
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt"
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": [
+        -1.375,
+        -4.375,
+        0.625
+      ],
+      "goal": [
+        2.125,
+        4.125,
+        0.625
+      ],
+      "ground": true,
+      "replan_interval": 5,
+      "mppi_samples": 96,
+      "mppi_iterations": 2,
+      "bounds": [
+        -6,
+        6,
+        -5,
+        5,
+        0,
+        3.5
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "recording": {
+      "max_disk_bytes": 17179869184,
+      "chunk_frames": 4,
+      "chunk_bytes": 67108864,
+      "queued_frames": 8,
+      "queued_bytes": 67108864,
+      "required": true
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "live": {
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 1280,
+      "camera_height": 800,
+      "camera_fps": 30,
+      "camera_color_width": null,
+      "camera_color_height": null,
+      "camera_color_fps": null,
+      "camera_align_mode": "auto",
+      "camera_intrinsics_tolerance_px": 1.0,
+      "camera_distortion_tolerance": 0.0001,
+      "calibration": "config/calibration_extrinsics.json",
+      "allow_degraded": false
+    },
+    "acquisition": {
+      "max_frames": 2,
+      "max_bytes": 67108864,
+      "max_age_seconds": 0.5,
+      "imu_history_seconds": 5.0,
+      "max_imu_samples": 8192
+    },
+    "input_mode": "sim",
+    "active_rendering": {
+      "name": "Headless processing",
+      "requested": "none"
+    },
+    "identity": {
+      "map_revision": "122bdf02b078ac9281661a93"
+    }
+  },
+  "input_mode": "sim",
+  "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+}
