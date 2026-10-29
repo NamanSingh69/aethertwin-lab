@@ -15,8 +15,8 @@
       "sha256": "92634c1520c6f6e331010af15469873299e8bc3ce667c1795942eb7ce35c35aa"
     },
     ".gitignore": {
-      "bytes": 1907,
-      "sha256": "fb5d8a6090a8a7afee2c8a44985da9dc3c7c3691dabd475f34ccb4675b0881f1"
+      "bytes": 1964,
+      "sha256": "3db0bfa1b8ec0befed1636abd63e2dd0d969a0cdb9f0f0d3878ca257ea51153b"
     },
     "AETHERTWIN_IMPLEMENTATION_PLAN.md": {
       "bytes": 2625,
@@ -2639,8 +2639,8 @@
       "sha256": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf"
     },
     "command_center/service.py": {
-      "bytes": 13521,
-      "sha256": "f8ae606086d2b5eff884245e10fa3cb5f3660757337e71be9a8dcab8a5f6d418"
+      "bytes": 14578,
+      "sha256": "ed61ee7c37228f517113cb62f2687fe365ca52067c0e34c121f964c689cbb0d5"
     },
     "config/calibration_extrinsics.json": {
       "bytes": 537,
@@ -3474,66 +3474,6 @@
       "bytes": 12486,
       "sha256": "95712b0146d75971f16bdf37dd3ac0ff074ab4a7392f3443eb19f4f2c5f1c325"
     },
-    "tests/.runtime_validation/test_complete_record_replay_is0/raw_observations/chunk_000000.npz": {
-      "bytes": 114296,
-      "sha256": "fbb594f9246eede6db2b07daa85ff8328a41a05deb0d4105dc6a1173d31c8f83"
-    },
-    "tests/.runtime_validation/test_complete_record_replay_is0/raw_observations/chunk_000001.npz": {
-      "bytes": 57567,
-      "sha256": "92f38688ac42cd4c88d1409c94246b6b0da182372d3d8dadc6d15a14f8efc43c"
-    },
-    "tests/.runtime_validation/test_complete_record_replay_is0/raw_observations/manifest.json": {
-      "bytes": 300,
-      "sha256": "3e594e336f598ce9d4d4e0494803ce8f69ddc455894b2ff2b92a17ead03f2aaa"
-    },
-    "tests/.runtime_validation/test_complete_record_replay_is0/record_replay_regression.json": {
-      "bytes": 441,
-      "sha256": "e9b5934f852c8ffc9c6889d0d186014c8a93565960390a35c797f943595eb805"
-    },
-    "tests/.runtime_validation/test_mobile_pipeline_processes0/mobile_pipeline_smoke.json": {
-      "bytes": 489,
-      "sha256": "6c10e5e7cf4113bb39e86f7cdb23a87e688cfac14d2bc44b47423f68c2b1bb6f"
-    },
-    "tests/.runtime_validation_final/test_complete_record_replay_is0/raw_observations/chunk_000000.npz": {
-      "bytes": 114296,
-      "sha256": "fbb594f9246eede6db2b07daa85ff8328a41a05deb0d4105dc6a1173d31c8f83"
-    },
-    "tests/.runtime_validation_final/test_complete_record_replay_is0/raw_observations/chunk_000001.npz": {
-      "bytes": 57567,
-      "sha256": "92f38688ac42cd4c88d1409c94246b6b0da182372d3d8dadc6d15a14f8efc43c"
-    },
-    "tests/.runtime_validation_final/test_complete_record_replay_is0/raw_observations/manifest.json": {
-      "bytes": 300,
-      "sha256": "3e594e336f598ce9d4d4e0494803ce8f69ddc455894b2ff2b92a17ead03f2aaa"
-    },
-    "tests/.runtime_validation_final/test_complete_record_replay_is0/record_replay_regression.json": {
-      "bytes": 441,
-      "sha256": "e9b5934f852c8ffc9c6889d0d186014c8a93565960390a35c797f943595eb805"
-    },
-    "tests/.runtime_validation_pass/test_complete_record_replay_is0/raw_observations/chunk_000000.npz": {
-      "bytes": 114296,
-      "sha256": "fbb594f9246eede6db2b07daa85ff8328a41a05deb0d4105dc6a1173d31c8f83"
-    },
-    "tests/.runtime_validation_pass/test_complete_record_replay_is0/raw_observations/chunk_000001.npz": {
-      "bytes": 57567,
-      "sha256": "92f38688ac42cd4c88d1409c94246b6b0da182372d3d8dadc6d15a14f8efc43c"
-    },
-    "tests/.runtime_validation_pass/test_complete_record_replay_is0/raw_observations/manifest.json": {
-      "bytes": 300,
-      "sha256": "3e594e336f598ce9d4d4e0494803ce8f69ddc455894b2ff2b92a17ead03f2aaa"
-    },
-    "tests/.runtime_validation_pass/test_complete_record_replay_is0/record_replay_regression.json": {
-      "bytes": 441,
-      "sha256": "e9b5934f852c8ffc9c6889d0d186014c8a93565960390a35c797f943595eb805"
-    },
-    "tests/.runtime_validation_pass/test_mobile_pipeline_processes0/mobile_pipeline_smoke.json": {
-      "bytes": 987,
-      "sha256": "d68ecd6c3451c938c6bc9cea5bb63f228f61ba16a668388e77f247857425c6ef"
-    },
-    "tests/.runtime_validation_pass/test_supported_normals_bound_l0/unanchored_mobile_drift.json": {
-      "bytes": 1885,
-      "sha256": "05ace3e1609c6c1a9bfcfcb1e077500ad048a8e110e12afdbd0efa797531fc04"
-    },
     "tests/run_commissioning_evidence.py": {
       "bytes": 4989,
       "sha256": "1f554b1c9a32773837b42a4a1156916c9d8f0a78e69c161e679bc178552b18da"
@@ -3635,8 +3575,8 @@
       "sha256": "d512265058a5008044653d7bcb1cae3620378d705ce16bd76be156dbd53c1c58"
     },
     "tests/test_scene_protocol_v2.py": {
-      "bytes": 9417,
-      "sha256": "df59c003dade2c133acfd617107479f9b7ddd7ea04acf4cbf74e1d90c4f49f7b"
+      "bytes": 10667,
+      "sha256": "8bcfdcb1814c7ba0855506ec00c3d9266c2b518cd87ee8c741afbff939950a59"
     },
     "tests/test_se3_and_deskew.py": {
       "bytes": 1223,

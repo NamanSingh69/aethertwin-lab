@@ -10,10 +10,19 @@ import time
 
 from fastapi import FastAPI,Request,WebSocket,WebSocketDisconnect,HTTPException
 from fastapi.responses import FileResponse,JSONResponse,Response
+from starlette.middleware.gzip import GZipMiddleware
 
 from .auth import SessionAuth,is_loopback
 from .controls import ControlPlane
 from .protocol import SceneEncoder,EncodedScene
+
+
+# Same-origin only. 'wasm-unsafe-eval' admits the meshopt glTF decoder; blob: admits embedded glTF images.
+CONTENT_SECURITY_POLICY=("default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data: blob:; connect-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; "
+    "base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
+# Vite emits content-hashed names under assets/; anything else (HTML entries) must revalidate.
+IMMUTABLE_CACHE='public, max-age=31536000, immutable'
 
 
 class SceneHub:
@@ -154,7 +163,10 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
         response.headers['Referrer-Policy']='same-origin'
         response.headers['X-Frame-Options']='DENY'
         if request.url.path.startswith('/api/'):response.headers['Cache-Control']='no-store'
+        else:response.headers.setdefault('Content-Security-Policy',CONTENT_SECURITY_POLICY)
         return response
+    # Starlette skips already-encoded and small bodies; binary scene packets use the WebSocket, not this path.
+    app.add_middleware(GZipMiddleware,minimum_size=1024,compresslevel=6)
 
     @app.post('/api/v2/session')
     async def login(request:Request):
@@ -265,8 +277,10 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
         if frontend_root is None:raise HTTPException(404,'Build the browser frontend first')
         candidate=(frontend_root/path).resolve()
         if not candidate.is_relative_to(frontend_root):raise HTTPException(404)
-        if candidate.is_file():return FileResponse(candidate)
+        if candidate.is_file():
+            hashed=candidate.parent==frontend_root/'assets'
+            return FileResponse(candidate,headers={'Cache-Control':IMMUTABLE_CACHE if hashed else 'no-cache'})
         index=frontend_root/'index.html'
-        if index.is_file() and not Path(path).suffix:return FileResponse(index)
+        if index.is_file() and not Path(path).suffix:return FileResponse(index,headers={'Cache-Control':'no-cache'})
         raise HTTPException(404)
     return app
