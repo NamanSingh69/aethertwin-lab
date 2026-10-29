@@ -156,6 +156,23 @@ def test_loopback_development_rejects_rebound_host_and_role_credentials_must_dif
         assert rejected.value.code==4401
 
 
+def test_frontend_is_compressed_cached_by_content_hash_and_restricted_by_csp(tmp_path):
+    from fastapi.testclient import TestClient
+    (tmp_path/'assets').mkdir();(tmp_path/'index.html').write_text('<!doctype html>'+'<p>studio</p>'*200,encoding='utf-8')
+    (tmp_path/'assets/index-abc123.js').write_text('export const value=1;\n'*400,encoding='utf-8')
+    with TestClient(create_app(frontend_root=tmp_path),client=('127.0.0.1',50000),base_url='http://127.0.0.1') as client:
+        asset=client.get('/assets/index-abc123.js',headers={'accept-encoding':'gzip'})
+        assert asset.status_code==200 and asset.headers['content-encoding']=='gzip'
+        assert 'immutable' in asset.headers['cache-control'] and asset.text.startswith('export const value=1;')
+        for path in ('/','/index.html','/workspace'):
+            page=client.get(path)
+            assert page.headers['cache-control']=='no-cache' and 'studio' in page.text
+            policy=page.headers['content-security-policy']
+            assert "frame-ancestors 'none'" in policy and "script-src 'self' 'wasm-unsafe-eval';" in policy
+        api=client.get('/api/v2/state')
+        assert api.headers['cache-control']=='no-store' and 'content-security-policy' not in api.headers
+
+
 def test_glb_contains_actual_mesh_buffers_and_valid_world_bounds(tmp_path):
     path=tmp_path/'mesh.glb';vertices=np.array([[0,0,0],[1,0,0],[0,1,1]],float)
     write_glb(path,vertices,[[0,1,2]],colors=np.ones((3,3)))
