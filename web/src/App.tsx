@@ -537,7 +537,7 @@ export default function App() {
         >
           <Icon name="layers" />
         </button>
-        <a className="brand" href="#" aria-label="AetherTwin command center">
+        <a className="brand" href="#">
           <span className="brand-mark">
             <i />
             <i />

@@ -3759,12 +3759,12 @@
       "sha256": "4e97fe4adb0bc23979e1f850c451f56f081db99dd5fe6a41d52e6a7d3236134d"
     },
     "web/.gitignore": {
-      "bytes": 99,
-      "sha256": "d4b91d86c3e06e835ac50f0f331834b54eb2e19d66b57916beca4513bb9b0cd2"
+      "bytes": 165,
+      "sha256": "76ac1f62a2b9e11491bcbb65521fc5d555d30c4f92ff91b35734386c7de950f4"
     },
     "web/README.md": {
-      "bytes": 5164,
-      "sha256": "9f3d1bf6b3f5b62c45bfd4835547d4bcc12a386e4d4ab9b677755635db194e62"
+      "bytes": 6012,
+      "sha256": "224c24cddcf60cb170a150ec98cc3db0cae2588bce15e4595f57bd1854cf1cde"
     },
     "web/benchmark.html": {
       "bytes": 2613,
@@ -3772,7 +3772,7 @@
     },
     "web/dist/.vite/manifest.json": {
       "bytes": 1648,
-      "sha256": "ae665007590232cd82f5b5ecb561ef375cbc5f53c43f4135b13e1de44d7c902f"
+      "sha256": "ea8c9ab403102ccbc2806d773572bdd8b17b8873ee50e8ed3656b2b3e2f2ab19"
     },
     "web/dist/assets/SpatialRenderer-BGgNbCOT.js": {
       "bytes": 14033,
@@ -3798,17 +3798,17 @@
       "bytes": 18095,
       "sha256": "8a71c73bd7dc12d20faa36b4caeadf926616b2ab3e60a2335fe3da51eab3bc2b"
     },
-    "web/dist/assets/index-BP_v25uK.js": {
-      "bytes": 64235,
-      "sha256": "5440d90b62aef6951999974f0a94f6fd1ab84ea3dcde60c996e6ca18c184e98e"
-    },
-    "web/dist/assets/index-BP_v25uK.js.map": {
-      "bytes": 186321,
-      "sha256": "2fe9fce8cf8f85cc65ffd618b4820b32a833d13c65df3dd7dd80f45c709b8092"
-    },
     "web/dist/assets/index-CebD2Odz.css": {
       "bytes": 32641,
       "sha256": "4fd9b0a589713236f81b7ceae70158744fedcd29e9e2a72f13510f1f6eeeef4e"
+    },
+    "web/dist/assets/index-DzzyLGs7.js": {
+      "bytes": 64194,
+      "sha256": "5e7ca6dec0b33debef5f83a94ec83124cca1a7b8be9a396e09975a4b28df2cea"
+    },
+    "web/dist/assets/index-DzzyLGs7.js.map": {
+      "bytes": 186269,
+      "sha256": "7ebb97c014e0abcfc093ba1feac9e586b647db243adeb649814fdf8728fc3981"
     },
     "web/dist/assets/modulepreload-polyfill-P2Xu9kJm.js": {
       "bytes": 670,
@@ -3848,19 +3848,43 @@
     },
     "web/dist/index.html": {
       "bytes": 917,
-      "sha256": "529d540a0fcd078aed070f1958c3cd0d94d8b1610bd550ec6106c3784d88fce6"
+      "sha256": "0e07369f14e5762e00cd45c36ddbd04e26750f31efe260183ee4069012851c6b"
+    },
+    "web/e2e/live/service.spec.ts": {
+      "bytes": 3780,
+      "sha256": "f1c4826908ae7661aecae8ac511258934c17205a2f84b2d09dc8b9c6169017f3"
+    },
+    "web/e2e/mock/accessibility.spec.ts": {
+      "bytes": 2484,
+      "sha256": "d489d7ad8d11e571f283e556688f1176d0a6a8e4bd6f11795d487540c3a90853"
+    },
+    "web/e2e/mock/studio.spec.ts": {
+      "bytes": 5389,
+      "sha256": "a991d9df9bd5ccf947caeb0d46914d64bbb7fc530526c951d98ee1c0ac9839c1"
+    },
+    "web/e2e/support/mockService.ts": {
+      "bytes": 9962,
+      "sha256": "e47534467f8c1edc5c1cae373946f203663df023e3167098fe5129bb7b382383"
+    },
+    "web/e2e/support/test.ts": {
+      "bytes": 1335,
+      "sha256": "367169fdb06e738e60d65cdcd072612d0ab9dccf54e7f18f99399860201b6126"
     },
     "web/index.html": {
       "bytes": 475,
       "sha256": "daeb5421f48062420cc5eba6aa87df62d7bd62836db252e9ab2bfcdc091199ae"
     },
     "web/package-lock.json": {
-      "bytes": 54108,
-      "sha256": "2fee9e1e84e8699cc591068f80417b5d73639d1311a1bcf27b94c7acd528abf3"
+      "bytes": 56402,
+      "sha256": "9053f2914b0b5dc0830f2fc498130a24ea909448b9f1d061be0ecdb666390650"
     },
     "web/package.json": {
-      "bytes": 718,
-      "sha256": "7aec74f928085e214e9f766acea91d0f5c3dd056d7e016da1ffa5beb57941518"
+      "bytes": 1006,
+      "sha256": "2fccb2c62ebb1b610325bc999e4215a08ca8a097a19f4c177797c8bb96a389f3"
+    },
+    "web/playwright.config.ts": {
+      "bytes": 2860,
+      "sha256": "54ce9f054626df18134d7274cc6284398c770a3bf4c5d1c21033914262e64f84"
     },
     "web/reports/github-snapshot-vitest.json": {
       "bytes": 16818,
@@ -3883,8 +3907,8 @@
       "sha256": "d4e68f6228f470adc28b5a6a27fd56b0f44cd64227d165a463a3ad95f2c7a180"
     },
     "web/src/App.tsx": {
-      "bytes": 48040,
-      "sha256": "f492d9693eddea2cb76b4524be9de9cbc44ac6e1d7e043bc4660bc7b32b8431f"
+      "bytes": 48001,
+      "sha256": "3d08b74399b755a1f2884db410cad3203a79eaf0d7fd56b64dd7d8dd68626c9f"
     },
     "web/src/benchmark.ts": {
       "bytes": 4797,
@@ -4011,12 +4035,12 @@
       "sha256": "271ebbb8bc731acf13951b6adac68a088f50232f456eea6879414c855f775168"
     },
     "web/tsconfig.json": {
-      "bytes": 389,
-      "sha256": "87f4aefea1790d842756cee4fca0fc8b068416207f8ef7c6f296336e1b8063f1"
+      "bytes": 420,
+      "sha256": "03882689f548fd1459440562277b7f4bb79566d0cae9f61286b5f7b64fadf7c9"
     },
     "web/vite.config.ts": {
-      "bytes": 830,
-      "sha256": "f3210eb8c59b053ecc91e3e82accfedd3fc94e9da61851d0d93e71d2d715b973"
+      "bytes": 989,
+      "sha256": "a9de094ea9351176793856ff736d1deb08df211606c91c99032ecfbb10349e9a"
     }
   }
 }

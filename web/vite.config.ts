@@ -1,7 +1,10 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
+  // Playwright owns e2e/; Vitest runs the unit and contract suites only.
+  test: { include: ["tests/**/*.test.ts"] },
   server: {
     proxy: {
       "/api": "http://127.0.0.1:8080",
