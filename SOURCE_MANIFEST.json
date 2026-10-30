@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 12187,
-      "sha256": "0e55816d5f93f15d46dc5a21bc8ae8819e23e50e3e56eb43a85748cc19a83f85"
+      "bytes": 12453,
+      "sha256": "e4d1cd3be105104d54fb69655072b1b4274827a7d505896a2442f8c8e618a2c8"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3219,8 +3219,8 @@
       "sha256": "c61b6ce4b4ec826e7a3b291dbf8956d87adc9ffe89e53bc36d1497b2849f0fed"
     },
     "reports/modal/README.md": {
-      "bytes": 4221,
-      "sha256": "5c81a1945785923f5e979630a5d4431ca53de3ddcc2b2d3f1869d692faa1105a"
+      "bytes": 4370,
+      "sha256": "bae0716f61796285f8c062ba376a8924098461ce5b43c003ddb46ce90b4ef279"
     },
     "reports/modal/experiments/latency_a10_amp_cast_experiment.json": {
       "bytes": 6299,
@@ -3253,6 +3253,10 @@
     "reports/modal/sweep_a10_20261029T232954Z.json": {
       "bytes": 10380,
       "sha256": "dbe8b030fd618d00123c90ad20e75f8fb92303d16a1f5dc8668913b7e8461db9"
+    },
+    "reports/modal/sweep_a10_20261030T071848Z.json": {
+      "bytes": 6674,
+      "sha256": "b7c1ab83569212cdf25ba08c21c46c3d4cd9e1a725e066a82833017cb244e19f"
     },
     "reports/motion_origin_verification.json": {
       "bytes": 3021,
