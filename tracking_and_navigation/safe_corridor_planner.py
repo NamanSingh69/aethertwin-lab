@@ -327,6 +327,9 @@ class SafeCorridorPlanner:
             return None,"No direct subcell corridor between start and goal"
         neighbors=[np.array(v,dtype=int) for v in product((-1,0,1),repeat=3)
                    if v!=(0,0,0) and (not ground or v[2]==0)]
+        # Python-int offsets and bounds checks in the expansion loop: same cells, keys and order as array arithmetic.
+        offsets=[tuple(int(x) for x in v) for v in neighbors]
+        shape=self.grid.shape;blocked=self.blocked;center_clear=self._center_clear
         off_center_ground=ground and abs(start[2]-self.grid.center(s)[2])>1e-10
         edge_masks={} if off_center_ground else {tuple(delta):self._static_edge_mask(delta) for delta in neighbors}
         if risk is not None:
@@ -353,16 +356,16 @@ class SafeCorridorPlanner:
             if node==s: position=np.asarray(start)
             node_risk=float(endpoint_risk[0]) if node==s else (0. if risk is None else float(self._risk_values(position[None],risk)[0]) if off_center_ground else float(risk[node[:risk.ndim]]))
             t0=distance[node]/self.max_speed; candidates=[]
-            for offset in neighbors:
-                nxt=tuple(np.asarray(node)+offset)
-                if nxt in visited or not self.grid.contains_index(nxt) or self.blocked[nxt]: continue
-                if nxt!=g and not off_center_ground and not self._center_clear[nxt]: continue
+            for offset in offsets:
+                nxt=(node[0]+offset[0],node[1]+offset[1],node[2]+offset[2])
+                if nxt in visited or not (0<=nxt[0]<shape[0] and 0<=nxt[1]<shape[1] and 0<=nxt[2]<shape[2]) or blocked[nxt]: continue
+                if nxt!=g and not off_center_ground and not center_clear[nxt]: continue
                 endpoint=np.asarray(goal) if nxt==g else self.grid.center(nxt)
                 if ground:endpoint=endpoint.copy();endpoint[2]=start[2]
                 length=float(np.linalg.norm(endpoint-position))
                 if node==s or nxt==g or off_center_ground:
                     if not self._static_segment_clear(position,endpoint): continue
-                elif not edge_masks[tuple(offset)][node]: continue
+                elif not edge_masks[offset][node]: continue
                 candidates.append((nxt,endpoint,length))
             if not candidates: continue
             # One swept check for every surviving neighbour (identical to per-edge checks, far fewer numpy calls).

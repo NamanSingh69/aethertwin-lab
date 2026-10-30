@@ -166,8 +166,13 @@ generation but is a much larger part; no A2000 figure is claimed.
    slab test, and the 30-frame trajectory output is byte-identical). Container
    CPU, seed 7, 30 frames, two alternating pairs: A* per replan 165-247 ->
    93-194 ms; planning p95 392-400 -> 305-334 ms; total p95 594-601 ->
-   498-520 ms. Remaining replan cost: the A* Python loop itself, path checks,
-   spline and MPPI.
+   498-520 ms. The A* expansion loop then dropped per-neighbour numpy
+   arithmetic and bounds checks for Python-int offsets (same cells, keys and
+   order): 60 benchmark pairs identical, standalone p50 72 -> 55 ms, p95 142
+   -> 98 ms; pipeline, four alternating runs each in both orders: A* per
+   replan 103-189 -> 77-140 ms, planning p95 271-281 -> 230-236 ms, total p95
+   436-488 -> 389-407 ms, trajectory byte-identical. Remaining replan cost:
+   path checks, spline and MPPI.
    Occupancy (same setup): the sparse map's per-voxel lookups built keys with
    `tuple(numpy_row)` and called a method per key; keys are now Python-int
    tuples and the lookups are inlined with the same scalar arithmetic.

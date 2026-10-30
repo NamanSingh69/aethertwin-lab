@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 16149,
-      "sha256": "7809c54c9667105eda8ddfca6986f5d4e52fd11fa03eef4ead2cac549125dfc3"
+      "bytes": 16535,
+      "sha256": "88e970b3ec39f178b167fd681e356d9887b4fc58a00e1bcc6b9681b9b83f2ded"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3879,8 +3879,8 @@
       "sha256": "00cf19fe240bd51c82c185f23f5a30c610c4701baff6c8ed846cad40c7fc7fc3"
     },
     "tracking_and_navigation/safe_corridor_planner.py": {
-      "bytes": 34774,
-      "sha256": "5fa0da75f877d1c764d8b61a5b8c93fd3933246bd5723464ffcff175d5bb2c83"
+      "bytes": 35079,
+      "sha256": "269f6d650c71c3137147360fd0d4cda95ba7bf86e051cb7dcf4e35f557eaa873"
     },
     "tracking_and_navigation/traffic_heatmap.py": {
       "bytes": 3134,
