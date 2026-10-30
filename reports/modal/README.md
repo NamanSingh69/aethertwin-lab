@@ -55,9 +55,11 @@ improves end-to-end latency by 20-25 %.
 | 101, 102, 201, 202 | 2103-2148 / 2683-2830 | ~1755 |
 
 Seed 7 is the only seed with a bundled measured twin (`assets/twin_seed7`);
-the others build one at start-up, and their perception and tracking stage is
-about 26x slower. The cause is not yet identified (open item in
-`docs/REVIEW_AND_ROADMAP.md`).
+the others build one at start-up, and their perception and tracking stage was
+about 26x slower. Cause, found afterwards: distance queries against the
+runtime-built (disk-tiled) twin re-read tiles and rebuilt KD-trees on every
+batch. Fixed with cached exact trees; on the laptop CPU seed 101 dropped from
+1,244 to 120 ms (seed 7: 115 ms). This sweep predates the fix.
 
 ## Stability (A10, seed 7, 900 s wall clock)
 
