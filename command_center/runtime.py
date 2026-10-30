@@ -78,6 +78,8 @@ class BrowserRuntime:
                 cfg['live'].setdefault('initial_pose_world',np.asarray(twin.poses[-1]).tolist())
             cfg['mapping']['runtime_cache_root']=str(self.output/'.runtime_cache')
             pipeline=LabPipeline(cfg,self.checkpoint,twin,static,grid,mobile)
+            from core.resources import freeze_startup_heap
+            freeze_startup_heap()
             folder=self.asset_root/revision
             manifest=export_twin_assets(twin,folder,revision,url_prefix=f'/api/v2/assets/{revision}/')
             if self.record_root is not None:
