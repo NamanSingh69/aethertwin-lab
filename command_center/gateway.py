@@ -248,6 +248,7 @@ class GatewayRuntime:
         self._last_packet = None
         self._asset_retry = None
         self._auth_lock = None
+        self._auth_generation = 0
         self._source_processed = None
         self._frames = 0
         self._reconnects = 0
@@ -532,8 +533,12 @@ class GatewayRuntime:
         # Single flight: concurrent 401s must not clear the jar under each other.
         if self._auth_lock is None:
             self._auth_lock = asyncio.Lock()
+        generation = self._auth_generation
         async with self._auth_lock:
+            if generation != self._auth_generation:
+                return
             await self._authenticate_once()
+            self._auth_generation += 1
 
     async def _authenticate_once(self):
         self._client.cookies.clear()

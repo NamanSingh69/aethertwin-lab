@@ -1,6 +1,6 @@
 {
-  "_SpatialRenderer-BgyOzoXC.js": {
-    "file": "assets/SpatialRenderer-BgyOzoXC.js",
+  "_SpatialRenderer-51CcrWZp.js": {
+    "file": "assets/SpatialRenderer-51CcrWZp.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
@@ -37,17 +37,17 @@
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-D6PIC44s.js",
+    "file": "assets/benchmark-B0XQfCDB.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
       "_preload-helper-CFijIu3R.js",
-      "_SpatialRenderer-BgyOzoXC.js"
+      "_SpatialRenderer-51CcrWZp.js"
     ]
   },
   "index.html": {
-    "file": "assets/index-BIJDS7FU.js",
+    "file": "assets/index-D6FAFXkm.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -57,7 +57,7 @@
       "_spatial-contracts-33vaUxT7.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-BgyOzoXC.js"
+      "_SpatialRenderer-51CcrWZp.js"
     ],
     "css": [
       "assets/index-CevuC8fd.css"
@@ -73,7 +73,7 @@
     "isDynamicEntry": true
   },
   "src/scene/effects.ts": {
-    "file": "assets/effects-CmfXBmxo.js",
+    "file": "assets/effects-OGphA-wp.js",
     "name": "effects",
     "src": "src/scene/effects.ts",
     "isDynamicEntry": true,

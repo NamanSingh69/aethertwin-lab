@@ -184,14 +184,15 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
 
     @app.post('/api/v2/session')
     async def login(request:Request):
-        check_origin(request);peer=peer_of(request) or 'unknown';wait=limiter.retry_after(peer)
+        # Per client address: behind a shared proxy all clients share one bucket.
+        check_origin(request);peer=peer_of(request) or 'unknown';wait=limiter.acquire(peer)
         if wait:
             audit('login_rate_limited',peer=peer)
             raise HTTPException(429,'Too many sign-in attempts',headers={'Retry-After':str(math.ceil(wait))})
         data=await bounded_json(request,4096)
         try:cookie,role=auth.create(data.get('token'))
         except ValueError as exc:
-            limiter.failure(peer);audit('login_failed',peer=peer)
+            audit('login_failed',peer=peer)
             raise HTTPException(401,'Invalid access credential') from exc
         limiter.success(peer);audit('login',peer=peer,role=role)
         response=JSONResponse({'role':role,'expires_in':auth.ttl})
@@ -296,7 +297,7 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
                     if latest:
                         while not outgoing.empty():outgoing.get_nowait()
                         enqueue(latest,True)
-        except WebSocketDisconnect:pass
+        except (WebSocketDisconnect,RuntimeError):pass  # RuntimeError: receive after the expiry task closed the socket
         finally:
             closed=True;hub.unsubscribe(token);task.cancel()
             if expiry:expiry.cancel()

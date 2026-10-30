@@ -51,11 +51,20 @@ class LoginLimiter:
         """Seconds until this peer may try again; 0 when an attempt is allowed."""
         with self.lock:
             tokens=self._tokens(peer,self.clock());return 0. if tokens>=1 else (1-tokens)/self.rate
+    def acquire(self,peer):
+        """Take one attempt atomically, so parallel requests cannot pass the burst; returns seconds to wait (0 = taken)."""
+        with self.lock:
+            now=self.clock();tokens=self._tokens(peer,now)
+            if tokens<1:return (1-tokens)/self.rate
+            self.buckets.pop(peer,None);self.buckets[peer]=(tokens-1,now)
+            while len(self.buckets)>self.max_peers:self.buckets.pop(next(iter(self.buckets)))
+            return 0.
     def failure(self,peer):
         with self.lock:
             now=self.clock();tokens=max(0.,self._tokens(peer,now)-1);self.buckets.pop(peer,None);self.buckets[peer]=(tokens,now)
             while len(self.buckets)>self.max_peers:self.buckets.pop(next(iter(self.buckets)))
     def success(self,peer):
+        """A valid credential clears the peer's failures (and refunds the attempt)."""
         with self.lock:self.buckets.pop(peer,None)
 
 
