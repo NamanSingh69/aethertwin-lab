@@ -113,3 +113,44 @@ def test_export_real_checkpoint_profile_is_numerically_gated_and_fp16_cpu_is_exp
         assert unsupported['status']=='unsupported' and not (tmp_path/'fp16/perception_tensor.pt2').exists()
         assert 'status' in unsupported['tensorrt']
     finally:source.close()
+
+
+def _compile_frames(engine,count=2):
+    source=SyntheticLabSimulator(seed=19,config={'lidar_points':400,'width':40,'height':24});results=[]
+    try:
+        for _ in range(count):
+            frame=source.next_frame();points=frame.lidar_points.copy();points[:,:3]=transform_points(frame.sensor_pose_world,points[:,:3])
+            results.append(engine.infer(frame,points)[1:3])
+    finally:source.close()
+    return results
+
+
+@pytest.mark.parametrize('mode',['exact','mismatch','error'])
+def test_compiled_inference_is_parity_gated_per_signature_and_falls_back_to_eager(monkeypatch,mode):
+    import perception_ml.inference_engine as module
+    calls=[]
+    def fake_compile(model,dynamic):
+        assert dynamic is True
+        def compiled(**kwargs):
+            calls.append(tuple(sorted(kwargs)))
+            if mode=='error':raise RuntimeError('compiler unavailable')
+            out=model(**kwargs)
+            return out if mode=='exact' else tuple(t+1e-3 for t in out)
+        return compiled
+    monkeypatch.setattr(module.torch,'compile',fake_compile)
+    checkpoint=ROOT/'assets/checkpoints/synthetic.pt'
+    expected=_compile_frames(InferenceEngine(checkpoint,max_voxels=80),3)
+    engine=InferenceEngine(checkpoint,max_voxels=80,compile=True);assert engine.compile_status=='pending'
+    actual=_compile_frames(engine,3)
+    for (a_probs,a_flow),(e_probs,e_flow) in zip(actual,expected):
+        np.testing.assert_allclose(a_probs,e_probs,atol=1e-6);np.testing.assert_allclose(a_flow,e_flow,atol=1e-6)
+    if mode=='exact':
+        # Frame 1 has no history, frames 2-3 do: two signatures, each verified once, then compiled only.
+        assert engine.compile_status=='active' and len(set(calls))==2 and len(calls)==3
+    else:
+        assert engine.compile_status.startswith('disabled: '+('RuntimeError' if mode=='error' else 'parity error'))
+        assert len(calls)==1 and engine._compiled is None
+
+
+def test_compile_flag_must_be_boolean():
+    with pytest.raises(ValueError,match='boolean'):InferenceEngine(ROOT/'assets/checkpoints/synthetic.pt',compile='yes')

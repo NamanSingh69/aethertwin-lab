@@ -1,0 +1,31 @@
+{
+  "test": "perception_torch_compile_cpu",
+  "date_utc": "2026-10-30",
+  "hardware_verified": false,
+  "environment": "Linux cloud container CPU, torch 2.14.1+cpu, 4 threads; simulator seed 7; 24 frames; steady state excludes the first 4 frames",
+  "settings": {
+    "dynamic": true,
+    "parity_tolerance_abs": 0.0001
+  },
+  "results": {
+    "status": "active",
+    "max_output_difference": 2.38e-06,
+    "eager_ms": {
+      "p50": 71.6,
+      "p95": 83.3
+    },
+    "compiled_ms": {
+      "p50": 64.4,
+      "p95": 65.5
+    },
+    "compile_cost_ms": {
+      "first_frame_no_history": 12809,
+      "first_frame_with_history": 12359
+    }
+  },
+  "notes": [
+    "Not a GPU, A2000 or lab figure; Modal measured ~30% faster compiled forward passes on T4/L4/A10 with fixed inputs (reports/modal/).",
+    "Default remains off because each input signature stalls the first frames by ~12 s; enable with perception.compile: true and expect the stall at startup."
+  ],
+  "reproduce": "perception.compile: true in the config; status appears as diagnostics.inference_compile"
+}

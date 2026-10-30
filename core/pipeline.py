@@ -222,7 +222,8 @@ class LabPipeline:
         self.inference=InferenceEngine(checkpoint,config['device'],config['mapping']['voxel_size'],config['perception']['max_voxels'],
             config['perception'].get('neighbors',16),config['perception'].get('temporal_neighbors',12),config['perception'].get('rgbd_stride',3),
             config['perception'].get('range_image_height',24),config['perception'].get('range_image_width',96),
-            config['perception'].get('camera_feature_height'),config['perception'].get('camera_feature_width'))
+            config['perception'].get('camera_feature_height'),config['perception'].get('camera_feature_width'),
+            config['perception'].get('compile',False))
         tiled_reference=getattr(twin,'point_store',None) is not None
         self.diff=SpatialDiffEngine(twin.points,config['mapping']['tau0'],config['mapping']['beta'],config['mapping']['floor_epsilon'],
             distance_provider=twin.distances if tiled_reference else None)
@@ -467,7 +468,7 @@ class LabPipeline:
         colors=PALETTE[probs.argmax(1)] if len(probs) else np.empty((0,3))
         inlay=frame.gemini_rgbd_cloud
         if inlay is not None:inlay=np.c_[transform_points(pose,inlay[:,:3]),inlay[:,3:]]
-        diagnostics={**frame.diagnostics,**self.deskewer.last_diagnostics,'module_ms':timings,'processing_ms':latency,
+        diagnostics={**frame.diagnostics,**self.deskewer.last_diagnostics,'module_ms':timings,'inference_compile':getattr(self.inference,'compile_status','disabled'),'processing_ms':latency,
             'module_shapes':{'localization':{'raw_lidar':raw_frame.lidar_points.shape,'deskewed_lidar':frame.lidar_points.shape,'pose':pose.shape},
                 'occupancy':{'lidar_rays':world_points.shape,'depth_points':None if frame.gemini_rgbd_cloud is None else frame.gemini_rgbd_cloud.shape},
                 'perception_tracking':{'voxel_centers':prepared.voxels.voxel_centers.shape,'semantic_probabilities':probs.shape,
