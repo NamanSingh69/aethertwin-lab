@@ -146,12 +146,17 @@ generation but is a much larger part; no A2000 figure is claimed.
    seed 7, 30 frames: p50 93 ms, p95 500 ms) comes from periodic replans
    (A* plus the scipy spline optimisation, ~200 ms each), not from the
    per-frame path check: batching that check across segments was exact but
-   changed nothing measurable, so it was not kept. Next: the spline step runs
-   L-BFGS-B with finite-difference gradients (up to 36 variables, so ~37
-   objective calls per iteration). The curve is linear in its control points
-   (precompute the B-spline basis once), so smoothness and reference terms
-   have exact gradients; clearance needs the gradient of the distance field.
-   This changes planner outputs slightly and needs a route-quality check.
+   changed nothing measurable, so it was not kept. **Done:** the spline
+   step now passes its gradient to L-BFGS-B (precomputed B-spline basis,
+   exact smoothness/reference terms, central differences on the clearance and
+   risk grids) instead of ~37 objective calls per iteration. On 60 random
+   pairs over the seed-7 grid with a risk field (`tools/planner_benchmark.py`,
+   `reports/planner/`): planning p50 176 -> 74 ms, p95 291 -> 129 ms (2.2x
+   total); route cost within -0.12/+0.26 %, clearance within 4 mm (all >=
+   0.26 m), no change in which routes are smoothed. Pipeline, seed 7, 30
+   frames, alternating runs: planning p95 531-537 -> 468-475 ms; p50 is
+   unchanged because most frames do not replan. Remaining replan cost: A* and
+   MPPI.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
 3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the
    Pi-to-Windows raw-sensor transport (does not exist yet). [HW]
