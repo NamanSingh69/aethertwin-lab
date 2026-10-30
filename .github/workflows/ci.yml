@@ -48,8 +48,11 @@ jobs:
       - run: python -m pip check
       - name: Regression suite
         run: python -m pytest -q --junitxml=ci-results.xml
+      # Reports are a debugging aid: upload only on failure and never let a full
+      # artifact quota fail an otherwise green run.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: always()
+        if: failure()
+        continue-on-error: true
         with:
           name: python-${{ runner.os }}
           path: ci-results.xml
@@ -86,6 +89,7 @@ jobs:
         run: npm run e2e:mock
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure()
+        continue-on-error: true
         with:
           name: playwright-mock
           path: |
@@ -139,6 +143,7 @@ jobs:
         run: tail -n 200 "$RUNNER_TEMP/service.log"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure()
+        continue-on-error: true
         with:
           name: playwright-live
           path: |
