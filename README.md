@@ -237,6 +237,14 @@ panel runs isolated bounded jobs for configured sources and produces candidates,
 without activating a new map or calibration. Live diagnostics require exclusive
 sensor ownership through the documented console workflow.
 
+The same address serves `/explainer.html` ("What is this?" in the studio header): a
+step-by-step explanation of the pipeline for non-specialists and engineers, with
+small interactive labs (motion deskew, log-odds mapping, shape descriptors, risk and
+time to collision), the measured results with their sources, and what is not yet
+proven. Each stage links back to the studio with its layers and camera view
+(`/?layers=path,risk&view=top`). `npm run build:explainer` (in `web/`) writes a
+standalone, shareable copy to `web/explainer-dist/` that shows recorded results only.
+
 Use `--record PATH` to retain raw observations in separate source segments,
 `--duration`/`--max-frames` for bounded processing, and `--input` for replay.
 The default laptop profile pages occupancy within an explicit64MiB cache limit.

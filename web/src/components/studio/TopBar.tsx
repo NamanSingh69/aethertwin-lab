@@ -99,6 +99,9 @@ export function TopBar({
           </button>
         ))}
       </nav>
+      <a className="explainer-link" href="explainer.html">
+        What is this?
+      </a>
       <div className="header-status">
         <span className={`connection-pill ${stale ? "stale" : ""}`}>
           <span
