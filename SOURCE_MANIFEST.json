@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 12919,
-      "sha256": "93b9e33768b887d9f573cd99659068a726c33a53c629ee0eb11e91b31194080c"
+      "bytes": 13222,
+      "sha256": "cc292e976fe10e4256a9057a23bdc16ae65a198fcbf80e8085b856419914a383"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3261,6 +3261,22 @@
     "reports/motion_origin_verification.json": {
       "bytes": 3021,
       "sha256": "76a5383ea76fe68b719d5f99c25a4cd904abe46c12137026a5d4b3074e35f2cd"
+    },
+    "reports/planner/spline_after_no_risk.json": {
+      "bytes": 15055,
+      "sha256": "b72075157a047efb77d8d263b578e83b8fdbdbc64a11ab9a5aee8a9840249ede"
+    },
+    "reports/planner/spline_after_risk.json": {
+      "bytes": 15007,
+      "sha256": "fad17eb9e2d66f9b7b8ae2132445d35fcecd0dad993ea02cf3fd57dbc17b0ade"
+    },
+    "reports/planner/spline_before_no_risk.json": {
+      "bytes": 15044,
+      "sha256": "9846c4be06e7ce4e742887c88561a35cd2690f1a42fabfea707da009278c2e8a"
+    },
+    "reports/planner/spline_before_risk.json": {
+      "bytes": 15008,
+      "sha256": "e726bcc9ede70628e51086e6ed2f599aa4ff9e1e707d0c1d12dbc1fb5c9cf2f3"
     },
     "reports/poisson_native_stability.json": {
       "bytes": 1795,
@@ -3694,6 +3710,10 @@
       "bytes": 7310,
       "sha256": "9afef8de1fd9f3140c683f23f7b2b62d7d1399d78711108c26b704e67edcfdfd"
     },
+    "tests/test_planner_spline_gradient.py": {
+      "bytes": 1494,
+      "sha256": "54d5bf20f44c0afcb91e799f17309d3793551f364664eef0618c8af63d701d7a"
+    },
     "tests/test_recorded_training_data.py": {
       "bytes": 12926,
       "sha256": "3f72f26cb6b7b6eb241eaa07867d4394a9612b3e3f8fdc8091ac7350f5827eec"
@@ -3798,6 +3818,10 @@
       "bytes": 3815,
       "sha256": "3b6020e6cbd0d06764aab5ffb0b35ecd7bc097ee48bb33903d3a990b187c39ff"
     },
+    "tools/planner_benchmark.py": {
+      "bytes": 3190,
+      "sha256": "2382a9ee3a227f223b5b168c079e0b5690b11f212c2de1c46574808be29b51a5"
+    },
     "tools/probe_jetson.py": {
       "bytes": 279,
       "sha256": "83056d1b6dbef8f33b1e7d07aa2ccc83182a791044bc0bc51c8919064859fc75"
@@ -3847,8 +3871,8 @@
       "sha256": "00cf19fe240bd51c82c185f23f5a30c610c4701baff6c8ed846cad40c7fc7fc3"
     },
     "tracking_and_navigation/safe_corridor_planner.py": {
-      "bytes": 32257,
-      "sha256": "3221bcf8d71a8c8f896bfe4ea0c88c2e9e7835b297c1d8756725374842844d58"
+      "bytes": 33630,
+      "sha256": "a102c869b8c23a7f4da3d151a025f79d0b680f0dc56b1bc6a1c2b9d280140704"
     },
     "tracking_and_navigation/traffic_heatmap.py": {
       "bytes": 3134,

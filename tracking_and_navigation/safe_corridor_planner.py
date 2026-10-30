@@ -394,19 +394,39 @@ class SafeCorridorPlanner:
         lower=np.minimum(controls[1:-1]-.75*self.grid.resolution,controls[1:-1])
         upper=controls[1:-1]+.75*self.grid.resolution
         if ground:lower[:,2]=upper[:,2]=path[0,2]
+        # The curve is linear in its control points: precompute the basis once.
+        basis=BSpline.design_matrix(parameter,knots,degree).toarray()
+        inner=basis[:,1:-1]; fixed=np.outer(basis[:,0],path[0])+np.outer(basis[:,-1],path[-1])
         def curve(flat):
-            cp=np.vstack([path[0],flat.reshape(-1,3),path[-1]])
-            points=BSpline(knots,cp,degree)(parameter)
+            points=fixed+inner@flat.reshape(-1,3)
             if ground:points[:,2]=path[0,2]
             return points
-        def objective(flat):
-            points=curve(flat); acceleration=np.diff(points,n=2,axis=0)
+        step=1e-6*self.grid.resolution  # small, so a step rarely straddles a cell boundary (kink)
+        def with_gradient(field,points):
+            # Central differences of a piecewise-linear grid interpolation, vectorised over points.
+            gradient=np.empty_like(points)
+            for axis in range(3):
+                offset=np.zeros(3); offset[axis]=step
+                gradient[:,axis]=(field(points+offset)-field(points-offset))/(2*step)
+            return field(points),gradient
+        def clearance_at(points):
             coords=(points-self.grid.origin)/self.grid.resolution-.5
-            clearance=map_coordinates(self.clearance,coords.T,order=1,mode="constant",cval=-1.)
+            return map_coordinates(self.clearance,coords.T,order=1,mode="constant",cval=-1.)
+        def objective(flat):
+            # Same objective as before, now with its gradient (L-BFGS-B otherwise
+            # estimates it with one extra evaluation per variable).
+            points=curve(flat); acceleration=np.diff(points,n=2,axis=0)
+            clearance,clearance_gradient=with_gradient(clearance_at,points)
             collision=np.maximum(self.radius+self.grid.resolution*.05-clearance,0)
-            return float(30*np.sum(acceleration**2)+.2*np.sum((points-reference)**2)
-                +self.risk_weight*self._risk_values(points,risk).sum()+1e4*np.sum(collision**2))
-        solution=minimize(objective,initial,method="L-BFGS-B",bounds=list(zip(lower.ravel(),upper.ravel())),
+            value=30*np.sum(acceleration**2)+.2*np.sum((points-reference)**2)+1e4*np.sum(collision**2)
+            gradient=.4*(points-reference)-2e4*collision[:,None]*clearance_gradient
+            gradient[:-2]+=60*acceleration; gradient[1:-1]-=120*acceleration; gradient[2:]+=60*acceleration
+            if risk is not None:
+                values,risk_gradient=with_gradient(lambda q:self._risk_values(q,risk),points)
+                value+=self.risk_weight*values.sum(); gradient+=self.risk_weight*risk_gradient
+            if ground:gradient[:,2]=0
+            return float(value),(inner.T@gradient).ravel()
+        solution=minimize(objective,initial,jac=True,method="L-BFGS-B",bounds=list(zip(lower.ravel(),upper.ravel())),
                           options={"maxiter":35,"ftol":1e-7})
         proposed=curve(solution.x)
         if self.path_clear(proposed,entities=entities) and self._route_cost(proposed,risk)<=self._route_cost(path,risk)*1.05:
