@@ -2490,3 +2490,23 @@ kbd {
   font-size: 14px;
   font-weight: 600;
 }
+.explainer-link {
+  margin-right: 14px;
+  font-size: 11px;
+  color: #9caec7;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.explainer-link:hover,
+.explainer-link:focus-visible {
+  color: #d3e7ff;
+  border-color: #3a5370;
+}
+@media (max-width: 760px) {
+  .explainer-link {
+    display: none;
+  }
+}

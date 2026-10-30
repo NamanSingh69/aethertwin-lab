@@ -1,11 +1,11 @@
 {
-  "_SpatialRenderer-51CcrWZp.js": {
-    "file": "assets/SpatialRenderer-51CcrWZp.js",
+  "_SpatialRenderer-CoSubYFR.js": {
+    "file": "assets/SpatialRenderer-CoSubYFR.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
-      "_preload-helper-CFijIu3R.js",
-      "_spatial-contracts-33vaUxT7.js",
+      "_spatial-contracts-DWLHILkS.js",
+      "_preload-helper-BLdHbfdN.js",
       "_three-vendor-BQRTTvu7.js"
     ],
     "dynamicImports": [
@@ -13,8 +13,12 @@
       "src/scene/effects.ts"
     ]
   },
-  "_preload-helper-CFijIu3R.js": {
-    "file": "assets/preload-helper-CFijIu3R.js",
+  "_modulepreload-polyfill-P2Xu9kJm.js": {
+    "file": "assets/modulepreload-polyfill-P2Xu9kJm.js",
+    "name": "modulepreload-polyfill"
+  },
+  "_preload-helper-BLdHbfdN.js": {
+    "file": "assets/preload-helper-BLdHbfdN.js",
     "name": "preload-helper"
   },
   "_react-vendor-Br0ptrPz.js": {
@@ -28,8 +32,8 @@
     "file": "assets/rolldown-runtime-4tVxZq34.js",
     "name": "rolldown-runtime"
   },
-  "_spatial-contracts-33vaUxT7.js": {
-    "file": "assets/spatial-contracts-33vaUxT7.js",
+  "_spatial-contracts-DWLHILkS.js": {
+    "file": "assets/spatial-contracts-DWLHILkS.js",
     "name": "spatial-contracts"
   },
   "_three-vendor-BQRTTvu7.js": {
@@ -37,30 +41,45 @@
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-B0XQfCDB.js",
+    "file": "assets/benchmark-DGYzKgkU.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
-      "_preload-helper-CFijIu3R.js",
-      "_SpatialRenderer-51CcrWZp.js"
+      "_modulepreload-polyfill-P2Xu9kJm.js",
+      "_SpatialRenderer-CoSubYFR.js"
+    ]
+  },
+  "explainer.html": {
+    "file": "assets/explainer-CHfX2g2G.js",
+    "name": "explainer",
+    "src": "explainer.html",
+    "isEntry": true,
+    "imports": [
+      "_modulepreload-polyfill-P2Xu9kJm.js",
+      "_react-vendor-Br0ptrPz.js",
+      "_spatial-contracts-DWLHILkS.js"
+    ],
+    "css": [
+      "assets/explainer-CvT1h0nl.css"
     ]
   },
   "index.html": {
-    "file": "assets/index-D6FAFXkm.js",
+    "file": "assets/index-BKWSftCQ.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_preload-helper-CFijIu3R.js",
+      "_modulepreload-polyfill-P2Xu9kJm.js",
       "_react-vendor-Br0ptrPz.js",
-      "_spatial-contracts-33vaUxT7.js"
+      "_spatial-contracts-DWLHILkS.js",
+      "_preload-helper-BLdHbfdN.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-51CcrWZp.js"
+      "_SpatialRenderer-CoSubYFR.js"
     ],
     "css": [
-      "assets/index-CevuC8fd.css"
+      "assets/index-Cdo_7lSo.css"
     ],
     "assets": [
       "assets/decode.worker-CC-RLjVq.js"
