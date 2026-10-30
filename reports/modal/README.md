@@ -59,7 +59,9 @@ the others build one at start-up, and their perception and tracking stage was
 about 26x slower. Cause, found afterwards: distance queries against the
 runtime-built (disk-tiled) twin re-read tiles and rebuilt KD-trees on every
 batch. Fixed with cached exact trees; on the laptop CPU seed 101 dropped from
-1,244 to 120 ms (seed 7: 115 ms). This sweep predates the fix.
+1,244 to 120 ms (seed 7: 115 ms). This sweep predates the fix; the
+confirming A10 sweep after it (`sweep_a10_20261030T071848Z.json`) gives
+perception + tracking p50 66.7 / 68.4 / 81.9 ms for seeds 7 / 101 / 202.
 
 ## Stability (A10, seed 7, 900 s wall clock)
 

@@ -142,7 +142,11 @@ generation but is a much larger part; no A2000 figure is claimed.
    distance queries (see "Cloud GPU benchmarks"). Re-run the Modal sweep to
    confirm on cloud CPUs. [software]
 2. Occupancy and planning latency: move ray clearing fully to the native
-   backend, bound MPPI samples by deadline, profile A* tails (p95 up to 950 ms).
+   backend, bound MPPI samples by deadline. Planning's p95 tail (laptop CPU,
+   seed 7, 30 frames: p50 93 ms, p95 500 ms) comes from periodic replans
+   (A* plus the scipy spline optimisation, ~200 ms each), not from the
+   per-frame path check: batching that check across segments was exact but
+   changed nothing measurable, so it was not kept.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
 3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the
    Pi-to-Windows raw-sensor transport (does not exist yet). [HW]
