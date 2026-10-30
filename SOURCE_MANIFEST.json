@@ -2699,8 +2699,8 @@
       "sha256": "9d73bed60295b93ddda2eee2a8326453e1445d18e196018c1ed72143bfbbe7ed"
     },
     "command_center/gateway.py": {
-      "bytes": 37663,
-      "sha256": "46b62d238060488f50b60eac8ecfac1b5762636e6e6d1a314cb58187ca5151f7"
+      "bytes": 38164,
+      "sha256": "31dc7a1051c4842e2fa02150b871850fda39593d0816c97c895cc989e74e33c4"
     },
     "command_center/protocol.py": {
       "bytes": 11173,
@@ -2811,8 +2811,8 @@
       "sha256": "376718c2a10a695a13a2f4fca843dc2ed61dc3b8a0e3dc387f9688d8e15b792c"
     },
     "deployment/gateway/README.md": {
-      "bytes": 8883,
-      "sha256": "b6aced1327cf38ac83b5889052b7857b94a379e011bcc88ec8b68cf789c4c23f"
+      "bytes": 9054,
+      "sha256": "6c3f3ef4e5727b0ab9e4dcad2dd61d0d5c004dee6756d2d664027d17a5f58ba4"
     },
     "deployment/gateway/compose.yaml": {
       "bytes": 1880,
@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 15056,
-      "sha256": "df4b05de29157bdaa941ba7a2f6160dca8e5fd9eeedfdd2428f2fec2ad650186"
+      "bytes": 15165,
+      "sha256": "73be4ea1bc24f4e760642f277512f0903f557a88a7e2d16c0d4ed030679519c4"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3195,8 +3195,8 @@
       "sha256": "2c96a1eeacf81f9f53eab90fe9bc770f22a659f01cadaa5d1970924bdad706ae"
     },
     "reports/gateway_container_smoke.json": {
-      "bytes": 3054,
-      "sha256": "4e720f21573ce6c86f2d0769a4c314becadce9b7494a2bbacb1d0da6b52df136"
+      "bytes": 4171,
+      "sha256": "5e12efea497dedfd7cdb3344cad2977a130d6a5022a18c8bf138ee4c4c89733a"
     },
     "reports/github_clone_smoke.json": {
       "bytes": 4013,
@@ -3671,8 +3671,8 @@
       "sha256": "f43cf0d232cd02263808a235aa4284ea0b7aa3e6b05af96167ee17c3dc756040"
     },
     "tests/test_gateway.py": {
-      "bytes": 26656,
-      "sha256": "f64d4c2dfde179ea3387c464d26f1c352a05604f38e5750ba40c0fb60a0678e7"
+      "bytes": 27493,
+      "sha256": "84e3f171704b0f95281a4119143686c0e9ea3e66cde144e9d991b7be45b66f87"
     },
     "tests/test_gemini_profiles.py": {
       "bytes": 12521,

@@ -148,8 +148,10 @@ requests. A guarded subprocess rejects ML and sensor imports.
 
 The container image was built and run once against the simulator in a Linux
 cloud container; results and exact limits are in
-`reports/gateway_container_smoke.json` (not a deployment host; HTTPS upstream
-and `docker compose up` remain untested).
+`reports/gateway_container_smoke.json` (not a deployment host). It covers plain-HTTP loopback and
+`docker compose up` with secret files and a verified HTTPS upstream. Upstream
+state changes are logged once each as `upstream_state` audit lines, so a wrong
+CA or token shows in `docker logs`.
 
 Hash locks were generated from the downloaded platform wheels using
 `lock_profile.py`; that script does not resolve or publish packages. Re-resolve

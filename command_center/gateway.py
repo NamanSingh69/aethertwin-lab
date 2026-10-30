@@ -29,7 +29,7 @@ import httpx
 import numpy as np
 from websockets.asyncio.client import connect
 
-from .auth import configured_token
+from .auth import audit, configured_token
 from .controls import ACTIONS, validate_payload
 from .protocol import (
     MAX_HEADER,
@@ -182,6 +182,18 @@ class ForwardControlPlane:
 
 class GatewayRuntime:
     """Authenticated single-stream relay with bounded caches and visible failures."""
+
+    # Every upstream state change is written once to the audit log (docker logs), so a wrong
+    # CA or token is diagnosable without signing in. Messages pass through safe_error first.
+    @property
+    def _error(self):
+        return self._error_text
+
+    @_error.setter
+    def _error(self, value):
+        if value != getattr(self, "_error_text", object()):
+            audit("upstream_state", state="unavailable" if value else "connected", reason=value)
+        self._error_text = value
 
     def __init__(
         self,
