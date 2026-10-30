@@ -1,4 +1,5 @@
 import type { HaloSnapshot, LayerName, Layers, Track } from "../../lib/types";
+import { alignmentSummary, type Appearance } from "../../lib/appearance";
 import type { SensorIndicator } from "../../lib/status";
 import type { SourceOption } from "../../lib/sources";
 import { Icon } from "../Icon";
@@ -21,6 +22,7 @@ export const layerInfo: Array<{
   { id: "risk", name: "Risk hotspots", icon: "alert", color: "#ed9774" },
   { id: "traffic", name: "Traffic history", icon: "chart", color: "#b998eb" },
   { id: "rgbd", name: "RGB-D points", icon: "camera" },
+  { id: "capture", name: "Photo capture", icon: "camera" },
 ];
 
 function SensorRow({
@@ -76,6 +78,7 @@ export function LayerDock(props: {
   graphOpen: boolean;
   onToggleGraph: () => void;
   mapRevision: string | undefined;
+  capture?: Appearance | null;
 }) {
   const { source } = props;
   return (
@@ -162,6 +165,7 @@ export function LayerDock(props: {
           <label className="layer-row" key={layer.id}>
             <input
               type="checkbox"
+              disabled={layer.id === "capture" && !props.capture}
               checked={props.layers[layer.id]}
               onChange={(e) => props.onLayer(layer.id, e.target.checked)}
             />
@@ -175,6 +179,11 @@ export function LayerDock(props: {
           </label>
         ))}
       </div>
+      <p className="caption capture-caption">
+        {props.capture
+          ? `Photo capture (visual only): ${alignmentSummary(props.capture).toLowerCase()}.`
+          : "No photo capture loaded. Add one with --appearance (docs/LAB_APPEARANCE.md)."}
+      </p>
       <label className="cutaway-switch">
         <span>Cutaway view</span>
         <input

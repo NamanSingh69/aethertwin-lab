@@ -60,8 +60,8 @@ for (let attempt = 1, run = 0; run < runs && attempt <= runs * 2; attempt++) {
     const value = await report.jsonValue();
     const gaps = await page.evaluate(() => window.throttleGaps);
     const throttled = value.hidden_during_measurement || gaps > 0;
-    // A cinematic run only counts if post-processing actually ran.
-    const effectsMissing = args.quality === "cinematic" && !value.effects?.postprocessing;
+    // A cinematic or photoreal run only counts if post-processing actually ran.
+    const effectsMissing = ["cinematic", "photoreal"].includes(args.quality) && !value.effects?.postprocessing;
     if (!throttled && !effectsMissing) run++;
     results.push({
       attempt,

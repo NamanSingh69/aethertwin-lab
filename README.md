@@ -245,6 +245,12 @@ proven. Each stage links back to the studio with its layers and camera view
 (`/?layers=path,risk&view=top`). `npm run build:explainer` (in `web/`) writes a
 standalone, shareable copy to `web/explainer-dist/` that shows recorded results only.
 
+Render quality **Photoreal** adds image-based lighting, soft shadows and ambient
+occlusion (presentation only). `--appearance DIR` adds a visual-only photo capture
+of the lab (a textured `.glb` from photogrammetry, with its alignment recorded) as
+the **Photo capture** layer; see `docs/LAB_APPEARANCE.md` for capture, packaging
+(`tools/package_lab_appearance.py`) and alignment rules.
+
 Use `--record PATH` to retain raw observations in separate source segments,
 `--duration`/`--max-frames` for bounded processing, and `--input` for replay.
 The default laptop profile pages occupancy within an explicit64MiB cache limit.

@@ -25,6 +25,7 @@ def main(argv=None):
     parser.add_argument('--allowed-origin',action='append',default=[],help='Explicit trusted HTTPS gateway origin; may repeat')
     parser.add_argument('--access-log',action='store_true',help='Log each HTTP request (off by default)')
     parser.add_argument('--open-browser',action='store_true',help='Open the local command center after the server is ready')
+    parser.add_argument('--appearance',type=Path,help='Visual-only photo capture directory (appearance.json + model); see docs/LAB_APPEARANCE.md')
     args=parser.parse_args(argv)
     from .auth import is_loopback
     if bool(args.ssl_certfile)!=bool(args.ssl_keyfile):parser.error('Both TLS certificate and key are required')
@@ -59,7 +60,8 @@ def main(argv=None):
             twins={'active':runtime.twin_path},correspondence_files=correspondence_files)
         app=create_app(runtime,host=args.host,asset_root=runtime.asset_root,frontend_root=root/'web/dist',
                        hub=SceneHub(cfg['mapping']['voxel_size']),
-                       allowed_origins=tuple(args.allowed_origin)+('http://127.0.0.1:5173','http://localhost:5173'),commissioning=commissioning)
+                       allowed_origins=tuple(args.allowed_origin)+('http://127.0.0.1:5173','http://localhost:5173'),commissioning=commissioning,
+                       appearance_root=args.appearance)
     except BaseException:runtime.close();raise
     import uvicorn
     from .auth import configure_audit_log

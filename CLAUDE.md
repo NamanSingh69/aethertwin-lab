@@ -15,6 +15,8 @@ that was not measured; visual effects are presentation-only and must say so.
   `SpatialRenderer`, protocol decoder, worker). `web/dist/` is COMMITTED and served by Python.
 - `web/src/explainer/` explainer page (`explainer.html`): content in `content.ts` (every number cites a
   repo source; a test enforces it), 2D labs ported from the Python constants in `math.ts`.
+- Photoreal: `web/src/scene/photoreal.ts` (lazy quality tier, presentation only) and the visual-only photo
+  capture layer (`command_center/appearance.py`, `--appearance DIR`, `docs/LAB_APPEARANCE.md`).
 - `web/tests/` Vitest unit/contract tests; `web/e2e/` Playwright (`mock/`, `live/`, `support/`).
 - `tests/` pytest; `tools/` scripts; `docs/` architecture/status; `reports/`, `artifacts/` evidence.
 

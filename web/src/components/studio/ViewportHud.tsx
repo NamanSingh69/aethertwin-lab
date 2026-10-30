@@ -29,6 +29,7 @@ export const QUALITY_OPTIONS: Array<{ value: Quality; label: string }> = [
   { value: "performance", label: "Performance" },
   { value: "balanced", label: "Balanced" },
   { value: "cinematic", label: "Cinematic" },
+  { value: "photoreal", label: "Photoreal" },
 ];
 
 export function ViewportHeading({

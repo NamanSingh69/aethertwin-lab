@@ -9,7 +9,7 @@ let renderer: SpatialRenderer | null = null,
 let cleanupVisibility = () => {};
 const params = new URLSearchParams(location.search);
 /** Fixed tier (never auto) so a run measures one known configuration. */
-const quality = (["balanced", "cinematic", "performance"] as const).find(
+const quality = (["balanced", "cinematic", "photoreal", "performance"] as const).find(
   (tier) => tier === params.get("quality"),
 ) ?? "balanced";
 /** Deterministic pseudo-random sequence so every run sees identical frames. */
