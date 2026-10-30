@@ -31,12 +31,12 @@
       "sha256": "da97cc2bdea289f463a3f17b9cd30975e81a5160a54cc791c1843747059a92e0"
     },
     ".github/workflows/ci.yml": {
-      "bytes": 5123,
-      "sha256": "38412ec22658283fb6565c1743a30c4a4b963eece6e706b6cb6cc2d9f17d8c6d"
+      "bytes": 5353,
+      "sha256": "b30e94c3c49d96973d5fa370c8d0fb74b7571ac0a09ef363ec8925515dbf1054"
     },
     ".github/workflows/codeql.yml": {
-      "bytes": 1182,
-      "sha256": "e20965aa5652e9066a6e3fbf5db4946152afa81302deabdf063aaebb62849d3f"
+      "bytes": 1292,
+      "sha256": "722b65ba263c5407851c0762121a00c36ced363ae74aeb2371d4a423d7fa937a"
     },
     ".github/workflows/release.yml": {
       "bytes": 4033,
