@@ -1,0 +1,136 @@
+{
+  "label": "zephyrus-m16-rtx4070-laptop-before",
+  "recorded_at": "2026-10-29T22:34:00.592Z",
+  "browser": "Chrome stable (Playwright channel=chrome), headed",
+  "vsync": "enabled",
+  "mode": "static",
+  "duration_seconds": 60,
+  "runs": [
+    {
+      "run": 1,
+      "valid": true,
+      "test": "explicit_static_100000_instance_render_fixture",
+      "update_rate_hz": 0,
+      "update_cpu_ms_after_warmup": null,
+      "source": "synthetic_test_injection",
+      "runtime_perception_benchmarked": false,
+      "drawing_buffer": [
+        1920,
+        1080
+      ],
+      "css_canvas": [
+        1865,
+        1049
+      ],
+      "pixel_ratio": 1,
+      "elapsed_seconds": 60.15680000000005,
+      "warmup_seconds": 5,
+      "sampled_one_second_windows": 56,
+      "mean_render_fps": 238.3931406363169,
+      "minimum_window_fps": 232.93012096370003,
+      "frame_interval_ms_last_1200": {
+        "p50": 4.199999999953434,
+        "p95": 4.400000000139698,
+        "p99": 4.7000000001862645
+      },
+      "instances": 100000,
+      "draw_calls": 3,
+      "triangles": 1200000,
+      "gpu_geometries": 3,
+      "last_update_cpu_ms": 13.899999999906868,
+      "last_render_submit_cpu_ms": 0.19999999995343387,
+      "device": {
+        "vendor": "Google Inc. (NVIDIA)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "completed": true,
+      "page_visibility": "visible",
+      "hidden_during_measurement": false
+    },
+    {
+      "run": 2,
+      "valid": false,
+      "test": "explicit_static_100000_instance_render_fixture",
+      "update_rate_hz": 0,
+      "update_cpu_ms_after_warmup": null,
+      "source": "synthetic_test_injection",
+      "runtime_perception_benchmarked": false,
+      "drawing_buffer": [
+        1920,
+        1080
+      ],
+      "css_canvas": [
+        1865,
+        1049
+      ],
+      "pixel_ratio": 1,
+      "elapsed_seconds": 61.671300000000045,
+      "warmup_seconds": 5,
+      "sampled_one_second_windows": 51,
+      "mean_render_fps": 96.91452271944159,
+      "minimum_window_fps": 0.9935419771485345,
+      "frame_interval_ms_last_1200": {
+        "p50": 4.199999999953434,
+        "p95": 4.5,
+        "p99": 1003.8999999999069
+      },
+      "instances": 100000,
+      "draw_calls": 3,
+      "triangles": 1200000,
+      "gpu_geometries": 3,
+      "last_update_cpu_ms": 16.600000000093132,
+      "last_render_submit_cpu_ms": 0.09999999986030161,
+      "device": {
+        "vendor": "Google Inc. (NVIDIA)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "completed": true,
+      "page_visibility": "visible",
+      "hidden_during_measurement": false
+    },
+    {
+      "run": 3,
+      "valid": true,
+      "test": "explicit_static_100000_instance_render_fixture",
+      "update_rate_hz": 0,
+      "update_cpu_ms_after_warmup": null,
+      "source": "synthetic_test_injection",
+      "runtime_perception_benchmarked": false,
+      "drawing_buffer": [
+        1920,
+        1080
+      ],
+      "css_canvas": [
+        1865,
+        1049
+      ],
+      "pixel_ratio": 1,
+      "elapsed_seconds": 60.15810000000009,
+      "warmup_seconds": 5,
+      "sampled_one_second_windows": 56,
+      "mean_render_fps": 238.2155195723558,
+      "minimum_window_fps": 232.04860073695687,
+      "frame_interval_ms_last_1200": {
+        "p50": 4.199999999953434,
+        "p95": 4.300000000046566,
+        "p99": 4.899999999906868
+      },
+      "instances": 100000,
+      "draw_calls": 3,
+      "triangles": 1200000,
+      "gpu_geometries": 3,
+      "last_update_cpu_ms": 13,
+      "last_render_submit_cpu_ms": 0.09999999986030161,
+      "device": {
+        "vendor": "Google Inc. (NVIDIA)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "completed": true,
+      "page_visibility": "visible",
+      "hidden_during_measurement": false
+    }
+  ]
+}

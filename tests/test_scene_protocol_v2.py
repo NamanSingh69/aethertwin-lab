@@ -131,6 +131,17 @@ def test_private_sessions_enforce_role_origin_cookie_and_no_auth_in_socket_url()
         assert client.get('/api/v2/bootstrap').json()['stream_url']=='/ws/v2/scene'
 
 
+def test_token_session_cookie_is_secure_only_over_tls_and_works_on_plain_loopback():
+    from fastapi.testclient import TestClient
+    operator='o'*40
+    with TestClient(create_app(operator_token=operator),client=('127.0.0.1',50000),base_url='http://127.0.0.1') as client:
+        response=client.post('/api/v2/session',json={'token':operator})
+        assert response.status_code==200 and 'Secure' not in response.headers['set-cookie']
+        assert client.get('/api/v2/bootstrap').json()['role']=='operator'
+    with TestClient(create_app(operator_token=operator),client=('127.0.0.1',50000),base_url='https://127.0.0.1') as client:
+        assert 'Secure' in client.post('/api/v2/session',json={'token':operator}).headers['set-cookie']
+
+
 def test_websocket_initial_keyframe_and_explicit_resync():
     from fastapi.testclient import TestClient
     hub=SceneHub();app=create_app(hub=hub)
@@ -154,6 +165,23 @@ def test_loopback_development_rejects_rebound_host_and_role_credentials_must_dif
         with pytest.raises(WebSocketDisconnect) as rejected:
             with client.websocket_connect('/ws/v2/scene'):pass
         assert rejected.value.code==4401
+
+
+def test_frontend_is_compressed_cached_by_content_hash_and_restricted_by_csp(tmp_path):
+    from fastapi.testclient import TestClient
+    (tmp_path/'assets').mkdir();(tmp_path/'index.html').write_text('<!doctype html>'+'<p>studio</p>'*200,encoding='utf-8')
+    (tmp_path/'assets/index-abc123.js').write_text('export const value=1;\n'*400,encoding='utf-8')
+    with TestClient(create_app(frontend_root=tmp_path),client=('127.0.0.1',50000),base_url='http://127.0.0.1') as client:
+        asset=client.get('/assets/index-abc123.js',headers={'accept-encoding':'gzip'})
+        assert asset.status_code==200 and asset.headers['content-encoding']=='gzip'
+        assert 'immutable' in asset.headers['cache-control'] and asset.text.startswith('export const value=1;')
+        for path in ('/','/index.html','/workspace'):
+            page=client.get(path)
+            assert page.headers['cache-control']=='no-cache' and 'studio' in page.text
+            policy=page.headers['content-security-policy']
+            assert "frame-ancestors 'none'" in policy and "script-src 'self' 'wasm-unsafe-eval';" in policy
+        api=client.get('/api/v2/state')
+        assert api.headers['cache-control']=='no-store' and 'content-security-policy' not in api.headers
 
 
 def test_glb_contains_actual_mesh_buffers_and_valid_world_bounds(tmp_path):

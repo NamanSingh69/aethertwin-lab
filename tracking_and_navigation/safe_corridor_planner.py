@@ -242,27 +242,39 @@ class SafeCorridorPlanner:
         return positions,velocities,accelerations,rotations,half_extents,acceleration_norm
 
     @staticmethod
+    def _dynamic_segments_clear(starts,ends,t0,t1,context):
+        """Swept checks of K segments against N predicted entity boxes at once; result (K,) bool.
+
+        Segments are independent, so this equals K single-segment checks (A* batches all
+        neighbours of an expanded node into one call)."""
+        starts=np.asarray(starts,dtype=float).reshape(-1,3); ends=np.asarray(ends,dtype=float).reshape(-1,3)
+        if context is None: return np.ones(len(starts),bool)
+        t0=np.broadcast_to(np.asarray(t0,dtype=float),(len(starts),))[:,None]
+        t1=np.broadcast_to(np.asarray(t1,dtype=float),(len(starts),))[:,None]
+        duration=np.maximum(t1-t0,0.)
+        position,velocity,acceleration,rotation,half_base,acceleration_norm=context
+        c0=position+velocity*t0[...,None]+.5*acceleration*t0[...,None]*t0[...,None]
+        c1=position+velocity*t1[...,None]+.5*acceleration*t1[...,None]*t1[...,None]
+        local_start=np.einsum("kni,nij->knj",starts[:,None,:]-c0,rotation)
+        local_end=np.einsum("kni,nij->knj",ends[:,None,:]-c1,rotation)
+        curvature_bound=acceleration_norm*duration*duration/8
+        half=half_base+curvature_bound[...,None]
+        direction=local_end-local_start
+        shape=direction.shape[:2]
+        enter=np.zeros(shape); leave=np.ones(shape); possible=np.ones(shape,bool)
+        for axis in range(3):
+            d=direction[...,axis]; moving=np.abs(d)>=1e-14
+            possible&=moving|(np.abs(local_start[...,axis])<=half[...,axis]+1e-10)
+            safe=np.where(moving,d,1.)
+            first=np.where(moving,(-half[...,axis]-local_start[...,axis])/safe,0.)
+            last=np.where(moving,(half[...,axis]-local_start[...,axis])/safe,1.)
+            enter=np.maximum(enter,np.minimum(first,last)); leave=np.minimum(leave,np.maximum(first,last))
+        return ~np.any(possible&(enter<=leave+1e-10),axis=1)
+
+    @staticmethod
     def _dynamic_segment_clear(start,end,t0,t1,context):
         if context is None: return True
-        duration=max(float(t1-t0),0.)
-        position,velocity,acceleration,rotation,half_base,acceleration_norm=context
-        c0=position+velocity*t0+.5*acceleration*t0*t0
-        c1=position+velocity*t1+.5*acceleration*t1*t1
-        local_start=np.einsum("ni,nij->nj",start-c0,rotation)
-        local_end=np.einsum("ni,nij->nj",end-c1,rotation)
-        curvature_bound=acceleration_norm*duration*duration/8
-        half=half_base+curvature_bound[:,None]
-        direction=local_end-local_start
-        enter=np.zeros(len(position)); leave=np.ones(len(position)); possible=np.ones(len(position),bool)
-        for axis in range(3):
-            moving=np.abs(direction[:,axis])>=1e-14
-            stationary=~moving
-            possible[stationary]&=(np.abs(local_start[stationary,axis])<=half[stationary,axis]+1e-10)
-            first=np.zeros(len(position)); last=np.ones(len(position))
-            first[moving]=(-half[moving,axis]-local_start[moving,axis])/direction[moving,axis]
-            last[moving]=(half[moving,axis]-local_start[moving,axis])/direction[moving,axis]
-            enter=np.maximum(enter,np.minimum(first,last)); leave=np.minimum(leave,np.maximum(first,last))
-        return not np.any(possible&(enter<=leave+1e-10))
+        return bool(SafeCorridorPlanner._dynamic_segments_clear(start,end,t0,t1,context)[0])
 
     def _static_segment_clear(self,start,end):
         start=np.asarray(start,dtype=float); end=np.asarray(end,dtype=float)
@@ -315,6 +327,9 @@ class SafeCorridorPlanner:
             return None,"No direct subcell corridor between start and goal"
         neighbors=[np.array(v,dtype=int) for v in product((-1,0,1),repeat=3)
                    if v!=(0,0,0) and (not ground or v[2]==0)]
+        # Python-int offsets and bounds checks in the expansion loop: same cells, keys and order as array arithmetic.
+        offsets=[tuple(int(x) for x in v) for v in neighbors]
+        shape=self.grid.shape;blocked=self.blocked;center_clear=self._center_clear
         off_center_ground=ground and abs(start[2]-self.grid.center(s)[2])>1e-10
         edge_masks={} if off_center_ground else {tuple(delta):self._static_edge_mask(delta) for delta in neighbors}
         if risk is not None:
@@ -340,18 +355,24 @@ class SafeCorridorPlanner:
             if ground:position[2]=start[2]
             if node==s: position=np.asarray(start)
             node_risk=float(endpoint_risk[0]) if node==s else (0. if risk is None else float(self._risk_values(position[None],risk)[0]) if off_center_ground else float(risk[node[:risk.ndim]]))
-            for offset in neighbors:
-                nxt=tuple(np.asarray(node)+offset)
-                if nxt in visited or not self.grid.contains_index(nxt) or self.blocked[nxt]: continue
-                if nxt!=g and not off_center_ground and not self._center_clear[nxt]: continue
+            t0=distance[node]/self.max_speed; candidates=[]
+            for offset in offsets:
+                nxt=(node[0]+offset[0],node[1]+offset[1],node[2]+offset[2])
+                if nxt in visited or not (0<=nxt[0]<shape[0] and 0<=nxt[1]<shape[1] and 0<=nxt[2]<shape[2]) or blocked[nxt]: continue
+                if nxt!=g and not off_center_ground and not center_clear[nxt]: continue
                 endpoint=np.asarray(goal) if nxt==g else self.grid.center(nxt)
                 if ground:endpoint=endpoint.copy();endpoint[2]=start[2]
                 length=float(np.linalg.norm(endpoint-position))
-                t0=distance[node]/self.max_speed; t1=t0+length/self.max_speed
                 if node==s or nxt==g or off_center_ground:
                     if not self._static_segment_clear(position,endpoint): continue
-                elif not edge_masks[tuple(offset)][node]: continue
-                if not self._dynamic_segment_clear(position,endpoint,t0,t1,context): continue
+                elif not edge_masks[offset][node]: continue
+                candidates.append((nxt,endpoint,length))
+            if not candidates: continue
+            # One swept check for every surviving neighbour (identical to per-edge checks, far fewer numpy calls).
+            clear=self._dynamic_segments_clear(np.broadcast_to(position,(len(candidates),3)),[c[1] for c in candidates],
+                t0,[t0+c[2]/self.max_speed for c in candidates],context)
+            for (nxt,endpoint,length),ok in zip(candidates,clear):
+                if not ok: continue
                 next_risk=float(endpoint_risk[1]) if nxt==g else (0. if risk is None else float(self._risk_values(endpoint[None],risk)[0]) if off_center_ground else float(risk[nxt[:risk.ndim]]))
                 mean_risk=.5*(node_risk+next_risk)
                 tentative=score[node]+length*(1+self.risk_weight*mean_risk)
@@ -394,19 +415,39 @@ class SafeCorridorPlanner:
         lower=np.minimum(controls[1:-1]-.75*self.grid.resolution,controls[1:-1])
         upper=controls[1:-1]+.75*self.grid.resolution
         if ground:lower[:,2]=upper[:,2]=path[0,2]
+        # The curve is linear in its control points: precompute the basis once.
+        basis=BSpline.design_matrix(parameter,knots,degree).toarray()
+        inner=basis[:,1:-1]; fixed=np.outer(basis[:,0],path[0])+np.outer(basis[:,-1],path[-1])
         def curve(flat):
-            cp=np.vstack([path[0],flat.reshape(-1,3),path[-1]])
-            points=BSpline(knots,cp,degree)(parameter)
+            points=fixed+inner@flat.reshape(-1,3)
             if ground:points[:,2]=path[0,2]
             return points
-        def objective(flat):
-            points=curve(flat); acceleration=np.diff(points,n=2,axis=0)
+        step=1e-6*self.grid.resolution  # small, so a step rarely straddles a cell boundary (kink)
+        def with_gradient(field,points):
+            # Central differences of a piecewise-linear grid interpolation, vectorised over points.
+            gradient=np.empty_like(points)
+            for axis in range(3):
+                offset=np.zeros(3); offset[axis]=step
+                gradient[:,axis]=(field(points+offset)-field(points-offset))/(2*step)
+            return field(points),gradient
+        def clearance_at(points):
             coords=(points-self.grid.origin)/self.grid.resolution-.5
-            clearance=map_coordinates(self.clearance,coords.T,order=1,mode="constant",cval=-1.)
+            return map_coordinates(self.clearance,coords.T,order=1,mode="constant",cval=-1.)
+        def objective(flat):
+            # Same objective as before, now with its gradient (L-BFGS-B otherwise
+            # estimates it with one extra evaluation per variable).
+            points=curve(flat); acceleration=np.diff(points,n=2,axis=0)
+            clearance,clearance_gradient=with_gradient(clearance_at,points)
             collision=np.maximum(self.radius+self.grid.resolution*.05-clearance,0)
-            return float(30*np.sum(acceleration**2)+.2*np.sum((points-reference)**2)
-                +self.risk_weight*self._risk_values(points,risk).sum()+1e4*np.sum(collision**2))
-        solution=minimize(objective,initial,method="L-BFGS-B",bounds=list(zip(lower.ravel(),upper.ravel())),
+            value=30*np.sum(acceleration**2)+.2*np.sum((points-reference)**2)+1e4*np.sum(collision**2)
+            gradient=.4*(points-reference)-2e4*collision[:,None]*clearance_gradient
+            gradient[:-2]+=60*acceleration; gradient[1:-1]-=120*acceleration; gradient[2:]+=60*acceleration
+            if risk is not None:
+                values,risk_gradient=with_gradient(lambda q:self._risk_values(q,risk),points)
+                value+=self.risk_weight*values.sum(); gradient+=self.risk_weight*risk_gradient
+            if ground:gradient[:,2]=0
+            return float(value),(inner.T@gradient).ravel()
+        solution=minimize(objective,initial,jac=True,method="L-BFGS-B",bounds=list(zip(lower.ravel(),upper.ravel())),
                           options={"maxiter":35,"ftol":1e-7})
         proposed=curve(solution.x)
         if self.path_clear(proposed,entities=entities) and self._route_cost(proposed,risk)<=self._route_cost(path,risk)*1.05:

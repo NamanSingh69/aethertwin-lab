@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import type { Bootstrap, Metadata, Vec3, Zone } from "../lib/types";
 import { zoneYaw, validZone } from "../lib/geometry";
 import { canControl } from "../lib/status";
@@ -19,8 +20,7 @@ export function ZoneEditor({
     [revision, setRevision] = useState(bootstrap.control_revision),
     [pending, setPending] = useState(false),
     [error, setError] = useState("");
-  const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  const dialog = useRef<HTMLElement>(null);
   const reset = () => {
     setZones(
       (scene?.geofences ?? []).map((z) => ({
@@ -37,41 +37,7 @@ export function ZoneEditor({
   useEffect(() => {
     reset();
   }, []);
-  useEffect(() => {
-    const previous = document.activeElement as HTMLElement | null;
-    const modal = document.querySelector<HTMLElement>(".modal");
-    const items = () =>
-      Array.from(
-        modal?.querySelectorAll<HTMLElement>(
-          "button:not(:disabled),input:not(:disabled),select:not(:disabled)",
-        ) ?? [],
-      );
-    items()[0]?.focus();
-    const key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeRef.current();
-      }
-      if (event.key === "Tab") {
-        const focusable = items();
-        if (!focusable.length) return;
-        const first = focusable[0],
-          last = focusable.at(-1)!;
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", key);
-    return () => {
-      document.removeEventListener("keydown", key);
-      previous?.focus();
-    };
-  }, []);
+  useFocusTrap(dialog, onClose);
   const zone = zones[index];
   const edit = (patch: Partial<Zone>) =>
     setZones(zones.map((z, i) => (i === index ? { ...z, ...patch } : z)));
@@ -102,6 +68,7 @@ export function ZoneEditor({
   return (
     <div className="modal-scrim">
       <section
+        ref={dialog}
         className="modal"
         role="dialog"
         aria-modal="true"

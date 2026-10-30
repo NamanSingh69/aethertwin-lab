@@ -154,6 +154,9 @@ def test_mobile_pipeline_processes_real_moving_rig_observations(runtime_assets,t
     finally:
         source.close()
     assert pipeline.odometry.total_scans==12 and len(pipeline.odometry.clouds)==12
+    stages=pipeline.report()["module_latency_ms"]
+    assert {"localization","occupancy","perception_tracking","planning","risk_fields"}<=set(stages)
+    assert all(0<=v["p50"]<=v["p95"] for v in stages.values())
     assert pipeline.odometry.last_diagnostics["fitness"]>.15
     assert pipeline.odometry.last_diagnostics["map_anchored"] is True
     assert pipeline.odometry.last_diagnostics["map_information_rank"]==6
@@ -274,3 +277,38 @@ def test_icp_does_not_repair_reflections_or_true_affine_inputs(rotation):
     graph=ICPPoseGraph();pose=np.eye(4);pose[:3,:3]=rotation
     with pytest.raises(ValueError,match='proper|scale/shear'):
         graph.add_scan(np.random.default_rng(1).normal(size=(30,3)),pose)
+
+
+def test_batched_swept_entity_check_matches_an_independent_per_entity_slab_test():
+    from scipy.spatial.transform import Rotation
+    from tracking_and_navigation.safe_corridor_planner import SafeCorridorPlanner
+    def reference(start,end,t0,t1,context):
+        # One entity and one segment at a time: box centre at t0/t1, segment in the box frame, slab clipping.
+        for p,v,a,rot,half,anorm in zip(*context):
+            c0=p+v*t0+.5*a*t0*t0;c1=p+v*t1+.5*a*t1*t1
+            s=(start-c0)@rot;e=(end-c1)@rot;h=half+anorm*max(t1-t0,0.)**2/8;d=e-s;lo,hi=0.,1.;hit=True
+            for i in range(3):
+                if abs(d[i])<1e-14:
+                    if abs(s[i])>h[i]+1e-10:hit=False;break
+                else:
+                    f,l=sorted(((-h[i]-s[i])/d[i],(h[i]-s[i])/d[i]));lo,hi=max(lo,f),min(hi,l)
+            if hit and lo<=hi+1e-10:return False
+        return True
+    rng=np.random.default_rng(3);checked=blocked=0
+    for trial in range(1500):
+        n=int(rng.integers(1,6))
+        accel=rng.normal(0,.3,(n,3))
+        context=(rng.normal(0,.6,(n,3)),rng.normal(0,1,(n,3)),accel,Rotation.random(n,random_state=trial).as_matrix(),
+                 rng.uniform(.1,1,(n,3)),np.linalg.norm(accel,axis=1))
+        k=int(rng.integers(1,9));starts=rng.normal(0,.8,(k,3));ends=starts+rng.normal(0,.4,(k,3))
+        if trial%5==0:ends[0]=starts[0]
+        if trial%3==0:ends[:,2]=starts[:,2]
+        t0=float(rng.uniform(0,3));t1=t0+rng.uniform(0,1,k)
+        result=SafeCorridorPlanner._dynamic_segments_clear(starts,ends,t0,t1,context)
+        assert result.shape==(k,)
+        for i in range(k):
+            expected=reference(starts[i],ends[i],t0,t1[i],context);checked+=1;blocked+=not expected
+            assert bool(result[i])==expected
+            assert SafeCorridorPlanner._dynamic_segment_clear(starts[i],ends[i],t0,t1[i],context)==expected
+    assert checked>5000 and blocked>500
+    assert SafeCorridorPlanner._dynamic_segments_clear(np.zeros((2,3)),np.ones((2,3)),0.,1.,None).all()

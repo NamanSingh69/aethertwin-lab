@@ -48,6 +48,7 @@ build/
 !/artifacts/jetson_probe_windows.json
 !/artifacts/native_pipeline_smoke/
 !/artifacts/perception_preprocessing.json
+!/artifacts/renderer_benchmarks/
 !/artifacts/render_verified_backend.json
 !/artifacts/render_verified_backend.png
 !/artifacts/runtime_scene_preview.json
@@ -69,3 +70,9 @@ build/
 .DS_Store
 Thumbs.db
 ci-results.xml
+
+# Pytest basetemp leftovers
+tests/.runtime_validation*/
+
+# Gateway credentials for Compose secrets (never committed)
+/deployment/gateway/secrets/

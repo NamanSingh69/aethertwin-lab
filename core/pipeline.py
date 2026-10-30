@@ -222,7 +222,8 @@ class LabPipeline:
         self.inference=InferenceEngine(checkpoint,config['device'],config['mapping']['voxel_size'],config['perception']['max_voxels'],
             config['perception'].get('neighbors',16),config['perception'].get('temporal_neighbors',12),config['perception'].get('rgbd_stride',3),
             config['perception'].get('range_image_height',24),config['perception'].get('range_image_width',96),
-            config['perception'].get('camera_feature_height'),config['perception'].get('camera_feature_width'))
+            config['perception'].get('camera_feature_height'),config['perception'].get('camera_feature_width'),
+            config['perception'].get('compile',False))
         tiled_reference=getattr(twin,'point_store',None) is not None
         self.diff=SpatialDiffEngine(twin.points,config['mapping']['tau0'],config['mapping']['beta'],config['mapping']['floor_epsilon'],
             distance_provider=twin.distances if tiled_reference else None)
@@ -271,7 +272,7 @@ class LabPipeline:
         x,y=np.meshgrid(np.arange(xmin,xmax,resolution),np.arange(ymin,ymax,resolution))
         self.floor_points=np.c_[x.ravel(),y.ravel(),np.full(x.size,.08)]
         self.frames=0;self.last_time=None;self.lock=threading.Lock();self.pending_goal=None
-        self.alert_log=deque(maxlen=12);self.processing_ms=deque(maxlen=20000);self.memory_mb=deque(maxlen=20000)
+        self.alert_log=deque(maxlen=12);self.processing_ms=deque(maxlen=20000);self.memory_mb=deque(maxlen=20000);self.module_ms={}
         self.last_state=None;self.started=time.monotonic();self.dropped_snapshots=0
 
     def set_start_goal(self,start,goal):
@@ -462,11 +463,12 @@ class LabPipeline:
         risk_start=time.perf_counter();risk,risk_colors=self.risk.compute_risk(self.floor_points,entities)
         timings['risk_fields']=1000*(time.perf_counter()-risk_start)
         latency=1000*(time.perf_counter()-start);self.processing_ms.append(latency)
+        for name,value in timings.items():self.module_ms.setdefault(name,deque(maxlen=20000)).append(value)
         rss=psutil.Process().memory_info().rss/1024**2;self.memory_mb.append(rss)
         colors=PALETTE[probs.argmax(1)] if len(probs) else np.empty((0,3))
         inlay=frame.gemini_rgbd_cloud
         if inlay is not None:inlay=np.c_[transform_points(pose,inlay[:,:3]),inlay[:,3:]]
-        diagnostics={**frame.diagnostics,**self.deskewer.last_diagnostics,'module_ms':timings,'processing_ms':latency,
+        diagnostics={**frame.diagnostics,**self.deskewer.last_diagnostics,'module_ms':timings,'inference_compile':getattr(self.inference,'compile_status','disabled'),'processing_ms':latency,
             'module_shapes':{'localization':{'raw_lidar':raw_frame.lidar_points.shape,'deskewed_lidar':frame.lidar_points.shape,'pose':pose.shape},
                 'occupancy':{'lidar_rays':world_points.shape,'depth_points':None if frame.gemini_rgbd_cloud is None else frame.gemini_rgbd_cloud.shape},
                 'perception_tracking':{'voxel_centers':prepared.voxels.voxel_centers.shape,'semantic_probabilities':probs.shape,
@@ -512,6 +514,7 @@ class LabPipeline:
         return {'schema_version':1,'frames':self.frames,'wall_seconds':elapsed,'end_to_end_fps':self.frames/max(elapsed,1e-6),
             'processing_latency_ms':{'p50':float(np.percentile(p,50)),'p95':float(np.percentile(p,95)),'max':float(p.max())} if len(p) else {},
             'mean_processing_fps':float(1000/p.mean()) if len(p) else 0.,
+            'module_latency_ms':{name:{'p50':float(np.percentile(v,50)),'p95':float(np.percentile(v,95))} for name,v in self.module_ms.items() if len(v)},
             'rss_mb':{'first':float(m[0]),'last':float(m[-1]),'max':float(m.max()),'last_half_slope_mb_per_frame':float(np.polyfit(np.arange(len(m)//2,len(m)),m[len(m)//2:],1)[0]) if len(m)>4 else 0.} if len(m) else {},
             'dropped_snapshots':self.dropped_snapshots,'occupancy_cells':len(self.occupancy.cells),
             'presentation_queue':{'capacity':2,'current_depth':getattr(self,'presentation_queue_depth',0),

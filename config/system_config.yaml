@@ -24,6 +24,8 @@ perception:
   range_image_width: 96
   confidence_threshold: 0.30
   checkpoint: assets/checkpoints/synthetic.pt
+  # Opt-in torch.compile with a per-signature parity gate; each signature compiles once (~12 s on CPU), so off by default.
+  compile: false
 tracking:
   model: ca
   cluster_eps: 0.40

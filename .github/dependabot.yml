@@ -1,0 +1,30 @@
+# Python dependencies are hash-locked with uv (tools/lock_dependencies.py) and
+# relocked by hand, so Dependabot covers npm, GitHub Actions and the gateway image.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # @axe-core/playwright is pinned to @playwright/test through npm overrides.
+      playwright:
+        patterns: ["@playwright/test", "@axe-core/playwright"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      build-tooling:
+        patterns: ["vite", "vitest", "@vitejs/*", "typescript"]
+      three:
+        patterns: ["three", "@types/three"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: docker
+    directory: /deployment/gateway
+    schedule:
+      interval: weekly

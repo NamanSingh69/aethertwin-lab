@@ -62,6 +62,8 @@ def main(argv=None):
                        allowed_origins=tuple(args.allowed_origin)+('http://127.0.0.1:5173','http://localhost:5173'),commissioning=commissioning)
     except BaseException:runtime.close();raise
     import uvicorn
+    from .auth import configure_audit_log
+    configure_audit_log()
     if args.open_browser:
         import threading,time,urllib.request,webbrowser
         browser_host='127.0.0.1' if args.host=='0.0.0.0' else args.host

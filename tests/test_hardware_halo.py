@@ -150,6 +150,38 @@ def test_incompatible_serial_device_receives_no_telemetry_and_virtual_status_con
     finally:controller.close()
 
 
+def test_malformed_snapshot_shows_disconnected_and_status_worker_survives():
+    controller=HaloController()
+    try:
+        controller.publish(snapshot(now=time.time()));threading.Event().wait(.1)
+        assert controller.status()['virtual']['source']=='sim'
+        bad=snapshot(now=time.time());bad.diagnostics['processing_ms']=None
+        controller.publish(bad);threading.Event().wait(.1)
+        first=controller.status();threading.Event().wait(.1);second=controller.status()
+        assert first['virtual']['state_name']=='disconnected' and first['virtual']['reason']=='invalid_snapshot'
+        assert 'TypeError' in first['last_error'] and second['status_ticks']>first['status_ticks']
+        controller.publish(snapshot(now=time.time()));threading.Event().wait(.1)
+        assert controller.status()['virtual']['source']=='sim'
+    finally:controller.close()
+
+
+def test_stalled_status_worker_stops_serial_packets_so_the_device_watchdog_expires(monkeypatch):
+    import hardware_halo.controller as module
+    serial=MockSerial();release=threading.Event();real=module.halo_state;calls=[0]
+    def stalling(snapshot,**options):
+        calls[0]+=1
+        if snapshot is not None and calls[0]>5:release.wait(5)
+        return real(snapshot,**options)
+    monkeypatch.setattr(module,'halo_state',stalling)
+    controller=HaloController({'enabled':True,'port':'EXPLICIT_TEST_PORT'},serial_factory=lambda **kwargs:serial)
+    try:
+        controller.publish(snapshot(now=time.time()));assert serial.received.wait(1)
+        threading.Event().wait(.3);sent=controller.status()['packets_sent'];threading.Event().wait(.3)
+        assert controller.status()['packets_sent']==sent
+    finally:
+        release.set();controller.close()
+
+
 def test_enabled_halo_requires_explicit_port_before_starting_any_worker():
     with pytest.raises(ValueError,match='explicitly'):HaloController({'enabled':True})
     for config in ({'enabled':'false'},{'handshake_timeout_seconds':float('inf')},{'stale_after_ms':float('nan')}):

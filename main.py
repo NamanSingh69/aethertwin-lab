@@ -155,6 +155,8 @@ def main(argv=None):
     try:pipeline=LabPipeline(config,checkpoint,twin,static,grid,mobile)
     except BaseException:
         source.close();raise
+    from core.resources import freeze_startup_heap
+    freeze_startup_heap()
     recorder=None
     if args.record:
         try:recorder=_raw_recorder(args.record,twin_path,mobile,config.get('recording',{}))

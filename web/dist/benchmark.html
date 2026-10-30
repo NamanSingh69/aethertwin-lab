@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>AetherTwin · Renderer measurement</title>
     <style>body{color:#c3d7ef;background:#09111d;margin:0;padding:20px;font:13px Segoe UI,sans-serif}h1{margin:7px 0;font-size:19px;font-weight:500}p{color:#829cb8;font-size:11px;line-height:1.7}.fixture{color:#f0bd79;letter-spacing:1px;font-size:10px}.canvas{aspect-ratio:16/9;background:#070d15;border:1px solid #2b445f;width:100%;margin:18px 0}.canvas canvas{width:100%;height:100%;display:block}pre{white-space:pre-wrap;background:#0d1b2c;border:1px solid #2b445f;border-radius:5px;padding:15px;font:11px Consolas,monospace}button{color:#cee6ff;cursor:pointer;background:#225785;border:1px solid #4c8cc4;border-radius:4px;padding:10px 14px}button:disabled{opacity:.4}a{color:#80b9ed}label{font-size:11px}select{color:#c7dff5;background:#10243a;border:1px solid #315373;margin-left:8px;padding:7px}</style>
-    <script type="module" crossorigin src="/assets/benchmark-CRjvq6BN.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-P2Xu9kJm.js">
+    <script type="module" crossorigin src="/assets/benchmark-B0XQfCDB.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/preload-helper-CFijIu3R.js">
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-4tVxZq34.js">
     <link rel="modulepreload" crossorigin href="/assets/spatial-contracts-33vaUxT7.js">
-    <link rel="modulepreload" crossorigin href="/assets/three-vendor-Bc4s0MDm.js">
-    <link rel="modulepreload" crossorigin href="/assets/SpatialRenderer-BGgNbCOT.js">
+    <link rel="modulepreload" crossorigin href="/assets/three-vendor-BQRTTvu7.js">
+    <link rel="modulepreload" crossorigin href="/assets/SpatialRenderer-51CcrWZp.js">
   </head>
   <body>
     <span class="fixture"
@@ -19,9 +19,17 @@
     <h1>100,000 instances. Measured in your browser.</h1>
     <p>
       Fixed 1920 × 1080 drawing buffer, pixel ratio 1. The displayed canvas may
-      be scaled to fit. This is a static GPU scene test; it does not benchmark
-      perception or claim fresh observations.
+      be scaled to fit. The static fixture measures rendering only; the
+      streaming fixture also regenerates every overlay 30 times per second to
+      measure scene-update cost. Neither benchmarks perception or claims fresh
+      observations.
     </p>
+    <label
+      >Fixture<select id="mode">
+        <option value="static">Static · render only</option>
+        <option value="streaming">Streaming · all overlays at 30 Hz</option>
+      </select></label
+    >
     <label
       >Measurement window<select id="duration">
         <option value="60">60 seconds</option>

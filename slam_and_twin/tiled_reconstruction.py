@@ -1,6 +1,7 @@
 """Disk-backed measured surface points and bounded tile-wise TSDF reconstruction."""
+from collections import OrderedDict
 from pathlib import Path
-import json,sqlite3,hashlib
+import json,sqlite3,hashlib,threading
 import numpy as np
 import open3d as o3d
 import cv2
@@ -10,10 +11,15 @@ from .tiled_map import DiskTileStore,MapBudgetExceeded
 
 
 class DiskPointCloud:
+    # Per-tile KD-trees reused across distance queries (the measured twin is static while it runs),
+    # bounded by the centroids they hold (~2 M points is roughly 100 MB of trees).
+    TREE_CACHE_POINTS=2_000_000
     def __init__(self,path,voxel_size=.08,*,readonly=False,**budgets):
+        self._trees=OrderedDict();self._tree_points=0;self._tree_lock=threading.Lock()
         self.path=Path(path).resolve();self.voxel_size=float(voxel_size);self.transform=np.eye(4)
         self.cells=DiskTileStore(path,value_width=4,readonly=readonly,**budgets);self.readonly=readonly
     def add(self,points):
+        with self._tree_lock:self._trees.clear();self._tree_points=0
         points=np.asarray(points,float);coords=np.floor(points/self.voxel_size).astype(np.int64)
         unique,indices,counts=np.unique(coords,axis=0,return_inverse=True,return_counts=True)
         sums=np.zeros((len(unique),3));np.add.at(sums,indices,points)
@@ -42,7 +48,7 @@ class DiskPointCloud:
                     if index<limit:sample[index]=point
                 seen+=1
         return sample[:min(seen,limit)].copy()
-    def distances(self,points,radius=2.,batch_size=256):
+    def distances(self,points,radius=2.,batch_size=4096):
         """Exact nearest measured centroid within radius, otherwise +inf.
 
         None requests a globally exact streamed search. Each KD-tree contains
@@ -53,20 +59,49 @@ class DiskPointCloud:
         batch_size=int(batch_size)
         if radius is not None and (not np.isfinite(radius) or radius<0):raise ValueError('Distance radius must be finite and nonnegative')
         query=transform_points(inverse(self.transform),points);result=np.full(len(query),np.inf)
+        upper=np.inf if radius is None or radius==0 else np.nextafter(float(radius),np.inf)
+        tree=self._global_tree()
+        if tree is not None:
+            # The whole static twin fits the budget: one exact search, as for an in-memory twin.
+            result=tree.query(query,k=1,distance_upper_bound=upper,workers=1)[0] if tree.n else result
+            if radius==0:result[result!=0]=np.inf
+            return result
         tile_length=self.voxel_size*self.cells.tile_size
         groups=np.zeros(len(query),np.int64) if radius is None else np.unique(np.floor(query/tile_length).astype(np.int64),axis=0,return_inverse=True)[1]
-        upper=np.inf if radius is None or radius==0 else np.nextafter(float(radius),np.inf)
         for group in np.unique(groups):
             members=np.flatnonzero(groups==group)
             for start in range(0,len(members),int(batch_size)):
                 ids=members[start:start+batch_size];selected=query[ids]
                 bounds=None if radius is None else np.array([np.floor((selected.min(0)-radius)/self.voxel_size),np.floor((selected.max(0)+radius)/self.voxel_size)],np.int64)
-                for _,_,values in self.cells.iter_tiles(bounds):
-                    candidates=values[:,:3]/values[:,3,None]
-                    distances=cKDTree(candidates).query(selected,k=1,distance_upper_bound=upper,workers=1)[0]
+                # A whole-tile tree is exact: points outside the bounded box are beyond the radius anyway.
+                for tile in self.cells.tile_keys(bounds):
+                    tree=self._tile_tree(tile)
+                    if tree is None:continue
+                    distances=tree.query(selected,k=1,distance_upper_bound=upper,workers=1)[0]
                     result[ids]=np.minimum(result[ids],distances)
         if radius==0:result[result!=0]=np.inf
         return result
+    def _global_tree(self):
+        """One KD-tree over every centroid when the store fits TREE_CACHE_POINTS, else None."""
+        if len(self.cells)>self.TREE_CACHE_POINTS:return None
+        with self._tree_lock:
+            if self._trees.get('global') is not None:return self._trees['global']
+        values=[values[:,:3]/values[:,3,None] for _,_,values in self.cells.iter_tiles()]
+        tree=cKDTree(np.concatenate(values) if values else np.empty((0,3)))
+        with self._tree_lock:self._trees.clear();self._trees['global']=tree;self._tree_points=tree.n
+        return tree
+    def _tile_tree(self,tile):
+        with self._tree_lock:
+            if tile in self._trees:
+                self._trees.move_to_end(tile);return self._trees[tile]
+        _,values=self.cells.read_tile(tile)
+        tree=cKDTree(values[:,:3]/values[:,3,None]) if len(values) else None
+        with self._tree_lock:
+            if tile not in self._trees:
+                self._trees[tile]=tree;self._tree_points+=len(values)
+            while self._tree_points>self.TREE_CACHE_POINTS and len(self._trees)>1:
+                _,old=self._trees.popitem(last=False);self._tree_points-=0 if old is None else old.n
+        return tree
     def flush(self):
         self.cells.flush()
         if self.readonly:return
