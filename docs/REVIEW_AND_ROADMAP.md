@@ -128,10 +128,11 @@ Full tables and limits: `reports/modal/README.md`. In short, on T4, L4 and A10:
   centroids, otherwise a point-budgeted LRU of per-tile trees. Laptop CPU,
   seed 101, 12 frames: perception + tracking p50 1,244 -> 120 ms (seed 7:
   115 ms), total p50 ~700 -> 310 ms; results are exact (tested against a
-  global search).
+  global search). Confirmed on Modal A10: seeds 7 / 101 / 202 now spend
+  67 / 68 / 82 ms p50 in perception and tracking.
 - A 15-minute run (1,608 frames, p50 370 ms, p95 520 ms) kept memory flat.
 - pytest from `requirements-ubuntu-cuda.lock`: 334 passed, 1 skipped.
-- Total Modal spend for all runs: about USD 1 (billing report).
+- Total Modal spend for all runs: about USD 1.1 (billing report).
 These are cloud GPUs with simulated sensors. The A10 shares the A2000's Ampere
 generation but is a much larger part; no A2000 figure is claimed.
 
@@ -139,8 +140,7 @@ generation but is a much larger part; no A2000 figure is claimed.
 
 **P0, correctness and evidence**
 1. Done: the seed-dependent perception slowdown was uncached disk-tile
-   distance queries (see "Cloud GPU benchmarks"). Re-run the Modal sweep to
-   confirm on cloud CPUs. [software]
+   distance queries (see "Cloud GPU benchmarks"); confirmed on Modal.
 2. Occupancy and planning latency: move ray clearing fully to the native
    backend, bound MPPI samples by deadline. Planning's p95 tail (laptop CPU,
    seed 7, 30 frames: p50 93 ms, p95 500 ms) comes from periodic replans
