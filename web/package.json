@@ -10,6 +10,7 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "e2e:mock": "playwright test --project=mock",
+    "size": "node tools/check-bundle-size.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 5173 --strictPort"
   },
   "dependencies": {

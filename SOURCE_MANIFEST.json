@@ -26,9 +26,21 @@
       "bytes": 212,
       "sha256": "8158fc1cfd9517518b2ac5ba0d11685120feea06e02ad2fdb795d097d5770f9a"
     },
+    ".github/dependabot.yml": {
+      "bytes": 951,
+      "sha256": "da97cc2bdea289f463a3f17b9cd30975e81a5160a54cc791c1843747059a92e0"
+    },
     ".github/workflows/ci.yml": {
-      "bytes": 1747,
-      "sha256": "92634c1520c6f6e331010af15469873299e8bc3ce667c1795942eb7ce35c35aa"
+      "bytes": 5123,
+      "sha256": "38412ec22658283fb6565c1743a30c4a4b963eece6e706b6cb6cc2d9f17d8c6d"
+    },
+    ".github/workflows/codeql.yml": {
+      "bytes": 1182,
+      "sha256": "e20965aa5652e9066a6e3fbf5db4946152afa81302deabdf063aaebb62849d3f"
+    },
+    ".github/workflows/release.yml": {
+      "bytes": 3665,
+      "sha256": "2c71b8f9853a3cc393fffa5337c4c2c4b3dd8d4d4ca9f69835a2a597c5713d50"
     },
     ".gitignore": {
       "bytes": 1926,
@@ -3983,8 +3995,8 @@
       "sha256": "9053f2914b0b5dc0830f2fc498130a24ea909448b9f1d061be0ecdb666390650"
     },
     "web/package.json": {
-      "bytes": 1006,
-      "sha256": "2fccb2c62ebb1b610325bc999e4215a08ca8a097a19f4c177797c8bb96a389f3"
+      "bytes": 1054,
+      "sha256": "cf63e199875edcebf67a60b910df97e6bbe865cd97e02b7c4104a65a10cafb1b"
     },
     "web/playwright.config.ts": {
       "bytes": 3156,
@@ -4205,6 +4217,10 @@
     "web/tests/voxel_material.test.ts": {
       "bytes": 1383,
       "sha256": "dcbf62ee54e0459ee509b226e5104a308a80103efe26890bc77870067ce1c2c6"
+    },
+    "web/tools/check-bundle-size.mjs": {
+      "bytes": 2727,
+      "sha256": "5ec00a7adce7f138f618db13e3f467e0269e8276d9467364c828e981d58a3907"
     },
     "web/tools/check-production.mjs": {
       "bytes": 2495,
