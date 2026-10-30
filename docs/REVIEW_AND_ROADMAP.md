@@ -166,8 +166,13 @@ generation but is a much larger part; no A2000 figure is claimed.
    Pi-to-Windows raw-sensor transport (does not exist yet). [HW]
 
 **P1, performance and platform**
-4. Adopt `torch.compile` for inference behind a config flag with a warm-up and a
-   parity check; measure on the A2000 itself. [software, then HW]
+4. `torch.compile` for inference: **done in software** behind `perception.compile`
+   (default off) with dynamic shapes and a per-signature eager/compiled parity
+   gate (falls back to eager on mismatch or compiler error; status in
+   `diagnostics.inference_compile`). Container CPU, seed 7: p50 71.6 -> 64.4 ms,
+   p95 83.3 -> 65.5 ms, max difference 2.4e-6, ~12 s compile per signature
+   (`reports/inference_compile_cpu.json`). Remaining: measure on the A2000 and
+   decide whether to warm up at service start. [HW]
 5. CUDA lock profile for Windows (`requirements-windows-cuda.lock`) validated on
    the A2000 workstation; record under `reports/` as a workstation profile. [HW]
 6. ONNX Runtime / TensorRT export for the A2000 (fp16 needs the overflow and

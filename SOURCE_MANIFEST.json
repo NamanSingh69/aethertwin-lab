@@ -2735,8 +2735,8 @@
       "sha256": "e667a67b5513e49fdadd3b7db4ab2e85fe87e6e61657912526c92728dfb58f03"
     },
     "config/system_config.yaml": {
-      "bytes": 1642,
-      "sha256": "66770c6704a6f2fc1e651313681f28c8b544ae1f4e46818c4f343f8bd4dc4675"
+      "bytes": 1782,
+      "sha256": "8a282576517e04f1bbaa8b7f5bf297ad2022d9324f0e9657048f0acaf5906dc4"
     },
     "core/__init__.py": {
       "bytes": 65,
@@ -2759,8 +2759,8 @@
       "sha256": "b428b1fff9ce997fb586b4268705edc9bd6b51b573e2d8f344a2366d03d77b0c"
     },
     "core/pipeline.py": {
-      "bytes": 40647,
-      "sha256": "b2a8b2b1792f078822d58897cae59b610dcd129881a967e4f29ebf3746a40405"
+      "bytes": 40774,
+      "sha256": "047d974303c063b4ac6dc615b803056d90fb36ead9a56c8b8bf04fb01ba0364b"
     },
     "core/recording.py": {
       "bytes": 1617,
@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 13616,
-      "sha256": "36a835574f94e564d878b12563106cbdd9d7640c44c2fb5a37c417d1dd330997"
+      "bytes": 13988,
+      "sha256": "3f6f8887192a60132512a73cd2fbaac5afec281669e0d876d2c51157bfc338b9"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3115,8 +3115,8 @@
       "sha256": "9b2af4c91140a3544a4975be38cf2005afb2587664c06d261777f48b827d83cf"
     },
     "perception_ml/inference_engine.py": {
-      "bytes": 13320,
-      "sha256": "3edc1e5f8c2bc2e6118bb22da0da7512fdb627d55e44c1cfabeba164fa269130"
+      "bytes": 14668,
+      "sha256": "c720b7007d2eba7eeb8bb5f0006a6fdd21d77941cd9fee5894eacb5356772dc0"
     },
     "perception_ml/point_mae_pretrain.py": {
       "bytes": 3420,
@@ -3213,6 +3213,10 @@
     "reports/history/SOURCE_MANIFEST-2.0.0.json": {
       "bytes": 184953,
       "sha256": "40ba17f3e78379155ab8d1e5a7b06b772595394a2b050ac28b58921ff657eff7"
+    },
+    "reports/inference_compile_cpu.json": {
+      "bytes": 1068,
+      "sha256": "4643410a47637d4105d08efee13cfef01a21a12e1193b1e2cb28b89ffb34e17e"
     },
     "reports/interactive_browser.json": {
       "bytes": 2292,
@@ -3711,8 +3715,8 @@
       "sha256": "052e8fbd21070fbef6fc7eb496add9b4013a9cb0a8bd71e8f304fd92d9f518f5"
     },
     "tests/test_perception_preprocessing.py": {
-      "bytes": 7310,
-      "sha256": "9afef8de1fd9f3140c683f23f7b2b62d7d1399d78711108c26b704e67edcfdfd"
+      "bytes": 9392,
+      "sha256": "24e5f9e995a03c403bf0a6d1cf394499c21c8d3e7fab0df457a67cb4e39d3cbc"
     },
     "tests/test_planner_spline_gradient.py": {
       "bytes": 1494,
