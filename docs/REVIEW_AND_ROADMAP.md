@@ -203,9 +203,11 @@ generation but is a much larger part; no A2000 figure is claimed.
 11. Effects polish: selective bloom per layer, a shader grid with distance fade.
 
 **IoT and operations**
-12. Gateway container: built and smoke-tested (see above). Remaining: an HTTPS
-    upstream with `--ca-file`, `docker compose up` with real secrets, a TLS
-    scanner run, and documented certificate rotation drills. [ops]
+12. Gateway container: built and smoke-tested, including `docker compose up`
+    with real secret files and a verified HTTPS upstream (a wrong CA keeps it
+    not-ready; upstream state changes now go to the audit log). Remaining: a
+    TLS scanner run, a real deployment host, and documented certificate
+    rotation drills. [ops]
 13. Halo [HW]: identify the board before flashing; add a device heartbeat or a
     periodic re-HELLO (the firmware already re-identifies on HELLO, but resets
     its link watchdog, which may flicker); inter-byte timeout and `0xA7`

@@ -32,17 +32,30 @@
     "bug_found_and_fixed": "service always marked the token-session cookie Secure, so the gateway's HTTP client never returned it to a plain-HTTP loopback upstream and re-signed-in every second; the cookie is now Secure exactly when served over HTTPS (test_token_session_cookie_is_secure_only_over_tls_and_works_on_plain_loopback)"
   },
   "not_tested": [
-    "HTTPS upstream with --ca-file in the container",
-    "docker compose up (secrets were bind-mounted directly)",
     "certificate rotation",
     "multi-arch image",
-    "TLS scan tooling beyond openssl s_client"
+    "TLS scan tooling beyond openssl s_client",
+    "a real deployment host and DNS name"
   ],
   "files_sha256": {
     "deployment/gateway/Dockerfile": "0aba59b906e84f603cb4dc6864c3fc9e9a6971e40d6282c7275d7bbd3f9928bc",
     "deployment/gateway/compose.yaml": "3c36746cbf996cdedc6d10da93af28afbe65203087a3ec2cb3629d669dbe0412",
     "deployment/gateway/requirements-linux.lock": "ade6b84c292f20b4b052e5e06116762c24f0535b6dc6db3eb9c4bc8902720373",
-    "command_center/gateway.py": "46b62d238060488f50b60eac8ecfac1b5762636e6e6d1a314cb58187ca5151f7",
+    "command_center/gateway.py": "31dc7a1051c4842e2fa02150b871850fda39593d0816c97c895cc989e74e33c4",
     "command_center/service.py": "dbdf63c795a68eefd85372c5744392062672bf2537bb4868cf0845e1ba839e27"
+  },
+  "compose_https_upstream": {
+    "setup": "docker compose with the committed deployment/gateway/compose.yaml plus a scratch override (prebuilt image, extra_hosts host.docker.internal:host-gateway); bridge network; real secret files; service on 0.0.0.0:8080 with TLS and an upstream token; gateway trusts the upstream certificate via AETHERTWIN_UPSTREAM_CA_FILE",
+    "results": {
+      "readyz": "200",
+      "docker_healthcheck": "healthy",
+      "roles": "unauthenticated 401; viewer no capabilities, command 403; operator pause/resume applied upstream",
+      "stream": "wss relay keyframe then consecutive deltas",
+      "assets": "manifest and GLB 200",
+      "secrets": "docker inspect shows only *_FILE paths; no token value in inspect output or container logs; /run/secrets holds the three files",
+      "limits": "mem_limit 768m and pids_limit 128 applied; read-only root; uid 10001",
+      "wrong_upstream_ca": "/readyz 503 {\"ready\":false}, /healthz 200; operator /api/v2/health reports CERTIFICATE_VERIFY_FAILED",
+      "upstream_state_logging": "after the fix, docker logs carry one audit line per change: unavailable (with the redacted TLS reason) and connected"
+    }
   }
 }
