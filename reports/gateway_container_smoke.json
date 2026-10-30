@@ -1,0 +1,48 @@
+{
+  "test": "gateway_container_smoke",
+  "date_utc": "2026-10-30",
+  "hardware_verified": false,
+  "environment": "Linux cloud container (Claude Code sandbox), Docker Engine 29.9.2, host networking; not a deployment host",
+  "image": {
+    "dockerfile": "deployment/gateway/Dockerfile",
+    "build_deviation": "test-only copy mounted the sandbox egress-proxy CA as a BuildKit secret (PIP_CERT) for pip install; the CA is not in the image; the committed Dockerfile is unchanged",
+    "user": "10001:10001",
+    "size_bytes": 314494945
+  },
+  "run": {
+    "options": "--read-only --tmpfs /tmp:size=16m --cap-drop ALL --security-opt no-new-privileges:true --memory 512m --pids-limit 128, token files under /run/secrets, self-signed TLS for 127.0.0.1",
+    "upstream": "python -m command_center --mode sim on http://127.0.0.1:8080 with an upstream operator token (loopback HTTP upstream)"
+  },
+  "results": {
+    "docker_healthcheck": "healthy",
+    "healthz": "200 {\"status\":\"alive\"} unauthenticated",
+    "readyz": "200 after upstream sign-in and first frame",
+    "tls": "TLS 1.1 refused; TLS 1.2 ECDHE-RSA-AES256-GCM-SHA384; TLS 1.3 TLS_AES_256_GCM_SHA384",
+    "headers_on_index": [
+      "strict-transport-security: max-age=31536000",
+      "content-security-policy (same-origin)",
+      "cache-control: no-cache",
+      "x-frame-options: DENY"
+    ],
+    "auth": "unauthenticated bootstrap 401; viewer role has no capabilities and its command gets 403; operator pause/resume forwarded and reported applied upstream; cross-origin command 403",
+    "stream": "wss relay delivered protocol-v2 packets: keyframe then deltas with consecutive sequences",
+    "assets": "manifest 200 (12 tiles), GLB tile 200 model/gltf-binary",
+    "rootfs": "write to /app refused (read-only); /tmp writable",
+    "sign_in_limit": "5 wrong credentials -> 401, then 429; audit log records login_rate_limited without credential material",
+    "bug_found_and_fixed": "service always marked the token-session cookie Secure, so the gateway's HTTP client never returned it to a plain-HTTP loopback upstream and re-signed-in every second; the cookie is now Secure exactly when served over HTTPS (test_token_session_cookie_is_secure_only_over_tls_and_works_on_plain_loopback)"
+  },
+  "not_tested": [
+    "HTTPS upstream with --ca-file in the container",
+    "docker compose up (secrets were bind-mounted directly)",
+    "certificate rotation",
+    "multi-arch image",
+    "TLS scan tooling beyond openssl s_client"
+  ],
+  "files_sha256": {
+    "deployment/gateway/Dockerfile": "0aba59b906e84f603cb4dc6864c3fc9e9a6971e40d6282c7275d7bbd3f9928bc",
+    "deployment/gateway/compose.yaml": "3c36746cbf996cdedc6d10da93af28afbe65203087a3ec2cb3629d669dbe0412",
+    "deployment/gateway/requirements-linux.lock": "ade6b84c292f20b4b052e5e06116762c24f0535b6dc6db3eb9c4bc8902720373",
+    "command_center/gateway.py": "46b62d238060488f50b60eac8ecfac1b5762636e6e6d1a314cb58187ca5151f7",
+    "command_center/service.py": "dbdf63c795a68eefd85372c5744392062672bf2537bb4868cf0845e1ba839e27"
+  }
+}

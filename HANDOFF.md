@@ -197,8 +197,8 @@ finite values, no duplicate keys, 100k voxels. `path` is sent every frame
 - State-changing requests check `Origin` against the own origin plus
   `--allowed-origin` values (Vite dev origins are allowed by default).
 - The plain service issues **no CSRF token**; protection is SameSite=Strict +
-  Origin check. The gateway issues `csrf_token` in bootstrap; the client sends it
-  as `X-CSRF-Token` when present.
+  Origin check. The gateway does not issue one either: it strips `csrf_token` from
+  the upstream bootstrap. The client sends `X-CSRF-Token` only if a bootstrap ever carries one.
 - WebSocket: same role/origin checks; close codes 4401/4403/1013/1009/1003;
   client messages ≤1 KiB; uvicorn `ws_max_size=4096`.
 
@@ -408,7 +408,7 @@ Research current docs for CodeQL, Dependabot grouping, and Playwright CI first.
 
 ### 6.5 IoT web server (gateway + ESP32 halo) — owner asked to cover it
 Components: `command_center/gateway.py` (~900 lines, private HTTPS/WebSocket
-relay that exposes the studio beyond loopback; adds `csrf_token`; forwards with
+relay that exposes the studio beyond loopback; strips upstream `csrf_token`; forwards with
 `Accept-Encoding: identity`), `deployment/gateway/` (Dockerfile, compose,
 locks, README), `hardware_halo/` (ESP32 firmware `aether_halo.ino` +
 `halo_protocol.h` over serial, Python `protocol.py`/`controller.py`/`state.py`,
