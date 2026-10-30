@@ -1,7 +1,8 @@
 # AetherTwin — working notes for Claude
 
-**Continuing the improvement work? Read `HANDOFF.md` first** (goals, owner decisions,
-repo state, remaining plan, Windows/GPU setup, constraints). Keep `PROGRESS.md` local/untracked.
+**Next phase (Windows desktop + physical rig): read `NEXT_AGENT.md` first.** It is the task list and
+rulebook; `docs/HARDWARE_SETUP.md` is the bench guide for the human. `HANDOFF.md` is history from the
+improvement pass. Keep `PROGRESS.md` local/untracked.
 
 Python 3.12 research platform (LiDAR/RGB-D perception, mapping, tracking, planning) plus a
 React 19 / TypeScript 7 / Vite 8 / Three.js r186 browser studio in `web/`. Honesty about
@@ -17,7 +18,7 @@ that was not measured; visual effects are presentation-only and must say so.
 
 ## Commands (keep output lean: pipe through `tail`/`grep`)
 - Python env: `uv venv -p 3.12 .venv && uv pip install --python .venv/bin/python --index-strategy unsafe-best-match --require-hashes -r requirements-ubuntu.lock`
-- Python tests: `.venv/bin/python -m pytest -q -p no:cacheprovider 2>&1 | tail -5` (~100 s, 343 pass, 2 skip)
+- Python tests: `.venv/bin/python -m pytest -q -p no:cacheprovider 2>&1 | tail -5` (~100 s, 358 pass, 2 skip)
 - Windows: `.venv\Scripts\python.exe` instead of `.venv/bin/python`; install with plain
   `pip install --require-hashes -r requirements-windows.lock`.
 - Web (in `web/`): `npm ci`, `npm run typecheck`, `npm test`, `npm run build` (rebuilds `dist/`; must leave git clean if source unchanged)
@@ -56,4 +57,5 @@ that was not measured; visual effects are presentation-only and must say so.
 4. UX: shortcuts, help overlay, quality selector, toast, map progress — done (`00d8efe`).
 5. Modal cloud GPU benchmarks + CUDA lock — done (`96c62a4`).
 6. CI/CD — done (`c0d8fff`). IoT gateway + halo hardening — done (`29ed107`).
-7. `docs/REVIEW_AND_ROADMAP.md` (backlog lives there), security review, PR to main.
+7. `docs/REVIEW_AND_ROADMAP.md` (backlog lives there), security review, PR #1 merged to main.
+8. Next: hardware bring-up, the Pi-to-Windows raw-sensor transport and commissioning (`NEXT_AGENT.md`).

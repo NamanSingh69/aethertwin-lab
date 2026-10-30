@@ -55,16 +55,20 @@
       "sha256": "0bfe8bfb8d7f2c93f871bb8da3e47a13b82f1062d53f4da7695e4edfba54ff23"
     },
     "CLAUDE.md": {
-      "bytes": 4783,
-      "sha256": "38f99fb9f2f769a11a70a90f726ec5c6c21285cad9f77025156e6308fc925426"
+      "bytes": 4971,
+      "sha256": "f5b69eea46e080a756b39cd6379e19a892f5d28c900597406cc24d9fb9903817"
     },
     "CONTRIBUTING.md": {
       "bytes": 1403,
       "sha256": "b3ff25cf1d30a44371730b5500c92d7d0ab53be302e667da4a6bb497589f41d8"
     },
     "HANDOFF.md": {
-      "bytes": 46651,
-      "sha256": "bb377ff389dfb35d4d549ec8542c1a1f989394020a3ae2ba0f5363736c8fb052"
+      "bytes": 46872,
+      "sha256": "69d23376d44c9341fb414df757df84094414ae99f9f842970a843d5540a8448b"
+    },
+    "NEXT_AGENT.md": {
+      "bytes": 15324,
+      "sha256": "00bb28039daffbc22deedc34d195c2ed7d60b8d248d18a6ca19d61e9280d2331"
     },
     "PEAK_HIL_AND_UI_SPEC.md": {
       "bytes": 23580,
@@ -2878,9 +2882,13 @@
       "bytes": 4639,
       "sha256": "3b4114023961c54b97446692db52e7ec2e0bc7ce367c6a857810460f06a215b7"
     },
+    "docs/HARDWARE_SETUP.md": {
+      "bytes": 10305,
+      "sha256": "91e10b76adaeb4636a3f356ec01f25164161ceb96558f191d2526e14a76468a2"
+    },
     "docs/PHYSICAL_COMMISSIONING.md": {
-      "bytes": 5071,
-      "sha256": "663915219ec8fc41bd07e4dc9764c5cf13e193aacd6d0c56134541e06845c641"
+      "bytes": 5075,
+      "sha256": "0be541d893ceeae36f30c5f06dc205643c217d2913a2992567bf88ad2265b30e"
     },
     "docs/PROJECT_STATUS.md": {
       "bytes": 3466,

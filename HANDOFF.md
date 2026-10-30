@@ -1,5 +1,9 @@
 # AetherTwin improvement work — handoff
 
+> **Superseded for new work:** the improvement pass is merged to `main`. The next phase
+> (Windows desktop, physical rig, raw-sensor transport, commissioning) starts from
+> `NEXT_AGENT.md`. This file is kept as history.
+
 Written 2026-10-29 at the end of a cloud Claude Code session, for a fresh local
 Claude Code session (Windows, ASUS ROG Zephyrus M16 with an NVIDIA RTX laptop GPU)
 that has **no memory of that session**. Read this file and `CLAUDE.md` completely
