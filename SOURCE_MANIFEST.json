@@ -43,8 +43,8 @@
       "sha256": "2c71b8f9853a3cc393fffa5337c4c2c4b3dd8d4d4ca9f69835a2a597c5713d50"
     },
     ".gitignore": {
-      "bytes": 1926,
-      "sha256": "8a64f4e69d6cb6990a9db97a41b141980f9cfcba9ec6e925c3d56e9d793cc6b5"
+      "bytes": 2016,
+      "sha256": "f7a60cab1992158514c85454e9c9e96dba6d52a771394a473fc2a655303856bd"
     },
     "AETHERTWIN_IMPLEMENTATION_PLAN.md": {
       "bytes": 2625,
@@ -2679,16 +2679,16 @@
       "sha256": "a1d27299bde8a31454cb3f9cae8aeda1b6e73fb49432d0fff5de4ae5fa4999db"
     },
     "command_center/__main__.py": {
-      "bytes": 5918,
-      "sha256": "85e1d8205fc1a22a001f7fdf69de82a3e782f6dfea2d74cbb49a737e0cbf50a1"
+      "bytes": 5986,
+      "sha256": "0347646e818090085dc58e57e311b125fea59e032cb64cd724a5d85505d3d2b7"
     },
     "command_center/assets.py": {
       "bytes": 7438,
       "sha256": "e2886789f55467cbdc644fb8852536a9891a1673a11a17cff967bd9846dbc579"
     },
     "command_center/auth.py": {
-      "bytes": 2737,
-      "sha256": "e4e9ca5af6891e6182eeb043ba3f18818958b2640cc6a0226592efd7b5416653"
+      "bytes": 5308,
+      "sha256": "cede8b48fba8c8e81a8a85194b6c9bd25b8cf39739f1388a4b1c1b1cfa36cc93"
     },
     "command_center/commissioning.py": {
       "bytes": 49318,
@@ -2699,8 +2699,8 @@
       "sha256": "9d73bed60295b93ddda2eee2a8326453e1445d18e196018c1ed72143bfbbe7ed"
     },
     "command_center/gateway.py": {
-      "bytes": 35401,
-      "sha256": "3d1f8c402d7cb3a9487ab740cffbe744974fe0535802f4486bf0d4c8bd627668"
+      "bytes": 37472,
+      "sha256": "5daed1084e466304d88f549559ff6223dce1f1e7112c1a943520540b82af4247"
     },
     "command_center/protocol.py": {
       "bytes": 11173,
@@ -2711,8 +2711,8 @@
       "sha256": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf"
     },
     "command_center/service.py": {
-      "bytes": 14578,
-      "sha256": "ed61ee7c37228f517113cb62f2687fe365ca52067c0e34c121f964c689cbb0d5"
+      "bytes": 16216,
+      "sha256": "bce0eb6b21034672849b8643aa554edb6975c27125de764b5f4d9dca1d8838dc"
     },
     "config/calibration_extrinsics.json": {
       "bytes": 537,
@@ -2803,20 +2803,20 @@
       "sha256": "d31a5be8c041816a8a9955bf303a29283f55e7a11112ce29ad451b25a9ded33c"
     },
     "deployment/gateway/Dockerfile": {
-      "bytes": 998,
-      "sha256": "98a317ca211519f359b202a83b1abff0ba6c1a9f8fd9a308297c3b782a8e9e34"
+      "bytes": 1588,
+      "sha256": "0aba59b906e84f603cb4dc6864c3fc9e9a6971e40d6282c7275d7bbd3f9928bc"
     },
     "deployment/gateway/Dockerfile.dockerignore": {
       "bytes": 373,
       "sha256": "376718c2a10a695a13a2f4fca843dc2ed61dc3b8a0e3dc387f9688d8e15b792c"
     },
     "deployment/gateway/README.md": {
-      "bytes": 7188,
-      "sha256": "56e8af1cb61710db1258f35de29e35cd247e7dc87a7d633152b818efa7093532"
+      "bytes": 8331,
+      "sha256": "9ff4b0ee3412141d8dfb50abd4a643cca712f6da1189183e4c114f3b3a4038c4"
     },
     "deployment/gateway/compose.yaml": {
-      "bytes": 1342,
-      "sha256": "6b5625b294df5fb48f49e5b3177285b2b296060f99fd85c317d8207bd1567576"
+      "bytes": 1880,
+      "sha256": "3c36746cbf996cdedc6d10da93af28afbe65203087a3ec2cb3629d669dbe0412"
     },
     "deployment/gateway/lock_profile.py": {
       "bytes": 1427,
@@ -2833,6 +2833,10 @@
     "deployment/gateway/requirements.in": {
       "bytes": 77,
       "sha256": "cf35f38d4d81b65947176f48a8ea2c19e27a7a3187be6fbfbd20f55ba27b49f0"
+    },
+    "deployment/gateway/verification-2026-10-30.json": {
+      "bytes": 2222,
+      "sha256": "b86fdeff5f46ccb86657de3f93d733540e5ac5c4c87c36eb9f5decd13ac28169"
     },
     "deployment/gateway/verification.json": {
       "bytes": 1220,
@@ -2911,8 +2915,8 @@
       "sha256": "119f6b68ce8cfa0a2ab78f3e76bce317c11a90348564a732b1e2d53a93a79430"
     },
     "hardware_halo/controller.py": {
-      "bytes": 7177,
-      "sha256": "09683409a32dd786284bb0cdc1d387496daeeeffd5e7f5925d714d5e8744b571"
+      "bytes": 9491,
+      "sha256": "e665144dddf17676f4f052fc0d0f8a2dd773a07f3e69db866c4dcda22d8e06ba"
     },
     "hardware_halo/firmware/aether_halo/aether_halo.ino": {
       "bytes": 6306,
@@ -3650,6 +3654,10 @@
       "bytes": 11871,
       "sha256": "171626b76dc9f19b861b2ebf1064e613d50d08b36c894aa3191f70876c0a3c37"
     },
+    "tests/test_hardware_halo_transport.py": {
+      "bytes": 2767,
+      "sha256": "dbc9baaab90d438f30da4963d6460d3eb5c86090e18f156853343b87b9b5ef15"
+    },
     "tests/test_hybrid_3d_network.py": {
       "bytes": 6972,
       "sha256": "58fd6d2dd9c8919fde7a8a0a53fce5ea5552eeeb8e25c5ab2c455481237684b1"
@@ -3697,6 +3705,10 @@
     "tests/test_sensing_mapping.py": {
       "bytes": 26202,
       "sha256": "b5c020d889c22ee8c588f57fd0788fa50c3897e9869aa58cc094efed968c9121"
+    },
+    "tests/test_service_hardening.py": {
+      "bytes": 6798,
+      "sha256": "66d210e9ba7c71ff8df816f2b9683ab5cc9eff85066c9707fbae01819eb54e88"
     },
     "tests/test_simulator_correspondences.py": {
       "bytes": 4387,
