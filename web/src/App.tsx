@@ -18,15 +18,20 @@ import { Inspector } from "./components/Inspector";
 import { ZoneEditor } from "./components/ZoneEditor";
 import { CommissioningPanel } from "./components/CommissioningPanel";
 import { TopBar } from "./components/studio/TopBar";
-import { LayerDock } from "./components/studio/LayerDock";
+import { LayerDock, layerInfo } from "./components/studio/LayerDock";
 import {
   PickBanner,
   SceneEmpty,
   ViewportFooter,
+  MapProgressIndicator,
+  QUALITY_OPTIONS,
   ViewportHeading,
   ViewportStats,
   ViewportWarnings,
 } from "./components/studio/ViewportHud";
+import { HelpOverlay } from "./components/studio/HelpOverlay";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import type { Quality } from "./scene/SpatialRenderer";
 import { RoutePanel } from "./components/studio/RoutePanel";
 import { PipelinePanel } from "./components/studio/PipelinePanel";
 import { PlaybackBar } from "./components/studio/PlaybackBar";
@@ -47,6 +52,17 @@ const moduleLayers: Record<string, LayerName> = {
   rgbd: "rgbd",
 };
 const STALE_SECONDS = 3;
+const QUALITY_KEY = "aethertwin.quality";
+
+/** Saved render quality; storage can be unavailable (private mode, policy). */
+function storedQuality(): Quality {
+  try {
+    const value = localStorage.getItem(QUALITY_KEY);
+    return QUALITY_OPTIONS.find((option) => option.value === value)?.value ?? "auto";
+  } catch {
+    return "auto";
+  }
+}
 
 function finitePoint(text: string) {
   try {
@@ -70,7 +86,17 @@ export default function App() {
     [zonesOpen, setZonesOpen] = useState(false),
     [routeOpen, setRouteOpen] = useState(false),
     [leftOpen, setLeftOpen] = useState(false),
-    [haloOpen, setHaloOpen] = useState(true);
+    [haloOpen, setHaloOpen] = useState(true),
+    [helpOpen, setHelpOpen] = useState(false),
+    [quality, setQualityState] = useState<Quality>(storedQuality);
+  const setQuality = (value: Quality) => {
+    setQualityState(value);
+    try {
+      localStorage.setItem(QUALITY_KEY, value);
+    } catch {
+      // The choice still applies for this session.
+    }
+  };
   const [start, setStart] = useState(""),
     [goal, setGoal] = useState(""),
     [pickPlaneText, setPickPlaneText] = useState(""),
@@ -103,6 +129,7 @@ export default function App() {
       activePickHeight,
       mapManifestUrl: bootstrap?.map_manifest_url,
       mapRevision: bootstrap?.map_revision,
+      quality,
     },
     {
       onSelect: setSelected,
@@ -216,6 +243,69 @@ export default function App() {
     setRouteOpen(false);
     setPickMode(null);
   };
+  const choosePreset = (value: string) => {
+    setPreset(value);
+    view.renderer.current?.preset(value);
+  };
+  // Shortcuts reuse the same handlers, role checks and command plane as the controls.
+  useKeyboardShortcuts((key) => {
+    if (key === "?") {
+      setHelpOpen(true);
+      return true;
+    }
+    if (key === "Escape") {
+      if (pickMode) setPickMode(null);
+      else if (eventsOpen) setEventsOpen(false);
+      else if (routeOpen) closeRoute();
+      else if (graphOpen) setGraphOpen(false);
+      else if (selected !== null) setSelected(null);
+      else return false;
+      return true;
+    }
+    if (key === " ") {
+      const action = paused ? "resume" : "pause";
+      if (busy || !canControl(bootstrap, action)) return false;
+      void command(action);
+      return true;
+    }
+    if (/^[1-9]$/.test(key)) {
+      const layer = layerInfo[Number(key) - 1];
+      if (!layer) return false;
+      setLayers((v) => ({ ...v, [layer.id]: !v[layer.id] }));
+      return true;
+    }
+    switch (key.toLowerCase()) {
+      case "c":
+        setCutaway((v) => !v);
+        return true;
+      case "f":
+        if (selected === null) return false;
+        view.renderer.current?.focusTrack(selected);
+        return true;
+      case "i":
+        choosePreset("isometric");
+        return true;
+      case "t":
+        choosePreset("top");
+        return true;
+      case "s":
+        choosePreset("sensor");
+        return true;
+      case "q": {
+        const order = QUALITY_OPTIONS.map((option) => option.value);
+        setQuality(order[(order.indexOf(quality) + 1) % order.length]);
+        return true;
+      }
+      case "r":
+        if (routeOpen) closeRoute();
+        else setRouteOpen(true);
+        return true;
+      case "e":
+        setEventsOpen((v) => !v);
+        return true;
+    }
+    return false;
+  });
 
   return (
     <div className="app-shell">
@@ -276,10 +366,11 @@ export default function App() {
         <ViewportHeading
           mode={mode}
           preset={preset}
-          onPreset={(value) => {
-            setPreset(value);
-            view.renderer.current?.preset(value);
-          }}
+          onPreset={choosePreset}
+          quality={quality}
+          onQuality={setQuality}
+          effects={view.metrics?.effects}
+          onHelp={() => setHelpOpen(true)}
         />
         <ViewportStats
           scene={scene}
@@ -296,6 +387,7 @@ export default function App() {
           hasScene={Boolean(scene)}
           staleSeconds={stale && !paused ? age : null}
         />
+        <MapProgressIndicator progress={view.mapProgress} />
         {pickMode && (
           <PickBanner
             target={pickMode}
@@ -391,6 +483,7 @@ export default function App() {
         />
       )}
       {notice && <Toast notice={notice} onDismiss={() => setNotice(null)} />}
+      {helpOpen && <HelpOverlay onClose={() => setHelpOpen(false)} />}
       {zonesOpen && bootstrap && (
         <ZoneEditor
           scene={scene}

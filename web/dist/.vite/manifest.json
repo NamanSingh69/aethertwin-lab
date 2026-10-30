@@ -1,6 +1,6 @@
 {
-  "_SpatialRenderer-7plb7GdA.js": {
-    "file": "assets/SpatialRenderer-7plb7GdA.js",
+  "_SpatialRenderer-BgyOzoXC.js": {
+    "file": "assets/SpatialRenderer-BgyOzoXC.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
@@ -37,17 +37,17 @@
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-xKaSWCk8.js",
+    "file": "assets/benchmark-D6PIC44s.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
       "_preload-helper-CFijIu3R.js",
-      "_SpatialRenderer-7plb7GdA.js"
+      "_SpatialRenderer-BgyOzoXC.js"
     ]
   },
   "index.html": {
-    "file": "assets/index-C3_ttpZx.js",
+    "file": "assets/index-BIJDS7FU.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -57,10 +57,10 @@
       "_spatial-contracts-33vaUxT7.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-7plb7GdA.js"
+      "_SpatialRenderer-BgyOzoXC.js"
     ],
     "css": [
-      "assets/index-CebD2Odz.css"
+      "assets/index-CevuC8fd.css"
     ],
     "assets": [
       "assets/decode.worker-CC-RLjVq.js"

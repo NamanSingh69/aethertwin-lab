@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import type { SpatialRenderer, RenderMetrics } from "../scene/SpatialRenderer";
+import type {
+  MapProgress,
+  Quality,
+  RenderMetrics,
+  SpatialRenderer,
+} from "../scene/SpatialRenderer";
 import type { Layers, SceneFrame, Vec3 } from "../lib/types";
 import type { Notice } from "./useStudioSession";
 
@@ -11,6 +16,7 @@ export interface RendererSettings {
   activePickHeight: number | null;
   mapManifestUrl: string | null | undefined;
   mapRevision: string | undefined;
+  quality: Quality;
 }
 
 /**
@@ -31,6 +37,7 @@ export function useSpatialRenderer(
 ) {
   const renderer = useRef<SpatialRenderer | null>(null);
   const [metrics, setMetrics] = useState<RenderMetrics | null>(null);
+  const [mapProgress, setMapProgress] = useState<MapProgress | null>(null);
   const settingsRef = useRef(settings),
     handlersRef = useRef(handlers);
   settingsRef.current = settings;
@@ -51,7 +58,10 @@ export function useSpatialRenderer(
         text: `Map layer unavailable: ${(event as CustomEvent).detail}`,
         bad: true,
       });
+    const progress = (event: Event) =>
+      setMapProgress((event as CustomEvent<MapProgress>).detail);
     element.addEventListener("asseterror", failed);
+    element.addEventListener("tileprogress", progress);
     void import("../scene/SpatialRenderer")
       .then(({ SpatialRenderer }) => {
         if (disposed) return;
@@ -60,6 +70,7 @@ export function useSpatialRenderer(
           (id) => handlersRef.current.onSelect(id),
           (point, target) => handlersRef.current.onWorldPick(point, target),
           setMetrics,
+          { quality: settingsRef.current.quality },
         );
         renderer.current = instance;
         const s = settingsRef.current;
@@ -79,6 +90,7 @@ export function useSpatialRenderer(
     return () => {
       disposed = true;
       element.removeEventListener("asseterror", failed);
+      element.removeEventListener("tileprogress", progress);
       renderer.current?.dispose();
       renderer.current = null;
     };
@@ -99,5 +111,8 @@ export function useSpatialRenderer(
   useEffect(() => {
     renderer.current?.setPickMode(settings.pickMode, settings.activePickHeight);
   }, [settings.pickMode, settings.activePickHeight]);
-  return { renderer, metrics };
+  useEffect(() => {
+    renderer.current?.setQuality(settings.quality);
+  }, [settings.quality]);
+  return { renderer, metrics, mapProgress };
 }
