@@ -168,6 +168,13 @@ generation but is a much larger part; no A2000 figure is claimed.
    93-194 ms; planning p95 392-400 -> 305-334 ms; total p95 594-601 ->
    498-520 ms. Remaining replan cost: the A* Python loop itself, path checks,
    spline and MPPI.
+   Occupancy (same setup): the sparse map's per-voxel lookups built keys with
+   `tuple(numpy_row)` and called a method per key; keys are now Python-int
+   tuples and the lookups are inlined with the same scalar arithmetic.
+   Occupancy p50 95 -> 64 ms, total p50 282-293 -> 218-223 ms (two
+   alternating pairs); trajectory and saved occupancy map byte-identical; the
+   occupancy p95 tail (ray traversal and de-duplication) is unchanged.
+   Remaining: the full-map scan in `occupied_points` and native ray clearing.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
 3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the
    Pi-to-Windows raw-sensor transport (does not exist yet). [HW]

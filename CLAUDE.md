@@ -40,6 +40,8 @@ that was not measured; visual effects are presentation-only and must say so.
 - `pkill -f <pattern>` kills your own shell when the pattern is in the command line; stop the service by PID.
 - The live route E2E derives endpoints from `/api/v2/state` because the simulated robot reaches its goal.
 - Python style in this repo is dense (semicolon-joined statements); match surrounding code.
+- Some files use CRLF (e.g. `slam_and_twin/log_odds_octomap.py`) and `.gitattributes` keeps exact bytes: edit
+  bytes-preserving (Python `read_text` converts CRLF to LF and rewrites every line). Check with `grep -c $'\r$' FILE`.
 - SOURCE_MANIFEST.json hashes every tracked file; any tracked change requires regenerating it.
 - Local Playwright runs cap workers at 4 (`E2E_WORKERS`); more SwiftShader contexts time out.
 - Stray `vite preview` processes share port 4173 on Windows and serve stale chunk lists (random 404s and
