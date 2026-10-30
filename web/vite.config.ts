@@ -17,9 +17,9 @@ export default defineConfig({
     manifest:true,
     chunkSizeWarningLimit: 850,
     rolldownOptions: {
-      input: { index: "index.html", benchmark: "benchmark.html" },
+      input: { index: "index.html", benchmark: "benchmark.html", explainer: "explainer.html" },
       output:{codeSplitting:{groups:[
-        {name:'spatial-contracts',test:/[\\/]src[\\/](lib[\\/](types|geometry)|scene[\\/]assets)\.ts$/,priority:30},
+        {name:'spatial-contracts',test:/[\\/]src[\\/](lib[\\/](types|geometry|viewParams)|scene[\\/]assets)\.ts$/,priority:30},
         // Post-processing, shader and decoder modules stay with their lazy importers.
         {name:'three-vendor',test:/[\\/]node_modules[\\/]three[\\/](?!examples[\\/]jsm[\\/](postprocessing|shaders|libs)[\\/])/,priority:20},
         {name:'react-vendor',test:/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,priority:20},

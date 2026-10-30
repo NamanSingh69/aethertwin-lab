@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { requestJSON } from "./lib/api";
 import type { Layers, LayerName, Vec3, Zone } from "./lib/types";
-import { initialLayers } from "./lib/types";
+import { parseViewParams } from "./lib/viewParams";
 import {
   canControl,
   sensorWarnings,
@@ -52,6 +52,10 @@ const moduleLayers: Record<string, LayerName> = {
   rgbd: "rgbd",
 };
 const STALE_SECONDS = 3;
+// Explainer links open the studio on one stage: `?layers=path,risk&view=top`.
+const requestedView = parseViewParams(
+  typeof window === "undefined" ? "" : window.location.search,
+);
 const QUALITY_KEY = "aethertwin.quality";
 
 /** Saved render quality; storage can be unavailable (private mode, policy). */
@@ -76,11 +80,11 @@ function finitePoint(text: string) {
 export default function App() {
   const host = useRef<HTMLDivElement>(null);
   const [notice, setNotice] = useState<Notice>(null);
-  const [layers, setLayers] = useState<Layers>(initialLayers),
+  const [layers, setLayers] = useState<Layers>(requestedView.layers),
     [selected, setSelected] = useState<number | null>(null),
     [mode, setMode] = useState("Explore"),
     [cutaway, setCutaway] = useState(true),
-    [preset, setPreset] = useState("isometric"),
+    [preset, setPreset] = useState<string>(requestedView.view ?? "isometric"),
     [graphOpen, setGraphOpen] = useState(false),
     [eventsOpen, setEventsOpen] = useState(false),
     [zonesOpen, setZonesOpen] = useState(false),
@@ -138,6 +142,13 @@ export default function App() {
       setError: session.setError,
     },
   );
+  // Apply a requested camera view once, when the renderer reports its first frame.
+  const viewApplied = useRef(false);
+  useEffect(() => {
+    if (viewApplied.current || !view.metrics || !requestedView.view) return;
+    viewApplied.current = true;
+    view.renderer.current?.preset(requestedView.view);
+  }, [view.metrics, view.renderer]);
   const { busy, command } = useControlCommands({
     bootstrap,
     setBootstrap: session.setBootstrap,

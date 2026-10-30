@@ -13,6 +13,8 @@ that was not measured; visual effects are presentation-only and must say so.
 - `command_center/` FastAPI service (`service.py`), auth, controls, binary scene protocol v2, gateway.
 - `web/src/` studio: `App.tsx`, `components/`, `lib/` (api, status, types), `scene/` (Three.js
   `SpatialRenderer`, protocol decoder, worker). `web/dist/` is COMMITTED and served by Python.
+- `web/src/explainer/` explainer page (`explainer.html`): content in `content.ts` (every number cites a
+  repo source; a test enforces it), 2D labs ported from the Python constants in `math.ts`.
 - `web/tests/` Vitest unit/contract tests; `web/e2e/` Playwright (`mock/`, `live/`, `support/`).
 - `tests/` pytest; `tools/` scripts; `docs/` architecture/status; `reports/`, `artifacts/` evidence.
 
