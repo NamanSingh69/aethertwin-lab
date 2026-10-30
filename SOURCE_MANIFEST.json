@@ -2707,8 +2707,8 @@
       "sha256": "a30762972b96d32bf9adb0714d1b0dc1d9e71eb6c0d05b38652fb42fc7c124f3"
     },
     "command_center/runtime.py": {
-      "bytes": 16720,
-      "sha256": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf"
+      "bytes": 16813,
+      "sha256": "5b3baccef66910421adc11dbd9235992986a860525f21d38e7b0c1d2d2d03c62"
     },
     "command_center/service.py": {
       "bytes": 16580,
@@ -2767,8 +2767,8 @@
       "sha256": "982b23da09034a95585741ac56bc23ee743b03809872cdbb53173c6db0b0fe8a"
     },
     "core/resources.py": {
-      "bytes": 709,
-      "sha256": "e5da2137ee1cfdc43bdf44707e970527a3040ba38215ec0a955431484de7dfe7"
+      "bytes": 1085,
+      "sha256": "80b18ae093ea6172a4caf274aa8c4679ea60c937cef70a8974ac223d912fbd7c"
     },
     "core/se3_math.py": {
       "bytes": 2079,
@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 15165,
-      "sha256": "73be4ea1bc24f4e760642f277512f0903f557a88a7e2d16c0d4ed030679519c4"
+      "bytes": 15670,
+      "sha256": "99d27dd40c40f55305adfaf3a5c06f8b30a800d46289e3c07d9b76c3438559f9"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -2987,8 +2987,8 @@
       "sha256": "c0b1967bc9e5ba752ef9b9dddfd5951c4cdf559c61502bf0e70c8e6d7dd08e96"
     },
     "main.py": {
-      "bytes": 16286,
-      "sha256": "be58bfa19bf73661802f33330bde1ee503d04f0533153cf05b5f845dfa801d51"
+      "bytes": 16363,
+      "sha256": "b17fb912ea498346d8cfc3ff383dd3060040369fd344d995b290b2c0cfb279d5"
     },
     "maintenance/__init__.py": {
       "bytes": 77,
@@ -3599,8 +3599,8 @@
       "sha256": "44a7f33b2320e44022a37963d3fc1c10d6d81317be63355e97eb4060d51653a0"
     },
     "slam_and_twin/log_odds_octomap.py": {
-      "bytes": 13204,
-      "sha256": "e32632fb3cf46b5cff92408ebf71b64a2b1cc4333d1bbcebfc52f41a0e6799af"
+      "bytes": 13427,
+      "sha256": "c1172113bee9a67b50dd1f5c76b7b3e54f840a88ac428a81644d66c3b7755588"
     },
     "slam_and_twin/planning_region.py": {
       "bytes": 2521,
@@ -3755,8 +3755,8 @@
       "sha256": "84687b70c782bfd724849cbc91546df28f06b2199228bd3a603802ff930fb3e6"
     },
     "tests/test_tiled_batch.py": {
-      "bytes": 5305,
-      "sha256": "5a4f023c53ddb350dcc9d3a3e9b395a2ca3206ac6a8fca1fcd5b1a947ffb1183"
+      "bytes": 5348,
+      "sha256": "1ec7dddb0d7f425d30f48f8d06be07455be74a6a9647b16606513796821176cb"
     },
     "tests/test_tiled_distances.py": {
       "bytes": 1168,

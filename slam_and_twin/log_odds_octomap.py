@@ -77,6 +77,8 @@ class SparseMultiReturnVoxelMap:
         if val is None:return 0.
         return val[0]*self.decay_rate**(max(0.,t-val[2])/.1)
 
+    # Cell values are (log_odds, permeability, timestamp) tuples: float-only tuples are untracked by the
+    # cyclic GC, so full collections no longer walk every cell (they reached ~100 ms per pass at 70k cells).
     # Hot paths below inline _value with identical scalar arithmetic and use Python-int key tuples
     # (equal to and hashing like numpy-int tuples, but far cheaper to build and look up).
     def query(self,points,return_known=False):
@@ -93,11 +95,11 @@ class SparseMultiReturnVoxelMap:
         cells=self.cells;t=self.timestamp;rate=self.decay_rate;minimum=self.minimum;maximum=self.maximum
         for key in free:
             v=cells.get(key);previous=0. if v is None else v[0]*rate**(max(0.,t-v[2])/.1)
-            cells[key]=[max(minimum,previous-.4),0.,t]
+            cells[key]=(max(minimum,previous-.4),0.,t)
         for key,increment in hits.items():
             old=cells.get(key);perm=penetrations[key] if old is None else .7*old[1]+.3*penetrations[key]
             previous=0. if old is None else old[0]*rate**(max(0.,t-old[2])/.1)
-            cells[key]=[min(maximum,previous+increment),perm,t]
+            cells[key]=(min(maximum,previous+increment),perm,t)
 
     def _observed_values(self,unique):
         cells=self.cells;t=self.timestamp;rate=self.decay_rate;stored=[cells[k] for k in map(tuple,np.asarray(unique).tolist())]
@@ -200,6 +202,6 @@ class SparseMultiReturnVoxelMap:
                   float(z['min_log_odds']) if 'min_log_odds' in z else -4,
                   float(z['max_log_odds']) if 'max_log_odds' in z else 4,
                   float(z['max_age']) if 'max_age' in z else 120.)
-            m.timestamp=float(z['timestamp']);m.cells={tuple(k):v.tolist() for k,v in zip(z['coords'],z['values'])}
+            m.timestamp=float(z['timestamp']);m.cells={tuple(k):tuple(v.tolist()) for k,v in zip(z['coords'],z['values'])}
             m._updates=int(z['updates']) if 'updates' in z else 0
         return m

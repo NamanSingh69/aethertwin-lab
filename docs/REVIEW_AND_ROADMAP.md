@@ -174,6 +174,13 @@ generation but is a much larger part; no A2000 figure is claimed.
    Occupancy p50 95 -> 64 ms, total p50 282-293 -> 218-223 ms (two
    alternating pairs); trajectory and saved occupancy map byte-identical; the
    occupancy p95 tail (ray traversal and de-duplication) is unchanged.
+   The occupancy p95 tail was not ray traversal: full garbage collections
+   walked every map cell (each value a list) and the ~325k objects allocated
+   at start-up, pausing whichever stage ran by up to ~100 ms. Cell values are
+   now float tuples (untracked by the collector) and the entry points call
+   `gc.freeze()` once initialised. Same setup, two alternating pairs:
+   occupancy p95 157-161 -> 65-69 ms, total p50 224-234 -> 207-215 ms, total
+   p95 463-498 -> 447-451 ms; outputs byte-identical.
    Remaining: the full-map scan in `occupied_points` and native ray clearing.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
 3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the

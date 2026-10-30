@@ -37,7 +37,7 @@ def test_grouped_disk_evidence_is_bit_exact_against_reference_with_echoes_clampi
         actual=disk.voxelize_and_update(points,origin=origins,beam_ids=beam_ids,return_metadata_valid=True,timestamp=stamp)
         for field in ('voxel_coords','voxel_features','log_odds','permeability','point_to_voxel_idx'):
             np.testing.assert_array_equal(getattr(actual,field),getattr(reference,field))
-    assert dict(disk.cells.items())==memory.cells
+    assert dict(disk.cells.items())=={key:list(value) for key,value in memory.cells.items()}
     probes=rng.uniform(-5,5,(200,3))
     np.testing.assert_array_equal(disk.query(probes,True)[0],memory.query(probes,True)[0])
     np.testing.assert_array_equal(disk.is_known(probes),memory.is_known(probes))
