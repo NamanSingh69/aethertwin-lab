@@ -6,12 +6,17 @@ services:
     restart: unless-stopped
     ports:
       - "${AETHERTWIN_GATEWAY_BIND:-127.0.0.1}:${AETHERTWIN_GATEWAY_PORT:-8443}:8443"
+    # Credentials arrive as files under /run/secrets, so they never appear in
+    # `docker inspect` or the process environment.
+    secrets: [upstream_token, operator_token, viewer_token]
     environment:
       AETHERTWIN_UPSTREAM_URL: ${AETHERTWIN_UPSTREAM_URL:?Set the verified HTTPS edge origin}
-      AETHERTWIN_UPSTREAM_TOKEN: ${AETHERTWIN_UPSTREAM_TOKEN:?Set the server-side upstream credential}
-      AETHERTWIN_OPERATOR_TOKEN: ${AETHERTWIN_OPERATOR_TOKEN:?Set a separate gateway operator credential}
-      AETHERTWIN_VIEWER_TOKEN: ${AETHERTWIN_VIEWER_TOKEN:?Set a separate gateway viewer credential}
-    command: ["--host", "0.0.0.0", "--port", "8443", "--frontend", "/app/web/dist", "--asset-cache", "/var/lib/aethertwin/assets", "--ssl-certfile", "/run/tls/fullchain.pem", "--ssl-keyfile", "/run/tls/privkey.pem", "--ca-file", "/run/tls/upstream-ca.pem"]
+      AETHERTWIN_UPSTREAM_TOKEN_FILE: /run/secrets/upstream_token
+      AETHERTWIN_OPERATOR_TOKEN_FILE: /run/secrets/operator_token
+      AETHERTWIN_VIEWER_TOKEN_FILE: /run/secrets/viewer_token
+      AETHERTWIN_UPSTREAM_CA_FILE: ${AETHERTWIN_UPSTREAM_CA_FILE:-/run/tls/upstream-ca.pem}
+      # Comma-separated extra browser origins, e.g. https://lab-gateway.example:8443
+      AETHERTWIN_ALLOWED_ORIGINS: ${AETHERTWIN_ALLOWED_ORIGINS:-}
     volumes:
       - gateway-assets:/var/lib/aethertwin
       - ${AETHERTWIN_TLS_DIR:-./tls}:/run/tls:ro
@@ -20,10 +25,26 @@ services:
       - /tmp:size=16m,mode=1777
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
+    mem_limit: 768m
+    pids_limit: 128
+    cpus: 2.0
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
     healthcheck:
-      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1',8443),2).close()"]
+      test: ["CMD", "python", "-c", "import ssl,urllib.request as u; u.urlopen('https://127.0.0.1:8443/healthz', context=ssl._create_unverified_context(), timeout=4)"]
       interval: 30s
-      timeout: 3s
+      timeout: 5s
+      start_period: 20s
       retries: 3
+secrets:
+  upstream_token:
+    file: ${AETHERTWIN_SECRETS_DIR:-./secrets}/upstream_token
+  operator_token:
+    file: ${AETHERTWIN_SECRETS_DIR:-./secrets}/operator_token
+  viewer_token:
+    file: ${AETHERTWIN_SECRETS_DIR:-./secrets}/viewer_token
 volumes:
   gateway-assets:

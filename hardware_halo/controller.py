@@ -5,6 +5,11 @@ import threading,time
 from .protocol import HELLO,IDENTITY,encode_packet
 from .state import halo_state
 
+# Device diagnostics after the handshake: bounded line buffer, only firmware error lines are kept.
+DEVICE_ERROR_PREFIX=b'AETHER_HALO_ERROR';MAX_DEVICE_LINE=256
+# Reconnect backoff after a lost link or a port that is missing/busy (never after a wrong device identity).
+RECONNECT_MIN_SECONDS=.5;RECONNECT_MAX_SECONDS=8.
+
 
 class HaloController:
     def __init__(self,config=None,*,serial_factory=None):
@@ -20,6 +25,7 @@ class HaloController:
         self._snapshot=None;self._lock=threading.Lock();self._stop=threading.Event();self._serial=None
         self._updates=deque(maxlen=128);self._last_identity=None;self._sequence=0;self._sent=0;self._ticks=0
         self._connected=False;self._compatible=False;self._error=None;self._virtual=halo_state(None,**self.options)
+        self._device_error=None;self._received=bytearray();self._connections=0
         self._thread=threading.Thread(target=self._run,name='aether-halo-status',daemon=False);self._thread.start()
         self._transport_thread=None
         if self.enabled:
@@ -30,6 +36,10 @@ class HaloController:
         with self._lock:
             self._snapshot=snapshot
             if identity!=self._last_identity:self._updates.append(time.monotonic());self._last_identity=identity
+    def _fail(self,error,connected=None):
+        with self._lock:
+            self._error=f'{type(error).__name__}: {error}'
+            if connected is not None:self._connected=connected
     def _handshake(self):
         factory=self.serial_factory
         if factory is None:
@@ -47,37 +57,59 @@ class HaloController:
                     if len(buffer)>1024:raise RuntimeError('Halo handshake exceeded bounded response size')
                     while b'\n' in buffer:
                         line,_,remaining=buffer.partition(b'\n');buffer=bytearray(remaining)
-                        if line.rstrip(b'\r')==IDENTITY:self._compatible=True;self._connected=True;return transport
+                        if line.rstrip(b'\r')==IDENTITY:
+                            with self._lock:self._compatible=True;self._connected=True;self._connections+=1
+                            self._received=bytearray(buffer);return transport
                 self._stop.wait(.01)
             raise RuntimeError('Configured serial device did not identify as the compatible 24-pixel Halo')
-        except BaseException:transport.close();raise
+        except BaseException:
+            self._close(transport);raise
+    @staticmethod
+    def _close(transport):
+        # Closing a failed port can raise too; it must never end the transport worker.
+        try:transport.close()
+        except Exception:pass
+    def _read_device_lines(self):
+        data=self._serial.read(MAX_DEVICE_LINE)
+        # Lines left over from the handshake read are parsed even when nothing new arrived.
+        if data:self._received.extend(data)
+        while b'\n' in self._received:
+            line,_,remaining=self._received.partition(b'\n');self._received=bytearray(remaining)
+            if line.startswith(DEVICE_ERROR_PREFIX):
+                with self._lock:self._device_error=line.rstrip(b'\r').decode('ascii','replace')[:120]
+        if len(self._received)>MAX_DEVICE_LINE:self._received.clear()
     def _run_transport(self):
+        retry=self.enabled;retry_at=0.;backoff=RECONNECT_MIN_SECONDS
         try:
-            if self.enabled:
-                try:self._serial=self._handshake()
-                except Exception as error:self._error=f'{type(error).__name__}: {error}'
             deadline=time.monotonic();seen_ticks=-1;ticked_at=time.monotonic()
             while not self._stop.is_set():
+                if retry and self._serial is None and time.monotonic()>=retry_at:
+                    try:self._serial=self._handshake();backoff=RECONNECT_MIN_SECONDS
+                    except Exception as error:
+                        self._fail(error,False)
+                        # A wrong device on the configured port is never probed again; a missing/busy port or a lost link is.
+                        retry=self._compatible or isinstance(error,OSError)
+                        retry_at=time.monotonic()+backoff;backoff=min(RECONNECT_MAX_SECONDS,backoff*2)
                 with self._lock:state=copy.deepcopy(self._virtual);ticks=self._ticks
                 if ticks!=seen_ticks:seen_ticks=ticks;ticked_at=time.monotonic()
                 # A stalled status worker must not keep refreshing the device's link watchdog with a frozen state.
                 fresh=time.monotonic()-ticked_at<=2/self.hz+.05
-                if self._serial is not None and fresh:
+                if self._serial is not None:
                     try:
-                        packet=encode_packet(state,self._sequence)
-                        written=self._serial.write(packet)
-                        if written!=len(packet):raise RuntimeError('Incomplete Halo serial write')
-                        self._sequence=(self._sequence+1)&0xFFFF;self._sent+=1
+                        self._read_device_lines()
+                        if fresh:
+                            packet=encode_packet(state,self._sequence)
+                            written=self._serial.write(packet)
+                            if written!=len(packet):raise RuntimeError('Incomplete Halo serial write')
+                            with self._lock:self._sequence=(self._sequence+1)&0xFFFF;self._sent+=1
                     except Exception as error:
-                        self._error=f'{type(error).__name__}: {error}';self._connected=False
-                        try:self._serial.close()
-                        except Exception:pass
-                        self._serial=None
+                        self._fail(error,False);self._close(self._serial);self._serial=None
+                        retry_at=time.monotonic()+backoff;backoff=min(RECONNECT_MAX_SECONDS,backoff*2)
                 deadline+=1/self.hz;self._stop.wait(max(0,deadline-time.monotonic()))
                 if deadline<time.monotonic()-1/self.hz:deadline=time.monotonic()
         finally:
-            if self._serial is not None:self._serial.close();self._serial=None
-            self._connected=False
+            if self._serial is not None:self._close(self._serial);self._serial=None
+            with self._lock:self._connected=False
     def _run(self):
         deadline=time.monotonic()
         while not self._stop.is_set():
@@ -95,10 +127,13 @@ class HaloController:
     def status(self):
         with self._lock:
             updates=list(self._updates);virtual=copy.deepcopy(self._virtual)
+            connected,compatible,error,device_error=self._connected,self._compatible,self._error,self._device_error
+            sent,ticks,sequence,connections=self._sent,self._ticks,self._sequence,self._connections
         source_hz=(len(updates)-1)/(updates[-1]-updates[0]) if len(updates)>1 and updates[-1]>updates[0] and time.monotonic()-updates[-1]<self.options['watchdog_ms']/1000 else 0.
-        return {'enabled':self.enabled,'connected':self._connected,'compatible':self._compatible,'port':self.port if self.enabled else None,
-            'status_hz':self.hz,'source_update_hz':source_hz,'packets_sent':self._sent,'status_ticks':self._ticks,
-            'next_sequence':self._sequence,'last_error':self._error,'virtual':virtual,'hardware_verified':False}
+        return {'enabled':self.enabled,'connected':connected,'compatible':compatible,'port':self.port if self.enabled else None,
+            'status_hz':self.hz,'source_update_hz':source_hz,'packets_sent':sent,'status_ticks':ticks,
+            'next_sequence':sequence,'last_error':error,'last_device_error':device_error,'connections':connections,
+            'virtual':virtual,'hardware_verified':False}
     def close(self):
         self._stop.set();self._thread.join(timeout=max(1,self.handshake_timeout+.2))
         if self._transport_thread:self._transport_thread.join(timeout=max(1,self.handshake_timeout+.2))

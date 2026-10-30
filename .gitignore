@@ -73,3 +73,6 @@ ci-results.xml
 
 # Pytest basetemp leftovers
 tests/.runtime_validation*/
+
+# Gateway credentials for Compose secrets (never committed)
+/deployment/gateway/secrets/

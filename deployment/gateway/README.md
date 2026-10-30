@@ -63,18 +63,36 @@ docker build -f deployment/gateway/Dockerfile -t aethertwin-gateway:local .
 docker compose -f deployment/gateway/compose.yaml up --build
 ```
 
-Supply actual credentials through the server environment; `.env.example`
-contains names only. The Compose TLS directory must contain `fullchain.pem`,
-`privkey.pem`, and `upstream-ca.pem`, readable by container UID 10001. The last
-file is the trusted edge CA bundle. For a publicly trusted upstream, omit the
-Compose `--ca-file` pair and use the system trust store. TLS keys/certificates and
-actual environment files are excluded from source. The default published bind
-is localhost:8443; select a private bind address explicitly when needed.
+Compose passes credentials as secret files, never as environment values (which
+`docker inspect` would show). Create `deployment/gateway/secrets/` (or point
+`AETHERTWIN_SECRETS_DIR` elsewhere) with three files, each holding one credential
+of at least 32 characters: `upstream_token`, `operator_token`, `viewer_token`.
+The service reads them through `AETHERTWIN_UPSTREAM_TOKEN_FILE`,
+`AETHERTWIN_OPERATOR_TOKEN_FILE` and `AETHERTWIN_VIEWER_TOKEN_FILE`; setting both a
+variable and its `_FILE` form is rejected. The secrets directory is git-ignored.
 
-The Python base version is pinned through `PYTHON_IMAGE`; an organization can
-override this build argument with its reviewed digest. Python dependencies are
-version/hash locked for CPython 3.12 x86-64. Docker's health check confirms the
-listener; authenticated `/api/v2/health` includes actual upstream/cache status.
+The Compose TLS directory must contain `fullchain.pem`, `privkey.pem`, and
+`upstream-ca.pem`, readable by container UID 10001. The last file is the trusted
+edge CA bundle; set `AETHERTWIN_UPSTREAM_CA_FILE` to another path if needed.
+Extra browser origins go in `AETHERTWIN_ALLOWED_ORIGINS` (comma-separated).
+Browser-facing TLS uses forward-secret AEAD suites only, the upstream client
+requires TLS 1.2 or newer, and HTTPS responses carry `Strict-Transport-Security`.
+To rotate certificates, replace the files and restart the container (uvicorn
+loads them at start-up). The default published bind is localhost:8443; select
+a private bind address explicitly when needed.
+
+The base image is pinned by tag and index digest in `PYTHON_IMAGE`; Dependabot
+proposes updates. Python dependencies are version/hash locked for CPython 3.12
+x86-64. Compose caps memory (768 MiB), processes (128) and CPU (2), and rotates
+JSON logs (3 x 10 MB).
+
+Health probes need no credential and return only a status code: `/healthz` is
+liveness (the container `HEALTHCHECK` uses it) and `/readyz` is 200 only while the
+upstream stream is connected and its last packet is under 3 s old. Authenticated
+`/api/v2/health` keeps the detailed upstream/cache status. Failed sign-ins are
+rate limited per client address (5, refilling one per 12 s; 429 with
+`Retry-After`), and sign-ins, failures and commands are written as JSON lines to
+the `aethertwin.audit` logger without credentials.
 The default Python 3.12.16 base matches the
 [official Bookworm image source](https://github.com/docker-library/python/blob/master/3.12/slim-bookworm/Dockerfile).
 

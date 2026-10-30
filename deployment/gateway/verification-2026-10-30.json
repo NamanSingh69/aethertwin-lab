@@ -1,0 +1,32 @@
+{
+  "verified_at_utc": "2026-10-30T00:09:41.364571+00:00",
+  "supersedes_for_current_sources": "verification.json (kept unchanged as the 2026-10-28 record)",
+  "python": "3.12.10",
+  "platform": "win32",
+  "gateway_and_hardening_tests_passed": 23,
+  "test_elapsed_seconds": 13.73,
+  "pytest_summary": "23 passed, 1 warning in 12.31s",
+  "test_source": "isolated authenticated TLS fixture edge on random loopback port, plus FastAPI TestClient checks",
+  "changes_verified_in_software": [
+    "credentials from AETHERTWIN_*_TOKEN_FILE (Compose secrets); variable plus file rejected",
+    "per-peer sign-in rate limit with Retry-After; audit log without credentials",
+    "unauthenticated /healthz and /readyz (gateway: upstream connected and last packet <= 3 s)",
+    "HSTS on HTTPS responses; upstream client TLS >= 1.2",
+    "scene stream closes when its signed session expires",
+    "failed asset syncs back off per map revision"
+  ],
+  "hardware_verified": false,
+  "docker_execution": "unverified: Docker is not installed on this machine; Dockerfile HEALTHCHECK, digest pin, Compose secrets, limits and log rotation were not built or run",
+  "tls_cipher_policy": "configured (ECDHE+AESGCM:ECDHE+CHACHA20) but no external TLS scan was run",
+  "files_sha256": {
+    "command_center/gateway.py": "5daed1084e466304d88f549559ff6223dce1f1e7112c1a943520540b82af4247",
+    "command_center/service.py": "bce0eb6b21034672849b8643aa554edb6975c27125de764b5f4d9dca1d8838dc",
+    "command_center/auth.py": "cede8b48fba8c8e81a8a85194b6c9bd25b8cf39739f1388a4b1c1b1cfa36cc93",
+    "tests/test_gateway.py": "f64d4c2dfde179ea3387c464d26f1c352a05604f38e5750ba40c0fb60a0678e7",
+    "tests/test_service_hardening.py": "66d210e9ba7c71ff8df816f2b9683ab5cc9eff85066c9707fbae01819eb54e88",
+    "deployment/gateway/Dockerfile": "0aba59b906e84f603cb4dc6864c3fc9e9a6971e40d6282c7275d7bbd3f9928bc",
+    "deployment/gateway/compose.yaml": "3c36746cbf996cdedc6d10da93af28afbe65203087a3ec2cb3629d669dbe0412",
+    "deployment/gateway/requirements-windows.lock": "254b7c1b8c4a5a3bd3bdcad5ed6db521c76d96168218ec0be8bb5b59f62c41f8",
+    "deployment/gateway/requirements-linux.lock": "ade6b84c292f20b4b052e5e06116762c24f0535b6dc6db3eb9c4bc8902720373"
+  }
+}
