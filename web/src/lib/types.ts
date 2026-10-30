@@ -103,6 +103,8 @@ export interface Bootstrap {
   hardware_status: string;
   map_revision: string;
   map_manifest_url: string;
+  /** Visual-only photo capture of the lab, when the service was started with one. */
+  appearance_url?: string | null;
   stream_url?: string;
   control_revision: number;
   capabilities: Record<string, any>;
@@ -134,7 +136,8 @@ export type LayerName =
   | "risk"
   | "traffic"
   | "path"
-  | "rgbd";
+  | "rgbd"
+  | "capture";
 export type Layers = Record<LayerName, boolean>;
 export const initialLayers: Layers = {
   map: true,
@@ -146,6 +149,7 @@ export const initialLayers: Layers = {
   traffic: false,
   path: true,
   rgbd: false,
+  capture: false,
 };
 export const palette = [
   "#304d5c",

@@ -13,6 +13,7 @@ from fastapi import FastAPI,Request,WebSocket,WebSocketDisconnect,HTTPException
 from fastapi.responses import FileResponse,JSONResponse,Response
 from starlette.middleware.gzip import GZipMiddleware
 
+from .appearance import load_appearance
 from .auth import LoginLimiter,SessionAuth,audit,is_loopback
 from .controls import ControlPlane
 from .protocol import SceneEncoder,EncodedScene
@@ -112,11 +113,15 @@ async def bounded_json(request,limit=32768):
 
 
 def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root=None,frontend_root=None,
-               operator_token=None,viewer_token=None,allowed_origins=(),local_development=True,commissioning=None,ready=None):
+               operator_token=None,viewer_token=None,allowed_origins=(),local_development=True,commissioning=None,ready=None,
+               appearance_root=None):
     auth=SessionAuth(host,operator_token,viewer_token,local_development);limiter=LoginLimiter()
     hub=hub or SceneHub();controls=controls or ControlPlane()
     asset_root=Path(asset_root).resolve() if asset_root else None
     frontend_root=Path(frontend_root).resolve() if frontend_root else None
+    # Visual-only photo capture of the lab; validated once at startup.
+    appearance_root=Path(appearance_root).resolve() if appearance_root else None
+    appearance=None if appearance_root is None else load_appearance(appearance_root)
     allowed_origins=set(allowed_origins)
 
     @asynccontextmanager
@@ -214,6 +219,7 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
                 'source_mode':(scene or {}).get('source_mode',details.get('source_mode','unspecified')),
                 'hardware_status':'not_tested','map_revision':controls.map_revision,
                 'map_manifest_url':'/api/v2/assets/manifest.json' if asset_root else None,
+                'appearance_url':'/api/v2/appearance/appearance.json' if appearance else None,
                 'stream_url':'/ws/v2/scene','role':role,'control_revision':controls.revision,
                 'capabilities':{action:role=='operator' and bool(capabilities.get(action,False)) for action in controls.actions},'latest':scene if include_latest else None,
                 'telemetry':hub.status(),**details}
@@ -256,6 +262,12 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
         path=(asset_root/filename).resolve()
         if not path.is_relative_to(asset_root) or not path.is_file():raise HTTPException(404,'Unknown scene asset')
         return FileResponse(path,media_type='model/gltf-binary' if path.suffix=='.glb' else 'application/json')
+
+    @app.get('/api/v2/appearance/{filename}')
+    async def appearance_file(filename:str,request:Request):
+        require_role(request)
+        if appearance is None or filename not in ('appearance.json',appearance['file']):raise HTTPException(404,'Unknown appearance file')
+        return FileResponse(appearance_root/filename,media_type='application/json' if filename.endswith('.json') else 'model/gltf-binary')
 
     @app.websocket('/ws/v2/scene')
     async def stream(websocket:WebSocket):

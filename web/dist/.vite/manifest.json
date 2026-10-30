@@ -1,25 +1,33 @@
 {
-  "_SpatialRenderer-CoSubYFR.js": {
-    "file": "assets/SpatialRenderer-CoSubYFR.js",
+  "_SpatialRenderer-MsyoOC3A.js": {
+    "file": "assets/SpatialRenderer-MsyoOC3A.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
-      "_spatial-contracts-DWLHILkS.js",
-      "_preload-helper-BLdHbfdN.js",
-      "_three-vendor-BQRTTvu7.js"
+      "_spatial-contracts-5dNHg0oU.js",
+      "_appearance-BEtXmM5s.js",
+      "_three-vendor-a2tZkKsF.js"
     ],
     "dynamicImports": [
       "node_modules/three/examples/jsm/libs/meshopt_decoder.module.js",
-      "src/scene/effects.ts"
+      "src/scene/effects.ts",
+      "src/scene/photoreal.ts"
     ]
+  },
+  "_UnrealBloomPass-MMFnCfTM.js": {
+    "file": "assets/UnrealBloomPass-MMFnCfTM.js",
+    "name": "UnrealBloomPass",
+    "imports": [
+      "_three-vendor-a2tZkKsF.js"
+    ]
+  },
+  "_appearance-BEtXmM5s.js": {
+    "file": "assets/appearance-BEtXmM5s.js",
+    "name": "appearance"
   },
   "_modulepreload-polyfill-P2Xu9kJm.js": {
     "file": "assets/modulepreload-polyfill-P2Xu9kJm.js",
     "name": "modulepreload-polyfill"
-  },
-  "_preload-helper-BLdHbfdN.js": {
-    "file": "assets/preload-helper-BLdHbfdN.js",
-    "name": "preload-helper"
   },
   "_react-vendor-Br0ptrPz.js": {
     "file": "assets/react-vendor-Br0ptrPz.js",
@@ -32,54 +40,54 @@
     "file": "assets/rolldown-runtime-4tVxZq34.js",
     "name": "rolldown-runtime"
   },
-  "_spatial-contracts-DWLHILkS.js": {
-    "file": "assets/spatial-contracts-DWLHILkS.js",
+  "_spatial-contracts-5dNHg0oU.js": {
+    "file": "assets/spatial-contracts-5dNHg0oU.js",
     "name": "spatial-contracts"
   },
-  "_three-vendor-BQRTTvu7.js": {
-    "file": "assets/three-vendor-BQRTTvu7.js",
+  "_three-vendor-a2tZkKsF.js": {
+    "file": "assets/three-vendor-a2tZkKsF.js",
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-DGYzKgkU.js",
+    "file": "assets/benchmark-a9_IbJW0.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
       "_modulepreload-polyfill-P2Xu9kJm.js",
-      "_SpatialRenderer-CoSubYFR.js"
+      "_SpatialRenderer-MsyoOC3A.js"
     ]
   },
   "explainer.html": {
-    "file": "assets/explainer-CHfX2g2G.js",
+    "file": "assets/explainer-CKzbnrRS.js",
     "name": "explainer",
     "src": "explainer.html",
     "isEntry": true,
     "imports": [
       "_modulepreload-polyfill-P2Xu9kJm.js",
       "_react-vendor-Br0ptrPz.js",
-      "_spatial-contracts-DWLHILkS.js"
+      "_spatial-contracts-5dNHg0oU.js"
     ],
     "css": [
       "assets/explainer-CvT1h0nl.css"
     ]
   },
   "index.html": {
-    "file": "assets/index-BKWSftCQ.js",
+    "file": "assets/index-B_Pwwuvt.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
       "_modulepreload-polyfill-P2Xu9kJm.js",
       "_react-vendor-Br0ptrPz.js",
-      "_spatial-contracts-DWLHILkS.js",
-      "_preload-helper-BLdHbfdN.js"
+      "_spatial-contracts-5dNHg0oU.js",
+      "_appearance-BEtXmM5s.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-CoSubYFR.js"
+      "_SpatialRenderer-MsyoOC3A.js"
     ],
     "css": [
-      "assets/index-Cdo_7lSo.css"
+      "assets/index-DtCvUPy7.css"
     ],
     "assets": [
       "assets/decode.worker-CC-RLjVq.js"
@@ -92,12 +100,23 @@
     "isDynamicEntry": true
   },
   "src/scene/effects.ts": {
-    "file": "assets/effects-OGphA-wp.js",
+    "file": "assets/effects-_HwHNTkG.js",
     "name": "effects",
     "src": "src/scene/effects.ts",
     "isDynamicEntry": true,
     "imports": [
-      "_three-vendor-BQRTTvu7.js"
+      "_three-vendor-a2tZkKsF.js",
+      "_UnrealBloomPass-MMFnCfTM.js"
+    ]
+  },
+  "src/scene/photoreal.ts": {
+    "file": "assets/photoreal-ByMN6QAp.js",
+    "name": "photoreal",
+    "src": "src/scene/photoreal.ts",
+    "isDynamicEntry": true,
+    "imports": [
+      "_three-vendor-a2tZkKsF.js",
+      "_UnrealBloomPass-MMFnCfTM.js"
     ]
   }
 }

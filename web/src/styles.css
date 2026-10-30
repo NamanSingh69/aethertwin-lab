@@ -2510,3 +2510,10 @@ kbd {
     display: none;
   }
 }
+.capture-caption {
+  margin: 6px 0 0;
+}
+.layer-row:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
