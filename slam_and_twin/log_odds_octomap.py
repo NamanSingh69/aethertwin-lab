@@ -177,6 +177,12 @@ class SparseMultiReturnVoxelMap:
         if not isinstance(self.cells,dict):
             return [k for k in self.cells if (self._value(k,self.timestamp)>threshold if above else self._value(k,self.timestamp)<threshold)]
         t=self.timestamp;rate=self.decay_rate
+        # Decay never moves a value past its stored v0 (0<rate<=1; a rounded v0*p with p<=1 stays within v0), so
+        # cells whose stored value is already on the wrong side of a same-signed threshold skip the power exactly.
+        if above and threshold>=0:
+            return [k for k,v in self.cells.items() if v[0]>threshold and v[0]*rate**(max(0.,t-v[2])/.1)>threshold]
+        if not above and threshold<0:
+            return [k for k,v in self.cells.items() if v[0]<threshold and v[0]*rate**(max(0.,t-v[2])/.1)<threshold]
         values=((k,v[0]*rate**(max(0.,t-v[2])/.1)) for k,v in self.cells.items())
         return [k for k,value in values if (value>threshold if above else value<threshold)]
 

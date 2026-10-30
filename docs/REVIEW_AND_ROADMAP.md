@@ -181,7 +181,11 @@ generation but is a much larger part; no A2000 figure is claimed.
    `gc.freeze()` once initialised. Same setup, two alternating pairs:
    occupancy p95 157-161 -> 65-69 ms, total p50 224-234 -> 207-215 ms, total
    p95 463-498 -> 447-451 ms; outputs byte-identical.
-   Remaining: the full-map scan in `occupied_points` and native ray clearing.
+   The per-frame `occupied_points` scan now skips the decay power for cells
+   whose stored value is already on the wrong side of the threshold (exact:
+   decay never moves a value past its stored one); 74k cells 17.3 -> 6.6 ms,
+   planning p50 47-49 -> 35-36 ms, total p50 208-212 -> 189-197 ms, outputs
+   byte-identical. Remaining: native ray clearing and evidence updates.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
 3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the
    Pi-to-Windows raw-sensor transport (does not exist yet). [HW]
