@@ -58,6 +58,18 @@ were active, so it was discarded; GPU clock state probably explains the spread.
 `auto` thresholds (cinematic after 10 s at p95 <= 16.7 ms, back after 3 s over
 25 ms) are a starting point, not tuned on several devices.
 
+**Photoreal tier (2026-10-31).** An explicit-only quality tier (auto never picks
+it): image-based lighting from a procedural room, 2048 px soft shadows, GTAO
+ambient occlusion, a faint bloom, AgX tone mapping, a procedural concrete floor,
+loaded lazily (7.4 kB gz). Presentation only. Same laptop, headed Chrome, vsync,
+3 x 60 s each: static 231.9-236.4 fps (p95 4.4-8.2 ms); streaming varied between
+runs, 140.4-234.1 fps over two batches (p95 7.1-24.2 ms, scene update p95
+2.2-3.9 ms). Always above 60 Hz here, but well below the cap on some runs, and
+the spread is not explained yet. Raw runs: `artifacts/renderer_benchmarks/photoreal_*`.
+A visual-only **photo capture** layer (`--appearance`, `docs/LAB_APPEARANCE.md`)
+places a photogrammetry `.glb` of the lab in the twin frame with its alignment
+recorded; no real capture has been loaded yet.
+
 ### UI and UX
 Added keyboard shortcuts with an accessible help dialog, a persisted quality
 selector, self-dismissing notices (errors stay), and measured-map progress.

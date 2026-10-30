@@ -144,3 +144,25 @@ test.describe("cinematic quality", () => {
     });
   });
 });
+
+test.describe("photoreal quality", () => {
+  test.use({ viewport: { width: 800, height: 450 } });
+  test("loads the photoreal look lazily, labels it and adds no motion", async ({ page, errors }) => {
+    await page.goto("/");
+    await expect(page.locator(".viewport")).toHaveAttribute("data-instances", /^[1-9]/);
+    await page.getByLabel("Render quality").selectOption("photoreal");
+    const viewport = page.locator(".viewport");
+    await expect(viewport).toHaveAttribute("data-effects", "photoreal", { timeout: 20_000 });
+    await expect(viewport).toHaveAttribute("data-motion", "false");
+    await expect(page.getByText("Effects · presentation only")).toBeVisible();
+    await page.getByLabel("Render quality").selectOption("balanced");
+    await expect(viewport).toHaveAttribute("data-effects", "off");
+    expect(errors).toEqual([]);
+  });
+});
+
+test("photo capture layer is unavailable until the service has one", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("checkbox", { name: "Photo capture" })).toBeDisabled();
+  await expect(page.getByText(/No photo capture loaded/)).toBeVisible();
+});

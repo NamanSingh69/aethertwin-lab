@@ -133,6 +133,7 @@ export default function App() {
       activePickHeight,
       mapManifestUrl: bootstrap?.map_manifest_url,
       mapRevision: bootstrap?.map_revision,
+      appearanceUrl: bootstrap?.appearance_url,
       quality,
     },
     {
@@ -370,6 +371,7 @@ export default function App() {
         graphOpen={graphOpen}
         onToggleGraph={() => setGraphOpen((v) => !v)}
         mapRevision={bootstrap?.map_revision}
+        capture={view.appearance}
       />
       <main className="spatial-main">
         <div className="viewport" ref={host} />
