@@ -242,27 +242,39 @@ class SafeCorridorPlanner:
         return positions,velocities,accelerations,rotations,half_extents,acceleration_norm
 
     @staticmethod
+    def _dynamic_segments_clear(starts,ends,t0,t1,context):
+        """Swept checks of K segments against N predicted entity boxes at once; result (K,) bool.
+
+        Segments are independent, so this equals K single-segment checks (A* batches all
+        neighbours of an expanded node into one call)."""
+        starts=np.asarray(starts,dtype=float).reshape(-1,3); ends=np.asarray(ends,dtype=float).reshape(-1,3)
+        if context is None: return np.ones(len(starts),bool)
+        t0=np.broadcast_to(np.asarray(t0,dtype=float),(len(starts),))[:,None]
+        t1=np.broadcast_to(np.asarray(t1,dtype=float),(len(starts),))[:,None]
+        duration=np.maximum(t1-t0,0.)
+        position,velocity,acceleration,rotation,half_base,acceleration_norm=context
+        c0=position+velocity*t0[...,None]+.5*acceleration*t0[...,None]*t0[...,None]
+        c1=position+velocity*t1[...,None]+.5*acceleration*t1[...,None]*t1[...,None]
+        local_start=np.einsum("kni,nij->knj",starts[:,None,:]-c0,rotation)
+        local_end=np.einsum("kni,nij->knj",ends[:,None,:]-c1,rotation)
+        curvature_bound=acceleration_norm*duration*duration/8
+        half=half_base+curvature_bound[...,None]
+        direction=local_end-local_start
+        shape=direction.shape[:2]
+        enter=np.zeros(shape); leave=np.ones(shape); possible=np.ones(shape,bool)
+        for axis in range(3):
+            d=direction[...,axis]; moving=np.abs(d)>=1e-14
+            possible&=moving|(np.abs(local_start[...,axis])<=half[...,axis]+1e-10)
+            safe=np.where(moving,d,1.)
+            first=np.where(moving,(-half[...,axis]-local_start[...,axis])/safe,0.)
+            last=np.where(moving,(half[...,axis]-local_start[...,axis])/safe,1.)
+            enter=np.maximum(enter,np.minimum(first,last)); leave=np.minimum(leave,np.maximum(first,last))
+        return ~np.any(possible&(enter<=leave+1e-10),axis=1)
+
+    @staticmethod
     def _dynamic_segment_clear(start,end,t0,t1,context):
         if context is None: return True
-        duration=max(float(t1-t0),0.)
-        position,velocity,acceleration,rotation,half_base,acceleration_norm=context
-        c0=position+velocity*t0+.5*acceleration*t0*t0
-        c1=position+velocity*t1+.5*acceleration*t1*t1
-        local_start=np.einsum("ni,nij->nj",start-c0,rotation)
-        local_end=np.einsum("ni,nij->nj",end-c1,rotation)
-        curvature_bound=acceleration_norm*duration*duration/8
-        half=half_base+curvature_bound[:,None]
-        direction=local_end-local_start
-        enter=np.zeros(len(position)); leave=np.ones(len(position)); possible=np.ones(len(position),bool)
-        for axis in range(3):
-            moving=np.abs(direction[:,axis])>=1e-14
-            stationary=~moving
-            possible[stationary]&=(np.abs(local_start[stationary,axis])<=half[stationary,axis]+1e-10)
-            first=np.zeros(len(position)); last=np.ones(len(position))
-            first[moving]=(-half[moving,axis]-local_start[moving,axis])/direction[moving,axis]
-            last[moving]=(half[moving,axis]-local_start[moving,axis])/direction[moving,axis]
-            enter=np.maximum(enter,np.minimum(first,last)); leave=np.minimum(leave,np.maximum(first,last))
-        return not np.any(possible&(enter<=leave+1e-10))
+        return bool(SafeCorridorPlanner._dynamic_segments_clear(start,end,t0,t1,context)[0])
 
     def _static_segment_clear(self,start,end):
         start=np.asarray(start,dtype=float); end=np.asarray(end,dtype=float)
@@ -340,6 +352,7 @@ class SafeCorridorPlanner:
             if ground:position[2]=start[2]
             if node==s: position=np.asarray(start)
             node_risk=float(endpoint_risk[0]) if node==s else (0. if risk is None else float(self._risk_values(position[None],risk)[0]) if off_center_ground else float(risk[node[:risk.ndim]]))
+            t0=distance[node]/self.max_speed; candidates=[]
             for offset in neighbors:
                 nxt=tuple(np.asarray(node)+offset)
                 if nxt in visited or not self.grid.contains_index(nxt) or self.blocked[nxt]: continue
@@ -347,11 +360,16 @@ class SafeCorridorPlanner:
                 endpoint=np.asarray(goal) if nxt==g else self.grid.center(nxt)
                 if ground:endpoint=endpoint.copy();endpoint[2]=start[2]
                 length=float(np.linalg.norm(endpoint-position))
-                t0=distance[node]/self.max_speed; t1=t0+length/self.max_speed
                 if node==s or nxt==g or off_center_ground:
                     if not self._static_segment_clear(position,endpoint): continue
                 elif not edge_masks[tuple(offset)][node]: continue
-                if not self._dynamic_segment_clear(position,endpoint,t0,t1,context): continue
+                candidates.append((nxt,endpoint,length))
+            if not candidates: continue
+            # One swept check for every surviving neighbour (identical to per-edge checks, far fewer numpy calls).
+            clear=self._dynamic_segments_clear(np.broadcast_to(position,(len(candidates),3)),[c[1] for c in candidates],
+                t0,[t0+c[2]/self.max_speed for c in candidates],context)
+            for (nxt,endpoint,length),ok in zip(candidates,clear):
+                if not ok: continue
                 next_risk=float(endpoint_risk[1]) if nxt==g else (0. if risk is None else float(self._risk_values(endpoint[None],risk)[0]) if off_center_ground else float(risk[nxt[:risk.ndim]]))
                 mean_risk=.5*(node_risk+next_risk)
                 tentative=score[node]+length*(1+self.risk_weight*mean_risk)
