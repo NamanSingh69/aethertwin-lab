@@ -77,25 +77,32 @@ class SparseMultiReturnVoxelMap:
         if val is None:return 0.
         return val[0]*self.decay_rate**(max(0.,t-val[2])/.1)
 
+    # Hot paths below inline _value with identical scalar arithmetic and use Python-int key tuples
+    # (equal to and hashing like numpy-int tuples, but far cheaper to build and look up).
     def query(self,points,return_known=False):
-        keys=np.floor(np.asarray(points)[:,:3]/self.voxel_size).astype(np.int64)
-        values=np.array([self._value(tuple(k),self.timestamp) for k in keys],np.float32)
-        known=np.array([tuple(k) in self.cells for k in keys],bool)
+        keys=list(map(tuple,np.floor(np.asarray(points)[:,:3]/self.voxel_size).astype(np.int64).tolist()))
+        cells=self.cells;t=self.timestamp;rate=self.decay_rate;found=[cells.get(k) for k in keys]
+        values=np.array([0. if v is None else v[0]*rate**(max(0.,t-v[2])/.1) for v in found],np.float32)
+        known=np.array([v is not None for v in found],bool)
         return (values,known) if return_known else values
 
     def is_known(self,points):return self.query(points,True)[1]
 
     def _apply_evidence(self,free,hits,penetrations):
         """Per-cell evidence hook; storage backends may group independent keys."""
+        cells=self.cells;t=self.timestamp;rate=self.decay_rate;minimum=self.minimum;maximum=self.maximum
         for key in free:
-            previous=self._value(key,self.timestamp);self.cells[key]=[max(self.minimum,previous-.4),0.,self.timestamp]
+            v=cells.get(key);previous=0. if v is None else v[0]*rate**(max(0.,t-v[2])/.1)
+            cells[key]=[max(minimum,previous-.4),0.,t]
         for key,increment in hits.items():
-            old=self.cells.get(key);perm=penetrations[key] if old is None else .7*old[1]+.3*penetrations[key]
-            self.cells[key]=[min(self.maximum,self._value(key,self.timestamp)+increment),perm,self.timestamp]
+            old=cells.get(key);perm=penetrations[key] if old is None else .7*old[1]+.3*penetrations[key]
+            previous=0. if old is None else old[0]*rate**(max(0.,t-old[2])/.1)
+            cells[key]=[min(maximum,previous+increment),perm,t]
 
     def _observed_values(self,unique):
-        return (np.array([self._value(tuple(k),self.timestamp) for k in unique],np.float32),
-                np.array([self.cells[tuple(k)][1] for k in unique],np.float32))
+        cells=self.cells;t=self.timestamp;rate=self.decay_rate;stored=[cells[k] for k in map(tuple,np.asarray(unique).tolist())]
+        return (np.array([v[0]*rate**(max(0.,t-v[2])/.1) for v in stored],np.float32),
+                np.array([v[1] for v in stored],np.float32))
 
     def voxelize_and_update(self,points,rgb=None,timestamp=None,origin=None,beam_ids=None,return_metadata_valid=False,integrate_rays=True):
         points=np.asarray(points)
@@ -133,7 +140,7 @@ class SparseMultiReturnVoxelMap:
             else:
                 traversed=traverse_beams(origins[finals],xyz[finals],self.voxel_size,max_cells=self.max_traversal_cells)
                 self.last_ray_backend='python_batched_reference'
-            free=set(map(tuple,traversed))
+            free=set(map(tuple,np.asarray(traversed).tolist()))
         if n:
             # Aggregate each return once. Repeatedly scanning inv for every
             # voxel was O(points * voxels), particularly costly at camera scale.
@@ -143,8 +150,9 @@ class SparseMultiReturnVoxelMap:
                 permeability=np.bincount(inv,weights=score,minlength=len(unique))/counts
             else:
                 solid=np.ones(len(unique),bool);permeability=np.zeros(len(unique))
-            hits={tuple(key):(.85 if is_solid else .25) for key,is_solid in zip(unique,solid)}
-            penetrations={tuple(key):float(value) for key,value in zip(unique,permeability)}
+            unique_keys=list(map(tuple,unique.tolist()))
+            hits={key:(.85 if is_solid else .25) for key,is_solid in zip(unique_keys,solid)}
+            penetrations={key:float(value) for key,value in zip(unique_keys,permeability)}
         self._apply_evidence(free.difference(hits),hits,penetrations)
         self._updates+=1
         if self._updates%50==0 and np.isfinite(self.max_age) and getattr(self,'eager_pruning',True):
@@ -163,12 +171,19 @@ class SparseMultiReturnVoxelMap:
         else:mean=np.empty((0,3))
         return VoxelGridState(self.voxel_size,unique.astype(np.int32),mean.astype(np.float32),features,lo,perm,inv)
 
+    def _thresholded(self,above,threshold):
+        if not isinstance(self.cells,dict):
+            return [k for k in self.cells if (self._value(k,self.timestamp)>threshold if above else self._value(k,self.timestamp)<threshold)]
+        t=self.timestamp;rate=self.decay_rate
+        values=((k,v[0]*rate**(max(0.,t-v[2])/.1)) for k,v in self.cells.items())
+        return [k for k,value in values if (value>threshold if above else value<threshold)]
+
     def occupied_points(self,threshold=.4):
-        keys=[k for k in self.cells if self._value(k,self.timestamp)>threshold]
+        keys=self._thresholded(True,threshold)
         return (np.array(keys,dtype=float).reshape(-1,3)+.5)*self.voxel_size
 
     def free_points(self,threshold=-.2):
-        keys=[k for k in self.cells if self._value(k,self.timestamp)<threshold]
+        keys=self._thresholded(False,threshold)
         return (np.array(keys,dtype=float).reshape(-1,3)+.5)*self.voxel_size
 
     def save(self,path):
