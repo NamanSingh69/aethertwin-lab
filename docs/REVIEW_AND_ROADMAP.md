@@ -216,9 +216,11 @@ generation but is a much larger part; no A2000 figure is claimed.
 **IoT and operations**
 12. Gateway container: built and smoke-tested, including `docker compose up`
     with real secret files and a verified HTTPS upstream (a wrong CA keeps it
-    not-ready; upstream state changes now go to the audit log). Remaining: a
-    TLS scanner run, a real deployment host, and documented certificate
-    rotation drills. [ops]
+    not-ready; upstream state changes now go to the audit log). An sslyze scan
+    found only TLS 1.2/1.3 forward-secret AEAD suites and no known weaknesses;
+    gateway and upstream certificate rotation drills passed and are documented
+    in `deployment/gateway/README.md`. Remaining: a real deployment host with
+    publicly trusted certificates. [ops]
 13. Halo [HW]: identify the board before flashing; add a device heartbeat or a
     periodic re-HELLO (the firmware already re-identifies on HELLO, but resets
     its link watchdog, which may flicker); inter-byte timeout and `0xA7`

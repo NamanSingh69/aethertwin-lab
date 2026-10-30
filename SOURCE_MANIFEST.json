@@ -2811,8 +2811,8 @@
       "sha256": "376718c2a10a695a13a2f4fca843dc2ed61dc3b8a0e3dc387f9688d8e15b792c"
     },
     "deployment/gateway/README.md": {
-      "bytes": 9054,
-      "sha256": "6c3f3ef4e5727b0ab9e4dcad2dd61d0d5c004dee6756d2d664027d17a5f58ba4"
+      "bytes": 9797,
+      "sha256": "ae89aba42d245473d792ea165dd9717db2af77e4cf5e78ca4c37c6a86e9212a0"
     },
     "deployment/gateway/compose.yaml": {
       "bytes": 1880,
@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 15969,
-      "sha256": "0c930be9b9ea327b2683aee3780f98a5400a4cb60ec2419b7c0c42f4a69ff8a8"
+      "bytes": 16149,
+      "sha256": "7809c54c9667105eda8ddfca6986f5d4e52fd11fa03eef4ead2cac549125dfc3"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3195,8 +3195,8 @@
       "sha256": "2c96a1eeacf81f9f53eab90fe9bc770f22a659f01cadaa5d1970924bdad706ae"
     },
     "reports/gateway_container_smoke.json": {
-      "bytes": 4171,
-      "sha256": "5e12efea497dedfd7cdb3344cad2977a130d6a5022a18c8bf138ee4c4c89733a"
+      "bytes": 5612,
+      "sha256": "f40c0eb3a2774a93125d1d9eb82cceccaede8fa99743430961544f8a565adeb6"
     },
     "reports/github_clone_smoke.json": {
       "bytes": 4013,

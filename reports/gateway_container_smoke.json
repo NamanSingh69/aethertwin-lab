@@ -32,10 +32,9 @@
     "bug_found_and_fixed": "service always marked the token-session cookie Secure, so the gateway's HTTP client never returned it to a plain-HTTP loopback upstream and re-signed-in every second; the cookie is now Secure exactly when served over HTTPS (test_token_session_cookie_is_secure_only_over_tls_and_works_on_plain_loopback)"
   },
   "not_tested": [
-    "certificate rotation",
-    "multi-arch image",
-    "TLS scan tooling beyond openssl s_client",
-    "a real deployment host and DNS name"
+    "a real deployment host and DNS name",
+    "publicly trusted certificates and chain validation",
+    "multi-arch image"
   ],
   "files_sha256": {
     "deployment/gateway/Dockerfile": "0aba59b906e84f603cb4dc6864c3fc9e9a6971e40d6282c7275d7bbd3f9928bc",
@@ -57,5 +56,39 @@
       "wrong_upstream_ca": "/readyz 503 {\"ready\":false}, /healthz 200; operator /api/v2/health reports CERTIFICATE_VERIFY_FAILED",
       "upstream_state_logging": "after the fix, docker logs carry one audit line per change: unavailable (with the redacted TLS reason) and connected"
     }
+  },
+  "tls_scan": {
+    "tool": "sslyze (scratch virtualenv), target 127.0.0.1:8443 through Compose",
+    "accepted": {
+      "tls_1_2": [
+        "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+      ],
+      "tls_1_3": [
+        "TLS_CHACHA20_POLY1305_SHA256",
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_AES_128_GCM_SHA256"
+      ]
+    },
+    "rejected": [
+      "SSL 2.0",
+      "SSL 3.0",
+      "TLS 1.0",
+      "TLS 1.1"
+    ],
+    "checks": {
+      "heartbleed": "not vulnerable",
+      "openssl_ccs_injection": "not vulnerable",
+      "robot": "not vulnerable (RSA key exchange not supported)",
+      "tls_compression": "not supported",
+      "tls_fallback_scsv": "supported",
+      "secure_renegotiation": "supported; client renegotiation DoS not possible"
+    },
+    "note": "self-signed test certificate; certificate-chain and hostname results are not meaningful here"
+  },
+  "rotation_drills": {
+    "gateway_certificate": "files replaced; old certificate served until restart; docker compose restart -> /readyz 200 with the new certificate after 2.3 s",
+    "upstream_certificate": "gateway trusted an old+new CA bundle (one restart); edge restarted on the new certificate; /readyz 503 during the edge restart and 200 about 4 s later without restarting the gateway; served edge certificate matched the new one; upstream_state audit lines logged"
   }
 }

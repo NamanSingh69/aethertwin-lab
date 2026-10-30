@@ -81,9 +81,22 @@ edge CA bundle; set `AETHERTWIN_UPSTREAM_CA_FILE` to another path if needed.
 Extra browser origins go in `AETHERTWIN_ALLOWED_ORIGINS` (comma-separated).
 Browser-facing TLS uses forward-secret AEAD suites only, the upstream client
 requires TLS 1.2 or newer, and HTTPS responses carry `Strict-Transport-Security`.
-To rotate certificates, replace the files and restart the container (uvicorn
-loads them at start-up). The default published bind is localhost:8443; select
-a private bind address explicitly when needed.
+The default published bind is localhost:8443; select a private bind address
+explicitly when needed.
+
+Certificate rotation (both drills were run once in a cloud container, see
+`reports/gateway_container_smoke.json`):
+
+- **Gateway certificate:** replace `fullchain.pem` and `privkey.pem` in the TLS
+  directory, then `docker compose restart`. uvicorn loads them only at start-up,
+  so the old certificate is served until the restart; the drill measured 2.3 s
+  from restart to `/readyz` 200 with the new certificate.
+- **Upstream (edge) certificate:** first append the new issuing CA to
+  `upstream-ca.pem` and restart the gateway, so it trusts old and new; then
+  switch the edge to the new certificate. The gateway reconnects by itself
+  (drill: `/readyz` 503 while the edge restarted, 200 about 4 s later, no gateway
+  restart; `upstream_state` audit lines record both changes). Remove the old CA
+  from the bundle at the next gateway restart.
 
 The base image is pinned by tag and index digest in `PYTHON_IMAGE`; Dependabot
 proposes updates. Python dependencies are version/hash locked for CPython 3.12
