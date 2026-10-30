@@ -55,16 +55,16 @@
       "sha256": "0bfe8bfb8d7f2c93f871bb8da3e47a13b82f1062d53f4da7695e4edfba54ff23"
     },
     "CLAUDE.md": {
-      "bytes": 3569,
-      "sha256": "de051bf56055ad038c16dd57d717865ebddbe7e91ecd17dbeb18dae491877770"
+      "bytes": 4554,
+      "sha256": "fb7aea4b24bdb6457334e13514baed64c4124659691932149afe60eec0bbd63c"
     },
     "CONTRIBUTING.md": {
       "bytes": 1403,
       "sha256": "b3ff25cf1d30a44371730b5500c92d7d0ab53be302e667da4a6bb497589f41d8"
     },
     "HANDOFF.md": {
-      "bytes": 46086,
-      "sha256": "c8accac6b62cf6475d88b4df149f18b39568b694e90968ac15caacc8f48474bd"
+      "bytes": 46577,
+      "sha256": "c022dc6b5fc367fbdb2e9af886da1691ad7481ac2600a11b613bca8ae12b526d"
     },
     "PEAK_HIL_AND_UI_SPEC.md": {
       "bytes": 23580,
@@ -2893,6 +2893,10 @@
     "docs/REPOSITORY_STRUCTURE.md": {
       "bytes": 3933,
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
+    },
+    "docs/REVIEW_AND_ROADMAP.md": {
+      "bytes": 11182,
+      "sha256": "38eaacf01d088d8e6d36b46ae9dcfce9a1e54b2457c15bb88cc6c55f5f4a22e6"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,

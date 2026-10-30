@@ -5,6 +5,14 @@ Claude Code session (Windows, ASUS ROG Zephyrus M16 with an NVIDIA RTX laptop GP
 that has **no memory of that session**. Read this file and `CLAUDE.md` completely
 before doing anything. Then verify the baseline (section 11) before changing code.
 
+> **Status 2026-10-30 (local Windows session):** the remaining plan below is
+> done — renderer performance and effects, UX, Modal cloud GPU benchmarks and a
+> Linux CUDA lock, CI/CD, IoT gateway and halo hardening, the review and
+> roadmap doc. Results and the prioritised backlog are in
+> `docs/REVIEW_AND_ROADMAP.md`; cloud results in `reports/modal/`; laptop GPU
+> benchmark runs in `artifacts/renderer_benchmarks/`. Sections below are the
+> original hand-off and are kept as history.
+
 ---
 
 ## 1. Goal and scope
