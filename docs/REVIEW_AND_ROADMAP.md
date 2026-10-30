@@ -159,8 +159,15 @@ generation but is a much larger part; no A2000 figure is claimed.
    total); route cost within -0.12/+0.26 %, clearance within 4 mm (all >=
    0.26 m), no change in which routes are smoothed. Pipeline, seed 7, 30
    frames, alternating runs: planning p95 531-537 -> 468-475 ms; p50 is
-   unchanged because most frames do not replan. Remaining replan cost: A* and
-   MPPI.
+   unchanged because most frames do not replan. **Done next:** with moving
+   entities, A* ran one numpy swept-entity check per edge (~75 us each), so it
+   was ~70 % of a pipeline replan. It now checks all neighbours of an expanded
+   node in one vectorised call (exact: checked against an independent per-entity
+   slab test, and the 30-frame trajectory output is byte-identical). Container
+   CPU, seed 7, 30 frames, two alternating pairs: A* per replan 165-247 ->
+   93-194 ms; planning p95 392-400 -> 305-334 ms; total p95 594-601 ->
+   498-520 ms. Remaining replan cost: the A* Python loop itself, path checks,
+   spline and MPPI.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
 3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the
    Pi-to-Windows raw-sensor transport (does not exist yet). [HW]
