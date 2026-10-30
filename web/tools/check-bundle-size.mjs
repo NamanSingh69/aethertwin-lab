@@ -15,6 +15,8 @@ const BUDGET_KB = {
   effects: 6,
   "meshopt_decoder.module": 8,
   benchmark: 4,
+  explainer: 14,
+  viewParams: 1,
   "spatial-contracts": 2,
   "decode.worker": 4,
   css: 10,
