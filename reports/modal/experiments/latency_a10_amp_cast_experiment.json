@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "provider": "Modal",
+  "gpu_class": "A10",
+  "suite": "latency",
+  "recorded_at": "2026-10-29T23:26:02+00:00",
+  "seeds": [
+    7
+  ],
+  "client_wall_seconds": 132.1,
+  "estimated_cost_usd": 0.052,
+  "cost_note": "Estimate from list prices and client wall time; the Modal billing report is authoritative.",
+  "limits": "Modal cloud GPU running the synthetic simulator (virtual sensors). Not an RTX laptop, A2000, Raspberry Pi or lab result; simulated sensors are not physical accuracy. Any A2000 scaling is an unverified estimate.",
+  "results": {
+    "environment": {
+      "recorded_at": "2026-10-29T23:24:09+00:00",
+      "gpu": "NVIDIA A10G",
+      "nvidia_smi": "NVIDIA A10G, 610.57.04, 23028 MiB, 300.00 W, 1710 MHz",
+      "compute_capability": [
+        8,
+        6
+      ],
+      "torch": "2.14.1+cu126",
+      "cuda_runtime": "12.6",
+      "cudnn": 91002,
+      "python": "3.12.6",
+      "cpu_count": 8,
+      "cpu_model": "unknown",
+      "requirements": "requirements-ubuntu-cuda.lock (--require-hashes)"
+    },
+    "model_variants": {
+      "suite": "model_variants",
+      "seed": 7,
+      "repeats": 200,
+      "voxels": 1400,
+      "points": 2018,
+      "temporal": true,
+      "scope": "Model forward only (precomputed spatial indices); not preprocessing or whole-pipeline latency.",
+      "variants": {
+        "fp32": {
+          "p50_ms": 4.319028999999475,
+          "p95_ms": 4.3884600500009086,
+          "mean_ms": 4.329879974999837,
+          "max_abs_error_vs_fp32": 1.9073486328125e-06
+        },
+        "fp32_cudnn_benchmark": {
+          "p50_ms": 4.310313999999593,
+          "p95_ms": 4.370281450000668,
+          "mean_ms": 4.319045320000079,
+          "max_abs_error_vs_fp32": 1.9073486328125e-06,
+          "cudnn_benchmark": true
+        },
+        "tf32": {
+          "p50_ms": 3.7430640000017945,
+          "p95_ms": 3.834811950001793,
+          "mean_ms": 3.7637633499999446,
+          "max_abs_error_vs_fp32": 0.0071258544921875,
+          "tf32": true
+        },
+        "amp_fp16": {
+          "error": "RuntimeError: value cannot be converted to type c10::Half without overflow"
+        },
+        "amp_bf16": {
+          "p50_ms": 4.669849999999087,
+          "p95_ms": 4.802504999998014,
+          "mean_ms": 4.69047993999995,
+          "max_abs_error_vs_fp32": 0.09482097625732422
+        },
+        "torch_compile_default": {
+          "p50_ms": 2.819058000000041,
+          "p95_ms": 2.8519934999998497,
+          "mean_ms": 2.8210960800001317,
+          "max_abs_error_vs_fp32": 3.5762786865234375e-06,
+          "compile_seconds": 18.877788369
+        }
+      },
+      "not_measured": [
+        "ONNX Runtime and TensorRT export: not part of the locked environment; see docs/REVIEW_AND_ROADMAP.md"
+      ]
+    },
+    "pipeline_cuda": {
+      "suite": "pipeline",
+      "seed": 7,
+      "device": "cuda",
+      "threads": 4,
+      "requested_frames": 30,
+      "requested_duration_s": null,
+      "returncode": 0,
+      "container_seconds": 33.9,
+      "benchmark": {
+        "frames": 30,
+        "wall_seconds": 26.386217913000003,
+        "end_to_end_fps": 1.1369571834400547,
+        "processing_latency_ms": {
+          "p50": 473.184811000003,
+          "p95": 1616.0719698000057,
+          "max": 1853.310117999996
+        },
+        "module_latency_ms": {
+          "localization": {
+            "p50": 10.27028000000385,
+            "p95": 12.095549050001964
+          },
+          "occupancy": {
+            "p50": 194.49917450000243,
+            "p95": 313.8423723000005
+          },
+          "perception_tracking": {
+            "p50": 81.82005149999938,
+            "p95": 107.64504800000083
+          },
+          "planning": {
+            "p50": 184.99075199999737,
+            "p95": 1090.9390665499982
+          },
+          "risk_fields": {
+            "p50": 0.5815000000026771,
+            "p95": 0.8594905499954562
+          }
+        },
+        "mean_processing_fps": 1.4985982778585125,
+        "rss_mb": {
+          "first": 6590.41015625,
+          "last": 6686.515625,
+          "max": 6686.515625,
+          "last_half_slope_mb_per_frame": 0.11813616071429373
+        },
+        "dropped_snapshots": 0,
+        "occupancy_cells": 72904,
+        "presentation_queue": {
+          "capacity": 2,
+          "current_depth": 0,
+          "max_depth": 0
+        },
+        "input_mode": "sim",
+        "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+      },
+      "stderr_tail": ""
+    },
+    "pipeline_cpu": {
+      "suite": "pipeline",
+      "seed": 7,
+      "device": "cpu",
+      "threads": 4,
+      "requested_frames": 30,
+      "requested_duration_s": null,
+      "returncode": 0,
+      "container_seconds": 42.6,
+      "benchmark": {
+        "frames": 30,
+        "wall_seconds": 32.79436476,
+        "end_to_end_fps": 0.9147913130670441,
+        "processing_latency_ms": {
+          "p50": 649.5557100000013,
+          "p95": 1665.7974516999989,
+          "max": 1994.0138700000034
+        },
+        "module_latency_ms": {
+          "localization": {
+            "p50": 11.222351500002503,
+            "p95": 12.969199600003734
+          },
+          "occupancy": {
+            "p50": 229.64742099999214,
+            "p95": 357.05434869999914
+          },
+          "perception_tracking": {
+            "p50": 184.1055310000037,
+            "p95": 217.11757409999944
+          },
+          "planning": {
+            "p50": 218.39063150000015,
+            "p95": 1213.82044285
+          },
+          "risk_fields": {
+            "p50": 0.7614529999990793,
+            "p95": 0.9772966999999961
+          }
+        },
+        "mean_processing_fps": 1.1926137754680728,
+        "rss_mb": {
+          "first": 4920.03515625,
+          "last": 4975.8515625,
+          "max": 5053.078125,
+          "last_half_slope_mb_per_frame": -2.2199497767857483
+        },
+        "dropped_snapshots": 0,
+        "occupancy_cells": 72904,
+        "presentation_queue": {
+          "capacity": 2,
+          "current_depth": 0,
+          "max_depth": 0
+        },
+        "input_mode": "sim",
+        "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+      },
+      "stderr_tail": ""
+    }
+  }
+}

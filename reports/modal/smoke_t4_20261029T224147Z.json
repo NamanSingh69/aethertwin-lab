@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "provider": "Modal",
+  "gpu_class": "T4",
+  "suite": "smoke",
+  "recorded_at": "2026-10-29T22:41:47+00:00",
+  "seeds": [
+    7
+  ],
+  "client_wall_seconds": 67.3,
+  "estimated_cost_usd": 0.0169,
+  "cost_note": "Estimate from list prices and client wall time; the Modal billing report is authoritative.",
+  "limits": "Modal cloud GPU running the synthetic simulator (virtual sensors). Not an RTX laptop, A2000, Raspberry Pi or lab result; simulated sensors are not physical accuracy. Any A2000 scaling is an unverified estimate.",
+  "results": {
+    "environment": {
+      "recorded_at": "2026-10-29T22:40:51+00:00",
+      "gpu": "Tesla T4",
+      "nvidia_smi": "Tesla T4, 610.57.04, 15360 MiB, 70.00 W, 1590 MHz",
+      "compute_capability": [
+        7,
+        5
+      ],
+      "torch": "2.14.1+cu126",
+      "cuda_runtime": "12.6",
+      "cudnn": 91002,
+      "python": "3.12.6",
+      "cpu_count": 20,
+      "cpu_model": "unknown",
+      "requirements": "requirements-ubuntu-cuda.lock (--require-hashes)"
+    },
+    "model_variants": {
+      "suite": "model_variants",
+      "seed": 7,
+      "repeats": 50,
+      "voxels": 1400,
+      "points": 2053,
+      "temporal": true,
+      "scope": "Model forward only (precomputed spatial indices); not preprocessing or whole-pipeline latency.",
+      "variants": {
+        "fp32": {
+          "p50_ms": 7.549434999999605,
+          "p95_ms": 9.166898649999666,
+          "mean_ms": 7.9422480199999885,
+          "max_abs_error_vs_fp32": 1.9073486328125e-06
+        },
+        "fp32_cudnn_benchmark": {
+          "p50_ms": 7.550801500000759,
+          "p95_ms": 7.644554499999501,
+          "mean_ms": 7.561719560000099,
+          "max_abs_error_vs_fp32": 1.9073486328125e-06,
+          "cudnn_benchmark": true
+        },
+        "tf32": {
+          "p50_ms": 7.520044999999698,
+          "p95_ms": 7.832978750000041,
+          "mean_ms": 7.561959240000107,
+          "max_abs_error_vs_fp32": 2.86102294921875e-06,
+          "tf32": true
+        },
+        "amp_fp16": {
+          "error": "RuntimeError: scatter(): Expected self.dtype to be equal to src.dtype"
+        },
+        "amp_bf16": {
+          "error": "RuntimeError: scatter(): Expected self.dtype to be equal to src.dtype"
+        },
+        "torch_compile_default": {
+          "p50_ms": 5.285906999997536,
+          "p95_ms": 5.458585699999929,
+          "mean_ms": 5.314937380000231,
+          "max_abs_error_vs_fp32": 5.0067901611328125e-06,
+          "compile_seconds": 17.403508675999998
+        }
+      },
+      "not_measured": [
+        "ONNX Runtime and TensorRT export: not part of the locked environment; see docs/REVIEW_AND_ROADMAP.md"
+      ]
+    },
+    "pipeline_cuda": {
+      "suite": "pipeline",
+      "seed": 7,
+      "device": "cuda",
+      "threads": 4,
+      "requested_frames": 20,
+      "requested_duration_s": null,
+      "returncode": 0,
+      "container_seconds": 24.9,
+      "benchmark": {
+        "frames": 20,
+        "wall_seconds": 17.644877039999997,
+        "end_to_end_fps": 1.133473469645669,
+        "processing_latency_ms": {
+          "p50": 467.408240000001,
+          "p95": 1679.6314657000057,
+          "max": 1715.601443000004
+        },
+        "mean_processing_fps": 1.4956492647607726,
+        "rss_mb": {
+          "first": 6544.8828125,
+          "last": 6640.5859375,
+          "max": 6640.5859375,
+          "last_half_slope_mb_per_frame": 0.2050662878789304
+        },
+        "dropped_snapshots": 0,
+        "occupancy_cells": 72088,
+        "presentation_queue": {
+          "capacity": 2,
+          "current_depth": 0,
+          "max_depth": 0
+        },
+        "input_mode": "sim",
+        "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+      },
+      "stderr_tail": ""
+    }
+  }
+}
