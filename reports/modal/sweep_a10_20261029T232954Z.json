@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "provider": "Modal",
+  "gpu_class": "A10",
+  "suite": "sweep",
+  "recorded_at": "2026-10-29T23:29:54+00:00",
+  "seeds": [
+    7,
+    101,
+    102,
+    201,
+    202
+  ],
+  "client_wall_seconds": 180.1,
+  "estimated_cost_usd": 0.3547,
+  "cost_note": "Estimate from list prices and client wall time; the Modal billing report is authoritative.",
+  "limits": "Modal cloud GPU running the synthetic simulator (virtual sensors). Not an RTX laptop, A2000, Raspberry Pi or lab result; simulated sensors are not physical accuracy. Any A2000 scaling is an unverified estimate.",
+  "results": {
+    "environment": {
+      "recorded_at": "2026-10-29T23:27:03+00:00",
+      "gpu": "NVIDIA A10",
+      "nvidia_smi": "NVIDIA A10, 610.57.04, 23028 MiB, 150.00 W, 1695 MHz",
+      "compute_capability": [
+        8,
+        6
+      ],
+      "torch": "2.14.1+cu126",
+      "cuda_runtime": "12.6",
+      "cudnn": 91002,
+      "python": "3.12.6",
+      "cpu_count": 20,
+      "cpu_model": "unknown",
+      "requirements": "requirements-ubuntu-cuda.lock (--require-hashes)"
+    },
+    "pipeline_cuda": [
+      {
+        "suite": "pipeline",
+        "seed": 7,
+        "device": "cuda",
+        "threads": 4,
+        "requested_frames": 60,
+        "requested_duration_s": null,
+        "returncode": 0,
+        "container_seconds": 46.9,
+        "benchmark": {
+          "frames": 60,
+          "wall_seconds": 40.495878405999996,
+          "end_to_end_fps": 1.4816322638678758,
+          "processing_latency_ms": {
+            "p50": 385.24155150000183,
+            "p95": 1021.4784969999997,
+            "max": 1606.384382
+          },
+          "module_latency_ms": {
+            "localization": {
+              "p50": 7.788178000001977,
+              "p95": 8.530341549997452
+            },
+            "occupancy": {
+              "p50": 154.98103499999695,
+              "p95": 264.82429944999996
+            },
+            "perception_tracking": {
+              "p50": 66.76098600000202,
+              "p95": 74.09721624999905
+            },
+            "planning": {
+              "p50": 146.54618249999984,
+              "p95": 649.0526745499994
+            },
+            "risk_fields": {
+              "p50": 0.4470089999983884,
+              "p95": 0.6538033999982318
+            }
+          },
+          "mean_processing_fps": 1.965396698154308,
+          "rss_mb": {
+            "first": 6598.6015625,
+            "last": 6697.1953125,
+            "max": 6697.1953125,
+            "last_half_slope_mb_per_frame": 0.1144240127920184
+          },
+          "dropped_snapshots": 0,
+          "occupancy_cells": 73640,
+          "presentation_queue": {
+            "capacity": 2,
+            "current_depth": 0,
+            "max_depth": 0
+          },
+          "input_mode": "sim",
+          "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+        },
+        "stderr_tail": ""
+      },
+      {
+        "suite": "pipeline",
+        "seed": 101,
+        "device": "cuda",
+        "threads": 4,
+        "requested_frames": 60,
+        "requested_duration_s": null,
+        "returncode": 0,
+        "container_seconds": 163.6,
+        "benchmark": {
+          "frames": 60,
+          "wall_seconds": 146.254757767,
+          "end_to_end_fps": 0.41024306433563434,
+          "processing_latency_ms": {
+            "p50": 2125.189786500002,
+            "p95": 2683.009768649995,
+            "max": 3426.4216529999985
+          },
+          "module_latency_ms": {
+            "localization": {
+              "p50": 7.783566999993496,
+              "p95": 8.697917600002114
+            },
+            "occupancy": {
+              "p50": 156.1879825000059,
+              "p95": 237.91708844999923
+            },
+            "perception_tracking": {
+              "p50": 1754.8669105000022,
+              "p95": 1830.2931450499864
+            },
+            "planning": {
+              "p50": 172.23453949999268,
+              "p95": 739.0948319500001
+            },
+            "risk_fields": {
+              "p50": 0.39852749999269577,
+              "p95": 0.5482750499995248
+            }
+          },
+          "mean_processing_fps": 0.4405355999180115,
+          "rss_mb": {
+            "first": 6586.77734375,
+            "last": 6685.4921875,
+            "max": 6685.4921875,
+            "last_half_slope_mb_per_frame": 0.08710980951058885
+          },
+          "dropped_snapshots": 0,
+          "occupancy_cells": 75121,
+          "presentation_queue": {
+            "capacity": 2,
+            "current_depth": 0,
+            "max_depth": 0
+          },
+          "input_mode": "sim",
+          "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+        },
+        "stderr_tail": ""
+      },
+      {
+        "suite": "pipeline",
+        "seed": 102,
+        "device": "cuda",
+        "threads": 4,
+        "requested_frames": 60,
+        "requested_duration_s": null,
+        "returncode": 0,
+        "container_seconds": 164.4,
+        "benchmark": {
+          "frames": 60,
+          "wall_seconds": 146.844818089,
+          "end_to_end_fps": 0.4085946019806779,
+          "processing_latency_ms": {
+            "p50": 2120.4434354999967,
+            "p95": 2773.8381253499965,
+            "max": 3415.809499000002
+          },
+          "module_latency_ms": {
+            "localization": {
+              "p50": 7.863389999997139,
+              "p95": 8.35277185000578
+            },
+            "occupancy": {
+              "p50": 154.3003069999962,
+              "p95": 269.6238386000018
+            },
+            "perception_tracking": {
+              "p50": 1772.449707000007,
+              "p95": 1816.061453149997
+            },
+            "planning": {
+              "p50": 173.33189649999525,
+              "p95": 803.0620560500017
+            },
+            "risk_fields": {
+              "p50": 0.38305949999539735,
+              "p95": 0.6063159000010643
+            }
+          },
+          "mean_processing_fps": 0.43877026305072175,
+          "rss_mb": {
+            "first": 6575.4921875,
+            "last": 6679.765625,
+            "max": 6679.765625,
+            "last_half_slope_mb_per_frame": 0.03577846913238079
+          },
+          "dropped_snapshots": 0,
+          "occupancy_cells": 75079,
+          "presentation_queue": {
+            "capacity": 2,
+            "current_depth": 0,
+            "max_depth": 0
+          },
+          "input_mode": "sim",
+          "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+        },
+        "stderr_tail": ""
+      },
+      {
+        "suite": "pipeline",
+        "seed": 201,
+        "device": "cuda",
+        "threads": 4,
+        "requested_frames": 60,
+        "requested_duration_s": null,
+        "returncode": 0,
+        "container_seconds": 166.9,
+        "benchmark": {
+          "frames": 60,
+          "wall_seconds": 149.207367494,
+          "end_to_end_fps": 0.4021249151950405,
+          "processing_latency_ms": {
+            "p50": 2147.773334,
+            "p95": 2830.478369750001,
+            "max": 3711.027799
+          },
+          "module_latency_ms": {
+            "localization": {
+              "p50": 7.976090500001476,
+              "p95": 8.58604950000128
+            },
+            "occupancy": {
+              "p50": 165.63216099999954,
+              "p95": 299.1088537499953
+            },
+            "perception_tracking": {
+              "p50": 1783.2263534999981,
+              "p95": 1829.0087274999985
+            },
+            "planning": {
+              "p50": 180.33489900000177,
+              "p95": 825.5062907000008
+            },
+            "risk_fields": {
+              "p50": 0.4789474999995491,
+              "p95": 0.6122942000011727
+            }
+          },
+          "mean_processing_fps": 0.4313504035400731,
+          "rss_mb": {
+            "first": 6594.4765625,
+            "last": 6692.64453125,
+            "max": 6692.64453125,
+            "last_half_slope_mb_per_frame": 0.036610991379334115
+          },
+          "dropped_snapshots": 0,
+          "occupancy_cells": 75396,
+          "presentation_queue": {
+            "capacity": 2,
+            "current_depth": 0,
+            "max_depth": 0
+          },
+          "input_mode": "sim",
+          "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+        },
+        "stderr_tail": ""
+      },
+      {
+        "suite": "pipeline",
+        "seed": 202,
+        "device": "cuda",
+        "threads": 4,
+        "requested_frames": 60,
+        "requested_duration_s": null,
+        "returncode": 0,
+        "container_seconds": 162.3,
+        "benchmark": {
+          "frames": 60,
+          "wall_seconds": 144.426129979,
+          "end_to_end_fps": 0.4154372896976758,
+          "processing_latency_ms": {
+            "p50": 2103.244051000004,
+            "p95": 2734.767043050011,
+            "max": 3470.0183360000024
+          },
+          "module_latency_ms": {
+            "localization": {
+              "p50": 7.841695499998025,
+              "p95": 8.71331385000147
+            },
+            "occupancy": {
+              "p50": 160.0529209999948,
+              "p95": 269.6457388000034
+            },
+            "perception_tracking": {
+              "p50": 1741.4419545000114,
+              "p95": 1804.9179017000015
+            },
+            "planning": {
+              "p50": 173.66709700000627,
+              "p95": 818.8700430499935
+            },
+            "risk_fields": {
+              "p50": 0.3773565000102508,
+              "p95": 0.6310935500010825
+            }
+          },
+          "mean_processing_fps": 0.4466027587096165,
+          "rss_mb": {
+            "first": 6587.1796875,
+            "last": 6684.953125,
+            "max": 6684.953125,
+            "last_half_slope_mb_per_frame": 0.036122601501687064
+          },
+          "dropped_snapshots": 0,
+          "occupancy_cells": 74954,
+          "presentation_queue": {
+            "capacity": 2,
+            "current_depth": 0,
+            "max_depth": 0
+          },
+          "input_mode": "sim",
+          "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery"
+        },
+        "stderr_tail": ""
+      }
+    ]
+  }
+}

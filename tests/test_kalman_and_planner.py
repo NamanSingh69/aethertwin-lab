@@ -154,6 +154,9 @@ def test_mobile_pipeline_processes_real_moving_rig_observations(runtime_assets,t
     finally:
         source.close()
     assert pipeline.odometry.total_scans==12 and len(pipeline.odometry.clouds)==12
+    stages=pipeline.report()["module_latency_ms"]
+    assert {"localization","occupancy","perception_tracking","planning","risk_fields"}<=set(stages)
+    assert all(0<=v["p50"]<=v["p95"] for v in stages.values())
     assert pipeline.odometry.last_diagnostics["fitness"]>.15
     assert pipeline.odometry.last_diagnostics["map_anchored"] is True
     assert pipeline.odometry.last_diagnostics["map_information_rank"]==6
