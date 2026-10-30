@@ -178,8 +178,15 @@ Checked on this branch before opening the pull request:
 - **CSP**: no `unsafe-eval`; `wasm-unsafe-eval` only for the meshopt decoder;
   `blob:` for workers and glTF images. `style-src 'unsafe-inline'` is still
   needed (React style attributes and the benchmark page's inline style).
-- **Dependencies**: `npm audit` and the independent review results are in the
-  pull request description; Python stays hash-locked.
+- **Dependencies**: `npm audit` (all and production only) reports 0
+  vulnerabilities; Python stays hash-locked.
+- **Independent review** of the branch diff found no critical or high issues.
+  Fixed from it: secrets and keys excluded from Modal uploads, atomic per-peer
+  sign-in limiting, real single-flight gateway re-authentication, expiry-close
+  handling in the scene socket, attestation moved out of the build job, all
+  composer passes disposed, no halo re-probing after a failed identity, and
+  the secret-file permission note. Kept: `style-src 'unsafe-inline'`
+  (benchmark.html has an inline style element).
 - **Secrets**: no credentials in the repository, workflows or Compose files;
   the gateway reads secret files; Modal results contain no account data.
 - **Input handling**: bounded JSON bodies, path checks on asset and SPA routes,

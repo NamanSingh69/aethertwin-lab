@@ -41,7 +41,9 @@ LIMITS=('Modal cloud GPU running the synthetic simulator (virtual sensors). Not 
 IGNORE=['.git','.venv','.venv-*','.local','.claude','web/node_modules','web/test-results','web/playwright-report',
     '**/__pycache__','**/.pytest_cache','reports/modal',
     # Written locally while a run uploads; Modal refuses files that change mid-build.
-    'PROGRESS.md','artifacts/renderer_benchmarks','web/reports']
+    'PROGRESS.md','artifacts/renderer_benchmarks','web/reports',
+    # Never upload local credentials or keys, whatever .gitignore says.
+    '**/.env','**/.env.*','**/*.pem','**/*.key','**/*.p12','deployment/gateway/secrets','deployment/gateway/tls']
 
 image=(modal.Image.debian_slim(python_version='3.12')
     .apt_install('libegl1','libgl1','libglib2.0-0','gcc','g++')  # Triton/Inductor need a C compiler.

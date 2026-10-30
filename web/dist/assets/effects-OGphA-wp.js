@@ -205,5 +205,5 @@ import{A as e,D as t,G as n,H as r,I as i,J as a,K as o,O as s,Y as c,c as l,l a
 					float bloomAlpha = max( bloom.r, max( bloom.g, bloom.b ) );
 					gl_FragColor = vec4( bloom, bloomAlpha );
 
-				}`})}};O.BlurDirectionX=new f(1,0),O.BlurDirectionY=new f(0,1);var k=class{composer;bloom;constructor(e,t,n){let r=e.getDrawingBufferSize(new f),i=new c(r.x,r.y,{type:m,samples:4});this.composer=new C(e,i),this.composer.addPass(new E(t,n)),this.bloom=new O(r,.55,.4,.82),this.composer.addPass(this.bloom),this.composer.addPass(new T)}setSize(e,t,n){this.composer.setPixelRatio(n),this.composer.setSize(e,t)}render(){this.composer.render()}dispose(){this.bloom.dispose(),this.composer.dispose()}};export{k as CinematicEffects};
-//# sourceMappingURL=effects-CmfXBmxo.js.map
+				}`})}};O.BlurDirectionX=new f(1,0),O.BlurDirectionY=new f(0,1);var k=class{composer;constructor(e,t,n){let r=e.getDrawingBufferSize(new f),i=new c(r.x,r.y,{type:m,samples:4});this.composer=new C(e,i),this.composer.addPass(new E(t,n)),this.composer.addPass(new O(r,.55,.4,.82)),this.composer.addPass(new T)}setSize(e,t,n){this.composer.setPixelRatio(n),this.composer.setSize(e,t)}render(){this.composer.render()}dispose(){for(let e of this.composer.passes)e.dispose();this.composer.dispose()}};export{k as CinematicEffects};
+//# sourceMappingURL=effects-OGphA-wp.js.map

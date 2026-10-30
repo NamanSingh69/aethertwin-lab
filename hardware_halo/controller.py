@@ -87,8 +87,8 @@ class HaloController:
                     try:self._serial=self._handshake();backoff=RECONNECT_MIN_SECONDS
                     except Exception as error:
                         self._fail(error,False)
-                        # A wrong device on the configured port is never probed again; a missing/busy port or a lost link is.
-                        retry=self._compatible or isinstance(error,OSError)
+                        # A failed identity (wrong or silent device) is never probed again; a missing/busy port is.
+                        retry=isinstance(error,OSError)
                         retry_at=time.monotonic()+backoff;backoff=min(RECONNECT_MAX_SECONDS,backoff*2)
                 with self._lock:state=copy.deepcopy(self._virtual);ticks=self._ticks
                 if ticks!=seen_ticks:seen_ticks=ticks;ticked_at=time.monotonic()

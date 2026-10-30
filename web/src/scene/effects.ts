@@ -10,7 +10,6 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
  */
 export class CinematicEffects {
   private composer: EffectComposer;
-  private bloom: UnrealBloomPass;
   constructor(
     renderer: T.WebGLRenderer,
     scene: T.Scene,
@@ -25,8 +24,7 @@ export class CinematicEffects {
     });
     this.composer = new EffectComposer(renderer, target);
     this.composer.addPass(new RenderPass(scene, camera));
-    this.bloom = new UnrealBloomPass(size, 0.55, 0.4, 0.82);
-    this.composer.addPass(this.bloom);
+    this.composer.addPass(new UnrealBloomPass(size, 0.55, 0.4, 0.82));
     // Tone mapping and sRGB conversion from the renderer's own settings.
     this.composer.addPass(new OutputPass());
   }
@@ -38,7 +36,7 @@ export class CinematicEffects {
     this.composer.render();
   }
   dispose() {
-    this.bloom.dispose();
+    for (const pass of this.composer.passes) pass.dispose();
     this.composer.dispose();
   }
 }

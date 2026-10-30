@@ -70,6 +70,10 @@ of at least 32 characters: `upstream_token`, `operator_token`, `viewer_token`.
 The service reads them through `AETHERTWIN_UPSTREAM_TOKEN_FILE`,
 `AETHERTWIN_OPERATOR_TOKEN_FILE` and `AETHERTWIN_VIEWER_TOKEN_FILE`; setting both a
 variable and its `_FILE` form is rejected. The secrets directory is git-ignored.
+Compose bind-mounts these files with their host permissions, so they must be
+readable by container UID 10001 (for example owned by 10001 with mode 0400);
+a 0600 file owned by your own user fails at start-up. Failed sign-ins are
+limited per client address, so clients behind one shared proxy share a limit.
 
 The Compose TLS directory must contain `fullchain.pem`, `privkey.pem`, and
 `upstream-ca.pem`, readable by container UID 10001. The last file is the trusted

@@ -112,3 +112,20 @@ def test_gateway_readiness_needs_a_live_recent_upstream_and_failed_asset_syncs_b
     clock[0]+=gateway.ASSET_RETRY_MIN_SECONDS+.1;asyncio.run(runtime._refresh());assert len(syncs)==2
     clock[0]+=gateway.ASSET_RETRY_MIN_SECONDS+.1;asyncio.run(runtime._refresh());assert len(syncs)==2
     bootstrap['map_revision']='map-2';asyncio.run(runtime._refresh());assert syncs[-1]=='map-2'
+
+
+def test_sign_in_attempts_are_taken_atomically_and_refunded_on_success():
+    now=[0.];limiter=LoginLimiter(burst=2,rate=.5,clock=lambda:now[0])
+    assert limiter.acquire('p')==0 and limiter.acquire('p')==0
+    assert limiter.acquire('p')==pytest.approx(2.)
+    limiter.success('p');assert limiter.acquire('p')==0
+
+
+def test_gateway_reauthentication_is_single_flight(tmp_path):
+    import asyncio
+    import command_center.gateway as gateway
+    runtime=gateway.GatewayRuntime('https://edge.local',token='u'*40,asset_root=tmp_path);logins=[]
+    async def login():logins.append(1);await asyncio.sleep(.01)
+    runtime._authenticate_once=login
+    async def burst():await asyncio.gather(*(runtime._authenticate() for _ in range(5)))
+    asyncio.run(burst());assert len(logins)==1
