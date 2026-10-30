@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
+import type { Appearance } from "../lib/appearance";
 import type {
   MapProgress,
   Quality,
@@ -16,6 +17,7 @@ export interface RendererSettings {
   activePickHeight: number | null;
   mapManifestUrl: string | null | undefined;
   mapRevision: string | undefined;
+  appearanceUrl?: string | null;
   quality: Quality;
 }
 
@@ -38,6 +40,7 @@ export function useSpatialRenderer(
   const renderer = useRef<SpatialRenderer | null>(null);
   const [metrics, setMetrics] = useState<RenderMetrics | null>(null);
   const [mapProgress, setMapProgress] = useState<MapProgress | null>(null);
+  const [appearance, setAppearance] = useState<Appearance | null>(null);
   const settingsRef = useRef(settings),
     handlersRef = useRef(handlers);
   settingsRef.current = settings;
@@ -49,6 +52,13 @@ export function useSpatialRenderer(
         bad: true,
       }),
     );
+  const loadCapture = (instance: SpatialRenderer, url: string) =>
+    void instance
+      .loadAppearance(url)
+      .then(setAppearance)
+      .catch((cause) =>
+        handlersRef.current.setNotice({ text: `Photo capture: ${String(cause)}`, bad: true }),
+      );
   useEffect(() => {
     if (!host.current) return;
     let disposed = false;
@@ -80,6 +90,7 @@ export function useSpatialRenderer(
         instance.setPickMode(s.pickMode, s.activePickHeight);
         if (latest.current) instance.updateFrame(latest.current);
         if (s.mapManifestUrl) loadMap(instance, s.mapManifestUrl);
+        if (s.appearanceUrl) loadCapture(instance, s.appearanceUrl);
       })
       .catch((cause) => {
         if (!disposed)
@@ -100,6 +111,10 @@ export function useSpatialRenderer(
       loadMap(renderer.current, settings.mapManifestUrl);
   }, [settings.mapRevision, settings.mapManifestUrl]);
   useEffect(() => {
+    if (renderer.current && settings.appearanceUrl)
+      loadCapture(renderer.current, settings.appearanceUrl);
+  }, [settings.appearanceUrl]);
+  useEffect(() => {
     renderer.current?.setLayers(settings.layers);
   }, [settings.layers]);
   useEffect(() => {
@@ -114,5 +129,5 @@ export function useSpatialRenderer(
   useEffect(() => {
     renderer.current?.setQuality(settings.quality);
   }, [settings.quality]);
-  return { renderer, metrics, mapProgress };
+  return { renderer, metrics, mapProgress, appearance };
 }

@@ -3,11 +3,11 @@
   "static_imports": [
     "benchmark.html",
     "_modulepreload-polyfill-P2Xu9kJm.js",
-    "_SpatialRenderer-CoSubYFR.js",
+    "_SpatialRenderer-MsyoOC3A.js",
     "_rolldown-runtime-4tVxZq34.js",
-    "_spatial-contracts-DWLHILkS.js",
-    "_preload-helper-BLdHbfdN.js",
-    "_three-vendor-BQRTTvu7.js"
+    "_spatial-contracts-5dNHg0oU.js",
+    "_appearance-BEtXmM5s.js",
+    "_three-vendor-a2tZkKsF.js"
   ],
   "studio_entry_executed": false,
   "studio_css_inherited": false,

@@ -17,6 +17,8 @@ import { chooseLOD, normalizeBounds } from "./assets";
 import { floorPickPoint } from "./picking";
 import { GrowableGeometry } from "./buffers";
 import type { CinematicEffects } from "./effects";
+import type { PhotorealLook } from "./photoreal";
+import { parseAppearance, type Appearance } from "../lib/appearance";
 export interface RenderMetrics {
   fps: number;
   frameMs: number;
@@ -45,7 +47,7 @@ export interface MapProgress {
   total: number;
   failed: number;
 }
-export type Quality = "auto" | "performance" | "balanced" | "cinematic";
+export type Quality = "auto" | "performance" | "balanced" | "cinematic" | "photoreal";
 export type ResolvedQuality = Exclude<Quality, "auto">;
 /**
  * Pixel-ratio ceilings per tier; adaptive scaling works between
@@ -55,6 +57,7 @@ const PIXEL_RATIO_CAP: Record<ResolvedQuality, () => number> = {
   performance: () => Math.min(devicePixelRatio, 1),
   balanced: () => Math.min(devicePixelRatio, 1.5),
   cinematic: () => Math.min(devicePixelRatio, 1.5),
+  photoreal: () => Math.min(devicePixelRatio, 1.5),
 };
 const MIN_PIXEL_RATIO = 0.6;
 const TILE_RETRY_MS = 10_000;
@@ -219,6 +222,10 @@ export class SpatialRenderer {
   private visibility: IntersectionObserver;
   private effects: CinematicEffects | null = null;
   private effectsLoading = false;
+  private look: PhotorealLook | null = null;
+  private lookLoading = false;
+  // Created after the constructor first applies the tier.
+  private grid?: T.GridHelper;
   private reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   private fog = new T.FogExp2("#070d15", 0.028);
   private epoch = performance.now();
@@ -323,9 +330,10 @@ export class SpatialRenderer {
       this.scene.add(group);
       group.visible = initialLayers[name];
     }
-    const grid = new T.GridHelper(24, 48, "#1f3a4c", "#12212f");
+    const grid = (this.grid = new T.GridHelper(24, 48, "#1f3a4c", "#12212f"));
     grid.rotation.x = Math.PI / 2;
     grid.position.z = -0.025;
+    grid.visible = this.resolved !== "photoreal";
     this.scene.add(grid);
     const axes = new T.AxesHelper(0.75);
     axes.position.set(-6, -5, 0.02);
@@ -450,6 +458,7 @@ export class SpatialRenderer {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
     this.effects?.setSize(width, height, this.renderer.getPixelRatio());
+    this.look?.setSize(width, height, this.renderer.getPixelRatio());
     this.invalidate();
   }
   setLayers(layers: Layers) {
@@ -528,6 +537,43 @@ export class SpatialRenderer {
     if (t >= 1) this.flight = null;
     this.invalidate();
   }
+  /**
+   * Visual-only photo capture (photogrammetry mesh) placed by its manifest's
+   * transform. Its textures already contain the lab's lighting, so it renders
+   * unlit, and nothing reads it back: picking, planning and risk ignore it.
+   */
+  async loadAppearance(url: string): Promise<Appearance> {
+    const response = await fetch(url, { credentials: "same-origin" });
+    if (!response.ok) throw new Error(`Photo-capture manifest returned ${response.status}`);
+    const appearance = parseAppearance(await response.json());
+    const gltf = await (await this.loader()).loadAsync(new URL(appearance.file, new URL(url, location.href)).href);
+    if (this.disposed) {
+      disposeObject(gltf.scene);
+      return appearance;
+    }
+    gltf.scene.traverse((node) => {
+      if (!(node instanceof T.Mesh)) return;
+      const unlit = (material: T.Material) => {
+        const map = (material as T.MeshStandardMaterial).map ?? null;
+        const color = (material as T.MeshStandardMaterial).color ?? new T.Color("#ffffff");
+        material.dispose();
+        return new T.MeshBasicMaterial({ map, color, vertexColors: Boolean(node.geometry.getAttribute("color")), side: T.DoubleSide });
+      };
+      node.material = Array.isArray(node.material) ? node.material.map(unlit) : unlit(node.material);
+    });
+    const placed = new T.Group();
+    placed.name = "photo-capture";
+    placed.matrixAutoUpdate = false;
+    placed.matrix.set(...(appearance.transform as Parameters<T.Matrix4["set"]>));
+    placed.add(gltf.scene);
+    for (const child of [...this.groups.capture.children]) {
+      this.groups.capture.remove(child);
+      disposeObject(child);
+    }
+    this.groups.capture.add(placed);
+    this.invalidate();
+    return appearance;
+  }
   async loadManifest(url: string) {
     const generation = ++this.loadGeneration;
     const response = await fetch(url, { credentials: "same-origin" });
@@ -572,6 +618,7 @@ export class SpatialRenderer {
     this.tiles.clear();
     this.failedTiles.clear();
     this.manifest = manifest;
+    this.look?.fit(normalizeBounds(manifest.bounds));
     this.emitProgress();
     this.refreshLods();
   }
@@ -602,6 +649,7 @@ export class SpatialRenderer {
         }
       }
     });
+    this.look?.prepare(object);
   }
   /**
    * One loader for all tiles. The meshopt decoder (WebAssembly, allowed by the
@@ -1086,6 +1134,7 @@ export class SpatialRenderer {
     this.renderer.info.reset();
     const renderStart = performance.now();
     if (this.resolved === "cinematic" && this.effects) this.effects.render();
+    else if (this.resolved === "photoreal" && this.look) this.look.render();
     else this.renderer.render(this.scene, this.camera);
     this.renderSubmitMs = performance.now() - renderStart;
     this.frames++;
@@ -1124,7 +1173,9 @@ export class SpatialRenderer {
       pixelRatio: this.renderer.getPixelRatio(),
       renderMode: this.resolved === "performance" ? "on-demand" : "continuous",
       effects: {
-        postprocessing: this.resolved === "cinematic" && this.effects !== null,
+        postprocessing:
+          (this.resolved === "cinematic" && this.effects !== null) ||
+          (this.resolved === "photoreal" && this.look !== null),
         motion: this.motion(),
       },
     };
@@ -1138,7 +1189,7 @@ export class SpatialRenderer {
       qualitySetting: metrics.qualitySetting,
       dpr: metrics.pixelRatio.toFixed(2),
       renderMode: metrics.renderMode,
-      effects: metrics.effects.postprocessing ? "cinematic" : "off",
+      effects: metrics.effects.postprocessing ? metrics.quality : "off",
       motion: String(metrics.effects.motion),
     });
     this.metricsCallback(metrics);
@@ -1159,8 +1210,12 @@ export class SpatialRenderer {
     return this.resolved === "cinematic" && !this.reducedMotion.matches;
   }
   private applyTier() {
-    const cinematic = this.resolved === "cinematic";
+    const cinematic = this.resolved === "cinematic",
+      photoreal = this.resolved === "photoreal";
     this.scene.fog = cinematic ? this.fog : null;
+    if (this.grid) this.grid.visible = !photoreal;
+    this.look?.setActive(photoreal, this.groups.map);
+    if (photoreal) this.loadLook();
     if (!cinematic || this.effects || this.effectsLoading) return;
     this.effectsLoading = true;
     void import("./effects")
@@ -1173,6 +1228,24 @@ export class SpatialRenderer {
         this.host.dispatchEvent(new CustomEvent("asseterror", { detail: String(error) })),
       )
       .finally(() => (this.effectsLoading = false));
+  }
+  /** The photoreal look loads on first use, like the cinematic effects. */
+  private loadLook() {
+    if (this.look || this.lookLoading) return;
+    this.lookLoading = true;
+    void import("./photoreal")
+      .then(({ PhotorealLook }) => {
+        if (this.disposed) return;
+        this.look = new PhotorealLook(this.renderer, this.scene, this.camera);
+        this.look.fit(normalizeBounds(this.manifest?.bounds ?? [-6, -5, 0, 6, 5, 3.5]));
+        for (const { object } of this.tiles.values()) this.look.prepare(object);
+        this.look.setActive(this.resolved === "photoreal", this.groups.map);
+        this.resizeViewport();
+      })
+      .catch((error) =>
+        this.host.dispatchEvent(new CustomEvent("asseterror", { detail: String(error) })),
+      )
+      .finally(() => (this.lookLoading = false));
   }
   private decorate(now: number) {
     const motion = this.motion(),
@@ -1272,6 +1345,8 @@ export class SpatialRenderer {
     this.reducedMotion.removeEventListener("change", this.invalidate);
     this.effects?.dispose();
     this.effects = null;
+    this.look?.dispose();
+    this.look = null;
     document.removeEventListener("visibilitychange", this.markDirty);
     this.controls.dispose();
     this.renderer.domElement.removeEventListener(
