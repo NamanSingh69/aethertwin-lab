@@ -196,7 +196,9 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
             raise HTTPException(401,'Invalid access credential') from exc
         limiter.success(peer);audit('login',peer=peer,role=role)
         response=JSONResponse({'role':role,'expires_in':auth.ttl})
-        response.set_cookie('aethertwin_session',cookie,httponly=True,samesite='strict',secure=not auth.local_development,max_age=auth.ttl)
+        # Secure exactly when served over TLS (proxy headers are not trusted); non-loopback listeners require TLS,
+        # and a Secure cookie on a plain-HTTP loopback upstream would never be sent back (e.g. by the gateway).
+        response.set_cookie('aethertwin_session',cookie,httponly=True,samesite='strict',secure=request.url.scheme=='https',max_age=auth.ttl)
         return response
 
     @app.delete('/api/v2/session')

@@ -63,8 +63,8 @@
       "sha256": "b3ff25cf1d30a44371730b5500c92d7d0ab53be302e667da4a6bb497589f41d8"
     },
     "HANDOFF.md": {
-      "bytes": 46577,
-      "sha256": "c022dc6b5fc367fbdb2e9af886da1691ad7481ac2600a11b613bca8ae12b526d"
+      "bytes": 46651,
+      "sha256": "bb377ff389dfb35d4d549ec8542c1a1f989394020a3ae2ba0f5363736c8fb052"
     },
     "PEAK_HIL_AND_UI_SPEC.md": {
       "bytes": 23580,
@@ -2711,8 +2711,8 @@
       "sha256": "d16dd659d37642880b7c3840947729baa8f4bb4c63d0edbd6b659071dfe42adf"
     },
     "command_center/service.py": {
-      "bytes": 16352,
-      "sha256": "745a26b157755aa4c28fe1880a2c6b534fb828b57b5fc20d24829eed6d34bb82"
+      "bytes": 16580,
+      "sha256": "dbdf63c795a68eefd85372c5744392062672bf2537bb4868cf0845e1ba839e27"
     },
     "config/calibration_extrinsics.json": {
       "bytes": 537,
@@ -2811,8 +2811,8 @@
       "sha256": "376718c2a10a695a13a2f4fca843dc2ed61dc3b8a0e3dc387f9688d8e15b792c"
     },
     "deployment/gateway/README.md": {
-      "bytes": 8637,
-      "sha256": "4d40c2814deafe34bdddd3758cf402e8ee316563c3ca55423c7b808b328bf6b0"
+      "bytes": 8883,
+      "sha256": "b6aced1327cf38ac83b5889052b7857b94a379e011bcc88ec8b68cf789c4c23f"
     },
     "deployment/gateway/compose.yaml": {
       "bytes": 1880,
@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 13222,
-      "sha256": "cc292e976fe10e4256a9057a23bdc16ae65a198fcbf80e8085b856419914a383"
+      "bytes": 13616,
+      "sha256": "36a835574f94e564d878b12563106cbdd9d7640c44c2fb5a37c417d1dd330997"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3193,6 +3193,10 @@
     "reports/edge_open3d_wheel_verification.json": {
       "bytes": 1609,
       "sha256": "2c96a1eeacf81f9f53eab90fe9bc770f22a659f01cadaa5d1970924bdad706ae"
+    },
+    "reports/gateway_container_smoke.json": {
+      "bytes": 3054,
+      "sha256": "4e720f21573ce6c86f2d0769a4c314becadce9b7494a2bbacb1d0da6b52df136"
     },
     "reports/github_clone_smoke.json": {
       "bytes": 4013,
@@ -3723,8 +3727,8 @@
       "sha256": "d512265058a5008044653d7bcb1cae3620378d705ce16bd76be156dbd53c1c58"
     },
     "tests/test_scene_protocol_v2.py": {
-      "bytes": 10667,
-      "sha256": "8bcfdcb1814c7ba0855506ec00c3d9266c2b518cd87ee8c741afbff939950a59"
+      "bytes": 11409,
+      "sha256": "029eec5e6d7fd3184fe1385e2d5930bd939418846e29280329d841d6b2eb0d6a"
     },
     "tests/test_se3_and_deskew.py": {
       "bytes": 1223,

@@ -131,6 +131,17 @@ def test_private_sessions_enforce_role_origin_cookie_and_no_auth_in_socket_url()
         assert client.get('/api/v2/bootstrap').json()['stream_url']=='/ws/v2/scene'
 
 
+def test_token_session_cookie_is_secure_only_over_tls_and_works_on_plain_loopback():
+    from fastapi.testclient import TestClient
+    operator='o'*40
+    with TestClient(create_app(operator_token=operator),client=('127.0.0.1',50000),base_url='http://127.0.0.1') as client:
+        response=client.post('/api/v2/session',json={'token':operator})
+        assert response.status_code==200 and 'Secure' not in response.headers['set-cookie']
+        assert client.get('/api/v2/bootstrap').json()['role']=='operator'
+    with TestClient(create_app(operator_token=operator),client=('127.0.0.1',50000),base_url='https://127.0.0.1') as client:
+        assert 'Secure' in client.post('/api/v2/session',json={'token':operator}).headers['set-cookie']
+
+
 def test_websocket_initial_keyframe_and_explicit_resync():
     from fastapi.testclient import TestClient
     hub=SceneHub();app=create_app(hub=hub)

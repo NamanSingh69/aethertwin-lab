@@ -98,8 +98,12 @@ credentials, token files for Compose secrets, HSTS on HTTPS, scene streams that
 close at session expiry, single-flight upstream re-authentication, explicit
 upstream ping/timeout, asset-sync backoff and a modern TLS policy. Compose uses
 secrets, resource limits, log rotation and a liveness check; the Dockerfile
-pins the base image by digest. Docker is not installed on the laptop, so the
-container files were not built or run. Halo: the serial transport reconnects
+pins the base image by digest. Docker is not installed on the laptop; the image
+was later built and run in a Linux cloud container against the simulator
+(`reports/gateway_container_smoke.json`: healthy, TLS 1.2/1.3 only, HSTS/CSP,
+roles, relayed stream, assets, read-only root, sign-in limit). That run found
+the service marking its session cookie `Secure` on a plain-HTTP loopback
+upstream, which the gateway could never return; fixed. Halo: the serial transport reconnects
 after a lost link or a missing port, reports firmware error lines and keeps
 shared state under its lock. The firmware is unchanged and nothing was tested
 on an ESP32.
@@ -180,8 +184,9 @@ generation but is a much larger part; no A2000 figure is claimed.
 11. Effects polish: selective bloom per layer, a shader grid with distance fade.
 
 **IoT and operations**
-12. Build and run the gateway container (Docker on Linux), run a TLS scan
-    against the cipher policy, document certificate rotation drills. [ops]
+12. Gateway container: built and smoke-tested (see above). Remaining: an HTTPS
+    upstream with `--ca-file`, `docker compose up` with real secrets, a TLS
+    scanner run, and documented certificate rotation drills. [ops]
 13. Halo [HW]: identify the board before flashing; add a device heartbeat or a
     periodic re-HELLO (the firmware already re-identifies on HELLO, but resets
     its link watchdog, which may flicker); inter-byte timeout and `0xA7`

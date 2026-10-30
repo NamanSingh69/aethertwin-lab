@@ -146,6 +146,11 @@ disconnect/reconnect, viewer restrictions, revision/application failures,
 allowlisted assets/cache limits, bounded forwarding and responsive ASGI health
 requests. A guarded subprocess rejects ML and sensor imports.
 
+The container image was built and run once against the simulator in a Linux
+cloud container; results and exact limits are in
+`reports/gateway_container_smoke.json` (not a deployment host; HTTPS upstream
+and `docker compose up` remain untested).
+
 Hash locks were generated from the downloaded platform wheels using
 `lock_profile.py`; that script does not resolve or publish packages. Re-resolve
 the five pinned inputs into a clean wheel directory before regenerating a lock.
