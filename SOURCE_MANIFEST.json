@@ -35,8 +35,8 @@
       "sha256": "b30e94c3c49d96973d5fa370c8d0fb74b7571ac0a09ef363ec8925515dbf1054"
     },
     ".github/workflows/codeql.yml": {
-      "bytes": 1292,
-      "sha256": "722b65ba263c5407851c0762121a00c36ced363ae74aeb2371d4a423d7fa937a"
+      "bytes": 1548,
+      "sha256": "3c140906e8907a0d5a4a2988776fed9e4d88010cdb08e7bd9efcd3c12292b50c"
     },
     ".github/workflows/release.yml": {
       "bytes": 4033,
@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 11668,
-      "sha256": "2464173dada152a642044b2483a04fd6a92f0c52c3e1ae5acf6a9bf1b3540999"
+      "bytes": 12187,
+      "sha256": "0e55816d5f93f15d46dc5a21bc8ae8819e23e50e3e56eb43a85748cc19a83f85"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3219,8 +3219,8 @@
       "sha256": "c61b6ce4b4ec826e7a3b291dbf8956d87adc9ffe89e53bc36d1497b2849f0fed"
     },
     "reports/modal/README.md": {
-      "bytes": 4026,
-      "sha256": "322389ac814afc7820e1cc7cc436da42a3e53eac459c735fb7bd1d3b0047bd67"
+      "bytes": 4221,
+      "sha256": "5c81a1945785923f5e979630a5d4431ca53de3ddcc2b2d3f1869d692faa1105a"
     },
     "reports/modal/experiments/latency_a10_amp_cast_experiment.json": {
       "bytes": 6299,
@@ -3587,12 +3587,12 @@
       "sha256": "d94f34a403eb02e545777d4cb7b9f028be373f8bb34dc921a813e2e277952d71"
     },
     "slam_and_twin/tiled_map.py": {
-      "bytes": 25636,
-      "sha256": "ce97cd0ce0788b22b79b285759bc1f13623b2e026324a8857d1c3eaf09a7c286"
+      "bytes": 25948,
+      "sha256": "9bf81c624901cfa7b653a86a63537f62cbd3452122adbb3e668c4cacdd95f0ce"
     },
     "slam_and_twin/tiled_reconstruction.py": {
-      "bytes": 12486,
-      "sha256": "95712b0146d75971f16bdf37dd3ac0ff074ab4a7392f3443eb19f4f2c5f1c325"
+      "bytes": 14574,
+      "sha256": "4a7381a5fb26a32bcbb7608854b40fcef8c968bba7cd137d54547ca1f28ff90d"
     },
     "tests/run_commissioning_evidence.py": {
       "bytes": 4989,
@@ -3725,6 +3725,10 @@
     "tests/test_tiled_batch.py": {
       "bytes": 5305,
       "sha256": "5a4f023c53ddb350dcc9d3a3e9b395a2ca3206ac6a8fca1fcd5b1a947ffb1183"
+    },
+    "tests/test_tiled_distances.py": {
+      "bytes": 1168,
+      "sha256": "cb75bd7b488ffd51d4785b3fdb1b40d32b7aac066e58bda0292c18a76983a078"
     },
     "tests/test_tracking_navigation.py": {
       "bytes": 24638,

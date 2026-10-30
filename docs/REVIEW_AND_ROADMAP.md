@@ -119,8 +119,16 @@ Full tables and limits: `reports/modal/README.md`. In short, on T4, L4 and A10:
 - The whole pipeline is ~385-486 ms p50 on CUDA versus ~500-617 ms on the
   container CPU. **Occupancy and planning dominate on CPU; the 35 ms target is
   not reachable with GPU changes alone.**
-- Seeds without the bundled twin (`assets/twin_seed7`) spend ~1.75 s per
-  frame in perception and tracking, about 26x seed 7. Not yet explained.
+- Seeds without the bundled twin (`assets/twin_seed7`) spent ~1.75 s per
+  frame in perception and tracking, about 26x seed 7. **Fixed after the
+  measurement:** a runtime-built twin keeps its points in a disk tile store,
+  and every background-distance query re-read and decompressed nearby tiles
+  and rebuilt a KD-tree per tile per 256-point batch (~17,000 tile reads per
+  frame). The store now keeps one exact global tree when it fits 2 M
+  centroids, otherwise a point-budgeted LRU of per-tile trees. Laptop CPU,
+  seed 101, 12 frames: perception + tracking p50 1,244 -> 120 ms (seed 7:
+  115 ms), total p50 ~700 -> 310 ms; results are exact (tested against a
+  global search).
 - A 15-minute run (1,608 frames, p50 370 ms, p95 520 ms) kept memory flat.
 - pytest from `requirements-ubuntu-cuda.lock`: 334 passed, 1 skipped.
 - Total Modal spend for all runs: about USD 1 (billing report).
@@ -130,9 +138,9 @@ generation but is a much larger part; no A2000 figure is claimed.
 ## Prioritised backlog
 
 **P0, correctness and evidence**
-1. Explain the 26x perception/tracking slowdown for seeds without a bundled
-   twin (profile `perception_tracking` with seed 101: background distance,
-   cluster counts, tracker association). [software]
+1. Done: the seed-dependent perception slowdown was uncached disk-tile
+   distance queries (see "Cloud GPU benchmarks"). Re-run the Modal sweep to
+   confirm on cloud CPUs. [software]
 2. Occupancy and planning latency: move ray clearing fully to the native
    backend, bound MPPI samples by deadline, profile A* tails (p95 up to 950 ms).
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
