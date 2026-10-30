@@ -744,3 +744,20 @@ def test_upstream_capability_strings_do_not_promote_controls(tmp_path):
     runtime._cache = {"capabilities": {"pause": "false", "resume": True}}
     assert runtime.capabilities()["pause"] is False
     assert runtime.capabilities()["resume"] is True
+
+
+def test_upstream_state_changes_are_audited_once_each(monkeypatch):
+    import command_center.gateway as gateway_module
+
+    events = []
+    monkeypatch.setattr(gateway_module, "audit", lambda event, **fields: events.append((event, fields)))
+    runtime = gateway_module.GatewayRuntime.__new__(gateway_module.GatewayRuntime)
+    for value in ("Connecting", "Connecting", "Upstream unavailable: tls", None, None, "Upstream unavailable: tls"):
+        runtime._error = value
+    assert [(event, fields["state"]) for event, fields in events] == [
+        ("upstream_state", "unavailable"),
+        ("upstream_state", "unavailable"),
+        ("upstream_state", "connected"),
+        ("upstream_state", "unavailable"),
+    ]
+    assert events[1][1]["reason"] == "Upstream unavailable: tls" and runtime._error == "Upstream unavailable: tls"

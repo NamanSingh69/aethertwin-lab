@@ -1,0 +1,143 @@
+{
+  "label": "zephyrus-m16-rtx4070-laptop-after-stage-a",
+  "recorded_at": "2026-10-29T22:56:43.695Z",
+  "browser": "Chrome stable (Playwright channel=chrome), headed",
+  "vsync": "enabled",
+  "mode": "static",
+  "duration_seconds": 60,
+  "valid_runs": 3,
+  "runs": [
+    {
+      "attempt": 1,
+      "valid": true,
+      "throttle_gaps_over_500ms": 0,
+      "test": "explicit_static_100000_instance_render_fixture",
+      "update_rate_hz": 0,
+      "update_cpu_ms_after_warmup": null,
+      "source": "synthetic_test_injection",
+      "runtime_perception_benchmarked": false,
+      "drawing_buffer": [
+        1920,
+        1080
+      ],
+      "css_canvas": [
+        1865,
+        1049
+      ],
+      "pixel_ratio": 1,
+      "quality": "balanced",
+      "elapsed_seconds": 60.156,
+      "warmup_seconds": 5,
+      "sampled_one_second_windows": 56,
+      "mean_render_fps": 237.9470708102961,
+      "minimum_window_fps": 232.07171314741035,
+      "frame_interval_ms_last_1200": {
+        "p50": 4.199999999720603,
+        "p95": 4.399999999906868,
+        "p99": 4.5
+      },
+      "instances": 100000,
+      "draw_calls": 3,
+      "triangles": 1200000,
+      "gpu_geometries": 3,
+      "last_update_cpu_ms": 5.899999999906868,
+      "last_render_submit_cpu_ms": 0,
+      "device": {
+        "vendor": "Google Inc. (NVIDIA)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "completed": true,
+      "page_visibility": "visible",
+      "hidden_during_measurement": false
+    },
+    {
+      "attempt": 2,
+      "valid": true,
+      "throttle_gaps_over_500ms": 0,
+      "test": "explicit_static_100000_instance_render_fixture",
+      "update_rate_hz": 0,
+      "update_cpu_ms_after_warmup": null,
+      "source": "synthetic_test_injection",
+      "runtime_perception_benchmarked": false,
+      "drawing_buffer": [
+        1920,
+        1080
+      ],
+      "css_canvas": [
+        1865,
+        1049
+      ],
+      "pixel_ratio": 1,
+      "quality": "balanced",
+      "elapsed_seconds": 60.1663999999999,
+      "warmup_seconds": 5,
+      "sampled_one_second_windows": 56,
+      "mean_render_fps": 237.8955744649417,
+      "minimum_window_fps": 232.02549292965224,
+      "frame_interval_ms_last_1200": {
+        "p50": 4.199999999720603,
+        "p95": 4.300000000279397,
+        "p99": 4.400000000372529
+      },
+      "instances": 100000,
+      "draw_calls": 3,
+      "triangles": 1200000,
+      "gpu_geometries": 3,
+      "last_update_cpu_ms": 3.3999999999068677,
+      "last_render_submit_cpu_ms": 0,
+      "device": {
+        "vendor": "Google Inc. (NVIDIA)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "completed": true,
+      "page_visibility": "visible",
+      "hidden_during_measurement": false
+    },
+    {
+      "attempt": 3,
+      "valid": true,
+      "throttle_gaps_over_500ms": 0,
+      "test": "explicit_static_100000_instance_render_fixture",
+      "update_rate_hz": 0,
+      "update_cpu_ms_after_warmup": null,
+      "source": "synthetic_test_injection",
+      "runtime_perception_benchmarked": false,
+      "drawing_buffer": [
+        1920,
+        1080
+      ],
+      "css_canvas": [
+        1865,
+        1049
+      ],
+      "pixel_ratio": 1,
+      "quality": "balanced",
+      "elapsed_seconds": 60.183,
+      "warmup_seconds": 5,
+      "sampled_one_second_windows": 56,
+      "mean_render_fps": 238.6082647963382,
+      "minimum_window_fps": 233.021310495982,
+      "frame_interval_ms_last_1200": {
+        "p50": 4.199999999720603,
+        "p95": 4.300000000279397,
+        "p99": 4.400000000372529
+      },
+      "instances": 100000,
+      "draw_calls": 3,
+      "triangles": 1200000,
+      "gpu_geometries": 3,
+      "last_update_cpu_ms": 4.400000000372529,
+      "last_render_submit_cpu_ms": 0.20000000018626451,
+      "device": {
+        "vendor": "Google Inc. (NVIDIA)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "webgl": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "completed": true,
+      "page_visibility": "visible",
+      "hidden_during_measurement": false
+    }
+  ]
+}

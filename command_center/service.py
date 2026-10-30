@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from contextlib import asynccontextmanager
 import json
+import math
 from pathlib import Path
 import queue
 import threading
@@ -10,10 +11,19 @@ import time
 
 from fastapi import FastAPI,Request,WebSocket,WebSocketDisconnect,HTTPException
 from fastapi.responses import FileResponse,JSONResponse,Response
+from starlette.middleware.gzip import GZipMiddleware
 
-from .auth import SessionAuth,is_loopback
+from .auth import LoginLimiter,SessionAuth,audit,is_loopback
 from .controls import ControlPlane
 from .protocol import SceneEncoder,EncodedScene
+
+
+# Same-origin only. 'wasm-unsafe-eval' admits the meshopt glTF decoder; blob: admits embedded glTF images.
+CONTENT_SECURITY_POLICY=("default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data: blob:; connect-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; "
+    "base-uri 'none'; frame-ancestors 'none'; form-action 'self'")
+# Vite emits content-hashed names under assets/; anything else (HTML entries) must revalidate.
+IMMUTABLE_CACHE='public, max-age=31536000, immutable'
 
 
 class SceneHub:
@@ -102,8 +112,8 @@ async def bounded_json(request,limit=32768):
 
 
 def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root=None,frontend_root=None,
-               operator_token=None,viewer_token=None,allowed_origins=(),local_development=True,commissioning=None):
-    auth=SessionAuth(host,operator_token,viewer_token,local_development)
+               operator_token=None,viewer_token=None,allowed_origins=(),local_development=True,commissioning=None,ready=None):
+    auth=SessionAuth(host,operator_token,viewer_token,local_development);limiter=LoginLimiter()
     hub=hub or SceneHub();controls=controls or ControlPlane()
     asset_root=Path(asset_root).resolve() if asset_root else None
     frontend_root=Path(frontend_root).resolve() if frontend_root else None
@@ -127,10 +137,13 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
     app=FastAPI(title='AetherTwin',version='2.0.0',lifespan=lifespan,docs_url=None,redoc_url=None)
     app.state.hub=hub;app.state.controls=controls;app.state.auth=auth
 
-    def role_for(connection):
-        if auth.local_development and not is_loopback(connection.url.hostname or ''):return None
-        peer=connection.client.host if connection.client else None
-        return auth.role(connection.cookies.get('aethertwin_session'),peer)
+    def peer_of(connection):return connection.client.host if connection.client else None
+
+    def session_for(connection):
+        if auth.local_development and not is_loopback(connection.url.hostname or ''):return None,None
+        return auth.session(connection.cookies.get('aethertwin_session'),peer_of(connection))
+
+    def role_for(connection):return session_for(connection)[0]
 
     def require_role(connection,operator=False):
         role=role_for(connection)
@@ -153,16 +166,39 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
         response.headers['X-Content-Type-Options']='nosniff'
         response.headers['Referrer-Policy']='same-origin'
         response.headers['X-Frame-Options']='DENY'
+        if request.url.scheme=='https':response.headers['Strict-Transport-Security']='max-age=31536000'
         if request.url.path.startswith('/api/'):response.headers['Cache-Control']='no-store'
+        else:response.headers.setdefault('Content-Security-Policy',CONTENT_SECURITY_POLICY)
         return response
+    # Starlette skips already-encoded and small bodies; binary scene packets use the WebSocket, not this path.
+    app.add_middleware(GZipMiddleware,minimum_size=1024,compresslevel=6)
+
+    # Unauthenticated probes for orchestrators: a status code and nothing else.
+    @app.get('/healthz')
+    async def healthz():return {'status':'alive'}
+
+    @app.get('/readyz')
+    async def readyz():
+        ok=bool(ready()) if ready is not None else hub.latest is not None
+        return JSONResponse({'ready':ok},status_code=200 if ok else 503)
 
     @app.post('/api/v2/session')
     async def login(request:Request):
-        check_origin(request);data=await bounded_json(request,4096)
+        # Per client address: behind a shared proxy all clients share one bucket.
+        check_origin(request);peer=peer_of(request) or 'unknown';wait=limiter.acquire(peer)
+        if wait:
+            audit('login_rate_limited',peer=peer)
+            raise HTTPException(429,'Too many sign-in attempts',headers={'Retry-After':str(math.ceil(wait))})
+        data=await bounded_json(request,4096)
         try:cookie,role=auth.create(data.get('token'))
-        except ValueError as exc:raise HTTPException(401,'Invalid access credential') from exc
+        except ValueError as exc:
+            audit('login_failed',peer=peer)
+            raise HTTPException(401,'Invalid access credential') from exc
+        limiter.success(peer);audit('login',peer=peer,role=role)
         response=JSONResponse({'role':role,'expires_in':auth.ttl})
-        response.set_cookie('aethertwin_session',cookie,httponly=True,samesite='strict',secure=not auth.local_development,max_age=auth.ttl)
+        # Secure exactly when served over TLS (proxy headers are not trusted); non-loopback listeners require TLS,
+        # and a Secure cookie on a plain-HTTP loopback upstream would never be sent back (e.g. by the gateway).
+        response.set_cookie('aethertwin_session',cookie,httponly=True,samesite='strict',secure=request.url.scheme=='https',max_age=auth.ttl)
         return response
 
     @app.delete('/api/v2/session')
@@ -198,8 +234,10 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
 
     @app.post('/api/v2/commands')
     async def command(request:Request):
-        require_role(request,True);check_origin(request)
-        result=await asyncio.to_thread(controls.submit,await bounded_json(request))
+        role=require_role(request,True);check_origin(request);body=await bounded_json(request)
+        result=await asyncio.to_thread(controls.submit,body)
+        audit('command',peer=peer_of(request),role=role,action=str(body.get('action'))[:64] if isinstance(body,dict) else None,
+            status=result.get('status'))
         return JSONResponse(result,status_code=202 if result['status']=='accepted' else 409)
 
     @app.get('/api/v2/trajectory.csv')
@@ -221,7 +259,8 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
 
     @app.websocket('/ws/v2/scene')
     async def stream(websocket:WebSocket):
-        if role_for(websocket) is None:
+        role,expires=session_for(websocket)
+        if role is None:
             await websocket.close(code=4401,reason='Authentication required');return
         try:check_origin(websocket)
         except HTTPException:
@@ -244,6 +283,11 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
             except Exception:
                 await websocket.close(code=1013,reason='Scene consumer is too slow')
         task=asyncio.create_task(writer())
+        async def expire():
+            # A stream must not outlive the signed session it was opened with.
+            await asyncio.sleep(max(0.,expires-time.time()))
+            await websocket.close(code=4401,reason='Session expired')
+        expiry=asyncio.create_task(expire()) if expires is not None else None
         try:
             while True:
                 message=await websocket.receive_text()
@@ -255,9 +299,11 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
                     if latest:
                         while not outgoing.empty():outgoing.get_nowait()
                         enqueue(latest,True)
-        except WebSocketDisconnect:pass
+        except (WebSocketDisconnect,RuntimeError):pass  # RuntimeError: receive after the expiry task closed the socket
         finally:
-            closed=True;hub.unsubscribe(token);task.cancel();await asyncio.gather(task,return_exceptions=True)
+            closed=True;hub.unsubscribe(token);task.cancel()
+            if expiry:expiry.cancel()
+            await asyncio.gather(task,*([expiry] if expiry else []),return_exceptions=True)
 
     @app.get('/{path:path}')
     async def frontend(path:str):
@@ -265,8 +311,10 @@ def create_app(runtime=None,*,hub=None,controls=None,host='127.0.0.1',asset_root
         if frontend_root is None:raise HTTPException(404,'Build the browser frontend first')
         candidate=(frontend_root/path).resolve()
         if not candidate.is_relative_to(frontend_root):raise HTTPException(404)
-        if candidate.is_file():return FileResponse(candidate)
+        if candidate.is_file():
+            hashed=candidate.parent==frontend_root/'assets'
+            return FileResponse(candidate,headers={'Cache-Control':IMMUTABLE_CACHE if hashed else 'no-cache'})
         index=frontend_root/'index.html'
-        if index.is_file() and not Path(path).suffix:return FileResponse(index)
+        if index.is_file() and not Path(path).suffix:return FileResponse(index,headers={'Cache-Control':'no-cache'})
         raise HTTPException(404)
     return app

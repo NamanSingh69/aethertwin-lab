@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm ci)",
+      "Bash(npm install)",
+      "Bash(npm run *)",
+      "Bash(npm test*)",
+      "Bash(npm ls*)",
+      "Bash(npm view *)",
+      "Bash(npx playwright test*)",
+      "Bash(npx playwright show-report*)",
+      "Bash(npx tsc*)",
+      "Bash(npx vitest*)",
+      "Bash(npx vite build*)",
+      "Bash(npx eslint*)",
+      "Bash(.venv/bin/python -m pytest*)",
+      "Bash(python3 tools/repository_manifest.py*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push -u origin claude/*)",
+      "Bash(git fetch origin*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(rm -rf /*)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-commit-check.sh", "timeout": 60 }
+        ]
+      }
+    ]
+  }
+}

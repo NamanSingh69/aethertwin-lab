@@ -63,18 +63,53 @@ docker build -f deployment/gateway/Dockerfile -t aethertwin-gateway:local .
 docker compose -f deployment/gateway/compose.yaml up --build
 ```
 
-Supply actual credentials through the server environment; `.env.example`
-contains names only. The Compose TLS directory must contain `fullchain.pem`,
-`privkey.pem`, and `upstream-ca.pem`, readable by container UID 10001. The last
-file is the trusted edge CA bundle. For a publicly trusted upstream, omit the
-Compose `--ca-file` pair and use the system trust store. TLS keys/certificates and
-actual environment files are excluded from source. The default published bind
-is localhost:8443; select a private bind address explicitly when needed.
+Compose passes credentials as secret files, never as environment values (which
+`docker inspect` would show). Create `deployment/gateway/secrets/` (or point
+`AETHERTWIN_SECRETS_DIR` elsewhere) with three files, each holding one credential
+of at least 32 characters: `upstream_token`, `operator_token`, `viewer_token`.
+The service reads them through `AETHERTWIN_UPSTREAM_TOKEN_FILE`,
+`AETHERTWIN_OPERATOR_TOKEN_FILE` and `AETHERTWIN_VIEWER_TOKEN_FILE`; setting both a
+variable and its `_FILE` form is rejected. The secrets directory is git-ignored.
+Compose bind-mounts these files with their host permissions, so they must be
+readable by container UID 10001 (for example owned by 10001 with mode 0400);
+a 0600 file owned by your own user fails at start-up. Failed sign-ins are
+limited per client address, so clients behind one shared proxy share a limit.
 
-The Python base version is pinned through `PYTHON_IMAGE`; an organization can
-override this build argument with its reviewed digest. Python dependencies are
-version/hash locked for CPython 3.12 x86-64. Docker's health check confirms the
-listener; authenticated `/api/v2/health` includes actual upstream/cache status.
+The Compose TLS directory must contain `fullchain.pem`, `privkey.pem`, and
+`upstream-ca.pem`, readable by container UID 10001. The last file is the trusted
+edge CA bundle; set `AETHERTWIN_UPSTREAM_CA_FILE` to another path if needed.
+Extra browser origins go in `AETHERTWIN_ALLOWED_ORIGINS` (comma-separated).
+Browser-facing TLS uses forward-secret AEAD suites only, the upstream client
+requires TLS 1.2 or newer, and HTTPS responses carry `Strict-Transport-Security`.
+The default published bind is localhost:8443; select a private bind address
+explicitly when needed.
+
+Certificate rotation (both drills were run once in a cloud container, see
+`reports/gateway_container_smoke.json`):
+
+- **Gateway certificate:** replace `fullchain.pem` and `privkey.pem` in the TLS
+  directory, then `docker compose restart`. uvicorn loads them only at start-up,
+  so the old certificate is served until the restart; the drill measured 2.3 s
+  from restart to `/readyz` 200 with the new certificate.
+- **Upstream (edge) certificate:** first append the new issuing CA to
+  `upstream-ca.pem` and restart the gateway, so it trusts old and new; then
+  switch the edge to the new certificate. The gateway reconnects by itself
+  (drill: `/readyz` 503 while the edge restarted, 200 about 4 s later, no gateway
+  restart; `upstream_state` audit lines record both changes). Remove the old CA
+  from the bundle at the next gateway restart.
+
+The base image is pinned by tag and index digest in `PYTHON_IMAGE`; Dependabot
+proposes updates. Python dependencies are version/hash locked for CPython 3.12
+x86-64. Compose caps memory (768 MiB), processes (128) and CPU (2), and rotates
+JSON logs (3 x 10 MB).
+
+Health probes need no credential and return only a status code: `/healthz` is
+liveness (the container `HEALTHCHECK` uses it) and `/readyz` is 200 only while the
+upstream stream is connected and its last packet is under 3 s old. Authenticated
+`/api/v2/health` keeps the detailed upstream/cache status. Failed sign-ins are
+rate limited per client address (5, refilling one per 12 s; 429 with
+`Retry-After`), and sign-ins, failures and commands are written as JSON lines to
+the `aethertwin.audit` logger without credentials.
 The default Python 3.12.16 base matches the
 [official Bookworm image source](https://github.com/docker-library/python/blob/master/3.12/slim-bookworm/Dockerfile).
 
@@ -123,6 +158,13 @@ one-stream fanout, source/calibration/sequence preservation, delta resync,
 disconnect/reconnect, viewer restrictions, revision/application failures,
 allowlisted assets/cache limits, bounded forwarding and responsive ASGI health
 requests. A guarded subprocess rejects ML and sensor imports.
+
+The container image was built and run once against the simulator in a Linux
+cloud container; results and exact limits are in
+`reports/gateway_container_smoke.json` (not a deployment host). It covers plain-HTTP loopback and
+`docker compose up` with secret files and a verified HTTPS upstream. Upstream
+state changes are logged once each as `upstream_state` audit lines, so a wrong
+CA or token shows in `docker logs`.
 
 Hash locks were generated from the downloaded platform wheels using
 `lock_profile.py`; that script does not resolve or publish packages. Re-resolve

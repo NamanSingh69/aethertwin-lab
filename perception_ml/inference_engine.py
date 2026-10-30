@@ -158,9 +158,13 @@ def aggregate_targets(prepared,truth):
     return labels,flow,count>0,instances
 
 
+COMPILE_TOLERANCE=1e-4  # max |compiled-eager| over logits, flow and embedding
+
+
 class InferenceEngine:
     def __init__(self,checkpoint,device='cpu',voxel_size=.18,max_voxels=1400,neighbors=16,temporal_neighbors=12,rgbd_stride=3,range_image_height=24,range_image_width=96,
-                 camera_feature_height=None,camera_feature_width=None):
+                 camera_feature_height=None,camera_feature_width=None,compile=False):
+        if not isinstance(compile,bool):raise ValueError('perception.compile must be boolean')
         if isinstance(rgbd_stride,bool) or not isinstance(rgbd_stride,(int,np.integer)) or rgbd_stride<1:
             raise ValueError('RGB-D fusion stride must be a positive integer')
         self.rgbd_stride=int(rgbd_stride)
@@ -173,6 +177,23 @@ class InferenceEngine:
         self.model.load_state_dict(data['model']);self.model.eval()
         self.metadata=data.get('metadata',{});self.voxel_size=voxel_size;self.max_voxels=max_voxels
         self.previous=None;self.last_timestamp=None;self.persistence={};self.temporal_valid=False
+        # Opt-in torch.compile (dynamic shapes: voxel counts change per frame). Each input signature is
+        # first run eager and compiled side by side; any mismatch or compiler error falls back to eager for good.
+        self._compiled=torch.compile(self.model,dynamic=True) if compile else None
+        self._verified=set();self.compile_status='pending' if compile else 'disabled'
+    def _forward(self,kwargs):
+        if self._compiled is None:return self.model(**kwargs)
+        signature=tuple(sorted(kwargs))
+        if signature in self._verified:return self._compiled(**kwargs)
+        eager=self.model(**kwargs)
+        try:
+            compiled=self._compiled(**kwargs)
+            error=max(float((a-b).abs().max()) if a.numel() else 0. for a,b in zip(compiled,eager))
+        except Exception as exc:
+            self._compiled=None;self.compile_status=f'disabled: {type(exc).__name__}: {exc}'[:300];return eager
+        if not error<=COMPILE_TOLERANCE:
+            self._compiled=None;self.compile_status=f'disabled: parity error {error:.3g}';return eager
+        self._verified.add(signature);self.compile_status='active';return compiled
     def reset(self):self.previous=None;self.last_timestamp=None;self.persistence.clear();self.temporal_valid=False
     @torch.inference_mode()
     def infer(self,frame,world_points,background_distance=None,occupancy=None,dense_rgbd=None,already_fused=False):
@@ -194,6 +215,6 @@ class InferenceEngine:
         kwargs=dict(prepared.inputs)
         if self.temporal_valid:
             kwargs['coords_prev'],kwargs['cached_stage2_prev']=self.previous
-        logits,flow,embedding=self.model(**kwargs)
+        logits,flow,embedding=self._forward(kwargs)
         self.previous=(kwargs['coords_t'].detach(),embedding.detach());self.last_timestamp=aligned_time
         return prepared,logits.softmax(-1).cpu().numpy(),flow.cpu().numpy(),embedding.cpu().numpy()

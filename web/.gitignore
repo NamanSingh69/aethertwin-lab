@@ -1,3 +1,7 @@
 node_modules/
 # dist/ is committed so the Python service works from a fresh clone.
 .sites-runtime/
+# Playwright output
+test-results/
+playwright-report/
+blob-report/

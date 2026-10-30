@@ -22,6 +22,22 @@ set `AETHERTWIN_SERVICE_URL=http://127.0.0.1:8080` in the current shell, then ru
 when the service URL is absent. It reads a real binary frame and map manifest;
 it does not pause processing or change the source.
 
+## Browser end-to-end tests
+
+Playwright runs two projects (`playwright.config.ts`):
+
+- `mock` serves the production build with `vite preview` and answers every
+  `/api/v2/*` request and the binary `/ws/v2/scene` stream from an in-test fake
+  service (`e2e/support/mockService.ts`). It covers streaming, layers, controls,
+  roles, sign-in, the zone dialog, axe WCAG 2.1 AA checks and phone layout.
+  Run `npm run build` first, then `npm run e2e:mock`.
+- `live` drives the real Python service in simulation mode: CSP, compression and
+  caching headers, map tiles, pause/step/resume and route planning with CSV export.
+  Set `AETHERTWIN_SERVICE_URL=http://127.0.0.1:8080` for a running service, or
+  `AETHERTWIN_PYTHON=../.venv/bin/python` to let Playwright start one.
+
+Headless runs use SwiftShader WebGL; they check behaviour, not GPU frame rates.
+
 ## Data and controls
 
 - Worker decoding follows `../docs/TELEMETRY_V2.md`, validates the 16 MiB packet

@@ -29,6 +29,7 @@ import httpx
 import numpy as np
 from websockets.asyncio.client import connect
 
+from .auth import audit, configured_token
 from .controls import ACTIONS, validate_payload
 from .protocol import (
     MAX_HEADER,
@@ -39,6 +40,16 @@ from .protocol import (
     encode_packet,
 )
 from .service import SceneHub, create_app
+
+
+# Upstream socket keepalive: a silent but open upstream is dropped and reconnected.
+PING_INTERVAL_SECONDS = 10
+PING_TIMEOUT_SECONDS = 10
+# Failed map syncs back off per revision instead of refetching every poll.
+ASSET_RETRY_MIN_SECONDS = 5
+ASSET_RETRY_MAX_SECONDS = 300
+# Browser-facing TLS 1.2 suites: forward secret AEAD only (TLS 1.3 suites are fixed by OpenSSL).
+TLS_CIPHERS = "ECDHE+AESGCM:ECDHE+CHACHA20"
 
 
 def upstream_origin(url):
@@ -172,6 +183,18 @@ class ForwardControlPlane:
 class GatewayRuntime:
     """Authenticated single-stream relay with bounded caches and visible failures."""
 
+    # Every upstream state change is written once to the audit log (docker logs), so a wrong
+    # CA or token is diagnosable without signing in. Messages pass through safe_error first.
+    @property
+    def _error(self):
+        return self._error_text
+
+    @_error.setter
+    def _error(self, value):
+        if value != getattr(self, "_error_text", object()):
+            audit("upstream_state", state="unavailable" if value else "connected", reason=value)
+        self._error_text = value
+
     def __init__(
         self,
         upstream_url,
@@ -186,9 +209,7 @@ class GatewayRuntime:
         max_asset_bytes=64 * 1024 * 1024,
     ):
         self.origin = upstream_origin(upstream_url)
-        self._token = (
-            token if token is not None else os.environ.get("AETHERTWIN_UPSTREAM_TOKEN")
-        )
+        self._token = configured_token(token, "AETHERTWIN_UPSTREAM_TOKEN")
         if not isinstance(self._token, str) or len(self._token) < 32:
             raise ValueError(
                 "AETHERTWIN_UPSTREAM_TOKEN must contain at least 32 characters"
@@ -214,6 +235,7 @@ class GatewayRuntime:
         self.ssl_context = ssl.create_default_context(
             cafile=None if ca_file is None else str(ca_file)
         )
+        self.ssl_context.minimum_version = ssl.TLSVersion.TLSv1_2
         self._lock = threading.Lock()
         self._slots = threading.BoundedSemaphore(4)
         self._stopping = threading.Event()
@@ -236,6 +258,9 @@ class GatewayRuntime:
         self._error = "Connecting to configured upstream"
         self._asset_error = None
         self._last_packet = None
+        self._asset_retry = None
+        self._auth_lock = None
+        self._auth_generation = 0
         self._source_processed = None
         self._frames = 0
         self._reconnects = 0
@@ -257,6 +282,15 @@ class GatewayRuntime:
         for path in self.asset_root.iterdir():
             if path.is_dir() and path.name.startswith(".stage_"):
                 self._remove_cache_directory(path)
+
+    def ready(self):
+        """Upstream connected and its last scene packet is under 3 s old."""
+        with self._lock:
+            return (
+                self._connected
+                and self._last_packet is not None
+                and time.time() - self._last_packet <= 3
+            )
 
     def safe_error(self, error):
         return (str(error) or type(error).__name__).replace(self._token, "[redacted]")[
@@ -399,6 +433,8 @@ class GatewayRuntime:
                         close_timeout=2,
                         max_size=MAX_PACKET,
                         max_queue=2,
+                        ping_interval=PING_INTERVAL_SECONDS,
+                        ping_timeout=PING_TIMEOUT_SECONDS,
                     ) as ws:
                         with self._lock:
                             self._connected = True
@@ -506,6 +542,17 @@ class GatewayRuntime:
         return status, value
 
     async def _authenticate(self):
+        # Single flight: concurrent 401s must not clear the jar under each other.
+        if self._auth_lock is None:
+            self._auth_lock = asyncio.Lock()
+        generation = self._auth_generation
+        async with self._auth_lock:
+            if generation != self._auth_generation:
+                return
+            await self._authenticate_once()
+            self._auth_generation += 1
+
+    async def _authenticate_once(self):
         self._client.cookies.clear()
         status, data = await self._json(
             "POST", "/api/v2/session", body={"token": self._token}, reauth=False
@@ -579,12 +626,19 @@ class GatewayRuntime:
             with self._lock:
                 setattr(self, target, value)
         if data.get("map_manifest_url"):
+            revision = str(data.get("map_revision", "unavailable"))
+            retry = self._asset_retry
+            if retry and retry[0] == revision and time.monotonic() < retry[2]:
+                return
             try:
-                await self._sync_assets(
-                    data["map_manifest_url"],
-                    str(data.get("map_revision", "unavailable")),
-                )
+                await self._sync_assets(data["map_manifest_url"], revision)
+                self._asset_retry = None
             except Exception as exc:
+                attempts = retry[1] + 1 if retry and retry[0] == revision else 1
+                delay = min(
+                    ASSET_RETRY_MAX_SECONDS, ASSET_RETRY_MIN_SECONDS * 2 ** (attempts - 1)
+                )
+                self._asset_retry = (revision, attempts, time.monotonic() + delay)
                 with self._lock:
                     self._asset_error = (
                         "Upstream map assets unavailable: " + self.safe_error(exc)
@@ -836,6 +890,7 @@ def create_gateway_app(
         viewer_token=viewer_token,
         allowed_origins=allowed_origins,
         local_development=local_development,
+        ready=runtime.ready,
     )
     app.state.gateway_runtime = runtime
     return app
@@ -854,10 +909,20 @@ def main(argv=None):
         type=Path,
         default=Path(__file__).resolve().parents[1] / "web/dist",
     )
-    parser.add_argument("--ca-file", type=Path)
+    parser.add_argument(
+        "--ca-file", type=Path, default=os.environ.get("AETHERTWIN_UPSTREAM_CA_FILE")
+    )
     parser.add_argument("--ssl-certfile", type=Path)
     parser.add_argument("--ssl-keyfile", type=Path)
-    parser.add_argument("--allowed-origin", action="append", default=[])
+    parser.add_argument(
+        "--allowed-origin",
+        action="append",
+        default=[
+            origin.strip()
+            for origin in os.environ.get("AETHERTWIN_ALLOWED_ORIGINS", "").split(",")
+            if origin.strip()
+        ],
+    )
     args = parser.parse_args(argv)
     if not args.upstream:
         parser.error("--upstream or AETHERTWIN_UPSTREAM_URL is required")
@@ -875,7 +940,9 @@ def main(argv=None):
         allowed_origins=args.allowed_origin,
     )
     import uvicorn
+    from .auth import configure_audit_log
 
+    configure_audit_log()
     uvicorn.run(
         app,
         host=args.host,
@@ -887,6 +954,7 @@ def main(argv=None):
         timeout_keep_alive=5,
         ssl_certfile=None if args.ssl_certfile is None else str(args.ssl_certfile),
         ssl_keyfile=None if args.ssl_keyfile is None else str(args.ssl_keyfile),
+        ssl_ciphers=TLS_CIPHERS,
     )
 
 

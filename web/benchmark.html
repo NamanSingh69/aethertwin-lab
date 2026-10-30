@@ -84,9 +84,17 @@
     <h1>100,000 instances. Measured in your browser.</h1>
     <p>
       Fixed 1920 × 1080 drawing buffer, pixel ratio 1. The displayed canvas may
-      be scaled to fit. This is a static GPU scene test; it does not benchmark
-      perception or claim fresh observations.
+      be scaled to fit. The static fixture measures rendering only; the
+      streaming fixture also regenerates every overlay 30 times per second to
+      measure scene-update cost. Neither benchmarks perception or claims fresh
+      observations.
     </p>
+    <label
+      >Fixture<select id="mode">
+        <option value="static">Static · render only</option>
+        <option value="streaming">Streaming · all overlays at 30 Hz</option>
+      </select></label
+    >
     <label
       >Measurement window<select id="duration">
         <option value="60">60 seconds</option>

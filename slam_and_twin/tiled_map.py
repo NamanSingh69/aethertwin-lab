@@ -201,8 +201,9 @@ class DiskTileStore(MutableMapping):
         with self.lock:
             for tile,page in self.cache.items():self._write(tile,page)
 
-    def iter_tiles(self,bounds=None):
-        sql='SELECT x,y,z FROM tiles';parameters=()
+    def tile_keys(self,bounds=None):
+        """Tiles overlapping an inclusive voxel-index box (all when None), including unsaved pages; reads no payload."""
+        sql='SELECT x,y,z FROM tiles';parameters=();lower=upper=None
         if bounds is not None:
             bounds=np.asarray(bounds,dtype=np.int64).reshape(2,3)
             lower=bounds[0]//self.tile_size;upper=bounds[1]//self.tile_size
@@ -211,19 +212,22 @@ class DiskTileStore(MutableMapping):
         # on every renderer query. The extra-key set is bounded by cache size.
         with self.lock:
             extras=[tile for tile in self.cache if self.conn.execute('SELECT 1 FROM tiles WHERE x=? AND y=? AND z=?',tile).fetchone() is None]
-        def keys():
-            for tile in self.conn.execute(sql+' ORDER BY x,y,z',parameters):
-                if tuple(tile) not in extras:yield tuple(tile)
-            for tile in extras:
-                if bounds is None or np.all((np.asarray(tile)>=lower)&(np.asarray(tile)<=upper)):yield tile
-        for tile in keys():
-            with self.lock:
-                if tile in self.cache:
-                    self.cache.move_to_end(tile);data=self.cache[tile]['data'];coords=np.array(list(data),np.int64).reshape(-1,3)
-                    values=np.array(list(data.values()),float).reshape(-1,self.value_width)
-                else:
-                    coords,values=self._read_arrays(tile);self.streamed_reads+=1
-                    coords=coords.copy();values=values.copy()
+            stored=[tuple(tile) for tile in self.conn.execute(sql+' ORDER BY x,y,z',parameters)]
+        return stored+[tile for tile in extras if lower is None or np.all((np.asarray(tile)>=lower)&(np.asarray(tile)<=upper))]
+
+    def read_tile(self,tile):
+        """One tile's keys and values as new arrays, from its resident page or its stored payload."""
+        with self.lock:
+            if tile in self.cache:
+                self.cache.move_to_end(tile);data=self.cache[tile]['data']
+                return np.array(list(data),np.int64).reshape(-1,3),np.array(list(data.values()),float).reshape(-1,self.value_width)
+            coords,values=self._read_arrays(tile);self.streamed_reads+=1
+            return coords.copy(),values.copy()
+
+    def iter_tiles(self,bounds=None):
+        if bounds is not None:bounds=np.asarray(bounds,dtype=np.int64).reshape(2,3)
+        for tile in self.tile_keys(bounds):
+            coords,values=self.read_tile(tile)
             if bounds is not None:
                 select=np.all((coords>=bounds[0])&(coords<=bounds[1]),axis=1);coords=coords[select];values=values[select]
             if len(coords):yield tuple(tile),coords,values

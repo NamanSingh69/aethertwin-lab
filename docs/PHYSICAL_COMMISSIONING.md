@@ -57,7 +57,7 @@ occlusions or beyond its coverage.
     access. Verify reconnection, stale states, revision conflicts and local
     recording during server loss. Run30minutes with the complete live pipeline,
     measuring acquisition age, latency percentiles, memory, queues/drops, render
-    frame times, recording throughput, Jetson temperature and throttling.
+    frame times, recording throughput, Pi and GPU temperature and throttling.
 
 The browser commissioning panel provides isolated diagnostic, calibration,
 reconstruction and coverage/relocalization jobs for configured sources. Outputs
