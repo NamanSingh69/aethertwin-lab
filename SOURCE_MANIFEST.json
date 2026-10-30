@@ -2895,8 +2895,8 @@
       "sha256": "ec52ea548eebdf087c762b52a6f1d490270237411d36782ac4298dec6b7d8ede"
     },
     "docs/REVIEW_AND_ROADMAP.md": {
-      "bytes": 15670,
-      "sha256": "99d27dd40c40f55305adfaf3a5c06f8b30a800d46289e3c07d9b76c3438559f9"
+      "bytes": 15969,
+      "sha256": "0c930be9b9ea327b2683aee3780f98a5400a4cb60ec2419b7c0c42f4a69ff8a8"
     },
     "docs/TELEMETRY_V2.md": {
       "bytes": 3965,
@@ -3599,8 +3599,8 @@
       "sha256": "44a7f33b2320e44022a37963d3fc1c10d6d81317be63355e97eb4060d51653a0"
     },
     "slam_and_twin/log_odds_octomap.py": {
-      "bytes": 13427,
-      "sha256": "c1172113bee9a67b50dd1f5c76b7b3e54f840a88ac428a81644d66c3b7755588"
+      "bytes": 13966,
+      "sha256": "030fd32dd65635a770fc003ddc62a343458ccd3da6dadb56afc34d7fb08c5f29"
     },
     "slam_and_twin/planning_region.py": {
       "bytes": 2521,
@@ -3771,8 +3771,8 @@
       "sha256": "fd13576b803cf8d7dc8d2962b26f53130e9a1fce3d05a0f95424cf175c611c2f"
     },
     "tests/test_voxel_hash_and_octomap.py": {
-      "bytes": 2333,
-      "sha256": "cb38ea9e1ebd3f44f0cc49a5f5f7604aa4565570959ff45529c2970b647677c5"
+      "bytes": 3351,
+      "sha256": "eb0897299a283797bcacf2e65e2f09f638da02a88213d63a2fb2ed18c05bdb37"
     },
     "tests/test_world_origin_invariance.py": {
       "bytes": 1099,
