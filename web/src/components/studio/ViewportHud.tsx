@@ -1,4 +1,8 @@
-import type { RenderMetrics } from "../../scene/SpatialRenderer";
+import type {
+  MapProgress,
+  Quality,
+  RenderMetrics,
+} from "../../scene/SpatialRenderer";
 import type { Metadata } from "../../lib/types";
 import { metric } from "../../lib/status";
 import { Icon } from "../Icon";
@@ -20,14 +24,29 @@ function heading(mode: string) {
   };
 }
 
+export const QUALITY_OPTIONS: Array<{ value: Quality; label: string }> = [
+  { value: "auto", label: "Auto quality" },
+  { value: "performance", label: "Performance" },
+  { value: "balanced", label: "Balanced" },
+  { value: "cinematic", label: "Cinematic" },
+];
+
 export function ViewportHeading({
   mode,
   preset,
   onPreset,
+  quality,
+  onQuality,
+  effects,
+  onHelp,
 }: {
   mode: string;
   preset: string;
   onPreset: (preset: string) => void;
+  quality: Quality;
+  onQuality: (quality: Quality) => void;
+  effects: RenderMetrics["effects"] | undefined;
+  onHelp: () => void;
 }) {
   const { eyebrow, title } = heading(mode);
   return (
@@ -52,7 +71,56 @@ export function ViewportHeading({
           </select>
           <Icon name="down" size={14} />
         </label>
+        <label className="camera-select">
+          <span className="sr-only">Render quality</span>
+          <select
+            value={quality}
+            onChange={(e) => onQuality(e.target.value as Quality)}
+          >
+            {QUALITY_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <Icon name="down" size={14} />
+        </label>
+        {(effects?.postprocessing || effects?.motion) && (
+          <span
+            className="effects-badge"
+            title="Bloom, fog and decorative motion change how the scene looks, not what was measured."
+          >
+            Effects · presentation only
+          </span>
+        )}
+        <button
+          className="icon-button help-button"
+          onClick={onHelp}
+          aria-label="Keyboard shortcuts"
+          title="Keyboard shortcuts (?)"
+        >
+          ?
+        </button>
       </div>
+    </div>
+  );
+}
+
+/** Measured-map tile loading; hidden once every tile has loaded or failed. */
+export function MapProgressIndicator({
+  progress,
+}: {
+  progress: MapProgress | null;
+}) {
+  if (!progress || !progress.total) return null;
+  const done = progress.loaded + progress.failed >= progress.total;
+  if (done && !progress.failed) return null;
+  return (
+    <div className="map-progress" role="status" aria-live="polite">
+      {done
+        ? `Measured map: ${progress.failed} of ${progress.total} tiles failed to load`
+        : `Loading measured map · ${progress.loaded} of ${progress.total} tiles` +
+          (progress.failed ? ` · ${progress.failed} failed` : "")}
     </div>
   );
 }

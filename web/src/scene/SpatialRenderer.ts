@@ -57,6 +57,7 @@ const PIXEL_RATIO_CAP: Record<ResolvedQuality, () => number> = {
   cinematic: () => Math.min(devicePixelRatio, 1.5),
 };
 const MIN_PIXEL_RATIO = 0.6;
+const TILE_RETRY_MS = 10_000;
 export const INSTANCE_LIMIT = 100000;
 const MAX_TRACKS = 256;
 type Overlay<O extends T.Object3D = T.Object3D> = { buffer: GrowableGeometry; object: O };
@@ -258,7 +259,8 @@ export class SpatialRenderer {
   private manifest: Manifest | null = null;
   private tiles = new Map<string, { lod: string; object: T.Object3D }>();
   private pending = new Set<string>();
-  private failedTiles = new Set<string>();
+  /** Tile id -> time of its last failed load; retried after TILE_RETRY_MS. */
+  private failedTiles = new Map<string, number>();
   private cutaway = true;
   private lodClock = 0;
   private loadGeneration = 0;
@@ -631,10 +633,14 @@ export class SpatialRenderer {
         .multiplyScalar(0.5);
       const distance = center.distanceTo(this.camera.position);
       const lod = chooseLOD(tile.lods, distance);
+      // Failed tiles wait before a retry so untried tiles are not starved
+      // (at most two loads run at once) and errors are not re-reported every second.
+      const failedAt = this.failedTiles.get(tile.id);
       if (
         !lod ||
         this.tiles.get(tile.id)?.lod === lod.url ||
-        this.pending.has(tile.id)
+        this.pending.has(tile.id) ||
+        (failedAt !== undefined && performance.now() - failedAt < TILE_RETRY_MS)
       )
         continue;
       this.pending.add(tile.id);
@@ -660,7 +666,7 @@ export class SpatialRenderer {
         })
         .catch((error) => {
           if (generation !== this.loadGeneration) return;
-          this.failedTiles.add(tile.id);
+          this.failedTiles.set(tile.id, performance.now());
           this.emitProgress();
           this.host.dispatchEvent(
             new CustomEvent("asseterror", { detail: String(error) }),

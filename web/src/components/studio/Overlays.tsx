@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { EventEntry, Notice } from "../../hooks/useStudioSession";
 import { Icon } from "../Icon";
 
@@ -49,6 +49,9 @@ export function EventsDrawer({
   );
 }
 
+/** Non-error notices dismiss themselves after this long, unless hovered or focused. */
+export const TOAST_MS = 5000;
+
 export function Toast({
   notice,
   onDismiss,
@@ -56,10 +59,23 @@ export function Toast({
   notice: NonNullable<Notice>;
   onDismiss: () => void;
 }) {
+  const [held, setHeld] = useState(false);
+  const dismiss = useRef(onDismiss);
+  dismiss.current = onDismiss;
+  // Errors stay until dismissed; a new notice restarts the timer.
+  useEffect(() => {
+    if (notice.bad || held) return;
+    const timer = setTimeout(() => dismiss.current(), TOAST_MS);
+    return () => clearTimeout(timer);
+  }, [notice, held]);
   return (
     <div
       className={`toast ${notice.bad ? "error" : ""}`}
       role={notice.bad ? "alert" : "status"}
+      onMouseEnter={() => setHeld(true)}
+      onMouseLeave={() => setHeld(false)}
+      onFocus={() => setHeld(true)}
+      onBlur={() => setHeld(false)}
     >
       <Icon name={notice.bad ? "alert" : "check"} size={18} />
       <span>{notice.text}</span>

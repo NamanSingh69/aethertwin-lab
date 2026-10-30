@@ -14,6 +14,8 @@ export interface MockOptions {
   requireLogin?: boolean;
   /** Milliseconds between streamed keyframes. */
   frameInterval?: number;
+  /** Publish a measured-map manifest with this many tiles; their GLBs answer 404. */
+  mapTiles?: number;
 }
 export interface CommandRecord {
   action: string;
@@ -197,7 +199,9 @@ export class MockService {
       source_mode: "sim",
       hardware_status: "not_tested",
       map_revision: "mockrevision0001",
-      map_manifest_url: null as unknown as string,
+      map_manifest_url: (this.options.mapTiles
+        ? "/api/v2/assets/manifest.json"
+        : null) as unknown as string,
       stream_url: "/ws/v2/scene",
       role,
       control_revision: this.revision,
@@ -239,6 +243,20 @@ export class MockService {
           json(this.bootstrap(url.searchParams.get("include_latest") !== "false")),
         );
       if (path === "/api/v2/state") return route.fulfill(json(mockScene(this.frame)));
+      if (path === "/api/v2/assets/manifest.json" && this.options.mapTiles)
+        return route.fulfill(
+          json({
+            coordinate_frame: "world_z_up",
+            bounds: [-6, -5, 0, 6, 5, 3.5],
+            tiles: Array.from({ length: this.options.mapTiles }, (_, i) => ({
+              id: `tile-${i}`,
+              bounds: [i - 6, -5, 0, i - 5, 5, 3.5],
+              lods: [{ url: `/api/v2/assets/tile-${i}.glb`, distance: 0, triangles: 12 }],
+            })),
+          }),
+        );
+      if (path.startsWith("/api/v2/assets/tile-"))
+        return route.fulfill(json({ detail: "Not found" }, 404));
       if (path === "/api/v2/commands" && request.method() === "GET")
         return route.fulfill(
           json({ revision: this.revision, pending: 0, history: this.history }),
