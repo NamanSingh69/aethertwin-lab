@@ -5,6 +5,10 @@ mapping, learned voxel semantics and scene flow, multi-object tracking, and
 collision-checked trajectory simulation. The original supplied specification is
 preserved in **SPEC.md**. Implementation corrections are recorded below.
 
+![Simulated runtime snapshot: top-view occupancy, tracked objects and the planned route](artifacts/runtime_scene_preview_hud.png)
+
+*Simulated runtime snapshot from the bundled demonstration (no physical sensors).*
+
 The bundled demonstration needs no sensors. It includes a trained synthetic
 checkpoint, measured simulator commissioning scans, a reconstructed twin, and a
 conservative navigation map. Physical robot commands are not emitted.
