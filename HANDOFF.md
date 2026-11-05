@@ -71,7 +71,7 @@ How to work (owner's rules):
   needed; keep a brief `PROGRESS.md` (local, untracked — see section 9).
 - Commit in logical, well-described chunks as each task completes.
 - Workspace setup (CLAUDE.md, `.claude/settings.json`, hooks, agents) was to be
-  committed separately as "chore: agent workspace setup" — done (`50e8c57`).
+  committed separately as "chore: agent workspace setup" — done (`1600509`).
 
 **Final report format when everything is done:** what changed per task; test and
 CI status; anything deferred or uncertain; the PR link.
@@ -85,8 +85,8 @@ CI status; anything deferred or uncertain; the PR link.
   `sumedhag28/aethertwin` (the URL in the original message): the cloud session
   could not attach it alongside NamanSingh69/aethertwin because both repos are
   named `aethertwin`. The owner can mirror the PR there later.
-- **The App.tsx refactor is approved** (done, `af0a6b2`).
-- **Agent workspace setup committed separately** (done, `50e8c57`).
+- **The App.tsx refactor is approved** (done, `28effb6`).
+- **Agent workspace setup committed separately** (done, `1600509`).
 - **Physical/GPU work is local**: the Zephyrus now, the A2000 workstation later.
   The cloud container has no GPU; its WebGL is SwiftShader (software).
 
@@ -97,13 +97,13 @@ CI status; anything deferred or uncertain; the PR link.
 ### Commits on the branch (oldest first)
 | Hash | Summary |
 |---|---|
-| `b3c42c3` | (pre-existing) Import AetherTwin platform, trained assets, specifications and evidence |
-| `c8fd70d` | (pre-existing) Record successful fresh-checkout simulation verification |
-| `a31cad0` | Serve the studio gzip-compressed, content-hash cached (immutable `assets/`), `no-cache` HTML, same-origin CSP; remove committed pytest leftovers `tests/.runtime_validation*` and ignore them |
-| `50e8c57` | chore: agent workspace setup (CLAUDE.md, `.claude/settings.json`, pre-commit hook, `test-runner` + `diff-reviewer` agents) |
-| `3222c84` | Playwright E2E: mock project (fake service + binary WebSocket) and live project (real simulator), axe WCAG 2.1 AA, phone layout; brand-link a11y fix; Vitest limited to `tests/` |
-| `af0a6b2` | Split `App.tsx` into `useStudioSession`, `useControlCommands`, `useSpatialRenderer` and `components/studio/*`; deterministic live route test |
-| `9ca2c9d` | HANDOFF.md (this file) and a CLAUDE.md pointer to it |
+| `6eae704` | (pre-existing) Import AetherTwin platform, trained assets, specifications and evidence |
+| `7ec4aa3` | (pre-existing) Record successful fresh-checkout simulation verification |
+| `97cfbab` | Serve the studio gzip-compressed, content-hash cached (immutable `assets/`), `no-cache` HTML, same-origin CSP; remove committed pytest leftovers `tests/.runtime_validation*` and ignore them |
+| `1600509` | chore: agent workspace setup (CLAUDE.md, `.claude/settings.json`, pre-commit hook, `test-runner` + `diff-reviewer` agents) |
+| `769d365` | Playwright E2E: mock project (fake service + binary WebSocket) and live project (real simulator), axe WCAG 2.1 AA, phone layout; brand-link a11y fix; Vitest limited to `tests/` |
+| `28effb6` | Split `App.tsx` into `useStudioSession`, `useControlCommands`, `useSpatialRenderer` and `components/studio/*`; deterministic live route test |
+| `d43be7c` | HANDOFF.md (this file) and a CLAUDE.md pointer to it |
 | (next) | Halo: malformed snapshot shows disconnected; serial frames stop when status stalls (IoT finding 1, fixed with tests); HANDOFF update |
 
 No PR has been opened yet. Check with `git log --oneline origin/main..HEAD`.

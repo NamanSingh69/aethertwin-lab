@@ -55,11 +55,11 @@ that was not measured; visual effects are presentation-only and must say so.
 - In `cmd`, call a `.cmd` from another with `call`, or nothing after it runs.
 
 ## Remaining plan (update as tasks complete)
-1. Playwright E2E (mock + live + axe) — done (`3222c84`).
-2. Refactor `App.tsx` into hooks/components — done (`af0a6b2`).
-3. Renderer perf, cinematic effects, camera animation — done (`a1e681d`, `fc92cdb`).
-4. UX: shortcuts, help overlay, quality selector, toast, map progress — done (`00d8efe`).
-5. Modal cloud GPU benchmarks + CUDA lock — done (`96c62a4`).
-6. CI/CD — done (`c0d8fff`). IoT gateway + halo hardening — done (`29ed107`).
+1. Playwright E2E (mock + live + axe) — done (`769d365`).
+2. Refactor `App.tsx` into hooks/components — done (`28effb6`).
+3. Renderer perf, cinematic effects, camera animation — done (`ce0120e`, `a2be9c5`).
+4. UX: shortcuts, help overlay, quality selector, toast, map progress — done (`8b3f73f`).
+5. Modal cloud GPU benchmarks + CUDA lock — done (`2952e5b`).
+6. CI/CD — done (`3893418`). IoT gateway + halo hardening — done (`29fd243`).
 7. `docs/REVIEW_AND_ROADMAP.md` (backlog lives there), security review, PR #1 merged to main.
 8. Next: hardware bring-up, the Pi-to-Windows raw-sensor transport and commissioning (`NEXT_AGENT.md`).
