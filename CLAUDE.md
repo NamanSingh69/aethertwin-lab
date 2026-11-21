@@ -111,6 +111,8 @@ that was not measured; visual effects are presentation-only and must say so.
 10. Next (`docs/LAB_DAY.md`): calibration with the monitor at 640x400, a moving commissioning scan that passes QA
    (the 5 Nov push failed: 81 s, 109 deg/s turns), landmark spans, latency trials, the 30-minute run.
 11. Showcase and resume polish (21 Nov): landing page, case study, poster PDF and staging script merged as PR #10
-   (`f94993e`), deployed (`docs/SHOWCASE.md` section 5), public repo synced (`aethertwin-lab` `feaa36c`). Open items,
-   owner first: replay data off Vercel (R2, option A; no Cloudflare login on this PC), faculty guide's name for the poster.
-   Landing fixes and the link-preview rule are done. List: `reports/reviews/aethertwin_showcase_review_2026-11-21.md` "Status".
+   (`f94993e`), deployed (`docs/SHOWCASE.md` section 5), public repo synced (`aethertwin-lab`). Landing fixes and the
+   link-preview rule are done; no faculty-guide line on the poster (owner). Replay data is served from GitHub Pages
+   (repo `aethertwin-replay-data`, option D, `docs/SHOWCASE.md` section 4), live since 21 Nov 17:38 UTC: a view costs
+   Vercel 0.4 MB. Every later showcase build needs `VITE_SHOWCASE_BASE` and `stage_showcase.py --data-dir --data-base`.
+   A new export means a new commit to that data repo first. Open: deny rules for unused paths; usage checked by hand.

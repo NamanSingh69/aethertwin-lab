@@ -70,6 +70,12 @@ function showcaseStatic(): Plugin {
         );
         return;
       }
+      // Replay data hosted elsewhere (VITE_SHOWCASE_BASE, docs/SHOWCASE.md section 4): keep it out of the upload, so
+      // the website host serves only the pages and code, never the 22 MB a replay view reads.
+      if (process.env.VITE_SHOWCASE_BASE) {
+        console.log(`[showcase] Replay data is served from ${process.env.VITE_SHOWCASE_BASE}; not copied into showcase-dist/`);
+        return;
+      }
       cpSync(dataDir, resolve(outDir, "showcase"), { recursive: true });
       console.log(`[showcase] Copied replay data from ${dataDir} to showcase-dist/showcase/`);
     },

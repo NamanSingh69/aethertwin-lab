@@ -1,4 +1,4 @@
-import json,shutil
+import json,re,shutil
 from pathlib import Path
 import pytest
 from tools import stage_showcase as ss
@@ -49,3 +49,34 @@ def test_gate_failure_stops_before_staging(tmp_path,monkeypatch):
     monkeypatch.setattr(ss.subprocess,'run',lambda *a,**k:type('R',(),{'returncode':1})())
     with pytest.raises(SystemExit,match='gate failed'): ss.main(['--build',str(build),'--out',str(tmp_path/'out')])
     assert not (tmp_path/'out').exists()
+
+BASE='https://data.example/replay/'
+def offsite(tmp_path,note='recorded real sensor data processed offline',base=BASE,connect="'self' blob: https://data.example"):
+    """A build whose replay data lives at --data-base: no showcase/ folder, the base compiled into its code."""
+    build=tmp_path/'dist';(build/'assets').mkdir(parents=True);(build/'index.html').write_text('<!doctype html>',encoding='utf-8')
+    (build/'assets'/'replay-x.js').write_text(f'const b="{base}";',encoding='utf-8')
+    data=tmp_path/'export';data.mkdir();(data/'index.json').write_text(json.dumps({'frame_count':360,'duration_s':30,'source':{'note':note}}),encoding='utf-8')
+    vj=json.loads((ROOT/'web'/'vercel.json').read_text(encoding='utf-8'))
+    for h in vj['headers'][0]['headers']:
+        if h['key']=='Content-Security-Policy':h['value']=re.sub(r"connect-src [^;]*",f"connect-src {connect}",h['value'])
+    (tmp_path/'vercel.json').write_text(json.dumps(vj),encoding='utf-8')
+    return ['--build',str(build),'--data-dir',str(data),'--data-base',BASE,'--vercel-json',str(tmp_path/'vercel.json'),'--out',str(tmp_path/'out')]
+
+def test_stages_a_build_whose_replay_data_is_hosted_elsewhere(tmp_path,monkeypatch):
+    calls=[];monkeypatch.setattr(ss.subprocess,'run',lambda cmd,*a,**k:calls.append(cmd) or type('R',(),{'returncode':0})())
+    assert ss.main(offsite(tmp_path))==0
+    out=tmp_path/'out';assert (out/'index.html').is_file() and not (out/'showcase').exists()
+    assert '--allow-host' in calls[0] and calls[0][calls[0].index('--allow-host')+1]=='data.example'
+
+def test_offsite_data_refuses_a_build_that_does_not_use_that_base(tmp_path):
+    args=offsite(tmp_path,base='https://other.example/')
+    with pytest.raises(SystemExit,match='does not load its replay from'): ss.main(args+['--skip-gate'])
+    assert not (tmp_path/'out').exists()
+
+def test_offsite_data_refuses_a_csp_that_blocks_the_data_origin(tmp_path):
+    args=offsite(tmp_path,connect="'self' blob:")
+    with pytest.raises(SystemExit,match='connect-src'): ss.main(args+['--skip-gate'])
+    assert not (tmp_path/'out').exists()
+
+def test_offsite_data_refuses_the_test_export(tmp_path):
+    with pytest.raises(SystemExit,match='TEST EXPORT'): ss.main(offsite(tmp_path,note='TEST EXPORT of a fixture')+['--skip-gate'])

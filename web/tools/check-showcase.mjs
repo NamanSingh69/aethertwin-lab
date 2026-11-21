@@ -22,6 +22,9 @@ async function walk(dir) {
 }
 
 const files = await walk(out);
+// With an external data base the replay must not also be uploaded to the website host.
+if (process.env.VITE_SHOWCASE_BASE && files.some((f) => relative(out, f).replaceAll("\\", "/").startsWith("showcase/")))
+  failures.push(`showcase/ is in the build although VITE_SHOWCASE_BASE=${process.env.VITE_SHOWCASE_BASE} serves the replay data`);
 let codeBytes = 0,
   codeGzip = 0,
   dataBytes = 0;

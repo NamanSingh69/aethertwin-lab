@@ -46,8 +46,8 @@ Under 44 px: `a.wordmark` (146x26), `a.btn.small` "Launch replay" (126x40). Two 
 - Done: "~510 tests" is gone from the page (700+ / 713, PR #10, live since 13:59 UTC). The firewall is now evidenced:
   read through the API before that deploy (`docs/SHOWCASE.md` section 5).
 - Still open, owner first:
-  1. Replay data still on Vercel. Option A, R2 via `VITE_SHOWCASE_BASE`, needs the owner's Cloudflare bucket and a
-     CORS rule.
+  1. Done 21 Nov 2026 17:38 UTC: replay data moved to GitHub Pages (option D, repo `aethertwin-replay-data`, owner's
+     yes). A replay view costs Vercel 11 requests and 0.4 MB instead of 76 and 22 MB (`docs/SHOWCASE.md` section 5).
   2. Done 21 Nov 2026 evening: link-preview bypass rule added on the owner's yes (`docs/SHOWCASE.md` section 5).
   3. There are no deny rules for unused paths.
   4. The owner checks team usage by hand on the dashboard (Hobby has no alerts).

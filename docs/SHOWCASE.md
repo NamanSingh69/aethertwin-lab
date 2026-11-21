@@ -83,6 +83,36 @@ has already used its one courtesy unblock.
 | **A.** Site on Vercel, replay data on Cloudflare R2 (free egress) via `VITE_SHOWCASE_BASE` | small (code ~0.3 MB gz a view) | an R2 bucket + CORS rule (owner's account) |
 | **B.** Whole site on Cloudflare Pages | none | owner's Cloudflare account; 25 MiB per file is fine |
 | **C.** Vercel only, a short loop (10-15 s) | still large per view | none |
+| **D.** Site on Vercel, replay data on GitHub Pages (repo `aethertwin-replay-data`) via `VITE_SHOWCASE_BASE` | small (code ~0.3 MB gz a view) | owner's GitHub account only; the same bytes, so the same quality |
+
+**Decision (owner, 21 Nov 2026): option D.** GitHub Pages has its own 100 GB a month soft limit per site and sends
+`Access-Control-Allow-Origin: *`. A flood on the data can at worst stop that one Pages site; it never counts against the
+Vercel team. No Cloudflare account is needed. Rehearsed on 21 Nov with the site and the data on two origins in Chrome:
+the replay played at the normal rate (144 frames in 13 s), all 26 replay files came from the data origin, none from the
+site, with no errors. The data repo is prepared at `%USERPROFILE%\aethertwin_demo\replay_data_repo` (the 5 Nov export,
+byte-identical, with `.nojekyll` and `.gitattributes` `* -text` so git never rewrites line endings). To publish it, the
+owner runs:
+
+```powershell
+cd $env:USERPROFILE\aethertwin_demo\replay_data_repo
+gh repo create NamanSingh69/aethertwin-replay-data --public --source . --push
+gh api -X POST repos/NamanSingh69/aethertwin-replay-data/pages -f "source[branch]=main" -f "source[path]=/"
+```
+
+Then build and stage with the data base (`web/vercel.json` already admits `https://namansingh69.github.io` in
+`connect-src`):
+
+```powershell
+cd web
+$env:VITE_SHOWCASE_BASE="https://namansingh69.github.io/aethertwin-replay-data/"
+$env:SHOWCASE_DATA_DIR="$env:USERPROFILE\aethertwin_demo\showcase_lab_2026-11-05"; npm run build:showcase
+cd ..
+.venv\Scripts\python.exe tools\stage_showcase.py --previous <last staging folder> `
+  --data-dir $env:USERPROFILE\aethertwin_demo\showcase_lab_2026-11-05 --data-base https://namansingh69.github.io/aethertwin-replay-data/
+```
+
+The build then has no `showcase/` folder (`check-showcase.mjs` fails if it does). The staging script refuses a build that
+does not load from that base, or a CSP that would block it, and passes the data host to the gate as an allowed host.
 
 Before any deploy of any project, the global rules in `~/.claude/CLAUDE.md` ("Vercel deployments: abuse-proofing
 gate") apply:
@@ -127,6 +157,12 @@ Link previews: since 21 Nov 2026 a firewall `bypass` rule "Allow link-preview cr
 user agents WhatsApp, LinkedInBot, facebookexternalhit, Twitterbot, Slackbot, TelegramBot, Discordbot) lets them through
 bot protection (owner's yes). Checked with curl: those agents get 200 on `/` and `/og.jpg` and 429 elsewhere; a POST and
 a curl user agent still get 429.
+
+Deploy 21 Nov 2026 17:38 UTC (option D live, staged in `vercel_showcase_20261121c`): replay data now comes from
+https://namansingh69.github.io/aethertwin-replay-data/ (repo created on the owner's yes; Pages sends CORS `*`, `.gz` as
+`application/gzip`, bytes identical). Gate pass=10 warn=1 fail=0: 11 requests and 0.4 MB per view on Vercel (was 76 and
+22 MB), break-even 45,454 visitors a month (was 2,234). Live in Chrome: the replay played 144 frames in 16 s, all 25 replay
+files from GitHub Pages and none from Vercel, no errors; landing, explainer query, 404, og.jpg and link previews unchanged.
 
 Deploy 21 Nov 2026 16:57 UTC (landing fixes, cycle C54, staged in `vercel_showcase_20261121b`, gate pass=10 warn=2
 fail=0, firewall and team re-read first): every navigation link and button is at least 44 x 44 px, links use clean URLs
