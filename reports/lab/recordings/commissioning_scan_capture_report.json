@@ -1,0 +1,574 @@
+{
+  "schema_version": 1,
+  "kind": "raw_capture",
+  "date_utc": "2026-11-05T09:03:07.695839+00:00",
+  "label": "real devices via the Pi capture node",
+  "bringup_uncalibrated": true,
+  "motion": "mobile",
+  "duration_requested_s": 120.0,
+  "elapsed_s": 91.35999999999967,
+  "frames": 974,
+  "frames_hz": 10.661120840630511,
+  "sensor_time_span_s": 81.36919651933476,
+  "error": "TimeoutError: Cannot synchronize required LiDAR, IMU and RGB-D streams within tolerance (transport: state streaming, segment 1, last error None)",
+  "recorder": {
+    "written_frames": 974,
+    "dropped_frames": 0,
+    "queued_frames": 0,
+    "queued_bytes": 0,
+    "inflight_bytes": 0,
+    "capacity_frames": 16,
+    "capacity_bytes": 268435456,
+    "peak_bytes": 7745768,
+    "complete": true,
+    "error": null,
+    "recorder_chunk_budget_bytes": 67108864
+  },
+  "transport": {
+    "state": "streaming",
+    "segment": 1,
+    "capture_host": "192.168.137.37",
+    "capture_port": 7600,
+    "connections": 1,
+    "connect_failures": 0,
+    "auth_failures": 0,
+    "protocol_errors": 0,
+    "stalls": 0,
+    "segments": 1,
+    "clock_jumps": 0,
+    "imu_samples": 22933,
+    "imu_sequence_breaks": 0,
+    "imu_missing_samples": 0,
+    "node_gaps": 0,
+    "clouds": 978,
+    "cloud_missing": 0,
+    "camera_frames": 1466,
+    "camera_missing": 0,
+    "camera_incomplete": 0,
+    "receiver_overflows": 0,
+    "decode_errors": 0,
+    "bytes": 379672813,
+    "imu_out_of_order_dropped": 0,
+    "clouds_out_of_order_dropped": 0,
+    "node_utc_steps": 0,
+    "rates_hz": {
+      "imu": 248.64486131871675,
+      "cloud": 12.610976594045622,
+      "camera": 29.940726527008614
+    },
+    "bandwidth_bytes_per_second": 5210950.446040972,
+    "clock": {
+      "offset_seconds": -4575.6391652580005,
+      "target_offset_seconds": -4575.6391652580005,
+      "best_delay_seconds": 0.0015119779995984572,
+      "error_bound_seconds": 0.0007559889997992286,
+      "residual_seconds": 0.0,
+      "jitter_seconds": 0.011085162861756587,
+      "exchanges": 186,
+      "utc_offset_seconds": -0.26479291915893555,
+      "utc_offset_note": "node UTC minus host UTC via the ping exchange; near zero only when both hosts are time-synchronised (chrony)",
+      "host_clock_alignment_seconds": 0.0035436999996818486
+    },
+    "last_error": null,
+    "faults": {},
+    "outage_seconds": null,
+    "camera_decode_ms_p95": 3.2746749998295854,
+    "arrival_latency_ms": {
+      "imu": {
+        "p50": 13.478410263815022,
+        "p95": 28.063009314837473,
+        "max": 46.71491263252392
+      },
+      "cloud": {
+        "p50": 99.94224344154645,
+        "p95": 123.79022370305391,
+        "max": 9634.516655256448
+      },
+      "camera": {
+        "p50": 45.04069134418387,
+        "p95": 68.62392698662916,
+        "max": 117.90828632274497
+      }
+    },
+    "segment_reasons": [
+      {
+        "segment": 1,
+        "reason": "connected",
+        "at_mono": 5952.671
+      }
+    ],
+    "node": {
+      "imu_samples": 359280,
+      "imu_dropped": 0,
+      "imu_gaps": 0,
+      "clouds": 17008,
+      "clouds_dropped": 0,
+      "camera_frames": 20704,
+      "camera_dropped": 0,
+      "discarded_without_client": 338398,
+      "discarded_at_session_start": 0,
+      "queued_imu": 0,
+      "queued_clouds": 0,
+      "queued_camera": 0,
+      "imu_capacity": 20000,
+      "cloud_capacity": 4,
+      "camera_capacity": 2,
+      "streaming": true
+    },
+    "node_identity": {
+      "host": "capture-pi",
+      "node_session": "1c92a1aa10574cc8988b2008828ffcec",
+      "node_version": "1",
+      "boot_id": "2e84a171-d144-4e8b-87eb-fe0cd61e9193",
+      "codecs": {
+        "depth": "zlib",
+        "color": "jpeg",
+        "camera_forward": "sweep"
+      }
+    }
+  },
+  "timeline": [
+    {
+      "t": 5.2,
+      "frames": 60,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 255.26131100399255,
+        "cloud": 11.911937909972492,
+        "camera": 15.629795505438969
+      },
+      "bandwidth_mb_s": 4.965474540063393,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 59,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 1938836,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 3884028,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 10.2,
+      "frames": 121,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 256.4670169838396,
+        "cloud": 12.02522598915522,
+        "camera": 12.326187371019754
+      },
+      "bandwidth_mb_s": 3.8372066075412823,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 119,
+        "dropped_frames": 0,
+        "queued_frames": 1,
+        "queued_bytes": 1939564,
+        "inflight_bytes": 1942560,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 5821492,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 15.2,
+      "frames": 181,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 258.7982525535899,
+        "cloud": 11.955222786995904,
+        "camera": 16.409203561680787
+      },
+      "bandwidth_mb_s": 4.4381199063207895,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 179,
+        "dropped_frames": 0,
+        "queued_frames": 1,
+        "queued_bytes": 1938472,
+        "inflight_bytes": 1941104,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 5823032,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 20.4,
+      "frames": 242,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 257.3981610711419,
+        "cloud": 11.918380265456905,
+        "camera": 15.536178669977708
+      },
+      "bandwidth_mb_s": 4.973369373926708,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 241,
+        "dropped_frames": 0,
+        "queued_frames": 1,
+        "queued_bytes": 1940908,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 5823032,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 25.6,
+      "frames": 301,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 210.27625847459734,
+        "cloud": 11.472701823089569,
+        "camera": 11.79735621247262
+      },
+      "bandwidth_mb_s": 3.444680200186305,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 301,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 5823032,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 30.6,
+      "frames": 364,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 391.6233756456411,
+        "cloud": 12.303842461762832,
+        "camera": 16.649168120254558
+      },
+      "bandwidth_mb_s": 5.9514199487665005,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 363,
+        "dropped_frames": 0,
+        "queued_frames": 1,
+        "queued_bytes": 1940656,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7741400,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 35.7,
+      "frames": 422,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 194.35717849466033,
+        "cloud": 11.140379927465943,
+        "camera": 14.553735768112446
+      },
+      "bandwidth_mb_s": 4.054218134255408,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 422,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7741400,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 40.8,
+      "frames": 486,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 253.32345471201276,
+        "cloud": 12.904040617660629,
+        "camera": 13.520643687528164
+      },
+      "bandwidth_mb_s": 3.7507253513271017,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 486,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 45.8,
+      "frames": 546,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 254.01285741645228,
+        "cloud": 11.962666666559961,
+        "camera": 16.42647176624196
+      },
+      "bandwidth_mb_s": 4.1072374052185685,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 546,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 50.8,
+      "frames": 606,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 255.74690884730722,
+        "cloud": 11.971367006137545,
+        "camera": 13.009151775659653
+      },
+      "bandwidth_mb_s": 3.953530521629719,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 606,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 55.9,
+      "frames": 667,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 251.38332299375114,
+        "cloud": 11.962316674961546,
+        "camera": 14.401987587881255
+      },
+      "bandwidth_mb_s": 3.1593445466861,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 667,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 60.9,
+      "frames": 727,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 253.63803981751548,
+        "cloud": 11.949180983895545,
+        "camera": 13.454095082946562
+      },
+      "bandwidth_mb_s": 3.461168527103664,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 727,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 65.9,
+      "frames": 787,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 248.95390545222529,
+        "cloud": 11.952751381554341,
+        "camera": 15.388712707250166
+      },
+      "bandwidth_mb_s": 4.094154753823172,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 787,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 71.0,
+      "frames": 848,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 260.17591360752436,
+        "cloud": 11.928175642749567,
+        "camera": 14.157430055924628
+      },
+      "bandwidth_mb_s": 3.0502469076661183,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 847,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 1940628,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 76.1,
+      "frames": 908,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 255.61816139960789,
+        "cloud": 11.877826369048561,
+        "camera": 15.69904047051396
+      },
+      "bandwidth_mb_s": 3.9637344121688396,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 907,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 1939172,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    },
+    {
+      "t": 81.2,
+      "frames": 969,
+      "segment": 1,
+      "rates_hz": {
+        "imu": 253.88026110845183,
+        "cloud": 11.92615028578598,
+        "camera": 13.045052883829468
+      },
+      "bandwidth_mb_s": 4.00046791781041,
+      "camera_missing": 0,
+      "cloud_missing": 0,
+      "imu_breaks": 0,
+      "recorder": {
+        "written_frames": 969,
+        "dropped_frames": 0,
+        "queued_frames": 0,
+        "queued_bytes": 0,
+        "inflight_bytes": 0,
+        "capacity_frames": 16,
+        "capacity_bytes": 268435456,
+        "peak_bytes": 7745768,
+        "complete": true,
+        "error": null,
+        "recorder_chunk_budget_bytes": 67108864
+      }
+    }
+  ],
+  "host": {
+    "name": "Naman_PC",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_count": 20,
+    "python": "3.12.10",
+    "numpy": "2.5.4",
+    "opencv": "5.0.0"
+  },
+  "compression_level": 1
+}

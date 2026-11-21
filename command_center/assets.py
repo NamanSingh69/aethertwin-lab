@@ -93,5 +93,5 @@ def export_twin_assets(twin,output,map_revision,tile_size=4.,max_tile_triangles=
         'bounds':np.r_[lower,upper].tolist(),'tile_size_m':tile_size,'max_tile_triangles':max_tile_triangles,'max_manifest_tiles':max_manifest_tiles,
         'navigation_authority':False,'geometry_source':'all_persisted_tsdf_tiles' if used_archive else 'legacy_or_bounded_preview',
         'source_meshes':source_meshes,'tiles':tiles}
-    temporary=manifest_path.with_suffix('.tmp');temporary.write_text(json.dumps(manifest,indent=2),encoding='utf-8');temporary.replace(manifest_path)
+    temporary=manifest_path.with_suffix('.tmp');temporary.write_bytes(json.dumps(manifest,indent=2).encode('utf-8'));temporary.replace(manifest_path)  # LF on every OS (C49)
     return manifest

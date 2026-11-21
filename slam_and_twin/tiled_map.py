@@ -5,7 +5,8 @@ from collections.abc import MutableMapping
 from pathlib import Path
 import json,sqlite3,sys,threading,zlib,struct,zipfile,io,math
 import numpy as np
-from .log_odds_octomap import SparseMultiReturnVoxelMap
+from itertools import chain
+from .log_odds_octomap import SparseMultiReturnVoxelMap,_DecayFactors
 
 
 class MapBudgetExceeded(RuntimeError):
@@ -54,6 +55,14 @@ class DiskTileStore(MutableMapping):
     def _item_bytes(key,value):
         return sys.getsizeof(key)+sum(sys.getsizeof(v) for v in key)+sys.getsizeof(value)+sum(sys.getsizeof(v) for v in value)
 
+    def _replaced_bytes(self,key,new,old):
+        """_item_bytes(key,new)-_item_bytes(key,old), without walking the key and every float on an overwrite: the key
+        is the same object's value and both lists hold value_width floats (24 bytes each in CPython), so only the list
+        objects can differ. Inserts still count everything."""
+        if old is None:return self._item_bytes(key,new)
+        if len(new)!=len(old):return self._item_bytes(key,new)-self._item_bytes(key,old)
+        return sys.getsizeof(new)-sys.getsizeof(old)
+
     def _write(self,tile,page):
         if not page['dirty']:return
         coords=np.array(list(page['data']),dtype='<i8').reshape(-1,3)
@@ -100,7 +109,7 @@ class DiskTileStore(MutableMapping):
         if self.closed:raise RuntimeError('Tile store is closed')
         if tile in self.cache:self.cache.move_to_end(tile);return self.cache[tile]
         coords,values=self._read_arrays(tile)
-        data={tuple(map(int,key)):value.tolist() for key,value in zip(coords,values)}
+        data={tuple(key):value for key,value in zip(coords.tolist(),values.tolist())}
         size=sys.getsizeof(data)+sum(self._item_bytes(k,v) for k,v in data.items())
         page={'data':data,'dirty':False,'bytes':size};self.cache[tile]=page;self.resident_bytes+=size
         self._trim(exclude=tile);return page
@@ -115,8 +124,16 @@ class DiskTileStore(MutableMapping):
         elif raw.dtype.kind=='f' and np.isfinite(raw).all() and np.all((raw>=-(1<<63))&(raw<(1<<63))) and np.all(raw==np.floor(raw)):
             coords=raw.astype(np.int64)
         else:coords=np.array([self._coordinate(key) for key in raw],np.int64)
-        tiles=coords//self.tile_size;order=np.lexsort((np.arange(len(coords)),tiles[:,2],tiles[:,1],tiles[:,0]))
-        boundaries=np.r_[0,np.flatnonzero(np.any(np.diff(tiles[order],axis=0),axis=1))+1,len(order)]
+        tiles=coords//self.tile_size;lo=tiles.min(0);span=[int(v)+1 for v in tiles.max(0)-lo]
+        if span[0]*span[1]*span[2]<(1<<62):
+            # One packed key in (x, y, z) tile order; a stable sort keeps the original order inside a tile, exactly
+            # like the 4-key lexsort (the top self-time entry of the parked live profile) at a fraction of the cost.
+            shifted=tiles-lo;key=(shifted[:,0]*span[1]+shifted[:,1])*span[2]+shifted[:,2]
+            if span[0]*span[1]*span[2]<=1<<16:key=key.astype(np.uint16)  # NumPy's stable sort is a radix sort for <=16-bit keys
+            order=np.argsort(key,kind='stable');boundaries=np.r_[0,np.flatnonzero(np.diff(key[order]))+1,len(order)]
+        else:
+            order=np.lexsort((np.arange(len(coords)),tiles[:,2],tiles[:,1],tiles[:,0]))
+            boundaries=np.r_[0,np.flatnonzero(np.any(np.diff(tiles[order],axis=0),axis=1))+1,len(order)]
         def groups():
             for start,end in zip(boundaries[:-1],boundaries[1:]):
                 selected=order[start:end];yield tuple(map(int,tiles[selected[0]])),selected
@@ -128,10 +145,10 @@ class DiskTileStore(MutableMapping):
         with self.lock:
             for tile,selected in groups:
                 if tile in self.cache:
-                    self.cache.move_to_end(tile);data=self.cache[tile]['data']
-                    for index in selected:
-                        value=data.get(tuple(map(int,coords[index])))
-                        if value is not None:values[index]=value;known[index]=True
+                    # One tolist() per tile instead of a numpy row index and int() per key; same keys, same floats.
+                    self.cache.move_to_end(tile);get=self.cache[tile]['data'].get
+                    found=[(index,value) for index,value in zip(selected.tolist(),map(get,map(tuple,coords[selected].tolist()))) if value is not None]
+                    if found:rows,stored=zip(*found);rows=list(rows);values[rows]=stored;known[rows]=True
                 else:
                     # Read-only misses must not evict/write back a dirty page.
                     # Local integer IDs index ONE tile, never a global grid or
@@ -153,21 +170,25 @@ class DiskTileStore(MutableMapping):
         across operation boundaries. No transaction-sized tile residency exists.
         """
         if self.readonly:raise TypeError('Tile store is read-only')
-        coords,groups=self._groups(keys)
+        coords,groups=self._groups(keys);width=self.value_width;getsizeof=sys.getsizeof;isfinite=math.isfinite;item_bytes=self._item_bytes
+        cache=self.cache;max_tiles=self.max_resident_tiles;max_bytes=self.max_resident_bytes
         with self.lock:
             for tile,selected in groups:
                 page=self._page(tile);data=page['data']
-                for index in selected:
-                    key=tuple(map(int,coords[index]));old=data.get(key)
-                    value=update(int(index),key,None if old is None else old.copy())
+                # Python-int indices and key tuples from one tolist() per tile (equal to the old int()/map(int) values).
+                for index,row in zip(selected.tolist(),coords[selected].tolist()):
+                    key=tuple(row);old=data.get(key)
+                    value=update(index,key,None if old is None else old.copy())
                     try:new=list(map(float,value))
                     except (TypeError,ValueError) as error:raise ValueError('Invalid tile callback value') from error
-                    if len(new)!=self.value_width or not all(math.isfinite(v) for v in new):raise ValueError('Invalid tile callback value width/finiteness')
-                    before=sys.getsizeof(data);data[key]=new
-                    delta=sys.getsizeof(data)-before+self._item_bytes(key,new)-(0 if old is None else self._item_bytes(key,old))
+                    if len(new)!=width or not all(map(isfinite,new)):raise ValueError('Invalid tile callback value width/finiteness')
+                    if old is None:before=getsizeof(data);data[key]=new;delta=getsizeof(data)-before+item_bytes(key,new);self.count+=1
+                    # Overwriting an existing key never resizes a dict, so its size term is 0; _replaced_bytes inlined.
+                    else:data[key]=new;delta=getsizeof(new)-getsizeof(old) if len(new)==len(old) else item_bytes(key,new)-item_bytes(key,old)
                     page['bytes']+=delta;self.resident_bytes+=delta;page['dirty']=True
-                    if old is None:self.count+=1
-                    self._trim(exclude=tile)
+                    # _trim only when a budget is exceeded (otherwise it would only raise the peak), as after EACH assignment before.
+                    if len(cache)>max_tiles or self.resident_bytes>max_bytes:self._trim(exclude=tile)
+                    elif self.resident_bytes>self.peak_resident_bytes:self.peak_resident_bytes=self.resident_bytes
 
     def __getitem__(self,key):
         with self.lock:
@@ -180,7 +201,7 @@ class DiskTileStore(MutableMapping):
         with self.lock:
             key=self._coordinate(key);tile=self._tile(key);page=self._page(tile);data=page['data'];before=sys.getsizeof(data)
             old=data.get(key);new=value.tolist();data[key]=new
-            delta=sys.getsizeof(data)-before+self._item_bytes(key,new)-(0 if old is None else self._item_bytes(key,old))
+            delta=sys.getsizeof(data)-before+self._replaced_bytes(key,new,old)
             page['bytes']+=delta;self.resident_bytes+=delta;page['dirty']=True
             if old is None:self.count+=1
             self._trim(exclude=tile)
@@ -275,25 +296,32 @@ class DiskBackedVoxelMap(SparseMultiReturnVoxelMap):
     def query(self,points,return_known=False):
         coordinates=np.floor(np.asarray(points)[:,:3]/self.voxel_size).astype(np.int64);values=np.zeros(len(coordinates),np.float32);known=np.zeros(len(coordinates),bool)
         stored,present=self.cells.get_many(coordinates)
-        for i in np.flatnonzero(present):
-            value=stored[i]
-            if self.timestamp-float(value[2])<=self.max_age:
-                known[i]=True;values[i]=float(value[0])*self.decay_rate**(max(0.,self.timestamp-float(value[2]))/.1)
+        rows=np.flatnonzero(present);rows=rows[self.timestamp-stored[rows,2]<=self.max_age]
+        known[rows]=True;values[rows]=self._decayed(stored[rows])
         return (values,known) if return_known else values
+
+    def _decayed(self,stored):
+        """stored log-odds * rate**(max(0,t-stamp)/.1), the old per-cell Python expression evaluated once per distinct
+        stamp (cells share frame timestamps); the float64 products and the float32 cast are the same operations."""
+        if not len(stored):return np.zeros(0)
+        distinct,inverse=np.unique(stored[:,2],return_inverse=True);t=self.timestamp;rate=self.decay_rate
+        return stored[:,0]*np.array([rate**(max(0.,t-stamp)/.1) for stamp in distinct.tolist()])[inverse]
 
     def _apply_evidence(self,free,hits,penetrations):
         free=list(free);keys=free+list(hits);boundary=len(free)
+        t=self.timestamp;decay=_DecayFactors(self.decay_rate,t);minimum=self.minimum;maximum=self.maximum
         def apply(index,key,old):
-            previous=0. if old is None else old[0]*self.decay_rate**(max(0.,self.timestamp-old[2])/.1)
-            if index<boundary:return [max(self.minimum,previous-.4),0.,self.timestamp]
+            previous=0. if old is None else old[0]*decay[old[2]]
+            if index<boundary:return [max(minimum,previous-.4),0.,t]
             perm=penetrations[key] if old is None else .7*old[1]+.3*penetrations[key]
-            return [min(self.maximum,previous+hits[key]),perm,self.timestamp]
-        self.cells.update_many(keys,apply)
+            return [min(maximum,previous+hits[key]),perm,t]
+        # An int64 (N,3) array instead of a tuple list: _groups converts the same coordinates either way.
+        self.cells.update_many(np.fromiter(chain.from_iterable(keys),np.int64,3*len(keys)).reshape(-1,3),apply)
 
     def _observed_values(self,unique):
         stored,known=self.cells.get_many(unique)
         if not known.all():raise KeyError('Fresh observed voxel missing from tile authority')
-        lo=np.array([float(v[0])*self.decay_rate**(max(0.,self.timestamp-float(v[2]))/.1) for v in stored],np.float32)
+        lo=self._decayed(stored).astype(np.float32)
         return lo,stored[:,1].astype(np.float32)
 
     def prune_expired(self,max_tiles=1):

@@ -7,8 +7,8 @@ command=$(printf '%s' "$input" | python3 -c 'import json,sys;print(json.load(sys
 case "$command" in "git commit"*) ;; *) exit 0 ;; esac
 root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 cd "$root" || exit 0
-if ! out=$(python3 tools/repository_manifest.py --check 2>&1); then
-  echo "SOURCE_MANIFEST.json is stale. Run: python3 tools/repository_manifest.py && git add SOURCE_MANIFEST.json" >&2
+if ! out=$(python3 tools/repository_manifest.py --check --index 2>&1); then
+  echo "SOURCE_MANIFEST.json is stale. Run: python3 tools/repository_manifest.py --index && git add SOURCE_MANIFEST.json" >&2
   echo "$out" | tail -c 600 >&2
   exit 2
 fi

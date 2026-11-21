@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "pi_device_check",
+  "date_utc": "2026-11-04T17:13:09.090381+00:00",
+  "label": "physical devices on the Pi capture node",
+  "hardware_verified": false,
+  "host": {
+    "name": "capture-pi",
+    "platform": "Linux-6.18.50+rpt-rpi-2712-aarch64-with-glibc2.41",
+    "python": "3.13.5",
+    "model": "Raspberry Pi 5 Model B Rev 1.1"
+  },
+  "system_before": {
+    "throttled": "throttled=0x50000",
+    "temp": "temp=49.4'C",
+    "uptime": "17:13:09 up 30 min,  3 users,  load average: 0.10, 1.35, 2.18"
+  },
+  "usb_tree": "/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M\n    |__ Port 001: Dev 002, If 0, Class=Human Interface Device, Driver=usbhid, 1.5M\n    |__ Port 002: Dev 003, If 0, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 002: Dev 003, If 1, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 002: Dev 003, If 2, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 002: Dev 003, If 3, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 002: Dev 003, If 4, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 002: Dev 003, If 5, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 002: Dev 003, If 6, Class=Human Interface Device, Driver=usbhid, 480M\n/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M\n/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M\n    |__ Port 001: Dev 002, If 0, Class=Human Interface Device, Driver=usbhid, 1.5M\n    |__ Port 001: Dev 002, If 1, Class=Human Interface Device, Driver=usbhid, 1.5M\n/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M",
+  "usb": "Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub\nBus 001 Device 002: ID 17ef:608d Lenovo Optical Mouse\nBus 001 Device 003: ID 2bc5:0807 Orbbec 3D Technology International, Inc Orbbec Gemini 336L\nBus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub\nBus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub\nBus 003 Device 002: ID 17ef:6100 Lenovo Lenovo New Calliope USB Keyboard\nBus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub",
+  "l2": {
+    "first_sweep_after_open_s": 0.17300458599993362,
+    "sweeps": 181,
+    "sweep_hz": 23.781998648129232,
+    "sweep_period_s": {
+      "min": 0.04199814796447754,
+      "p5": 0.042020225524902345,
+      "median": 0.04204869270324707,
+      "p95": 0.04208106994628906,
+      "max": 0.04209470748901367
+    },
+    "sweep_duration_s": {
+      "min": 0.04190320149064064,
+      "p5": 0.04194820299744606,
+      "median": 0.04201949015259743,
+      "p95": 0.04206312075257301,
+      "max": 0.042117640376091
+    },
+    "points_per_sweep": {
+      "min": 4885.0,
+      "p5": 5110.0,
+      "median": 5169.0,
+      "p95": 5314.0,
+      "max": 5330.0
+    },
+    "imu_samples": 3777,
+    "imu_hz": 498.8136301790951,
+    "imu_accel_norm": {
+      "min": 9.99262714906608,
+      "p5": 10.36580037242735,
+      "median": 10.485438791248084,
+      "p95": 10.607221735026505,
+      "max": 11.183046728528891
+    },
+    "range_m": {
+      "min": 0.22467832267284393,
+      "p5": 0.6074005424976349,
+      "median": 2.4653563499450684,
+      "p95": 4.3299208641052225,
+      "max": 8.962482452392578
+    },
+    "dropped_clouds": 0,
+    "rejected_long_clouds": 1,
+    "monotonic_sweeps": true
+  },
+  "system_after": {
+    "throttled": "throttled=0x50000",
+    "temp": "temp=49.9'C",
+    "uptime": "17:13:24 up 31 min,  3 users,  load average: 0.15, 1.27, 2.13"
+  }
+}

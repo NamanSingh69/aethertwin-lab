@@ -1,0 +1,64 @@
+/* Static showcase only: a permanent provenance banner above the studio. */
+.showcase-root {
+  height: 100dvh;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.showcase-root > .app-shell {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+}
+.showcase-banner {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 14px;
+  padding: 6px 16px;
+  background: #2b1f08;
+  border-bottom: 1px solid #6d5016;
+  color: #f4dca4;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.showcase-banner strong {
+  color: #ffe6ad;
+  font-weight: 650;
+}
+.showcase-banner span + span::before {
+  content: "· ";
+  color: #b8954c;
+}
+.showcase-banner strong + span::before {
+  content: "";
+}
+.showcase-note {
+  color: #d9c08a;
+}
+.showcase-home {
+  margin-left: auto;
+  color: #ffe6ad;
+  font-weight: 600;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.showcase-home:hover {
+  color: #fff;
+}
+@media (max-width: 760px) {
+  .showcase-banner {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  .showcase-note {
+    display: none;
+  }
+  /* Public visitors on phones still need "What is this?". */
+  .showcase-root .explainer-link {
+    display: inline-block;
+    margin-right: 6px;
+  }
+}

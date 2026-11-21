@@ -3,6 +3,11 @@ mapping:
   runtime_tiled: true
   ray_backend: auto
   max_traversal_cells: 5000000
+  # build-twin on this 16 GB laptop: keep more tiles resident than the 32-tile default; a real L2 room scan touched
+  # more tiles per sweep than that and spent most of its time evicting and re-committing them (SQLite, fsync).
+  commissioning_budgets:
+    max_resident_tiles: 1024
+    max_resident_bytes: 1073741824
   tile_budgets:
     max_resident_tiles: 128
     max_resident_bytes: 67108864

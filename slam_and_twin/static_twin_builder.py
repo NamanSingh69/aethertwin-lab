@@ -40,18 +40,46 @@ def rectify_rgbd_for_tsdf(rgb,depth,calibration):
         'valid_input_pixels':int(np.count_nonzero(depth>0)),'valid_output_pixels':int(np.count_nonzero(rectified_depth>0))}
 
 
-def fit_floor_transform(points,normals=None,voxel_size=.08):
+def _floor_from_normal(n,d,extra):
+    axis=np.cross(n,[0,0,1]);theta=np.arccos(np.clip(n[2],-1,1))
+    R=np.eye(3) if np.linalg.norm(axis)<1e-10 else so3_exp(axis/np.linalg.norm(axis)*theta)
+    T=np.eye(4);T[:3,:3]=R;T[2,3]=d
+    return T,{'normal':n.tolist(),'offset':d,'height_before_alignment':float(-d/n[2]),**extra}
+
+
+def fit_floor_transform(points,normals=None,voxel_size=.08,*,sensor_positions=None,declared_lidar_height=None,gravity_up=None):
     """Find a low gravity-horizontal support plane, independent of scanner height.
 
     This assumes a gravity-aligned initial world z direction. A missing/weak
     measured support plane is an error; it cannot justify treating z=0 as floor.
+
+    With sensor_positions, a floor must lie below every sensor position: an upright Unitree L2 returns nothing
+    below its horizon (real bench data: elevations 0..90 deg), so its lowest horizontal surface is a ceiling or
+    soffit. If no measured floor qualifies, declared_lidar_height (tape-measured LiDAR origin height, metres)
+    places the floor that far below the median sensor position along gravity_up (default world +z); the report
+    says method 'declared_lidar_height', measured False. Neither available: ValueError naming mapping.lidar_height_m.
     """
     p=np.asarray(points,dtype=float)[:,:3]
+    sensors=None if sensor_positions is None else np.asarray(sensor_positions,float).reshape(-1,3)
+    up=np.array([0.,0.,1.]) if gravity_up is None else np.asarray(gravity_up,float)/np.linalg.norm(gravity_up)
+    def declared(reason):
+        if declared_lidar_height is None or sensors is None or not len(sensors):
+            raise ValueError(f"{reason}; set mapping.lidar_height_m (build-twin --lidar-height) to the tape-measured LiDAR height above the floor")
+        height=float(declared_lidar_height)
+        if not .05<=height<=3.:raise ValueError('Declared LiDAR height must lie in [0.05, 3] m')
+        n=up if up[2]>0 else -up;base=float(np.median(sensors@n))
+        return _floor_from_normal(n,height-base,{'method':'declared_lidar_height','measured':False,'declared_lidar_height_m':height,
+            'reason_no_measured_floor':reason,'support_points':0})
     if len(p)<30:raise ValueError("Floor calibration requires at least 30 measured points")
     if normals is None:
         cloud=as_cloud(p,0);cloud.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=max(.35,4*voxel_size),max_nn=40));normals=np.asarray(cloud.normals)
     horizontal=p[np.abs(np.asarray(normals)[:,2])>.85]
-    if len(horizontal)<20:raise ValueError("No measured gravity-horizontal floor support")
+    if sensors is not None and len(sensors):
+        # A floor is clearly below the LiDAR (>= 5 cm under the lowest sensor position); anything higher is not floor.
+        horizontal=horizontal[horizontal[:,2]<sensors[:,2].min()-.05]
+    if len(horizontal)<20:
+        if sensors is not None:return declared('No measured horizontal support below the sensor (an upright L2 does not see the floor)')
+        raise ValueError("No measured gravity-horizontal floor support")
     # The low quantile avoids below-floor outliers while rejecting upper bench
     # surfaces. Heights are relative, so scanner-origin recordings at -1.6m work.
     cutoff=np.quantile(horizontal[:,2],.35)+max(.05,voxel_size)
@@ -60,19 +88,25 @@ def fit_floor_transform(points,normals=None,voxel_size=.08):
     n=np.asarray(plane[:3]);d=float(plane[3])
     if n[2]<0:n=-n;d=-d
     support=candidate[inliers]
-    if n[2]<.9 or len(support)<20:raise ValueError("Floor fit failed gravity/support checks")
+    if n[2]<.9 or len(support)<20:
+        if sensors is not None:return declared('Measured floor candidate failed gravity/support checks')
+        raise ValueError("Floor fit failed gravity/support checks")
     support_span=np.ptp(support[:,:2],axis=0);scene_span=np.maximum(np.ptp(p[:,:2],axis=0),1e-6)
     if min(support_span)<.5 or np.prod(support_span)<.15*np.prod(scene_span):
+        if sensors is not None:return declared('Measured floor has insufficient spatial coverage')
         raise ValueError("Floor fit has insufficient measured spatial coverage")
-    axis=np.cross(n,[0,0,1]);theta=np.arccos(np.clip(n[2],-1,1))
-    R=np.eye(3) if np.linalg.norm(axis)<1e-10 else so3_exp(axis/np.linalg.norm(axis)*theta)
-    T=np.eye(4);T[:3,:3]=R;T[2,3]=d
-    return T,{'normal':n.tolist(),'offset':d,'support_points':len(support),'height_before_alignment':float(-d/n[2])}
+    extra={'method':'measured_floor','measured':True,'support_points':len(support)}
+    if sensors is not None and len(sensors) and declared_lidar_height is not None:
+        extra['declared_minus_measured_m']=float(declared_lidar_height)-float(np.median(sensors@n)+d)  # tape vs fitted height
+    return _floor_from_normal(n,d,extra)
 
 
 class StaticTwinBuilder:
-    def __init__(self,voxel_size=.08,poisson_depth=7,seed=0,initial_velocity=None,commissioning_mode='auto',*,storage_path=None,budgets=None):
+    def __init__(self,voxel_size=.08,poisson_depth=7,seed=0,initial_velocity=None,commissioning_mode='auto',*,storage_path=None,budgets=None,accel_bias=None):
         if commissioning_mode not in ('auto','mobile','stations'):raise ValueError('commissioning_mode must be auto, mobile or stations')
+        self.accel_bias=None if accel_bias is None else np.asarray(accel_bias,float).copy()
+        # Floor fallback inputs (fit_floor_transform): tape-measured LiDAR height and gravity up in the build's world.
+        self.declared_lidar_height=None;self.gravity_up=None
         velocity=None if initial_velocity is None else np.asarray(initial_velocity,dtype=float)
         if velocity is not None and (velocity.shape!=(3,) or not np.isfinite(velocity).all()):raise ValueError('Initial velocity prior must be a finite world-frame 3-vector')
         self.initial_velocity=None if velocity is None else velocity.copy();self.commissioning_mode=commissioning_mode;self.prepared_frames=()
@@ -119,7 +153,7 @@ class StaticTwinBuilder:
                 f=raw;carried=None
             elif station:
                 if len(raw.imu_samples)>=2:
-                    independent=ContinuousTimeIMUDeskewer(initial_pose=raw.sensor_pose_world,initial_velocity=np.zeros(3),imu_to_lidar=raw.imu_to_lidar)
+                    independent=ContinuousTimeIMUDeskewer(initial_pose=raw.sensor_pose_world,initial_velocity=np.zeros(3),imu_to_lidar=raw.imu_to_lidar,accel_bias=self.accel_bias)
                     f=independent.deskew_frame(raw)
                 else:
                     # Explicit fixed station observations can have no IMU. This
@@ -133,7 +167,7 @@ class StaticTwinBuilder:
                 if carried is None:
                     velocity=self.initial_velocity if previous_pose is None else np.zeros(3)
                     carried=ContinuousTimeIMUDeskewer(initial_pose=raw.sensor_pose_world if previous_pose is None else previous_pose,
-                        initial_velocity=velocity,imu_to_lidar=raw.imu_to_lidar)
+                        initial_velocity=velocity,imu_to_lidar=raw.imu_to_lidar,accel_bias=self.accel_bias)
                     if previous_end is not None:carried.last_timestamp=previous_end
                 elif not np.allclose(carried.imu_to_lidar,raw.imu_to_lidar,atol=1e-10):
                     raise ValueError('IMU extrinsics changed inside causal commissioning sequence')
@@ -151,8 +185,9 @@ class StaticTwinBuilder:
                 try:
                     coarse,fitness=global_registration(cloud,graph.clouds[-1]);coarse_report['fpfh_ransac_fitness']=fitness
                     if not known_prior and mode!='causal_mobile':
-                        coarse_refined,coarse_diag=point_to_plane_icp(cloud,graph.clouds[-1],coarse,voxel=max(.1,self.voxel_size))
-                        prior_refined,prior_diag=point_to_plane_icp(cloud,graph.clouds[-1],prior_relative,voxel=max(.1,self.voxel_size))
+                        last=graph.keyframe_reference(-1)
+                        coarse_refined,coarse_diag=point_to_plane_icp(cloud,None,coarse,voxel=graph.voxel_size,reference=last)
+                        prior_refined,prior_diag=point_to_plane_icp(cloud,None,prior_relative,voxel=graph.voxel_size,reference=last)
                         def score(diag):return diag['rmse']/max(diag['fitness'],1e-6)+.1*(1-diag['fitness'])
                         if score(coarse_diag)<score(prior_diag):guess=graph.poses[-1]@coarse_refined;coarse_report['method']='fpfh_ransac'
                 except ValueError as error:coarse_report['fpfh_ransac_error']=str(error)
@@ -185,7 +220,7 @@ class StaticTwinBuilder:
         for a in range(len(graph.clouds)):
             for b in range(a+2,len(graph.clouds)):
                 initial=inverse(graph.poses[a])@graph.poses[b]
-                T,diag=point_to_plane_icp(graph.clouds[b],graph.clouds[a],initial,voxel=max(.1,self.voxel_size))
+                T,diag=point_to_plane_icp(None,None,initial,voxel=graph.voxel_size,reference=graph.keyframe_reference(a),source_reference=graph.keyframe_reference(b))
                 if diag['fitness']>.4 and diag['rmse']<.15:graph.edges.append((a,b,T,diag['information']))
         optimized=graph.optimize();self.poses[len(self.poses)-len(optimized):]=optimized
         if writer is None:
@@ -200,7 +235,8 @@ class StaticTwinBuilder:
             self.point_store=DiskPointCloud(self.storage_path/'surface_tiles',self.voxel_size,**options)
             for frame,pose in zip(self.prepared_frames,self.poses):self.point_store.add(transform_points(pose,frame.lidar_points[:,:3]))
             self.point_store.flush();cloud=as_cloud(self.point_store.sample(self.budgets['reconstruction_points'],self.seed),0)
-        self.floor_transform,floor_report=fit_floor_transform(np.asarray(cloud.points),voxel_size=self.voxel_size)
+        self.floor_transform,floor_report=fit_floor_transform(np.asarray(cloud.points),voxel_size=self.voxel_size,
+            sensor_positions=np.array([pose[:3,3] for pose in self.poses]),declared_lidar_height=self.declared_lidar_height,gravity_up=self.gravity_up)
         cloud.transform(self.floor_transform)
         if self.point_store is not None:self.point_store.transform=self.floor_transform;self.point_store.flush()
         self.points=np.asarray(cloud.points).copy();cloud.estimate_normals(o3d.geometry.KDTreeSearchParamHybrid(radius=self.voxel_size*4,max_nn=30))

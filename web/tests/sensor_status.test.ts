@@ -133,4 +133,43 @@ describe("reported sensor availability", () => {
     expect(warnings).toContain("profile missing");
     expect(warnings).toContain("serial disconnected");
   });
+  it("surfaces counted raw-sensor transport losses and restarts", () => {
+    const healthy = {
+      ...observed,
+      diagnostics: {
+        ...observed.diagnostics,
+        raw_transport: {
+          segment: 1,
+          camera_missing: 0,
+          cloud_missing: 0,
+          imu_missing_samples: 0,
+        },
+      },
+    };
+    expect(sensorWarnings(healthy, fresh).join(" ")).not.toContain(
+      "Pi capture",
+    );
+    const lossy = {
+      ...observed,
+      diagnostics: {
+        ...observed.diagnostics,
+        raw_transport: {
+          segment: 4,
+          connections: 3,
+          camera_missing: 4,
+          camera_incomplete: 1,
+          cloud_missing: 0,
+          imu_missing_samples: 7,
+          last_error: "stall",
+        },
+      },
+    };
+    const warnings = sensorWarnings(lossy, fresh).join(" ");
+    expect(warnings).toContain(
+      "lost 4 camera frames, 1 incomplete camera frames, 7 IMU samples",
+    );
+    expect(warnings).toContain("reconnected 2 time(s)");
+    expect(warnings).toContain("last: stall");
+    expect(warnings).toContain("1 new segment(s) without reconnecting");
+  });
 });

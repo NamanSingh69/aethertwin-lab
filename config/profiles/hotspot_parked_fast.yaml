@@ -1,0 +1,12 @@
+# OPT-IN for a parked live run (command_center --mode live --parked) on the laptop: the hotspot profile plus a
+# setting that only changes speed, not results.
+#   - In-memory dynamic occupancy map instead of the disk-backed tiles (same evidence semantics; cells older than
+#     the live map's 30 s are pruned every 50 updates, so memory stays bounded).
+#   (Since C30 every profile skips the planning-grid rebuild while no goal is set; this profile used to set it here.)
+# Measured on 100 real recorded frames, GPU, parked: 263 ms a frame vs 300 ms with plain hotspot.yaml.
+# 30-minute rehearsal on recorded data (reports/rehearsal/live_parked_fast_replay_30min.json): no errors, p50 275 ms /
+# p95 350 ms (plain hotspot.yaml: 381 / 570 ms); memory bounded but a sawtooth (1.56-2.03 GB), not flat like plain
+# hotspot.yaml. Use plain hotspot.yaml for runs longer than 30 minutes or if in doubt.
+extends: hotspot.yaml
+mapping:
+  runtime_tiled: false

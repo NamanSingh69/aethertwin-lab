@@ -29,7 +29,8 @@ export function useControlCommands({
   const command = useCallback(
     async (action: string, payload: unknown = {}, revision?: number) => {
       const session = current.current;
-      if (!session || !canControl(session, action)) {
+      // The static showcase has no command service (its playback is local).
+      if (import.meta.env.VITE_SHOWCASE === "1" || !session || !canControl(session, action)) {
         setNotice({
           text: "This session or source does not support that control.",
           bad: true,

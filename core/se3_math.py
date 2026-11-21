@@ -54,5 +54,30 @@ def transform_points(T,points):
 def interpolate(T0,T1,alpha):
     return T0@se3_exp(float(alpha)*se3_log(inverse(T0)@T1))
 
+def left_jacobian_batch(w):
+    """left_jacobian for (N,3) rotation vectors."""
+    w=np.asarray(w,dtype=np.float64);t=np.linalg.norm(w,axis=1);W=np.zeros((len(w),3,3))
+    W[:,0,1]=-w[:,2];W[:,0,2]=w[:,1];W[:,1,0]=w[:,2];W[:,1,2]=-w[:,0];W[:,2,0]=-w[:,1];W[:,2,1]=w[:,0]
+    b=.5*np.sinc(t/(2*np.pi))**2;safe=np.where(t<1e-4,1.,t)
+    c=np.where(t<1e-4,1/6-t*t/120+t**4/5040,(safe-np.sin(safe))/safe**3)
+    return np.eye(3)[None]+b[:,None,None]*W+c[:,None,None]*(W@W)
+
+def se3_exp_batch(xi):
+    """se3_exp for (N,6) twists [rotation, translation]."""
+    xi=np.asarray(xi,dtype=np.float64).reshape(-1,6);T=np.zeros((len(xi),4,4));T[:,3,3]=1
+    T[:,:3,:3]=so3_exp_batch(xi[:,:3]);T[:,:3,3]=np.einsum('nij,nj->ni',left_jacobian_batch(xi[:,:3]),xi[:,3:])
+    return T
+
+def se3_log_batch(T):
+    """se3_log for (N,4,4) rigid transforms (same quaternion-based rotation log)."""
+    T=np.asarray(T,dtype=np.float64)
+    if len(T)==0:return np.zeros((0,6))
+    w=Rotation.from_matrix(T[:,:3,:3]).as_rotvec()
+    return np.c_[w,np.linalg.solve(left_jacobian_batch(w),T[:,:3,3:])[:,:,0]]
+
+def inverse_batch(T):
+    T=np.asarray(T,dtype=np.float64);out=np.zeros_like(T);out[:,3,3]=1;Rt=np.swapaxes(T[:,:3,:3],1,2)
+    out[:,:3,:3]=Rt;out[:,:3,3]=-np.einsum('nij,nj->ni',Rt,T[:,:3,3]);return out
+
 def adjoint(T):
     A=np.zeros((6,6)); R=T[:3,:3]; A[:3,:3]=R; A[3:,3:]=R; A[3:,:3]=hat(T[:3,3])@R; return A

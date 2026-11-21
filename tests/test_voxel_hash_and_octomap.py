@@ -49,3 +49,18 @@ def test_thresholded_exports_match_a_brute_force_decay_scan_at_boundaries(rate):
             above=[k for k,d in decayed.items() if d>threshold];below=[k for k,d in decayed.items() if d<threshold]
             np.testing.assert_array_equal(m.occupied_points(threshold),(np.array(above,float).reshape(-1,3)+.5)*m.voxel_size)
             np.testing.assert_array_equal(m.free_points(threshold),(np.array(below,float).reshape(-1,3)+.5)*m.voxel_size)
+
+
+def test_cached_decay_factors_are_bit_identical_to_the_per_cell_power():
+    from slam_and_twin.log_odds_octomap import _DecayFactors
+    rng=np.random.default_rng(4);rate=.96;t=37.3
+    stamps=np.r_[rng.uniform(0,40,200),[t,t+1.,0.]]
+    decay=_DecayFactors(rate,t)
+    for value,stamp in zip(rng.uniform(-4,4,len(stamps)),stamps):
+        value=float(value);stamp=float(stamp)
+        assert value*decay[stamp]==value*rate**(max(0.,t-stamp)/.1)
+    m=SparseMultiReturnVoxelMap(.2,decay_rate=rate)
+    for k in range(6):m.voxelize_and_update(rng.uniform(-3,3,(400,7)).astype(np.float32),timestamp=.1*k,origin=[0.,0.,0.])
+    m.timestamp=1.7;points=(np.array(list(m.cells),float)+.5)*.2
+    expected=np.array([v[0]*rate**(max(0.,1.7-v[2])/.1) for v in m.cells.values()],np.float32)
+    assert np.array_equal(m.query(points),expected)

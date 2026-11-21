@@ -15,6 +15,12 @@ mapping:
   tau0: 0.14
   beta: 0.008
   floor_epsilon: 0.06
+  # build-twin: register this many consecutive raw L2 sweeps (83.6 ms, ~5200 returns each) as one scan;
+  # every return keeps its own time and IMU pose (ingestion/sweep_merge.py). 1 = one scan per sweep.
+  commissioning_sweeps_per_scan: 1
+  # Tape-measured LiDAR origin height above the floor (m). An upright L2 returns nothing below its horizon, so the
+  # twin's floor comes from this when no floor is measured below the sensor (build report floor_fit.method).
+  lidar_height_m: null
 perception:
   max_voxels: 1400
   neighbors: 16
@@ -26,10 +32,25 @@ perception:
   checkpoint: assets/checkpoints/synthetic.pt
   # Opt-in torch.compile with a per-signature parity gate; each signature compiles once (~12 s on CPU), so off by default.
   compile: false
+  # Opt-in (C43): per-point preparation (camera projection, voxel keys and sums, point features) on the CUDA device.
+  # APPROXIMATE (GPU summation order; tests/test_aide2_c43_gpu_prepare.py). Needs device: cuda, else CPU path + warning.
+  gpu_prepare: false
+  # Opt-in (C46), 0 = off: every N ms a daemon thread runs a gpu_keepalive_matmul-sized matmul on its own CUDA stream,
+  # so a laptop GPU keeps its clocks between live frames (CNN ~58 ms in P8 at a 0.2 s cadence vs ~4 ms at 20 and 3072).
+  # A real load (~38% GPU, +18-20 W measured on the RTX 4070 laptop; 10 and 2048: ~10 ms, +8 W); tiny ops do not work.
+  # Prefer the owner's power setting. Needs device: cuda, else a warning and nothing. tests/test_aide2_c46_gpu_keepalive.py
+  gpu_keepalive_ms: 0
+  gpu_keepalive_matmul: 3072
 tracking:
   model: ca
   cluster_eps: 0.40
   min_cluster_points: 4
+  # Opt-in (C47), BEHAVIOUR-CHANGING when person_confirm_frames > 1: a track is reported (and seen by halo, heatmap and
+  # the scene) as HUMAN_PEDESTRIAN only after that class won >= person_confirm_frames of its last person_confirm_window
+  # observed frames; it delays real people by up to k-1 frames. 1 and 1 = off (the tracker before C47).
+  # tests/test_aide2_c47_person_persistence.py. Try 3 and 5 on the rig; not yet checked against a walking person.
+  person_confirm_frames: 1
+  person_confirm_window: 1
 planning:
   resolution: 0.25
   radius: 0.20
@@ -51,6 +72,8 @@ recording:
   queued_frames: 8
   queued_bytes: 67108864
   required: true
+  # null keeps NumPy's default deflate; 1 is ~2.5x faster (full-resolution RGB-D at 10 Hz) for ~30 % more disk.
+  compression_level: 1
 rendering:
   backend: auto
   mesa_dir: assets/rendering/mesa
@@ -63,7 +86,25 @@ training:
   validation_seeds: [101, 102]
   test_seeds: [201, 202]
   max_points: 1800
+# Returns on the rig's own body (robot chassis, wheels, wiring) are dropped where frames enter
+# processing (ingestion/self_mask.py); recordings keep every return. Boxes are axis-aligned in the
+# LiDAR frame, metres. Disabled until the body is measured on the real rig.
+lidar_self_mask:
+  enabled: false
+  min_range: 0.0
+  boxes: []   # e.g. {name: chassis, min: [-0.30, -0.12, -0.20], max: [0.12, 0.12, 0.02]}
 live:
+  # local: L2 and Gemini drivers run on this host. remote: a Pi capture node
+  # (ingestion/capture_node.py) streams them over the authenticated raw-sensor
+  # transport; see docs/RASPBERRY_PI_WINDOWS.md.
+  source: local
+  capture_host: 192.168.1.2
+  capture_port: 7600
+  capture_key_file: config/capture_node.key
+  capture_reconnect: true
+  capture_max_outage_seconds: 10.0
+  capture_stall_seconds: 3.0
+  capture_clock_jump_seconds: 0.02
   lidar_ip: 192.168.1.62
   host_ip: 192.168.1.2
   lidar_port: 6101
@@ -78,4 +119,25 @@ live:
   camera_intrinsics_tolerance_px: 1.0
   camera_distortion_tolerance: 0.0001
   calibration: config/calibration_extrinsics.json
+  # Accelerometer bias in the IMU frame (m/s^2) subtracted before deskew, from tools/imu_bias_from_recording.py;
+  # null = none. The L2 on the rig read 10.52 m/s^2 at rest (reports/hardware/pi/README.md).
+  imu_accel_bias: null
   allow_degraded: false
+# Pi side of the raw-sensor transport (python -m ingestion.capture_node). The
+# node reads the live section above for the L2 and Gemini settings.
+capture_node:
+  bind: 192.168.1.2
+  bind_interface: null     # e.g. wlan0: bind the address it holds (hotspot DHCP lease; config/profiles/hotspot.yaml); --bind overrides
+  port: 7600
+  allowed_peers: [192.168.1.10]
+  key_file: config/capture_node.key
+  depth_codec: raw        # lossless: raw (61 MB/s at 1280x800x30, no CPU), zlib or png (~2.4x smaller and ~30 ms/frame on an i9, synthetic images)
+  depth_level: 1
+  color_codec: device     # device (forward SDK bytes), raw, png, or jpeg (lossy)
+  color_quality: 90
+  camera_forward: all      # all, or sweep: only frames within camera_sweep_window_seconds of a predicted L2 sweep end (fusable ones)
+  camera_sweep_window_seconds: 0.02
+  imu_queue_samples: 20000
+  cloud_queue_sweeps: 4
+  camera_queue_frames: 2
+  fragment_bytes: 1048576  # camera fragment; IMU queues behind at most one (estimate ~8 ms on gigabit)

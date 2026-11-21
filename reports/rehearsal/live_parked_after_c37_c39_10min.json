@@ -1,0 +1,75 @@
+{
+  "kind": "live_replay_rehearsal",
+  "label": "REHEARSAL: recorded data replayed over the real transport on loopback; NOT live hardware, NOT a lab result",
+  "commit": "9a2d9ff",
+  "recording": "C:\\Users\\user\\aethertwin_rec\\wifi_stationary_60s",
+  "twin": "C:\\Users\\user\\AppData\\Local\\Temp\\claude\\8afd82c7fd932295\\5589308e-8bed-4c67-bafe-2d01a62929ee\\scratchpad\\rehearsal\\twin_final",
+  "calibration": "C:\\Users\\user\\AppData\\Local\\Temp\\claude\\8afd82c7fd932295\\5589308e-8bed-4c67-bafe-2d01a62929ee\\scratchpad\\rehearsal\\rehearsal_calibration.json",
+  "duration_s": 600.0,
+  "device": "cuda",
+  "parked": true,
+  "node_port": 58226,
+  "service_port": 58227,
+  "started_utc": "2026-11-05T03:17:40.332610+00:00",
+  "verdict": "ran the full duration without a runtime error",
+  "monitored_span_s": 605.7,
+  "samples": 61,
+  "completed": true,
+  "runtime_error": null,
+  "frame_errors": {
+    "total_frame_errors": 0,
+    "consecutive_frame_errors": 0,
+    "last_frame_error": null,
+    "stop_after_consecutive": 20
+  },
+  "live_source": {
+    "live_source_reopens": 0,
+    "failed_reopens": 0,
+    "last_reopen_error": null,
+    "max_source_reopens": 20
+  },
+  "localization_valid_at_end": true,
+  "parked_localization": {
+    "accepted": true,
+    "fitness": 0.9729577464788732,
+    "rmse_m": 0.02541224201223518,
+    "correction_m": 0.019083018152996397,
+    "correction_deg": 0.059786256868882365
+  },
+  "processing_ms": {
+    "p50": 239.65789999965637,
+    "p95": 295.62929999883636,
+    "target_ms": 35
+  },
+  "module_ms_median": {
+    "localization": 58.82689999998547,
+    "occupancy": 50.737600000502425,
+    "perception_tracking": 129.31229999958305,
+    "planning": 0.005700001565855928,
+    "risk_fields": 1.2360000000626314
+  },
+  "acquired_frames": 7161,
+  "dropped_by_latest_frame_coalescing": 4738,
+  "transport": {
+    "state": "streaming",
+    "segment": 1,
+    "segments": 1,
+    "bytes": 2525792592,
+    "clock_jumps": 0,
+    "imu_sequence_breaks": 0,
+    "cloud_missing": 0,
+    "camera_missing": 0
+  },
+  "rss_mb": {
+    "first": 1617.95703125,
+    "last": 1514.73046875,
+    "max": 1652.55078125,
+    "slope_second_half_mb_per_min": 0.019427801171239694
+  },
+  "not_shown": [
+    "Wi-Fi delay or loss (loopback)",
+    "a measured calibration unless one was given",
+    "Pi temperature or power",
+    "moving people unless the recording has them"
+  ]
+}

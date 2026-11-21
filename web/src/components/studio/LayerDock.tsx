@@ -73,6 +73,7 @@ export function LayerDock(props: {
   routeOpen: boolean;
   onToggleRoute: () => void;
   zonesDisabled: boolean;
+  workspaces?: readonly string[];
   zoneCount: number;
   onOpenZones: () => void;
   graphOpen: boolean;
@@ -86,7 +87,7 @@ export function LayerDock(props: {
       <section className="responsive-workspace" aria-label="Workspace menu">
         <div className="section-title">Workspace</div>
         <nav aria-label="All workspaces">
-          {WORKSPACES.map((tab) => (
+          {(props.workspaces ?? WORKSPACES).map((tab) => (
             <button
               className={props.mode === tab ? "active" : ""}
               key={tab}

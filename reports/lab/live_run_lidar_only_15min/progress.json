@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "frames": 5510,
+  "wall_seconds": 899.875,
+  "end_to_end_fps": 6.123072648979025,
+  "processing_latency_ms": {
+    "p50": 140.0322499998765,
+    "p95": 215.51004500006462,
+    "max": 940.0725999994393
+  },
+  "mean_processing_fps": 6.7231892852608635,
+  "module_latency_ms": {
+    "localization": {
+      "p50": 48.34320000009029,
+      "p95": 85.72950500015396
+    },
+    "occupancy": {
+      "p50": 36.523449999549484,
+      "p95": 64.37118500016368
+    },
+    "perception_tracking": {
+      "p50": 54.50735000022178,
+      "p95": 78.8627850003195
+    },
+    "planning": {
+      "p50": 0.004100000296602957,
+      "p95": 0.007799999366397969
+    },
+    "risk_fields": {
+      "p50": 0.7654999999431311,
+      "p95": 3.0396950001431833
+    }
+  },
+  "rss_mb": {
+    "first": 1514.66796875,
+    "last": 1637.65234375,
+    "max": 1638.09375,
+    "last_half_slope_mb_per_frame": 0.0004680209891203355
+  },
+  "dropped_snapshots": 0,
+  "occupancy_cells": 33936,
+  "presentation_queue": {
+    "capacity": 2,
+    "current_depth": 0,
+    "max_depth": 0
+  },
+  "configuration": {
+    "seed": 7,
+    "device": "cuda",
+    "simulation": {
+      "lidar_points": 2400,
+      "width": 160,
+      "height": 100,
+      "dt": 0.1,
+      "noise_std": 0.008,
+      "mobile": false,
+      "include_s2": false
+    },
+    "mapping": {
+      "voxel_size": 0.18,
+      "decay_rate": 0.98,
+      "twin_voxel_size": 0.08,
+      "tau0": 0.14,
+      "beta": 0.008,
+      "floor_epsilon": 0.06,
+      "commissioning_sweeps_per_scan": 1,
+      "lidar_height_m": null,
+      "runtime_tiled": true,
+      "ray_backend": "auto",
+      "max_traversal_cells": 5000000,
+      "commissioning_budgets": {
+        "max_resident_tiles": 1024,
+        "max_resident_bytes": 1073741824
+      },
+      "tile_budgets": {
+        "max_resident_tiles": 128,
+        "max_resident_bytes": 67108864,
+        "max_disk_bytes": 4294967296
+      },
+      "runtime_cache_root": "C:\\Users\\user\\aethertwin_live\\run_lidar_only_15min\\.runtime_cache"
+    },
+    "perception": {
+      "max_voxels": 1400,
+      "neighbors": 16,
+      "temporal_neighbors": 12,
+      "rgbd_stride": 3,
+      "range_image_height": 24,
+      "range_image_width": 96,
+      "confidence_threshold": 0.3,
+      "checkpoint": "assets/checkpoints/synthetic.pt",
+      "compile": false,
+      "gpu_prepare": false,
+      "gpu_keepalive_ms": 0,
+      "gpu_keepalive_matmul": 3072
+    },
+    "tracking": {
+      "model": "ca",
+      "cluster_eps": 0.4,
+      "min_cluster_points": 4,
+      "person_confirm_frames": 1,
+      "person_confirm_window": 1
+    },
+    "planning": {
+      "resolution": 0.25,
+      "radius": 0.2,
+      "start": null,
+      "goal": null,
+      "ground": true,
+      "replan_interval": 5,
+      "mppi_samples": 96,
+      "mppi_iterations": 2,
+      "bounds": [
+        -8.75,
+        8.75,
+        -3.5,
+        14.5,
+        -0.25,
+        3.75
+      ]
+    },
+    "telemetry": {
+      "enabled": false,
+      "host": "127.0.0.1",
+      "port": 8765
+    },
+    "recording": {
+      "max_disk_bytes": 17179869184,
+      "chunk_frames": 4,
+      "chunk_bytes": 67108864,
+      "queued_frames": 8,
+      "queued_bytes": 67108864,
+      "required": true,
+      "compression_level": 1
+    },
+    "rendering": {
+      "backend": "auto",
+      "mesa_dir": "assets/rendering/mesa"
+    },
+    "training": {
+      "learning_rate": 0.001,
+      "fine_tune_learning_rate": 0.0001,
+      "epochs": 20,
+      "frames_per_scene": 12,
+      "train_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_seeds": [
+        101,
+        102
+      ],
+      "test_seeds": [
+        201,
+        202
+      ],
+      "max_points": 1800
+    },
+    "lidar_self_mask": {
+      "enabled": false,
+      "min_range": 0.0,
+      "boxes": []
+    },
+    "live": {
+      "source": "remote",
+      "capture_host": "192.168.137.37",
+      "capture_port": 7600,
+      "capture_key_file": "config/capture_node.key",
+      "capture_reconnect": true,
+      "capture_max_outage_seconds": 10.0,
+      "capture_stall_seconds": 3.0,
+      "capture_clock_jump_seconds": 0.02,
+      "lidar_ip": "192.168.1.62",
+      "host_ip": "192.168.1.2",
+      "lidar_port": 6101,
+      "host_port": 6201,
+      "camera_width": 640,
+      "camera_height": 400,
+      "camera_fps": 30,
+      "camera_color_width": 640,
+      "camera_color_height": 400,
+      "camera_color_fps": 30,
+      "camera_align_mode": "auto",
+      "camera_intrinsics_tolerance_px": 1.0,
+      "camera_distortion_tolerance": 0.0001,
+      "calibration": "config/calibration_extrinsics_640x400.json",
+      "imu_accel_bias": null,
+      "allow_degraded": false,
+      "parked": true,
+      "capture_bringup": true,
+      "parked_relocalize": true,
+      "initial_pose_world": [
+        [
+          0.9999014772359995,
+          0.011928071807841403,
+          -0.007399792173638435,
+          0.0053212945169983945
+        ],
+        [
+          -0.011969307435683597,
+          0.9999129433309575,
+          -0.005553506885848181,
+          -0.0013793664445738221
+        ],
+        [
+          0.0073329053434604535,
+          0.005641530126486422,
+          0.9999571999026037,
+          0.0013513202465047294
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "capture_node": {
+      "bind": null,
+      "bind_interface": "wlan0",
+      "port": 7600,
+      "allowed_peers": [
+        "192.168.137.1"
+      ],
+      "key_file": "config/capture_node.key",
+      "depth_codec": "zlib",
+      "depth_level": 1,
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "sweep",
+      "camera_sweep_window_seconds": 0.02,
+      "imu_queue_samples": 20000,
+      "cloud_queue_sweeps": 4,
+      "camera_queue_frames": 2,
+      "fragment_bytes": 65536
+    },
+    "acquisition": {
+      "max_frames": 2,
+      "max_bytes": 67108864,
+      "max_age_seconds": 0.5,
+      "imu_history_seconds": 5.0,
+      "max_imu_samples": 8192
+    },
+    "input_mode": "live",
+    "identity": {
+      "map_revision": "9b7ba2f6af958ec02e24aed4"
+    },
+    "geofences": []
+  },
+  "input_mode": "live",
+  "hardware_validation": "physical devices and real-lab accuracy have not been validated by this delivery",
+  "telemetry": {
+    "encoded_frames": 5509,
+    "coalesced_snapshots": 0,
+    "queue_capacity": 1,
+    "queue_depth": 0,
+    "clients": 1,
+    "error": null
+  }
+}

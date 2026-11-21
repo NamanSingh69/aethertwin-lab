@@ -24,9 +24,12 @@ simultaneous-axis rule is exactly the reference's absolute `1e-12` threshold.
 There is no temporal binning, ray sampling, range truncation or fast-math.
 
 `traverse_beams(...)` returns sorted unique keys, matching the occupancy
-module's current reference signature. An allocation-free in-place native heap
-sort compacts a private key copy in signed lexicographic order, preserving the
-ordered sequences and owners. Older compatible binaries use NumPy unique.
+module's current reference signature. Keys within +-2^20 cells (about +-189 km
+at 0.18 m voxels) are packed offset-binary into one int64 and de-duplicated with
+a 1-D NumPy unique, which keeps signed lexicographic order exactly. Outside that
+range an allocation-free in-place native heap sort compacts a private key copy
+(older compatible binaries use NumPy unique). The ordered sequences and owners
+are never modified.
 Multi-return endpoint selection remains
 the caller's responsibility. Pass only the chosen final returns with their
 acquisition origins. All observed hit keys, including intermediate echoes,

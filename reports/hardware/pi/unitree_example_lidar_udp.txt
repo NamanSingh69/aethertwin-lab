@@ -1,0 +1,61 @@
+[UDPHandler] create udp socket success.
+[UDPHandler] bind udp port success. port 6201.
+[UDPHandler] set udp recv timeout success. 1 sec.
+Unilidar initialization succeed!
+set Lidar work mode to: 0
+lidar hardware version = 2.2.1.1
+lidar firmware version = 2.8.11.1
+lidar sdk version = 2.0.9
+stop lidar rotation ...
+start lidar rotation ...
+dirty percentage = 11.404492 %
+time delay (second) = 0.002451
+An IMU msg is parsed!
+	system stamp = 1793811800.1706497669
+	seq = 926, stamp = 1793811800.170602798
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [-0.0084, 0.0012, 0.0000]
+	linear_acceleration (x, y, z) = [0.0132, -0.1748, 10.5644]
+An IMU msg is parsed!
+	system stamp = 1793811800.1707684994
+	seq = 927, stamp = 1793811800.170763969
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [-0.0076, -0.0000, 0.0000]
+	linear_acceleration (x, y, z) = [0.0347, -0.1616, 10.5644]
+An IMU msg is parsed!
+	system stamp = 1793811800.1708371639
+	seq = 928, stamp = 1793811800.170833110
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [-0.0018, -0.0076, -0.0000]
+	linear_acceleration (x, y, z) = [0.1676, -0.0575, 10.4579]
+An IMU msg is parsed!
+	system stamp = 1793811800.1709041595
+	seq = 929, stamp = 1793811800.170900106
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [-0.0073, -0.0007, 0.0000]
+	linear_acceleration (x, y, z) = [0.0467, -0.1544, 10.4471]
+An IMU msg is parsed!
+	system stamp = 1793811800.170924902
+	seq = 930, stamp = 1793811800.170920848
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [0.0030, 0.0022, -0.0000]
+	linear_acceleration (x, y, z) = [-0.0048, 0.0263, 10.4663]
+An IMU msg is parsed!
+	system stamp = 1793811800.1709923744
+	seq = 931, stamp = 1793811800.170988321
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [0.0090, -0.0004, -0.0000]
+	linear_acceleration (x, y, z) = [0.0419, 0.1317, 10.5070]
+An IMU msg is parsed!
+	system stamp = 1793811800.17105937
+	seq = 932, stamp = 1793811800.171055555
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [0.0077, -0.0020, -0.0000]
+	linear_acceleration (x, y, z) = [0.0694, 0.1101, 10.5584]
+An IMU msg is parsed!
+	system stamp = 1793811800.1711266041
+	seq = 933, stamp = 1793811800.171122550
+	quaternion (x, y, z, w) = [0.9983, -0.0013, -0.0016, 0.0000]
+	angular_velocity (x, y, z) = [-0.0036, 0.0051, 0.0000]
+	linear_acceleration (x, y, z) = [-0.0563, -0.0898, 10.5728]
+... (trimmed: 10722 lines total, 1595 IMU messages, 0 point-cloud messages in the 60 s run)

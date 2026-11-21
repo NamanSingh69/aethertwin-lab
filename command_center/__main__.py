@@ -26,6 +26,10 @@ def main(argv=None):
     parser.add_argument('--access-log',action='store_true',help='Log each HTTP request (off by default)')
     parser.add_argument('--open-browser',action='store_true',help='Open the local command center after the server is ready')
     parser.add_argument('--appearance',type=Path,help='Visual-only photo capture directory (appearance.json + model); see docs/LAB_APPEARANCE.md')
+    parser.add_argument('--live-source',choices=['local','remote'],help='Live sensors on this host, or a Pi capture node over the raw-sensor transport')
+    parser.add_argument('--capture-host',help='Capture node address for --live-source remote (default live.capture_host)')
+    parser.add_argument('--lidar-only',action='store_true',help='Live without a camera calibration (capture node in bring-up mode): LiDAR only, camera not fused; accepts a LiDAR-only twin')
+    parser.add_argument('--parked',action='store_true',help='Live: the cart stays put; localize once against the twin, then hold the station (live.parked)')
     args=parser.parse_args(argv)
     from .auth import is_loopback
     if bool(args.ssl_certfile)!=bool(args.ssl_keyfile):parser.error('Both TLS certificate and key are required')
@@ -37,6 +41,10 @@ def main(argv=None):
     from core.configuration import load_config
     cfg=load_config(args.config)
     if args.seed is not None:cfg['seed']=args.seed
+    if args.live_source is not None:cfg['live']['source']=args.live_source
+    if args.capture_host is not None:cfg['live']['capture_host']=args.capture_host
+    if args.parked:cfg['live']['parked']=True
+    if args.lidar_only:cfg['live']['capture_bringup']=True
     device=args.device or cfg['device']
     cfg['device']='cuda' if device=='auto' and torch.cuda.is_available() else ('cpu' if device=='auto' else device)
     if cfg['device']=='cuda' and not torch.cuda.is_available():raise RuntimeError('CUDA requested but unavailable')

@@ -1,24 +1,33 @@
-/* Aether Halo advisory display. ESP32 DevKit V1 / ESP32-WROOM-32.
+/* Aether Halo advisory display. ESP32 DevKit V1 / ESP32-WROOM-32, or ESP32-S3 DevKitC (S3 build).
  * No motors, relays, servo outputs, sensor configuration or firmware update API.
  * LED: GPIO18, WS2812B GRB,24 pixels. OLED optional: SSD1306 128x64 @0x3C,
- * SDA21/SCL22. Compiled for Arduino-ESP32 3.3.12, generic esp32 board profile.
+ * SDA21/SCL22 (ESP32) or SDA8/SCL9 (ESP32-S3, which has no GPIO22). Host link on Serial: UART0 (the
+ * DevKit's USB port, or the S3 board's "UART" port), or the S3's native USB port when built with
+ * CDCOnBoot=cdc (build_firmware.py --board esp32s3-usb). Compiled for Arduino-ESP32 3.3.12.
  */
 #include <Arduino.h>
 #include <Wire.h>
 #include "halo_protocol.h"
 #define HALO_LED_GPIO 18
+#if CONFIG_IDF_TARGET_ESP32S3
+#define HALO_OLED_SDA 8
+#define HALO_OLED_SCL 9
+#define HALO_PROFILE "ESP32_S3_DEVKITC"
+#else
 #define HALO_OLED_SDA 21
 #define HALO_OLED_SCL 22
+#define HALO_PROFILE "ESP32_DEVKIT_V1"
+#endif
 #ifndef HALO_ENABLE_OLED
 #define HALO_ENABLE_OLED 1
 #endif
 static const uint32_t LINK_WATCHDOG_MS=250;
-static const char* IDENTITY="AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_DEVKIT_V1";
-static bool paired=false,havePacket=false,ledReady=false,oledReady=false,linkExpired=false,ageSaturated=false;
-static uint32_t lastPacketMs=0,lastRenderMs=0,lastOledMs=0;
+static const uint32_t HEARTBEAT_MS=1000;
+static const char* IDENTITY="AETHER_HALO 1 PIXELS=24 PROFILE=" HALO_PROFILE;
+static bool paired=false,havePacket=false,ledReady=false,oledReady=false,linkExpired=false,ageSaturated=false,sequenceSession=false;
+static uint32_t lastPacketMs=0,lastRenderMs=0,lastOledMs=0,lastHeartbeatMs=0,accepted=0;
 static HaloPacket packet={HALO_DISCONNECTED,0,-32768,0,64,65535,0};
-static uint8_t receiveBytes[16];static unsigned receiveLength=0;
-static char hello[64];static unsigned helloLength=0;
+static HaloReceiver receiver;
 static rmt_data_t symbols[24*24+1];
 static uint8_t oled[1024];
 
@@ -27,7 +36,8 @@ static void oledCommand(uint8_t command) {
 }
 static void oledSetup() {
 #if HALO_ENABLE_OLED
-  Wire.begin(HALO_OLED_SDA,HALO_OLED_SCL);Wire.setClock(400000);
+  // A missing or hung OLED must not stall the loop: bound every I2C transaction.
+  Wire.begin(HALO_OLED_SDA,HALO_OLED_SCL);Wire.setClock(400000);Wire.setTimeOut(20);
   Wire.beginTransmission(0x3C);oledReady=Wire.endTransmission()==0;
   if(!oledReady)return;
   const uint8_t commands[]={0xAE,0xD5,0x80,0xA8,0x3F,0xD3,0,0x40,0x8D,0x14,0x20,0,0xA1,0xC8,0xDA,0x12,0x81,0x7F,0xD9,0xF1,0xDB,0x40,0xA4,0xA6,0xAF};
@@ -76,38 +86,33 @@ static void showLeds(bool watchdog) {
   symbols[index].level0=0;symbols[index].duration0=3000;symbols[index].level1=0;symbols[index].duration1=1;
   if(!rmtWrite(HALO_LED_GPIO,symbols,index+1,10))Serial.println("AETHER_HALO_ERROR RMT_WRITE");
 }
-static void acceptHello() {
-  hello[helloLength]=0;
-  if(strcmp(hello,"AETHER_HALO_HELLO 1")==0) {
-    if(ledReady){Serial.println(IDENTITY);paired=true;havePacket=false;receiveLength=0;linkExpired=true;ageSaturated=true;}
-    else Serial.println("AETHER_HALO_ERROR RMT_INIT");
-  }
-  helloLength=0;
+static void acceptHello(uint32_t now) {
+  if(!ledReady){Serial.println("AETHER_HALO_ERROR RMT_INIT");return;}
+  Serial.println(IDENTITY);
+  // A repeated HELLO starts a new sequence session; while packets are still fresh it keeps the
+  // displayed state and link watchdog, so a host re-identifying does not flash the watchdog colour.
+  bool fresh=paired&&havePacket&&!linkExpired&&(uint32_t)(now-lastPacketMs)<LINK_WATCHDOG_MS;
+  paired=true;sequenceSession=false;
+  if(!fresh){havePacket=false;linkExpired=true;ageSaturated=true;}
 }
 void setup() {
-  Serial.begin(115200);ledReady=rmtInit(HALO_LED_GPIO,RMT_TX_MODE,RMT_MEM_NUM_BLOCKS_1,10000000);
+  Serial.begin(115200);haloReceiverInit(receiver);ledReady=rmtInit(HALO_LED_GPIO,RMT_TX_MODE,RMT_MEM_NUM_BLOCKS_1,10000000);
   oledSetup();showLeds(false);oledRender(false);
+  enableLoopWDT();  // A hung loop resets the board (task watchdog, core default timeout).
 }
 void loop() {
   uint32_t now=millis();
   while(Serial.available()) {
-    uint8_t byte=(uint8_t)Serial.read();
-    if(receiveLength==0&&byte!=0xA7) {
-      if(byte=='\n')acceptHello();else if(byte!='\r'){
-        if(byte>=32&&byte<127&&helloLength<sizeof(hello)-1)hello[helloLength++]=(char)byte;else helloLength=0;
-      }
-      continue;
+    HaloPacket candidate;int event=haloReceive(receiver,(uint8_t)Serial.read(),millis(),paired,candidate);
+    if(event==HALO_EVENT_HELLO)acceptHello(now);
+    else if(event==HALO_EVENT_PACKET&&(!sequenceSession||!havePacket||haloNewer(candidate.sequence,packet.sequence))) {
+      packet=candidate;havePacket=true;sequenceSession=true;lastPacketMs=now;linkExpired=false;ageSaturated=packet.age==65535;accepted++;
     }
-    if(!paired){receiveLength=0;continue;}
-    if(receiveLength==1&&byte!=0x54){receiveLength=byte==0xA7?1:0;continue;}
-    receiveBytes[receiveLength++]=byte;
-    if(receiveLength==16) {
-      HaloPacket candidate;
-      if(haloDecode(receiveBytes,candidate)&&(!havePacket||haloNewer(candidate.sequence,packet.sequence))) {
-        packet=candidate;havePacket=true;lastPacketMs=now;linkExpired=false;ageSaturated=packet.age==65535;
-      }
-      receiveLength=0;
-    }
+  }
+  if(paired&&(uint32_t)(now-lastHeartbeatMs)>=HEARTBEAT_MS) {
+    // Lets the host notice a hung or reset board even while its writes still succeed.
+    Serial.printf("AETHER_HALO_ALIVE %lu %lu %lu %lu\n",(unsigned long)now,(unsigned long)accepted,(unsigned long)receiver.rejected,(unsigned long)receiver.timeouts);
+    lastHeartbeatMs=now;
   }
   if(paired&&(!havePacket||(uint32_t)(now-lastPacketMs)>=LINK_WATCHDOG_MS))linkExpired=true;
   bool watchdog=paired&&linkExpired; // Latch until a new valid packet, even across millis wrap.

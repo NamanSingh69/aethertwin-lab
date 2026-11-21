@@ -52,7 +52,57 @@ def traverse_beams(origin,targets,size,max_cells=None):
         maximum[cell==end]=np.inf
         chunks.append(cell[active].copy());total+=count;active=np.any(cell!=end,axis=1)
     if active.any():raise RuntimeError('DDA traversal failed to reach measured endpoints')
-    return np.unique(np.concatenate(chunks),axis=0)
+    return _unique_cells(np.concatenate(chunks))
+
+
+def _packed_key(coords):
+    """(lo, span, key): one mixed-radix int64 key over the min-shifted (n,3) int64 columns, monotone in lexicographic
+    row order, so sorting keys sorts rows exactly as np.unique(axis=0) does. None when the box does not fit in 62 bits;
+    spans are Python ints, so extreme (e.g. NaN-cast) coordinates cannot wrap into a false fit."""
+    lo=coords.min(0);span=[int(a)-int(b)+1 for a,b in zip(coords.max(0).tolist(),lo.tolist())]
+    if span[0]*span[1]*span[2]>=(1<<62):return None
+    shifted=coords-lo;return lo,span,(shifted[:,0]*span[1]+shifted[:,1])*span[2]+shifted[:,2]
+
+
+def _unique_cells(coords):
+    """np.unique(coords,axis=0) for (n,3) int64 cells (same rows, order and dtype) via the packed 1-D key."""
+    packed=_packed_key(coords) if len(coords) else None
+    if packed is None:return np.unique(coords,axis=0)
+    lo,span,key=packed;key=np.unique(key);unique=np.empty((len(key),3),np.int64)
+    unique[:,2]=key%span[2]+lo[2];key//=span[2];unique[:,1]=key%span[1]+lo[1];unique[:,0]=key//span[1]+lo[0]
+    return unique
+
+
+def _unique_voxels(coords):
+    """np.unique(coords,axis=0,return_inverse=True,return_counts=True) for (n,3) int64 voxels (identical arrays and
+    dtypes), plus the stable grouping permutation `order` (voxel by voxel, input order inside a voxel) and the start of
+    each voxel's run in it. One stable 1-D argsort of the packed key replaces the row-wise structured sort."""
+    n=len(coords);packed=_packed_key(coords) if n else None
+    if packed is None:
+        unique,inv,counts=np.unique(coords,axis=0,return_inverse=True,return_counts=True)
+        order=np.argsort(inv.reshape(-1),kind='stable');return unique,inv,counts,order,(np.cumsum(counts)-counts).astype(np.intp)
+    key=packed[2];order=np.argsort(key,kind='stable');ordered=key[order]
+    first=np.empty(n,bool);first[0]=True;np.not_equal(ordered[1:],ordered[:-1],out=first[1:])
+    starts=np.flatnonzero(first);inv=np.empty(n,np.intp);inv[order]=np.cumsum(first,dtype=np.intp)-1
+    return coords[order[starts]],inv,np.diff(np.append(starts,n)),order,starts
+
+
+def _last_extreme(values,order,starts,counts,reduce):
+    """np.minimum.at / np.maximum.at from +-inf over finite values, exactly: those return the later operand on a tie,
+    so each voxel ends on the LAST return (input order) equal to its extreme, which decides the sign of a zero.
+    reduceat finds the extreme value; the last equal position inside the stable run picks the exact element."""
+    ordered=values[order];extreme=reduce.reduceat(ordered,starts)
+    position=np.maximum.reduceat(np.where(ordered==np.repeat(extreme,counts),np.arange(len(ordered)),-1),starts)
+    return ordered[position]
+
+
+class _DecayFactors(dict):
+    """rate**(max(0,t-stamp)/.1) by stored timestamp. Cells share frame timestamps, so the power runs once per
+    distinct stamp instead of once per cell; each factor is the same expression, so results are bit-identical."""
+    __slots__=('rate','t')
+    def __init__(self,rate,t):super().__init__();self.rate=rate;self.t=t
+    def __missing__(self,stamp):
+        value=self[stamp]=self.rate**(max(0.,self.t-stamp)/.1);return value
 
 
 class SparseMultiReturnVoxelMap:
@@ -83,8 +133,8 @@ class SparseMultiReturnVoxelMap:
     # (equal to and hashing like numpy-int tuples, but far cheaper to build and look up).
     def query(self,points,return_known=False):
         keys=list(map(tuple,np.floor(np.asarray(points)[:,:3]/self.voxel_size).astype(np.int64).tolist()))
-        cells=self.cells;t=self.timestamp;rate=self.decay_rate;found=[cells.get(k) for k in keys]
-        values=np.array([0. if v is None else v[0]*rate**(max(0.,t-v[2])/.1) for v in found],np.float32)
+        cells=self.cells;decay=_DecayFactors(self.decay_rate,self.timestamp);found=[cells.get(k) for k in keys]
+        values=np.array([0. if v is None else v[0]*decay[v[2]] for v in found],np.float32)
         known=np.array([v is not None for v in found],bool)
         return (values,known) if return_known else values
 
@@ -92,21 +142,24 @@ class SparseMultiReturnVoxelMap:
 
     def _apply_evidence(self,free,hits,penetrations):
         """Per-cell evidence hook; storage backends may group independent keys."""
-        cells=self.cells;t=self.timestamp;rate=self.decay_rate;minimum=self.minimum;maximum=self.maximum
+        cells=self.cells;t=self.timestamp;decay=_DecayFactors(self.decay_rate,t);minimum=self.minimum;maximum=self.maximum
         for key in free:
-            v=cells.get(key);previous=0. if v is None else v[0]*rate**(max(0.,t-v[2])/.1)
+            v=cells.get(key);previous=0. if v is None else v[0]*decay[v[2]]
             cells[key]=(max(minimum,previous-.4),0.,t)
         for key,increment in hits.items():
             old=cells.get(key);perm=penetrations[key] if old is None else .7*old[1]+.3*penetrations[key]
-            previous=0. if old is None else old[0]*rate**(max(0.,t-old[2])/.1)
+            previous=0. if old is None else old[0]*decay[old[2]]
             cells[key]=(min(maximum,previous+increment),perm,t)
 
     def _observed_values(self,unique):
-        cells=self.cells;t=self.timestamp;rate=self.decay_rate;stored=[cells[k] for k in map(tuple,np.asarray(unique).tolist())]
-        return (np.array([v[0]*rate**(max(0.,t-v[2])/.1) for v in stored],np.float32),
+        cells=self.cells;decay=_DecayFactors(self.decay_rate,self.timestamp);stored=[cells[k] for k in map(tuple,np.asarray(unique).tolist())]
+        return (np.array([v[0]*decay[v[2]] for v in stored],np.float32),
                 np.array([v[1] for v in stored],np.float32))
 
-    def voxelize_and_update(self,points,rgb=None,timestamp=None,origin=None,beam_ids=None,return_metadata_valid=False,integrate_rays=True):
+    def voxelize_and_update(self,points,rgb=None,timestamp=None,origin=None,beam_ids=None,return_metadata_valid=False,integrate_rays=True,
+                            return_state=True):
+        """Integrate one cloud. return_state=False skips the per-voxel VoxelGridState (features, decayed observed
+        values) and returns None; the map evidence is identical. The live pipeline ignores the returned state."""
         points=np.asarray(points)
         n=len(points);xyz=points[:,:3];origin=np.zeros(3) if origin is None else np.asarray(origin,float)
         if origin.shape==(3,):origins=np.broadcast_to(origin,(n,3))
@@ -123,7 +176,7 @@ class SparseMultiReturnVoxelMap:
                     raise ValueError('Returns of one beam must share the same acquisition origin')
         self.timestamp=float(self.timestamp+.1 if timestamp is None else timestamp)
         coords=np.floor(xyz/self.voxel_size).astype(np.int64)
-        unique,inv,counts=np.unique(coords,axis=0,return_inverse=True,return_counts=True)
+        unique,inv,counts,grouping,starts=_unique_voxels(coords)
         free=set();hits={};penetrations={}
         if return_metadata_valid and beam_ids is None:raise ValueError("Multi-return integration requires beam identity")
         if integrate_rays and n:
@@ -153,22 +206,32 @@ class SparseMultiReturnVoxelMap:
             else:
                 solid=np.ones(len(unique),bool);permeability=np.zeros(len(unique))
             unique_keys=list(map(tuple,unique.tolist()))
-            hits={key:(.85 if is_solid else .25) for key,is_solid in zip(unique_keys,solid)}
-            penetrations={key:float(value) for key,value in zip(unique_keys,permeability)}
+            hits={key:(.85 if is_solid else .25) for key,is_solid in zip(unique_keys,solid.tolist())}
+            penetrations=dict(zip(unique_keys,permeability.tolist()))
         self._apply_evidence(free.difference(hits),hits,penetrations)
         self._updates+=1
         if self._updates%50==0 and np.isfinite(self.max_age) and getattr(self,'eager_pruning',True):
             stale=[k for k,v in self.cells.items() if self.timestamp-v[2]>self.max_age]
             for key in stale:del self.cells[key]
+        if not return_state:
+            # A tiled store's reads move its page residency, which steers its round-robin expiry: skipping them would
+            # change which expired cells are dropped when, so non-dict stores still do the reads (and the fresh check).
+            if not isinstance(self.cells,dict):self._observed_values(unique)
+            return None
         V=len(unique);features=np.zeros((V,12),np.float32)
         lo,perm=self._observed_values(unique)
         if n:
-            mean=np.zeros((V,3));np.add.at(mean,inv,xyz);mean/=counts[:,None]
+            # bincount sums each column in input order in float64, exactly like np.add.at, without its per-element cost.
+            def sums(x):return np.column_stack([np.bincount(inv,weights=x[:,j],minlength=V) for j in range(3)])
+            mean=sums(xyz);mean/=counts[:,None]
             intensity=np.bincount(inv,weights=points[:,3],minlength=V)/counts
-            minz=np.full(V,np.inf);maxz=np.full(V,-np.inf);np.minimum.at(minz,inv,xyz[:,2]);np.maximum.at(maxz,inv,xyz[:,2])
+            z=np.asarray(xyz[:,2],np.float64)
+            if np.isfinite(z).all():
+                minz=_last_extreme(z,grouping,starts,counts,np.minimum);maxz=_last_extreme(z,grouping,starts,counts,np.maximum)
+            else:minz=np.full(V,np.inf);maxz=np.full(V,-np.inf);np.minimum.at(minz,inv,xyz[:,2]);np.maximum.at(maxz,inv,xyz[:,2])
             colors=np.full((V,3),.5)
             if rgb is not None:
-                colors=np.zeros((V,3));np.add.at(colors,inv,np.asarray(rgb)[:,:3]);colors/=counts[:,None]
+                colors=sums(np.broadcast_to(np.asarray(rgb)[:,:3],(n,3)));colors/=counts[:,None]
             features[:]=np.c_[mean,intensity,maxz-minz,np.log1p(counts),perm,lo,colors,maxz]
         else:mean=np.empty((0,3))
         return VoxelGridState(self.voxel_size,unique.astype(np.int32),mean.astype(np.float32),features,lo,perm,inv)
@@ -176,14 +239,14 @@ class SparseMultiReturnVoxelMap:
     def _thresholded(self,above,threshold):
         if not isinstance(self.cells,dict):
             return [k for k in self.cells if (self._value(k,self.timestamp)>threshold if above else self._value(k,self.timestamp)<threshold)]
-        t=self.timestamp;rate=self.decay_rate
+        decay=_DecayFactors(self.decay_rate,self.timestamp)
         # Decay never moves a value past its stored v0 (0<rate<=1; a rounded v0*p with p<=1 stays within v0), so
         # cells whose stored value is already on the wrong side of a same-signed threshold skip the power exactly.
         if above and threshold>=0:
-            return [k for k,v in self.cells.items() if v[0]>threshold and v[0]*rate**(max(0.,t-v[2])/.1)>threshold]
+            return [k for k,v in self.cells.items() if v[0]>threshold and v[0]*decay[v[2]]>threshold]
         if not above and threshold<0:
-            return [k for k,v in self.cells.items() if v[0]<threshold and v[0]*rate**(max(0.,t-v[2])/.1)<threshold]
-        values=((k,v[0]*rate**(max(0.,t-v[2])/.1)) for k,v in self.cells.items())
+            return [k for k,v in self.cells.items() if v[0]<threshold and v[0]*decay[v[2]]<threshold]
+        values=((k,v[0]*decay[v[2]]) for k,v in self.cells.items())
         return [k for k,value in values if (value>threshold if above else value<threshold)]
 
     def occupied_points(self,threshold=.4):

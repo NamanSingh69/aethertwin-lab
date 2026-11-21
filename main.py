@@ -28,10 +28,14 @@ def parser():
     p.add_argument('--epochs',type=int);p.add_argument('--record',type=Path);p.add_argument('--twin',type=Path)
     p.add_argument('--mobile',action='store_true',default=None);p.add_argument('--rebuild-twin',action='store_true')
     p.add_argument('--commissioning-mode',choices=['auto','mobile','stations'],help='Explicitly declare independent at-rest station captures when timestamps reset')
+    p.add_argument('--sweeps-per-scan',type=int,help='build-twin: register this many consecutive raw LiDAR sweeps as one scan (default mapping.commissioning_sweeps_per_scan, 1)')
+    p.add_argument('--lidar-height',type=float,help='build-twin: tape-measured LiDAR origin height above the floor, m (mapping.lidar_height_m); an upright L2 never sees the floor')
     p.add_argument('--websocket',action='store_true');p.add_argument('--threads',type=int,default=4)
     p.add_argument('--render-backend',choices=['auto','native','mesa'])
     p.add_argument('--mesa-dir',type=Path)
     p.add_argument('--real-time',action='store_true',help='Pace replay/simulation at acquisition time when processing is faster')
+    p.add_argument('--source',choices=['local','remote'],help='Live sensors on this host, or a Pi capture node over the raw-sensor transport')
+    p.add_argument('--capture-host',help='Capture node address for --source remote (default live.capture_host)')
     return p
 
 
@@ -52,8 +56,12 @@ def main(argv=None):
     config=load_config(args.config)
     config['input_mode']=args.mode
     if args.commissioning_mode is not None:config['mapping']['commissioning_mode']=args.commissioning_mode
+    if args.sweeps_per_scan is not None:config['mapping']['commissioning_sweeps_per_scan']=args.sweeps_per_scan
+    if args.lidar_height is not None:config['mapping']['lidar_height_m']=args.lidar_height
     if args.seed is not None:config['seed']=args.seed
     if args.mobile is not None:config['simulation']['mobile']=args.mobile
+    if args.source is not None:config['live']['source']=args.source
+    if args.capture_host is not None:config['live']['capture_host']=args.capture_host
     device=args.device or config['device'];config['device']='cuda' if device=='auto' and torch.cuda.is_available() else ('cpu' if device=='auto' else device)
     if config['device']=='cuda' and not torch.cuda.is_available():raise RuntimeError('CUDA requested but unavailable; choose --device cpu')
     checkpoint=args.checkpoint or _asset(Path(config['perception']['checkpoint']))
@@ -130,15 +138,16 @@ def main(argv=None):
         if not (twin_path/'planning_grid.npz').exists():raise ValueError('Replay requires its recorded twin or an explicit matching --twin')
         twin,static,grid=load_commissioned_assets(twin_path)
     else:
-        from ingestion.live_source import LiveSensorSource
+        from ingestion.live_source import open_live_source
         from core.pipeline import read_commissioning_provenance
         twin_path=args.twin
         if twin_path is None:raise ValueError('Live mode requires a measured commissioned map via --twin')
-        if not read_commissioning_provenance(twin_path).get('live_reference_eligible',False):
-            raise ValueError('Live mode rejects synthetic/unknown commissioning provenance; build a measured physical reference')
+        from command_center.runtime import live_twin_acceptable
+        if not live_twin_acceptable(read_commissioning_provenance(twin_path),config):
+            raise ValueError('Live mode rejects synthetic/unknown commissioning provenance; build a measured physical reference (a LiDAR-only twin needs live.capture_bringup)')
         twin,static,grid=load_commissioned_assets(twin_path)
         config['live'].setdefault('initial_pose_world',np.asarray(twin.poses[-1]).tolist())
-        source=LiveSensorSource(config['live'],ROOT)
+        source=open_live_source(config['live'],ROOT)
     if not checkpoint.exists():
         source.close();raise FileNotFoundError(f'No trained checkpoint at {checkpoint}. Run --mode train first.')
     output.mkdir(parents=True,exist_ok=True)

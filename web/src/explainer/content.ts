@@ -56,7 +56,7 @@ export const CHAPTERS: Chapter[] = [
     simple:
       "The laser scanner is like a bat's sonar: it measures distance very well but sees no colour. The depth camera is like our eyes: it sees colour and shape but struggles in glare and at range. Together they cover each other's blind spots.",
     engineer:
-      "Planned rig: a Unitree 4D LiDAR L2 (with its built-in IMU) and an Orbbec Gemini 335L RGB-D camera on a Raspberry Pi 5, streaming to the workstation. Packets are timestamped and buffered in bounded queues so a slow stage drops old data visibly instead of growing memory.",
+      "The rig: a Unitree 4D LiDAR L2 (with its built-in IMU) and an Orbbec Gemini 336L RGB-D camera on a Raspberry Pi 5, streaming to a GPU laptop. Packets are timestamped and buffered in bounded queues so a slow stage drops old data visibly instead of growing memory.",
     problem: "One sensor alone fails in predictable conditions.",
     approach: "Fuse two sensor types in one timeline, with bounded buffers and visible drop counters.",
     code: ["ingestion/", "native/"],

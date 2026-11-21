@@ -11,23 +11,59 @@ from collections import deque
 import numpy as np
 import psutil
 from scipy.spatial.transform import Rotation
-from core.contracts import Detection3D,OrientedGeofence3D,PlannedTrajectory,TwinMasterFrameState,PALETTE
-from core.se3_math import transform_points,inverse
+from core.contracts import Detection3D,OrientedGeofence3D,PlannedTrajectory,TwinMasterFrameState,PALETTE,evolve_frame
+from core.se3_math import transform_points,inverse,se3_log
 from ingestion.sensor_synchronizer import fuse_frame
 from ingestion.recorder_replayer import FrameRecorder
+from ingestion.self_mask import LidarSelfMask
 from slam_and_twin.imu_deskew import ContinuousTimeIMUDeskewer
-from slam_and_twin.icp_pose_graph import ICPPoseGraph
+from slam_and_twin.icp_pose_graph import ICPPoseGraph,point_to_plane_icp,prepare_reference
 from slam_and_twin.static_twin_builder import StaticTwinBuilder
 from slam_and_twin.spatial_diff_engine import SpatialDiffEngine
 from slam_and_twin.log_odds_octomap import SparseMultiReturnVoxelMap
 from slam_and_twin.tiled_map import DiskBackedVoxelMap
 from perception_ml.inference_engine import InferenceEngine
+from perception_ml.gpu_keepalive import GpuKeepAlive
 from perception_ml.eigen_descriptors import cluster_points,eigen_descriptors
 from tracking_and_navigation.kalman_9dof_tracker import KalmanMultiObjectTracker
 from tracking_and_navigation.risk_and_geofence import RiskGeofenceEngine
 from tracking_and_navigation.traffic_heatmap import TrafficHeatmap
 from tracking_and_navigation.safe_corridor_planner import PlannerGrid,SafeCorridorPlanner
 from tracking_and_navigation.observed_navigation import integrate_commissioning_frame
+from ingestion.sweep_merge import merge_sweeps
+from slam_and_twin.imu_static_init import resolve_auto_bias
+
+
+def imu_accel_bias(config):
+    """Configured accelerometer bias (IMU frame, m/s^2), None, or 'auto'. See tools/imu_bias_from_recording.py.
+
+    'auto' estimates the bias along gravity from the first still seconds of a commissioning build
+    (slam_and_twin/imu_static_init.py); the live pipeline treats it as None (a parked rig re-anchors every sweep).
+    """
+    value=(config.get('live') or {}).get('imu_accel_bias')
+    if value is None:return None
+    if isinstance(value,str):
+        if value.strip().lower()=='auto':return 'auto'
+        raise ValueError("live.imu_accel_bias must be null, 'auto' or a 3-vector")
+    bias=np.asarray(value,float)
+    if bias.shape!=(3,) or not np.isfinite(bias).all() or np.linalg.norm(bias)>3.:raise ValueError('live.imu_accel_bias must be a finite 3-vector under 3 m/s^2')
+    return bias
+
+
+def trajectory_summary(poses,max_step_m=.5):
+    """Path length, start-to-end distance and scan-to-scan jumps of a commissioning trajectory.
+
+    A pushed cart moves well under 0.5 m between scans (<= 4 sweeps, ~0.33 s); larger jumps mean registration
+    failed. One sweep per scan drifted 13.7 m on the real stationary L2 recording.
+    """
+    positions=np.array([np.asarray(p,float)[:3,3] for p in poses]).reshape(-1,3)
+    steps=np.linalg.norm(np.diff(positions,axis=0),axis=1) if len(positions)>1 else np.zeros(0)
+    summary={'scans':len(positions),'path_m':float(steps.sum()),'start_to_end_m':float(np.linalg.norm(positions[-1]-positions[0])) if len(positions) else 0.,
+             'max_step_m':float(steps.max()) if len(steps) else 0.,'suspect_jumps':int((steps>max_step_m).sum()),'max_step_limit_m':max_step_m}
+    message=(f"Trajectory: {summary['scans']} scans, path {summary['path_m']:.2f} m, start to end {summary['start_to_end_m']:.2f} m, "
+             f"largest step {summary['max_step_m']:.3f} m")
+    if summary['suspect_jumps']:message+=f"; WARNING: {summary['suspect_jumps']} step(s) over {max_step_m} m, faster than a pushed cart: registration probably failed (use --sweeps-per-scan 4, config/profiles/hotspot_build.yaml)"
+    summary['message']=message;return summary
 
 
 def build_commissioned_assets(frames,path,config,progress=print):
@@ -80,10 +116,23 @@ def _build_assets_into(frames,path,config,progress=print):
     path=Path(path);path.mkdir(parents=True,exist_ok=True);mapping=config['mapping'];limits=mapping.get('commissioning_budgets',{})
     twin=StaticTwinBuilder(mapping['twin_voxel_size'],commissioning_mode=mapping.get('commissioning_mode','auto'),
         initial_velocity=mapping.get('commissioning_initial_velocity'),storage_path=path,budgets=limits)
+    accel_bias=imu_accel_bias(config)
     static=None
     recorder=FrameRecorder(path/'commissioning',chunk_size=4,max_buffer_bytes=twin.budgets['frame_buffer_bytes'],
         max_disk_bytes=twin.budgets['frame_disk_bytes'],metadata={'commissioning_raw_acquisitions':True})
     provenance={'frame_count':0,'any_synthetic':False,'source_modes':set(),'sensor_ids':set(),'unknown_source_frames':0,'calibrations':{}}
+    # The rig's own body is removed before reconstruction; the commissioning recording keeps every return.
+    self_mask=LidarSelfMask.from_config(config)
+    provenance['lidar_self_mask']=None if self_mask is None else {**self_mask.describe(),'removed':0}
+    try:total=len(frames)
+    except TypeError:total=None
+    clock={'start':time.perf_counter(),'last':time.perf_counter()}
+    def report_progress(count):
+        now=time.perf_counter()
+        if now-clock['last']<30 and count!=total:return
+        clock['last']=now;rate=count/max(now-clock['start'],1e-9)
+        eta='' if not total else f", about {(total-count)/max(rate,1e-9)/60:.0f} min left"
+        progress(f'Prepared {count}'+(f'/{total}' if total else '')+f' sweeps ({rate:.1f} sweeps/s{eta})')
     def raw_stream():
         for raw in frames:
             sensor=str(raw.capabilities.sensor_id)
@@ -102,16 +151,39 @@ def _build_assets_into(frames,path,config,progress=print):
             if origin=='unknown' and sensor.lower().startswith(('unitree','orbbec','gemini')):origin='physical_sensor_recording'
             provenance['frame_count']+=1;provenance['any_synthetic']|=synthetic;provenance['source_modes'].add(origin);provenance['sensor_ids'].add(sensor)
             if origin not in ('sim','live','physical_sensor_recording'):provenance['unknown_source_frames']+=1
-            recorder.write(raw);yield raw
+            recorder.write(raw);report_progress(provenance['frame_count'])
+            if self_mask is not None:
+                raw=self_mask.apply(raw);provenance['lidar_self_mask']['removed']+=raw.diagnostics['lidar_self_mask']['removed']
+            yield raw
     try:
         progress('Streaming raw commissioning scans through pointwise preparation and bounded reconstruction...')
-        try:twin.build(raw_stream())
+        # Optional: register k consecutive raw sweeps as one denser scan (ingestion/sweep_merge.py); the
+        # commissioning recording above still keeps every raw sweep.
+        per_scan=int(mapping.get('commissioning_sweeps_per_scan',1))
+        if per_scan>1:progress(f'Merging {per_scan} consecutive LiDAR sweeps per registered scan')
+        stream=raw_stream();static_init=None
+        if isinstance(accel_bias,str):
+            bias,static_init,stream=resolve_auto_bias(stream)
+            progress('IMU bias (auto): '+(f"{np.round(bias,4).tolist()} m/s^2 from {static_init['seconds']:.1f} s still" if bias is not None else 'not applied: '+static_init['reason']))
+            accel_bias=bias
+        twin.accel_bias=None if accel_bias is None else np.asarray(accel_bias,float).copy()
+        height=mapping.get('lidar_height_m');twin.declared_lidar_height=None if height is None else float(height)
+        if height is None:progress('Note: no mapping.lidar_height_m (--lidar-height). An upright L2 returns nothing below its horizon; if no floor is measured below the sensor the build stops at the floor fit.')
+        if static_init and static_init.get('gravity_up_world') is not None:twin.gravity_up=np.asarray(static_init['gravity_up_world'],float)
+        try:
+            twin.build(merge_sweeps(stream,per_scan))
+            trajectory=trajectory_summary(twin.poses);progress(trajectory['message'])
+            twin.report.setdefault('commissioning',{}).update(trajectory=trajectory,sweeps_per_scan=per_scan,imu_accel_bias=None if accel_bias is None else np.asarray(accel_bias,float).tolist(),imu_static_init=static_init)
         finally:recorder.close()
         tile_limits={key:twin.budgets[key] for key in ('tile_size','max_resident_tiles','max_resident_bytes','max_disk_bytes','sqlite_cache_bytes')}
         tile_limits.update(mapping.get('tile_budgets',{}))
         static=DiskBackedVoxelMap(path/'occupancy_tiles',config['planning']['resolution'],decay_rate=1.,max_age=float('inf'),**tile_limits)
+        uncalibrated_depth=0
         for j,(frame,pose) in enumerate(zip(twin.prepared_frames,twin.poses)):
             measured=replace(frame,sensor_pose_world=twin.floor_transform@pose)
+            if measured.depth is not None and measured.calibration is None:
+                # A bring-up (uncalibrated) recording still yields a LiDAR-only twin; depth needs the extrinsic.
+                measured=replace(measured,depth=None);uncalibrated_depth+=1
             progress(f'Carving prepared navigation observations: {j+1}/{len(twin.poses)}')
             integrate_commissioning_frame(static,measured,camera_stride=1)
         static.flush();grid,window=observed_planning_window(static,config['planning']);grid.save(path/'planning_grid.npz')
@@ -119,8 +191,12 @@ def _build_assets_into(frames,path,config,progress=print):
         all_measured=all(item['measured'] for item in calibrations) if calibrations else None
         provenance.update(calibrations=calibrations,all_camera_calibrations_measured=all_measured,
             live_reference_eligible=bool(not provenance['any_synthetic'] and not provenance['unknown_source_frames'] and all_measured is True),
+            # Real data with no camera calibration at all (a bring-up recording): the twin is LiDAR-only. Live mode accepts it
+            # only for an explicitly uncalibrated run (command_center --lidar-only); see command_center/runtime.py.
+            lidar_only_reference_eligible=bool(not provenance['any_synthetic'] and not provenance['unknown_source_frames'] and not calibrations),
             declaration_only=True,hardware_validation='not_tested')
-        twin.report['navigation_storage']={**window,'authority':'occupancy_tiles','tile_cache':static.cells.statistics()}
+        twin.report['navigation_storage']={**window,'authority':'occupancy_tiles','tile_cache':static.cells.statistics(),
+            'depth_frames_skipped_without_calibration':uncalibrated_depth,'camera_depth_used':uncalibrated_depth<len(twin.poses)}
         twin.report['source_provenance']=provenance
         twin.save(path)
         manifest={'schema_version':2,'type':'commissioned-lab-twin','raw_recording':'commissioning','prepared_recording':'prepared_frames',
@@ -157,7 +233,7 @@ def load_commissioned_assets(path):
 
 def read_commissioning_provenance(path,verify_integrity=True):
     path=Path(path).resolve();manifest=path/'bundle_manifest.json'
-    if not manifest.exists():return {'live_reference_eligible':False,'any_synthetic':None,'source_modes':['unknown_legacy'],
+    if not manifest.exists():return {'live_reference_eligible':False,'lidar_only_reference_eligible':False,'any_synthetic':None,'source_modes':['unknown_legacy'],
         'hardware_validation':'not_tested','reason':'Legacy bundle has no commissioning provenance; source cannot be established'}
     content=json.loads(manifest.read_text(encoding='utf-8'))
     provenance=dict(content.get('source_provenance',{'live_reference_eligible':False,'source_modes':['unknown']}))
@@ -180,7 +256,7 @@ def read_commissioning_provenance(path,verify_integrity=True):
             try:valid=all(matches(str(Path('tsdf_tiles')/name),digest) for name,digest in connection.execute('SELECT file,sha256 FROM meshes'))
             finally:connection.close()
         provenance['integrity_verified']=valid
-        if not valid:provenance.update(live_reference_eligible=False,integrity_failure='Authority, mesh tile or recording checksum differs from publication manifest')
+        if not valid:provenance.update(live_reference_eligible=False,lidar_only_reference_eligible=False,integrity_failure='Authority, mesh tile or recording checksum differs from publication manifest')
     return provenance
 
 
@@ -210,7 +286,7 @@ def detections_from_prediction(prepared,probabilities,flow,embeddings,diff,confi
 
 class LabPipeline:
     def __init__(self,config,checkpoint,twin,static_map,planning_grid,mobile=False):
-        self._closed=False;self._owned_map_cache=None
+        self._closed=False;self._owned_map_cache=None;self.gpu_keepalive=None
         try:self._initialize(config,checkpoint,twin,static_map,planning_grid,mobile)
         except BaseException:
             try:self.close()
@@ -219,11 +295,16 @@ class LabPipeline:
 
     def _initialize(self,config,checkpoint,twin,static_map,planning_grid,mobile):
         self.config=config;self.twin=twin;self.static_map=static_map;self.base_grid=planning_grid;self.mobile=mobile
+        self.self_mask=LidarSelfMask.from_config(config)
         self.inference=InferenceEngine(checkpoint,config['device'],config['mapping']['voxel_size'],config['perception']['max_voxels'],
             config['perception'].get('neighbors',16),config['perception'].get('temporal_neighbors',12),config['perception'].get('rgbd_stride',3),
             config['perception'].get('range_image_height',24),config['perception'].get('range_image_width',96),
             config['perception'].get('camera_feature_height'),config['perception'].get('camera_feature_width'),
-            config['perception'].get('compile',False))
+            config['perception'].get('compile',False),gpu_prepare=config['perception'].get('gpu_prepare',False))
+        # Opt-in (C46), off at 0: a GPU load thread that holds the laptop GPU's clocks between live frames (costs ~8-20 W;
+        # the owner's power setting is the preferred fix). None when off or without CUDA (warns); stopped in close().
+        self.gpu_keepalive=GpuKeepAlive.from_config(config)
+        if self.gpu_keepalive is not None:self.gpu_keepalive.start()
         tiled_reference=getattr(twin,'point_store',None) is not None
         self.diff=SpatialDiffEngine(twin.points,config['mapping']['tau0'],config['mapping']['beta'],config['mapping']['floor_epsilon'],
             distance_provider=twin.distances if tiled_reference else None)
@@ -237,11 +318,13 @@ class LabPipeline:
             self.occupancy=DiskBackedVoxelMap(self._owned_map_cache.name,config['mapping']['voxel_size'],config['mapping']['decay_rate'],
                 **map_args,**config['mapping'].get('tile_budgets',{}))
         else:self.occupancy=SparseMultiReturnVoxelMap(config['mapping']['voxel_size'],config['mapping']['decay_rate'],**map_args)
-        self.deskewer=None
+        self.deskewer=None;self._station_pose=None;self._parked_sweeps=[];self._parked_localization=None
+        self.deskew_reseeds=0;self._acquisition_segment=None
         reference=transform_points(inverse(twin.floor_transform),twin.points) if mobile and not tiled_reference else None
         self.odometry=ICPPoseGraph(reference_points=reference)
         self._tiled_reference=tiled_reference;self._reference_center=None
-        self.tracker=KalmanMultiObjectTracker(model=config['tracking']['model'])
+        self.tracker=KalmanMultiObjectTracker(model=config['tracking']['model'],person_confirm_frames=config['tracking'].get('person_confirm_frames',1),
+            person_confirm_window=config['tracking'].get('person_confirm_window',1))
         self.risk=RiskGeofenceEngine()
         observed=getattr(static_map,'observed_bounds',None)
         heat_bounds=config['planning']['bounds'][:4] if observed is None else np.asarray(observed)[:4]
@@ -353,13 +436,83 @@ class LabPipeline:
             return
         self.planner.set_grid(grid)
 
+    def refresh_planning_grid(self):
+        """Bring planner.grid up to date with the current map (an idle run skips the per-frame rebuild)."""
+        with self.lock:
+            if getattr(self,'_planning_grid_stale',False):self._update_planning_grid();self._planning_grid_stale=False
+        return self.planner.grid
+
+    PARKED_SWEEPS=4;PARKED_ATTEMPTS=5
+    def _relocalize_parked(self,frame):
+        """Live parked run: localize the station once against the twin from PARKED_SWEEPS merged sweeps.
+
+        The live prior is the twin's last commissioning pose; a cart parked a little off it would otherwise put
+        every observation in the wrong place. One L2 sweep is too sparse to register (2026-11-05 real data), so
+        the sweeps (all expressed at the same held station) are merged first. Outside the trust region the prior
+        is kept and the run reports localization as invalid instead of guessing.
+        """
+        self._parked_sweeps.append(np.asarray(frame.lidar_points[:,:3],float))
+        attempts=0 if self._parked_localization is None else self._parked_localization['attempts']
+        if len(self._parked_sweeps)<self.PARKED_SWEEPS or attempts>=self.PARKED_ATTEMPTS:return
+        cloud=np.concatenate(self._parked_sweeps);self._parked_sweeps=[];prior=self._station_pose
+        report={'sweeps':self.PARKED_SWEEPS,'attempts':attempts+1,'accepted':False,'prior_pose':prior.tolist()}
+        try:
+            if self._tiled_reference:
+                center=transform_points(self.twin.floor_transform,prior[:3,3][None])[0]
+                measured=self.twin.load_local_points(center,float(self.config['mapping'].get('localization_radius_m',8.)),self.config['mapping'].get('localization_max_points',100000))
+            else:measured=self.twin.points
+            reference=prepare_reference(transform_points(inverse(self.twin.floor_transform),np.asarray(measured,float)),.12)
+            pose,diag=point_to_plane_icp(cloud,None,prior,max_distance=.45,voxel=.12,reference=reference)
+            correction=se3_log(inverse(prior)@pose)
+            report.update(fitness=float(diag['fitness']),rmse_m=float(diag['rmse']),information_rank=int(diag['information_rank']),
+                          correction_m=float(np.linalg.norm(correction[3:])),correction_deg=float(np.degrees(np.linalg.norm(correction[:3]))))
+            if diag['fitness']<.3 or diag['rmse']>.15 or diag['information_rank']<6:report['reason']='insufficient overlap with the twin'
+            elif report['correction_m']>1. or report['correction_deg']>20.:report['reason']='correction exceeds the parked trust region (1 m, 20 deg)'
+            else:report['accepted']=True;self._station_pose=pose
+        except ValueError as error:report['reason']=str(error)
+        self._parked_localization=report
+
+    def _reseed_reason(self,raw_frame):
+        """Why the deskewer must restart before this sweep, or None."""
+        segment=raw_frame.diagnostics.get('acquisition_segment')
+        changed=segment is not None and self._acquisition_segment is not None and segment!=self._acquisition_segment
+        if segment is not None:self._acquisition_segment=segment
+        last=getattr(self.deskewer,"last_timestamp",None)
+        if last is None:return None
+        if changed:return 'acquisition_segment'
+        times=[s.timestamp for s in raw_frame.imu_samples]
+        if raw_frame.timestamp>last+1e-6 and times and min(times)>last+1e-6:return 'imu_gap'
+        return None
+
     def process(self,raw_frame):
         start=time.perf_counter();timings={}
-        if self.deskewer is None:self.deskewer=ContinuousTimeIMUDeskewer(initial_pose=raw_frame.sensor_pose_world,imu_to_lidar=raw_frame.imu_to_lidar)
+        if self.self_mask is not None:raw_frame=self.self_mask.apply(raw_frame)
+        if self.deskewer is None:
+            self.deskewer=ContinuousTimeIMUDeskewer(initial_pose=raw_frame.sensor_pose_world,imu_to_lidar=raw_frame.imu_to_lidar,
+                                                    accel_bias=None if isinstance(imu_accel_bias(self.config),str) else imu_accel_bias(self.config))
+        if self._station_pose is None:self._station_pose=raw_frame.sensor_pose_world.copy()
+        reseeded=self._reseed_reason(raw_frame)
+        if reseeded is not None:
+            # A stall, reconnect or dropped IMU leaves no IMU across the gap: restart integration from the last
+            # pose at rest instead of failing every later sweep (2026-11-05 replay rehearsal). Mobile odometry and
+            # map localization then correct the pose as usual.
+            last=self._station_pose if not self.mobile else self.deskewer.pose_world
+            self.deskewer=ContinuousTimeIMUDeskewer(initial_pose=last,imu_to_lidar=raw_frame.imu_to_lidar,accel_bias=self.deskewer.accel_bias)
+            self.deskew_reseeds+=1
         frame=self.deskewer.deskew_frame(raw_frame)
+        if reseeded is not None:frame=evolve_frame(frame,diagnostics={**frame.diagnostics,'deskew_reseeded':reseeded})
+        if not self.mobile:
+            # A parked rig does not move: re-anchor every sweep at the station with zero velocity, so IMU bias and
+            # noise cannot integrate into drift (a 0.7 m/s^2 accelerometer offset, measured on the L2, would
+            # otherwise put the rig ~35 m away within 10 s).
+            if (self.config.get('live') or {}).get('parked_relocalize') and (self._parked_localization is None or not self._parked_localization['accepted']):
+                self._relocalize_parked(frame)
+            self.deskewer.correct_state(self._station_pose,np.zeros(3));frame=evolve_frame(frame,sensor_pose_world=self._station_pose.copy())
         pose=frame.sensor_pose_world
         aligned_time=frame.timestamp+frame.sweep_duration
         localization_valid=not self.mobile
+        if not self.mobile and (self.config.get('live') or {}).get('parked_relocalize'):
+            localization_valid=bool(self._parked_localization and self._parked_localization['accepted'])
         if self.mobile and len(frame.lidar_points)>=30:
             if self._tiled_reference:
                 center=transform_points(self.twin.floor_transform,pose[:3,3][None])[0]
@@ -380,7 +533,7 @@ class LabPipeline:
             self.previous_pose=corrected.copy()
             localization_valid=True
         pose=self.twin.floor_transform@pose
-        frame=replace(frame,sensor_pose_world=pose)
+        frame=evolve_frame(frame,sensor_pose_world=pose)
         fusion_stride=self.config['perception'].get('rgbd_stride',3)
         frame=fuse_frame(frame,stride=fusion_stride)
         observation_counts={'lidar':len(frame.lidar_points),
@@ -394,19 +547,19 @@ class LabPipeline:
         origins=pose[:3,3] if frame.lidar_origins is None else transform_points(pose,frame.lidar_origins)
         if localization_valid:
             self.occupancy.voxelize_and_update(world_points,rgb,timestamp=aligned_time,origin=origins,
-                beam_ids=frame.beam_ids,return_metadata_valid=frame.return_metadata_valid)
+                beam_ids=frame.beam_ids,return_metadata_valid=frame.return_metadata_valid,return_state=False)
         else:self.occupancy.timestamp=aligned_time
         if localization_valid and frame.gemini_rgbd_cloud is not None:
             dense=np.zeros((len(frame.gemini_rgbd_cloud),7),np.float32)
             dense[:,:3]=transform_points(pose,frame.gemini_rgbd_cloud[:,:3]);dense[:,3]=.5;dense[:,4:6]=1
             camera_pose=frame.calibration.T_lidar_camera if frame.camera_pose_in_lidar is None else frame.camera_pose_in_lidar
             camera_origin=(pose@camera_pose)[:3,3]
-            self.occupancy.voxelize_and_update(dense,frame.gemini_rgbd_cloud[:,3:],timestamp=aligned_time,origin=camera_origin)
+            self.occupancy.voxelize_and_update(dense,frame.gemini_rgbd_cloud[:,3:],timestamp=aligned_time,origin=camera_origin,return_state=False)
         if localization_valid and frame.rplidar_s2_points is not None:
             ring=np.zeros((len(frame.rplidar_s2_points),7),np.float32)
             ring[:,:3]=transform_points(pose,frame.rplidar_s2_points[:,:3]);ring[:,3]=.5;ring[:,4:6]=1
             ring_origin=transform_points(pose,frame.rplidar_origin_lidar[None])[0]
-            self.occupancy.voxelize_and_update(ring,timestamp=aligned_time,origin=ring_origin)
+            self.occupancy.voxelize_and_update(ring,timestamp=aligned_time,origin=ring_origin,return_state=False)
         timings['occupancy']=1000*(time.perf_counter()-stage);stage=time.perf_counter()
         prepared,probs,flow,embedding=self.inference.infer(frame,world_points,self.diff.distances,self.occupancy.query,
             dense_rgbd=frame.gemini_rgbd_cloud)
@@ -429,7 +582,15 @@ class LabPipeline:
                     if not isinstance(exc,MapBudgetExceeded):raise
                     self.planning_region_error=str(exc)
                     self.trajectory=PlannedTrajectory('resource_limit',np.empty((0,3)),np.empty(0),str(exc))
-            if observations_valid:self._update_planning_grid()
+            # Nothing reads the planning grid until a goal is set (the first goal frame rebuilds it here from the current
+            # map before planning; set_grid is stateless), so by default an idle (e.g. parked live) run
+            # skips the rebuild: 353 ms every 10th frame on the tiled bench data. planning.idle_grid_interval N>0
+            # restores a rebuild every N idle frames; refresh_planning_grid() rebuilds on demand for other readers.
+            idle_interval=int(self.config['planning'].get('idle_grid_interval',0) or 0)
+            if observations_valid:
+                if self.planning_requested or (idle_interval>0 and self.frames%idle_interval==0):
+                    self._update_planning_grid();self._planning_grid_stale=False
+                else:self._planning_grid_stale=True
             if self.planning_requested and not navigation_valid:
                 self.trajectory=PlannedTrajectory('stale_observations',np.empty((0,3)),np.empty(0),
                     'Motion held: no current observations or insufficient localization coverage')
@@ -493,6 +654,7 @@ class LabPipeline:
             'ray_traversal_backend':self.occupancy.last_ray_backend,
             'map_storage':self.occupancy.cells.statistics() if hasattr(self.occupancy.cells,'statistics') else {'type':'in_memory_reference'},
             'traffic_grid':{'bounds_xy':self.heatmap.bounds,'resolution_m':self.heatmap.resolution,'decay_seconds':self.heatmap.decay_seconds}}
+        if self._parked_localization is not None:diagnostics['parked_localization']=dict(self._parked_localization)
         if self.mobile:
             diagnostics['localization']={key:value for key,value in self.odometry.last_diagnostics.items() if np.isscalar(value)}
         state=TwinMasterFrameState(raw_frame.frame_id,aligned_time,1000/max(latency,.001),pose,tuple(entities),
@@ -526,6 +688,9 @@ class LabPipeline:
         if getattr(self,'_closed',False):return
         self._closed=True
         failures=[]
+        try:
+            if getattr(self,'gpu_keepalive',None) is not None:self.gpu_keepalive.stop()
+        except Exception as exc:failures.append(exc)
         for resource in (getattr(self,'occupancy',None),getattr(self,'static_map',None),getattr(self,'twin',None),self._owned_map_cache):
             try:
                 if hasattr(resource,'close'):resource.close()

@@ -1,0 +1,44 @@
+{
+  "format": "aethertwin-showcase",
+  "version": 1,
+  "label": "Recorded replay - not live",
+  "recorded_at": "2026-11-05T04:39:54Z",
+  "duration_s": 0.6,
+  "frame_count": 7,
+  "source": {
+    "recording": "sample_recording",
+    "commit": "47272af",
+    "calibration": "placeholder",
+    "lidar_height": "measured",
+    "hardware_verified": false,
+    "note": "TEST EXPORT: synthetic or unverified-provenance data processed offline by the AetherTwin pipeline; not real sensor data"
+  },
+  "bootstrap": "bootstrap.json",
+  "assets_prefix": "assets/122bdf02b078ac9281661a93/",
+  "chunks": [
+    {
+      "file": "chunks/0000-4d3832c65b.bin.gz",
+      "first_frame": 0,
+      "frames": 3,
+      "start_s": 0.0,
+      "end_s": 0.20000000000000004,
+      "bytes": 287199
+    },
+    {
+      "file": "chunks/0001-cba1624803.bin.gz",
+      "first_frame": 3,
+      "frames": 2,
+      "start_s": 0.30000000000000004,
+      "end_s": 0.4,
+      "bytes": 210381
+    },
+    {
+      "file": "chunks/0002-1a961e5000.bin.gz",
+      "first_frame": 5,
+      "frames": 2,
+      "start_s": 0.5,
+      "end_s": 0.6,
+      "bytes": 211150
+    }
+  ]
+}

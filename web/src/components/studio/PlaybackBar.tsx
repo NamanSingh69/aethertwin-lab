@@ -30,6 +30,8 @@ export function PlaybackBar(props: {
   onSeek: (frame: number) => void;
   eventsOpen: boolean;
   onToggleEvents: () => void;
+  /** Replaces the seek caption (the showcase seeks to chunk keyframes). */
+  seekHint?: string;
   processingFps: unknown;
 }) {
   const [seek, setSeek] = useState<number | null>(null);
@@ -99,7 +101,7 @@ export function PlaybackBar(props: {
         <div className="timeline-caption">
           <span>
             {props.canSeek
-              ? "Seek a recorded frame"
+              ? (props.seekHint ?? "Seek a recorded frame")
               : "Frame seek is available for supported replay sources"}
           </span>
           <span className="mono">

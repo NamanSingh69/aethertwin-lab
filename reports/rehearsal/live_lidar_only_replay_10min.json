@@ -1,0 +1,75 @@
+{
+  "kind": "live_replay_rehearsal",
+  "label": "REHEARSAL: recorded data replayed over the real transport on loopback; NOT live hardware, NOT a lab result",
+  "commit": "5a50a73",
+  "recording": "C:\\Users\\user\\aethertwin_rec\\wifi_stationary_60s",
+  "twin": "C:\\Users\\user\\AppData\\Local\\Temp\\claude\\8afd82c7fd932295\\5589308e-8bed-4c67-bafe-2d01a62929ee\\scratchpad\\rehearsal\\twin_lidar_only",
+  "calibration": "none (LiDAR-only, bring-up)",
+  "duration_s": 600.0,
+  "device": "cuda",
+  "parked": true,
+  "node_port": 53316,
+  "service_port": 53317,
+  "started_utc": "2026-11-05T01:28:47.178528+00:00",
+  "verdict": "ran the full duration without a runtime error",
+  "monitored_span_s": 606.0,
+  "samples": 61,
+  "completed": true,
+  "runtime_error": null,
+  "frame_errors": {
+    "total_frame_errors": 0,
+    "consecutive_frame_errors": 0,
+    "last_frame_error": null,
+    "stop_after_consecutive": 20
+  },
+  "live_source": {
+    "live_source_reopens": 0,
+    "failed_reopens": 0,
+    "last_reopen_error": null,
+    "max_source_reopens": 20
+  },
+  "localization_valid_at_end": true,
+  "parked_localization": {
+    "accepted": true,
+    "fitness": 0.9775749674054759,
+    "rmse_m": 0.027361598131920847,
+    "correction_m": 0.011126679021521141,
+    "correction_deg": 0.03516700942180705
+  },
+  "processing_ms": {
+    "p50": 175.1963999995496,
+    "p95": 775.6251999999222,
+    "target_ms": 35
+  },
+  "module_ms_median": {
+    "localization": 47.98479999953997,
+    "occupancy": 37.61800000029325,
+    "perception_tracking": 74.48680000015884,
+    "planning": 0.0038999996831989847,
+    "risk_fields": 0.06630000007135095
+  },
+  "acquired_frames": 7142,
+  "dropped_by_latest_frame_coalescing": 4704,
+  "transport": {
+    "state": "streaming",
+    "segment": 1,
+    "segments": 1,
+    "bytes": 2520041628,
+    "clock_jumps": 0,
+    "imu_sequence_breaks": 0,
+    "cloud_missing": 0,
+    "camera_missing": 20
+  },
+  "rss_mb": {
+    "first": 1603.87890625,
+    "last": 1497.58203125,
+    "max": 1754.25,
+    "slope_second_half_mb_per_min": -18.39790417019898
+  },
+  "not_shown": [
+    "Wi-Fi delay or loss (loopback)",
+    "a measured calibration unless one was given",
+    "Pi temperature or power",
+    "moving people unless the recording has them"
+  ]
+}

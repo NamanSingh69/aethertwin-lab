@@ -155,6 +155,8 @@ test.describe("photoreal quality", () => {
     await expect(viewport).toHaveAttribute("data-effects", "photoreal", { timeout: 20_000 });
     await expect(viewport).toHaveAttribute("data-motion", "false");
     await expect(page.getByText("Effects · presentation only")).toBeVisible();
+    // The photoreal floor texture and lighting are synthetic, and the badge says so.
+    await expect(page.getByText("synthetic floor and lighting")).toBeVisible();
     await page.getByLabel("Render quality").selectOption("balanced");
     await expect(viewport).toHaveAttribute("data-effects", "off");
     expect(errors).toEqual([]);

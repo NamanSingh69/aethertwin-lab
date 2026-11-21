@@ -63,3 +63,12 @@ def test_ray_empty_capacity_and_invalid_contracts(backend):
     for origins,targets,size in [([0,0,0],np.array([[np.nan,0,0]]),.25),
                                 ([0,0],np.array([[1,0,0]]),.25),([0,0,0],np.array([[1,0,0]]),0)]:
         with pytest.raises(ValueError):native.traverse_rays(origins,targets,size,backend=backend)
+
+
+def test_packed_unique_matches_row_unique_inside_and_outside_the_packing_range():
+    from native.voxel_rays import traverse_rays,PACK_OFFSET
+    rng=np.random.default_rng(11)
+    for scale in (3.,400.,PACK_OFFSET*.25):  # the last mixes keys beyond +-2**20 cells (fallback path)
+        origins=rng.normal(0,scale,(300,3));targets=origins+rng.normal(0,1.5,(300,3))
+        result=traverse_rays(origins,targets,.18,backend='reference' if scale>1e4 else 'auto')
+        assert np.array_equal(result.unique_keys(),np.unique(result.keys,axis=0))

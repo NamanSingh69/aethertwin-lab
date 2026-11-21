@@ -166,7 +166,7 @@ def run(output,gateway_python):
 
         # Select a short demonstrably clear segment entirely from the observed
         # current planner grid, rather than assuming unobserved cells are free.
-        planner=runtime.pipeline.planner;grid=planner.grid;z=grid.index(runtime.pipeline.robot_position)[2]
+        grid=runtime.pipeline.refresh_planning_grid();planner=runtime.pipeline.planner;z=grid.index(runtime.pipeline.robot_position)[2]
         candidates=np.argwhere(planner._center_clear[:,:,z]);points=grid.center(np.c_[candidates,np.full(len(candidates),z)])
         reference=runtime.pipeline.robot_position.copy();order=np.argsort(np.linalg.norm(points-reference,axis=1))
         selected=None

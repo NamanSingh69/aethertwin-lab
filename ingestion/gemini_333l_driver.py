@@ -20,6 +20,11 @@ def decode_color(data,width,height,format_name):
     raise ValueError(f'Unsupported Gemini color format: {format_name}')
 
 
+def depth_meters(raw,scale):
+    """The one depth conversion used locally and after the raw-sensor transport (bit-identical)."""
+    return np.asarray(raw,np.uint16).astype(np.float32)*float(scale)*.001
+
+
 def _name(value):return str(getattr(value,'name',value)).split('.')[-1]
 
 
@@ -44,6 +49,18 @@ def _positive_integer(value,name):
     return integer
 
 
+def _device_info(device):
+    """Serial, firmware and name when the SDK exposes them; missing fields stay None, never guessed."""
+    info={}
+    try:raw=device.get_device_info()
+    except Exception:return {'available':False}
+    for key,method in (('name','get_name'),('serial','get_serial_number'),('firmware','get_firmware_version'),
+                       ('hardware','get_hardware_version'),('connection','get_connection_type'),('pid','get_pid'),('vid','get_vid')):
+        try:value=getattr(raw,method)();info[key]=value if isinstance(value,(int,float)) else str(value)
+        except Exception:info[key]=None
+    info['available']=True;return info
+
+
 def _clock_fields(frame):
     result={};available={}
     for key,method in [('device_us','get_timestamp_us'),('system_us','get_system_timestamp_us'),('global_us','get_global_timestamp_us')]:
@@ -60,8 +77,12 @@ def _clock_fields(frame):
 class Gemini335LDriver:
     def __init__(self,calibration,width=1280,height=800,fps=30,serial=None,timeout_ms=2000,*,
                  color_width=None,color_height=None,color_fps=None,calibration_image_size=None,
-                 align_mode='auto',intrinsics_tolerance_px=1.0,distortion_tolerance=1e-4):
-        if calibration is None or not calibration.measured:raise ValueError('Live camera fusion requires a measured calibration file')
+                 align_mode='auto',intrinsics_tolerance_px=1.0,distortion_tolerance=1e-4,retain_raw=False,decode=True,bringup=False):
+        # bringup=True captures before any calibration exists (to record calibration targets): there is no
+        # calibration object, frames carry calibration=None, and the SDK's factory intrinsics are metadata only.
+        if bringup:
+            if calibration is not None:raise ValueError('Bring-up capture runs without a calibration; pass calibration=None')
+        elif calibration is None or not calibration.measured:raise ValueError('Live camera fusion requires a measured calibration file')
         if calibration_image_size is None or np.asarray(calibration_image_size).shape!=(2,):
             raise ValueError('Measured calibration requires image_size:[width,height]; pass calibration_image_size')
         self.image_size=tuple(_positive_integer(v,'calibration image size') for v in calibration_image_size)
@@ -76,14 +97,18 @@ class Gemini335LDriver:
         except ImportError as exc:raise RuntimeError('Gemini live capture requires the optional pyorbbecsdk2 package') from exc
         self.ob=ob;self.calibration=calibration;self.timeout_ms=_positive_integer(timeout_ms,'timeout_ms');self.clock=ClockAligner()
         self.intrinsics_tolerance_px=float(intrinsics_tolerance_px);self.distortion_tolerance=float(distortion_tolerance)
-        self.pipeline=None;self.context=None;self.align_filter=None;self._start_attempted=False;self._pending=None
+        self.pipeline=None;self.context=None;self.align_filter=None;self._start_attempted=False;self._pending=None;self.incomplete_framesets=0
         self.last_metadata={'camera_available':False};self.last_clock_metadata={};self.previous_color_us=None
+        # retain_raw keeps the SDK buffers (uint16 depth, device colour bytes) for the capture node to forward;
+        # decode=False also skips RGB decoding and the metres conversion, and read() then returns None images.
+        self.retain_raw=bool(retain_raw) or not decode;self.decode=bool(decode);self.last_raw=None
         self.profiles={};self.profile_metadata={'requested_source_depth':dict(zip(('width','height','fps','format'),source_depth)),
             'requested_source_color':dict(zip(('width','height','fps'),source_color)),'measured_image_size':list(self.image_size)}
         try:
             self.context=ob.Context();devices=self.context.query_devices()
             if devices.get_count()==0:raise RuntimeError('No Orbbec camera is connected')
             device=devices.get_device_by_serial_number(serial) if serial else devices.get_device_by_index(0)
+            self.profile_metadata['device']=_device_info(device)
             self.pipeline=ob.Pipeline(device)
             colors=_profiles(self.pipeline.get_stream_profile_list(ob.OBSensorType.COLOR_SENSOR))
             depths=_profiles(self.pipeline.get_stream_profile_list(ob.OBSensorType.DEPTH_SENSOR))
@@ -115,6 +140,9 @@ class Gemini335LDriver:
             mode,enum,color,depth=selected
             self.profile_metadata.update(alignment=mode,selected_source_color=_profile(color),selected_source_depth=_profile(depth))
             config=ob.Config();config.enable_stream(color);config.enable_stream(depth)
+            aggregate=getattr(getattr(ob,'OBFrameAggregateOutputMode',None),'FULL_FRAME_REQUIRE',None)
+            if aggregate is not None and hasattr(config,'set_frame_aggregate_output_mode'):config.set_frame_aggregate_output_mode(aggregate)
+            self.profile_metadata['full_frame_required']=aggregate is not None and hasattr(config,'set_frame_aggregate_output_mode')
             if mode=='hardware':
                 config.set_align_mode(enum)
                 # SDK geometric D2C scaling updates output profile metadata;
@@ -143,8 +171,8 @@ class Gemini335LDriver:
             raise ValueError(f'Aligned {name} profile/intrinsic dimensions differ from delivered image')
         K=np.array([[intrinsic.fx,0,intrinsic.cx],[0,intrinsic.fy,intrinsic.cy],[0,0,1.]],float)
         if not np.isfinite(K).all() or min(K[0,0],K[1,1])<=0:raise ValueError(f'Aligned {name} has invalid SDK intrinsics')
-        error=float(np.max(np.abs(K-self.calibration.K)))
-        if error>self.intrinsics_tolerance_px:raise ValueError(f'Aligned {name} intrinsics mismatch measured calibration ({error:.6g}px > {self.intrinsics_tolerance_px:g}px); recalibrate this profile')
+        error=None if self.calibration is None else float(np.max(np.abs(K-self.calibration.K)))
+        if error is not None and error>self.intrinsics_tolerance_px:raise ValueError(f'Aligned {name} intrinsics mismatch measured calibration ({error:.6g}px > {self.intrinsics_tolerance_px:g}px); recalibrate this profile')
         model=_name(distortion.model)
         if model not in ('NONE','BROWN_CONRADY','BROWN_CONRADY_K6'):
             raise ValueError(f'Aligned {name} distortion model {model} is incompatible with the OpenCV Brown calibration contract')
@@ -152,17 +180,25 @@ class Gemini335LDriver:
         if np.any(np.abs(higher)>self.distortion_tolerance):raise ValueError(f'Aligned {name} rational distortion needs unsupported higher coefficients; calibration has five coefficients')
         coefficients=np.array([distortion.k1,distortion.k2,distortion.p1,distortion.p2,distortion.k3],float)
         if model=='NONE' and np.max(np.abs(coefficients))>self.distortion_tolerance:raise ValueError(f'Aligned {name} reports inconsistent NONE distortion')
-        distortion_error=float(np.max(np.abs(coefficients-self.calibration.distortion)))
-        if not np.isfinite(coefficients).all() or not np.isfinite(higher).all() or distortion_error>self.distortion_tolerance:
+        distortion_error=None if self.calibration is None else float(np.max(np.abs(coefficients-self.calibration.distortion)))
+        if not np.isfinite(coefficients).all() or not np.isfinite(higher).all() or (distortion_error is not None and distortion_error>self.distortion_tolerance):
             raise ValueError(f'Aligned {name} distortion mismatch measured calibration; recalibrate this output profile')
         return _profile(profile),{'K':K.tolist(),'distortion':coefficients.tolist(),'distortion_model':model,
             'max_intrinsics_error_px':error,'max_distortion_error':distortion_error}
 
     def _acquire(self):
-        frames=self.pipeline.wait_for_frames(self.timeout_ms)
-        if frames is None:raise TimeoutError('Gemini RGB-D acquisition timed out')
-        color=frames.get_color_frame();depth=frames.get_depth_frame()
-        if color is None or depth is None:raise RuntimeError('Incomplete Gemini RGB-D frameset')
+        # A frameset missing one stream (common while the streams start; seen on a Gemini 336L) is skipped and
+        # counted; only no complete frameset within timeout_ms is an error.
+        deadline=time.monotonic()+self.timeout_ms/1000.
+        while True:
+            frames=self.pipeline.wait_for_frames(max(1,int((deadline-time.monotonic())*1000)))
+            if frames is None:
+                if time.monotonic()>=deadline:raise TimeoutError('Gemini RGB-D acquisition timed out')
+                continue
+            color=frames.get_color_frame();depth=frames.get_depth_frame()
+            if color is not None and depth is not None:break
+            self.incomplete_framesets+=1
+            if time.monotonic()>=deadline:raise RuntimeError('Incomplete Gemini RGB-D frameset (no complete one within the timeout)')
         source_times={'color':_clock_fields(color),'depth':_clock_fields(depth)}
         if self.align_filter is not None:
             aligned=self.align_filter.process(frames)
@@ -173,11 +209,16 @@ class Gemini335LDriver:
         depth_profile,depth_validation=self._validate_output(depth,'depth')
         if depth_profile['format']!='Y16':raise ValueError('Aligned Gemini depth must be Y16')
         format_name=_name(color.get_format())
-        rgb=decode_color(color.get_data(),color.get_width(),color.get_height(),format_name)
+        if self.decode:rgb=decode_color(color.get_data(),color.get_width(),color.get_height(),format_name)
+        elif format_name.upper() not in ('RGB','BGR','MJPG','MJPEG','YUYV','YUY2'):raise ValueError(f'Unsupported Gemini color format: {format_name}')
+        else:rgb=None
         raw=np.frombuffer(depth.get_data(),np.uint16).reshape(depth.get_height(),depth.get_width())
         scale=float(depth.get_depth_scale())
         if not np.isfinite(scale) or scale<=0:raise ValueError('Invalid Gemini depth unit scale')
-        depth_m=raw.astype(np.float32)*scale*.001
+        depth_m=depth_meters(raw,scale) if self.decode else None
+        if self.retain_raw:
+            self.last_raw={'depth':raw.copy(),'depth_scale':scale,'color':np.array(color.get_data(),dtype=np.uint8,copy=True).reshape(-1),
+                           'color_format':format_name}
         output_times={'color':_clock_fields(color),'depth':_clock_fields(depth)}
         color_us=output_times['color']['device_us'];depth_us=output_times['depth']['device_us']
         stamp=float(color_us)*1e-6;timestamp=self.clock.update(stamp,time.monotonic())
@@ -186,10 +227,11 @@ class Gemini335LDriver:
         self.profile_metadata['aligned_output']={'color':color_profile,'depth':depth_profile}
         self.last_metadata={'raw_timestamp':stamp,'camera_device_us':color_us,'camera_depth_device_us':depth_us,
             'clock_fit_residual_seconds':self.clock.residual,'color_depth_delta_seconds':(color_us-depth_us)*1e-6,
-            'color_format':format_name,'hardware_trigger_claimed':False,'camera_available':True,
+            'color_format':format_name,'hardware_trigger_claimed':False,'camera_available':True,'incomplete_framesets_skipped':self.incomplete_framesets,
             'camera_profiles':deepcopy(self.profile_metadata),'camera_timestamps':{'source':source_times,'aligned_output':output_times,
                 'observed_color_interval_seconds':interval},
-            'camera_calibration_validation':{'calibration_id':self.calibration.calibration_id,'measured':True,
+            'camera_calibration_validation':{'calibration_id':None if self.calibration is None else self.calibration.calibration_id,
+                'measured':self.calibration is not None,'bringup_factory_intrinsics_only':self.calibration is None,
                 'image_size':list(self.image_size),'intrinsics_tolerance_px':self.intrinsics_tolerance_px,
                 'distortion_tolerance':self.distortion_tolerance,'color':color_validation,'depth':depth_validation}}
         self.last_clock_metadata={'metadata':self.last_metadata}

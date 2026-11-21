@@ -10,9 +10,10 @@ from ingestion.sensor_synchronizer import SensorSynchronizer
 
 def fake_sdk(monkeypatch,*,color_size=(8,6),depth_size=(6,4),compatible=('hardware',),
              depth_output_size=None,intrinsic_error=0.,distortion_error=0.,missing=None,
-             api_available=True,start_error=False,fail_after_first=False,pair_fps=30,color_fps=30):
+             api_available=True,start_error=False,fail_after_first=False,pair_fps=30,color_fps=30,partial_first=0,color_K=None,distortion=None):
     """Model actual SDK source profiles separately from delivered aligned frames."""
-    color_K=np.array([[400.,0,(color_size[0]-1)/2],[0,401.,(color_size[1]-1)/2],[0,0,1.]])
+    color_K=np.array([[400.,0,(color_size[0]-1)/2],[0,401.,(color_size[1]-1)/2],[0,0,1.]]) if color_K is None else np.asarray(color_K,float)
+    k1,k2,p1,p2,k3=(distortion_error,0.,0.,0.,0.) if distortion is None else (np.asarray(distortion,float)+[distortion_error,0,0,0,0])
     calls=types.SimpleNamespace(pipelines=[],align_filters=[],pair_queries=[])
     class Profile:
         def __init__(self,width,height,fmt,fps=30,K=None):
@@ -23,7 +24,7 @@ def fake_sdk(monkeypatch,*,color_size=(8,6),depth_size=(6,4),compatible=('hardwa
         def get_fps(self):return self.fps
         def get_format(self):return self.fmt
         def get_intrinsic(self):return types.SimpleNamespace(width=self.width,height=self.height,fx=self.K[0,0],fy=self.K[1,1],cx=self.K[0,2],cy=self.K[1,2])
-        def get_distortion(self):return types.SimpleNamespace(model='BROWN_CONRADY',k1=distortion_error,k2=0.,p1=0.,p2=0.,k3=0.,k4=0.,k5=0.,k6=0.)
+        def get_distortion(self):return types.SimpleNamespace(model='BROWN_CONRADY',k1=k1,k2=k2,p1=p1,p2=p2,k3=k3,k4=0.,k5=0.,k6=0.)
     class Options:
         def __init__(self,profiles):self.profiles=profiles
         def get_count(self):return len(self.profiles)
@@ -58,7 +59,7 @@ def fake_sdk(monkeypatch,*,color_size=(8,6),depth_size=(6,4),compatible=('hardwa
         def get_global_timestamp_us(self):raise RuntimeError('global sensor clock unavailable')
     class Frames:
         def __init__(self,index,aligned):self.index=index;self.aligned=aligned
-        def get_color_frame(self):return None if missing=='color' else Frame(delivered_color,True,self.index)
+        def get_color_frame(self):return None if missing=='color' or self.index<=partial_first else Frame(delivered_color,True,self.index)
         def get_depth_frame(self):return None if missing=='depth' else Frame(delivered_depth if self.aligned else source_depth,False,self.index)
         def as_frame_set(self):return self
     class Pipeline:
@@ -201,3 +202,18 @@ def test_unsupported_source_depth_profile_is_not_replaced(monkeypatch):
     kwargs['fps']=60
     with pytest.raises(ValueError,match='source depth profile'):Gemini335LDriver(calibration,**kwargs,color_fps=30)
     assert calls.pipelines[0].config is None
+
+
+def test_framesets_missing_a_stream_are_skipped_and_counted(monkeypatch):
+    # Seen on a Gemini 336L while its streams start: framesets with depth but no colour.
+    calibration,kwargs,calls=fake_sdk(monkeypatch,partial_first=3)
+    camera=Gemini335LDriver(calibration,**kwargs)
+    timestamp,rgb,depth,_=camera.read()
+    assert calls.pipelines[0].waits==4 and camera.incomplete_framesets==3 and rgb.shape[:2]==depth.shape
+    camera.close()
+
+
+def test_only_incomplete_framesets_still_fail_after_the_timeout(monkeypatch):
+    calibration,kwargs,calls=fake_sdk(monkeypatch,missing='color')
+    with pytest.raises(RuntimeError,match='no complete one within the timeout'):Gemini335LDriver(calibration,timeout_ms=60,**kwargs)
+    assert calls.pipelines[0].stops==1

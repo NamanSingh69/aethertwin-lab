@@ -176,6 +176,40 @@ function disposeObject(object: T.Object3D) {
       }
   });
 }
+/**
+ * Photo-capture meshes render unlit: keep the base colour map and colour, and
+ * dispose every other texture the source material held (normal, roughness...).
+ */
+export function unlitCaptureMaterial(material: T.Material, vertexColors: boolean) {
+  const source = material as T.MeshStandardMaterial;
+  const map = source.map ?? null;
+  const color = source.color ?? new T.Color("#ffffff");
+  for (const value of Object.values(material))
+    if (value instanceof T.Texture && value !== map) value.dispose();
+  material.dispose();
+  return new T.MeshBasicMaterial({ map, color, vertexColors, side: T.DoubleSide });
+}
+/**
+ * Mobile browsers drop WebGL contexts under memory pressure or in background
+ * tabs. Preventing the default lets the browser restore the context; three.js
+ * then re-uploads geometry and textures on the next render.
+ */
+export function watchContextLoss(
+  canvas: EventTarget,
+  handlers: { lost: () => void; restored: () => void },
+) {
+  const lost = (event: Event) => {
+    event.preventDefault();
+    handlers.lost();
+  };
+  const restored = () => handlers.restored();
+  canvas.addEventListener("webglcontextlost", lost);
+  canvas.addEventListener("webglcontextrestored", restored);
+  return () => {
+    canvas.removeEventListener("webglcontextlost", lost);
+    canvas.removeEventListener("webglcontextrestored", restored);
+  };
+}
 function clearGroup(group: T.Group) {
   for (const child of [...group.children]) {
     group.remove(child);
@@ -254,6 +288,8 @@ export class SpatialRenderer {
   private frames = 0;
   private intervals: number[] = [];
   private frozen = false;
+  private contextLost = false;
+  private unwatchContext: () => void = () => {};
   private updateMs = 0;
   private renderSubmitMs = 0;
   private selected: number | null = null;
@@ -445,6 +481,19 @@ export class SpatialRenderer {
     this.resizeViewport();
     this.renderer.domElement.addEventListener("pointerdown", this.pointerDown);
     this.renderer.domElement.addEventListener("pointerup", this.pointerUp);
+    this.unwatchContext = watchContextLoss(this.renderer.domElement, {
+      lost: () => {
+        this.contextLost = true;
+        this.host.dispatchEvent(new CustomEvent("rendercontext", { detail: "lost" }));
+      },
+      restored: () => {
+        this.contextLost = false;
+        // three.js re-creates its GL state; resize the passes and redraw.
+        this.resizeViewport();
+        this.markDirty();
+        this.host.dispatchEvent(new CustomEvent("rendercontext", { detail: "restored" }));
+      },
+    });
     this.animate();
   }
   private resizeViewport() {
@@ -553,12 +602,8 @@ export class SpatialRenderer {
     }
     gltf.scene.traverse((node) => {
       if (!(node instanceof T.Mesh)) return;
-      const unlit = (material: T.Material) => {
-        const map = (material as T.MeshStandardMaterial).map ?? null;
-        const color = (material as T.MeshStandardMaterial).color ?? new T.Color("#ffffff");
-        material.dispose();
-        return new T.MeshBasicMaterial({ map, color, vertexColors: Boolean(node.geometry.getAttribute("color")), side: T.DoubleSide });
-      };
+      const colors = Boolean(node.geometry.getAttribute("color"));
+      const unlit = (material: T.Material) => unlitCaptureMaterial(material, colors);
       node.material = Array.isArray(node.material) ? node.material.map(unlit) : unlit(node.material);
     });
     const placed = new T.Group();
@@ -574,8 +619,15 @@ export class SpatialRenderer {
     this.invalidate();
     return appearance;
   }
-  async loadManifest(url: string) {
+  /**
+   * `relativeToManifest` (static showcase): each LOD loads from its `file` name
+   * next to the manifest, whatever URL prefix the exporter wrote, and may share
+   * the manifest's origin (a CDN) instead of the page's.
+   */
+  async loadManifest(url: string, options: { relativeToManifest?: boolean } = {}) {
     const generation = ++this.loadGeneration;
+    const manifestUrl = new URL(url, location.href);
+    const origin = options.relativeToManifest ? manifestUrl.origin : location.origin;
     const response = await fetch(url, { credentials: "same-origin" });
     if (!response.ok)
       throw new Error(`Map manifest returned ${response.status}`);
@@ -599,16 +651,22 @@ export class SpatialRenderer {
       )
         throw new Error("Invalid map tile");
       ids.add(tile.id);
-      for (const lod of tile.lods)
+      for (const lod of tile.lods) {
+        if (options.relativeToManifest) {
+          if (typeof lod.file !== "string" || !/^[\w.-]+\.glb$/.test(lod.file))
+            throw new Error("Invalid local map LOD");
+          lod.url = new URL(lod.file, manifestUrl).href;
+        }
         if (
           typeof lod.url !== "string" ||
-          new URL(lod.url, location.href).origin !== location.origin ||
+          new URL(lod.url, location.href).origin !== origin ||
           !Number.isFinite(lod.distance) ||
           lod.distance < 0 ||
           !Number.isSafeInteger(lod.triangles) ||
           lod.triangles < 0
         )
           throw new Error("Invalid local map LOD");
+      }
     }
     if (this.disposed || generation !== this.loadGeneration) return;
     for (const { object } of this.tiles.values()) {
@@ -1117,8 +1175,8 @@ export class SpatialRenderer {
     this.stepFlight(now);
     const moved = this.controls.update();
     const continuous = this.resolved !== "performance";
-    // Offscreen canvases and settled on-demand scenes skip rendering entirely.
-    if (!this.onscreen || (!continuous && !moved && !this.dirty)) {
+    // Offscreen canvases, a lost WebGL context and settled on-demand scenes skip rendering.
+    if (this.contextLost || !this.onscreen || (!continuous && !moved && !this.dirty)) {
       this.skipInterval = true;
       this.last = now;
       this.tick(now);
@@ -1355,6 +1413,8 @@ export class SpatialRenderer {
     );
     this.renderer.domElement.removeEventListener("pointerup", this.pointerUp);
     disposeObject(this.scene);
+    // Our own forceContextLoss below is not a loss to recover from.
+    this.unwatchContext();
     this.renderer.dispose();
     this.renderer.forceContextLoss();
     this.renderer.domElement.remove();

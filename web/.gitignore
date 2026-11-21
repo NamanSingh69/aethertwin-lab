@@ -6,3 +6,5 @@ test-results/
 playwright-report/
 blob-report/
 explainer-dist/
+# Static showcase build (npm run build:showcase; deployed, not committed)
+showcase-dist/

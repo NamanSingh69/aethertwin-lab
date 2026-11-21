@@ -10,8 +10,11 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "e2e:mock": "playwright test --project=mock",
+    "e2e:showcase": "playwright test --project=showcase",
     "size": "node tools/check-bundle-size.mjs",
     "build:explainer": "vite build --config vite.explainer.config.ts",
+    "build:showcase": "vite build --config vite.showcase.config.ts && node tools/check-showcase.mjs",
+    "preview:showcase": "vite preview --config vite.showcase.config.ts --host 127.0.0.1 --port 4180 --strictPort",
     "preview": "vite preview --host 127.0.0.1 --port 5173 --strictPort"
   },
   "dependencies": {

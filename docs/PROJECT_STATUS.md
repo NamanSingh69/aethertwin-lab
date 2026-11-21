@@ -39,6 +39,15 @@ readiness helper still describes a legacy Jetson setup, has no public CLI, and
 must not be used as the Pi commissioning tool. New repository validation is
 reported separately in `reports/github_snapshot_validation.json`.
 
+Headline numbers from the real bench recordings (5 November, `docs/LAB_DAY.md`,
+`reports/rehearsal/`) measure self-consistency, not accuracy: the 42 mm pose
+spread is static precision (jitter) of a rig that never moved; the 2.6-2.7 cm
+relocalization figure is the ICP registration residual (RMSE) against the twin,
+not error against independent ground truth; the only trajectory error (ATE) is on
+a SYNTHETIC loop in simulation. Processing on recorded data was p50 381 ms /
+p95 570 ms a frame (plain profile) at first and p50 240 / p95 296 ms after exact speed-ups
+(10-minute rehearsal), so the 35 ms target is not met.
+
 ## Remaining work
 
 1. Implement a bounded Pi-to-Windows raw-sensor transport and receiver with

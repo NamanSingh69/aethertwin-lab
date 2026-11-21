@@ -10,17 +10,24 @@ import {
   type Audience,
 } from "./content";
 import { Lab } from "./Labs";
-import { studioLink } from "../lib/viewParams";
+import { STUDIO_HREF, studioLink } from "../lib/viewParams";
 
 interface LiveState {
   source: string;
   stages: Array<[string, number]>;
 }
 
+/** Static builds (the standalone explainer and the showcase) have no service to poll. */
+const SHOWCASE = import.meta.env.VITE_SHOWCASE === "1";
+export function livePollingEnabled(standalone: boolean) {
+  return !standalone && !SHOWCASE;
+}
+
 /** Polls the running service when there is one; the standalone build has none. */
-function useLiveState(): LiveState | null {
+function useLiveState(enabled: boolean): LiveState | null {
   const [live, setLive] = useState<LiveState | null>(null);
   useEffect(() => {
+    if (SHOWCASE || !enabled) return;
     let stopped = false;
     const poll = async () => {
       try {
@@ -40,7 +47,7 @@ function useLiveState(): LiveState | null {
       stopped = true;
       window.clearInterval(timer);
     };
-  }, []);
+  }, [enabled]);
   return live;
 }
 
@@ -52,7 +59,7 @@ function chapterFromHash() {
 export default function Explainer({ standalone = false }: { standalone?: boolean }) {
   const [audience, setAudience] = useState<Audience>("simple");
   const [index, setIndex] = useState(chapterFromHash);
-  const live = useLiveState();
+  const live = useLiveState(livePollingEnabled(standalone));
   const chapter = CHAPTERS[index];
   const go = (next: number) => {
     const bounded = (next + CHAPTERS.length) % CHAPTERS.length;
@@ -80,7 +87,7 @@ export default function Explainer({ standalone = false }: { standalone?: boolean
           ))}
         </div>
         {!standalone && (
-          <a className="ex-open-studio" href="./">
+          <a className="ex-open-studio" href={STUDIO_HREF}>
             Open the 3D studio
           </a>
         )}
@@ -95,7 +102,9 @@ export default function Explainer({ standalone = false }: { standalone?: boolean
             <span className="ex-dot" aria-hidden="true" />
             {live
               ? `Connected to a running service (${live.source} data). Hardware: not tested.`
-              : "Showing recorded results. No real sensors have been connected yet."}
+              : SHOWCASE
+                ? "Showing recorded results. This public page is never connected to the sensors."
+                : "Showing recorded results. No real sensors have been connected yet."}
           </p>
         </section>
 
@@ -157,7 +166,9 @@ export default function Explainer({ standalone = false }: { standalone?: boolean
                 <p>
                   {standalone
                     ? "This stage is best seen in the 3D studio, which runs alongside the project's service."
-                    : "Open this stage in the 3D studio to see it on the live simulated scene."}
+                    : SHOWCASE
+                      ? "Open this stage in the 3D studio to see it on the recorded replay (not live)."
+                      : "Open this stage in the 3D studio to see it on the live simulated scene."}
                 </p>
               </div>
             )}

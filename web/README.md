@@ -24,7 +24,7 @@ it does not pause processing or change the source.
 
 ## Browser end-to-end tests
 
-Playwright runs two projects (`playwright.config.ts`):
+Playwright runs three projects (`playwright.config.ts`):
 
 - `mock` serves the production build with `vite preview` and answers every
   `/api/v2/*` request and the binary `/ws/v2/scene` stream from an in-test fake
@@ -35,6 +35,10 @@ Playwright runs two projects (`playwright.config.ts`):
   caching headers, map tiles, pause/step/resume and route planning with CSV export.
   Set `AETHERTWIN_SERVICE_URL=http://127.0.0.1:8080` for a running service, or
   `AETHERTWIN_PYTHON=../.venv/bin/python` to let Playwright start one.
+- `showcase` builds the static showcase with the committed fixture export
+  (`e2e/showcase/fixture`) and serves it with no service. It checks the
+  provenance banner, replay state, playback, seek, the explainer link and axe,
+  and fails on any `/api`, `/ws` or WebSocket traffic: `npm run e2e:showcase`.
 
 Headless runs use SwiftShader WebGL; they check behaviour, not GPU frame rates.
 

@@ -42,6 +42,23 @@ def test_imu_integrates_observed_gap_between_nonoverlapping_sweeps():
     assert deskewer.last_diagnostics['inter_sweep_integration_seconds']==pytest.approx(.02)
 
 
+def test_jitter_sized_sweep_overlap_is_tolerated_but_a_replayed_sweep_is_not():
+    # Real L2 sweeps start up to 0.77 ms before the previous end (reports/hardware/pi, 7171 sweeps).
+    points=np.array([[2.,0,0,1,1,1,0.],[2.,0,0,1,1,1,.04]])
+    deskewer=ContinuousTimeIMUDeskewer(initial_velocity=[1,0,0])
+    imu=lambda a,b,n:[IMUSample(t,[0,0,0],[0,0,9.80665]) for t in np.linspace(a,b,n)]
+    deskewer.deskew_sweep(points,imu(0,.08,9),0,.08)
+    result=deskewer.deskew_sweep(points,imu(.0790,.16,82),.0792,.08)
+    np.testing.assert_allclose(deskewer.pose_world[:3,3],[.1592,0,0],atol=1e-8)
+    assert deskewer.last_diagnostics['sweep_overlap_seconds']==pytest.approx(.0008)
+    assert deskewer.last_diagnostics['inter_sweep_integration_seconds']==0
+    # The overlapping return takes the pose at the previous end: 0.8 ms of 1 m/s motion, 0.8 mm.
+    np.testing.assert_allclose(result[0,:3],[2.-(.1592-.08),0,0],atol=1e-8)
+    with pytest.raises(ValueError,match='Overlapping'):deskewer.deskew_sweep(points,imu(.15,.24,10),.155,.08)
+    strict=ContinuousTimeIMUDeskewer(overlap_tolerance=0);strict.deskew_sweep(points,imu(0,.08,9),0,.08)
+    with pytest.raises(ValueError,match='Overlapping'):strict.deskew_sweep(points,imu(.079,.16,82),.0792,.08)
+
+
 def test_dda_multi_return_evidence_and_unobserved_space(tmp_path):
     m=SparseMultiReturnVoxelMap(1.)
     p=np.array([[2.5,.5,.5,.4,1,2,0],[4.5,.5,.5,.7,2,2,0]])

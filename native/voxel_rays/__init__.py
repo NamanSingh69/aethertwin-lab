@@ -13,6 +13,10 @@ _STATUS={'available':False,'backend':'python_reference','reason':'Native kernel 
 class NativeUnavailable(RuntimeError):pass
 
 
+# Keys within +-2**20 cells (about +-189 km at 0.18 m) take the packed unique path in unique_keys.
+PACK_OFFSET=1<<20;PACK_MASK=(1<<21)-1
+
+
 def _load():
     global _LIBRARY,_STATUS
     if _LIBRARY is not None:return _LIBRARY
@@ -45,6 +49,14 @@ class TraversalResult:
     offsets: np.ndarray
     backend: str
     def unique_keys(self):
+        keys=self.keys
+        if len(keys) and int(keys.min())>=-PACK_OFFSET and int(keys.max())<PACK_OFFSET:
+            # Offset-binary packing of three 21-bit fields keeps signed lexicographic order, so a 1-D unique
+            # gives exactly the rows and order of the 3-column sort (and is several times faster).
+            packed=np.unique(((keys[:,0]+PACK_OFFSET)<<42)|((keys[:,1]+PACK_OFFSET)<<21)|(keys[:,2]+PACK_OFFSET))
+            unique=np.empty((len(packed),3),np.int64)
+            unique[:,0]=(packed>>42)-PACK_OFFSET;unique[:,1]=((packed>>21)&PACK_MASK)-PACK_OFFSET;unique[:,2]=(packed&PACK_MASK)-PACK_OFFSET
+            return unique
         library=_load() if self.backend=='native' else None
         if library is not None and hasattr(library,'lab_voxel_unique'):
             keys=self.keys.copy();count=np.zeros(1,np.int64)

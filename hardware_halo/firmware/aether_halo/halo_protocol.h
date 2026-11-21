@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <string.h>
 #define HALO_PIXELS 24
 #define HALO_STALE 4
 #define HALO_WATCHDOG 8
@@ -30,6 +31,42 @@ static bool haloDecode(const uint8_t* bytes,HaloPacket& packet) {
   else if(azimuth!=-32768)return false;
   packet.flags=bytes[3];packet.sequence=(uint16_t)bytes[4]|((uint16_t)bytes[5]<<8);packet.azimuth=azimuth;
   packet.risk=bytes[8];packet.brightness=bytes[9];packet.age=(uint16_t)bytes[10]|((uint16_t)bytes[11]<<8);packet.source=bytes[12];return true;
+}
+/* Serial receive state machine shared by the firmware and the desktop cross-check.
+ * Text before pairing is an ASCII HELLO line; binary packets start with A7 54.
+ * A partial packet older than HALO_INTERBYTE_TIMEOUT_MS is discarded (a lost
+ * byte can never glue two packets together), and a 16-byte block that fails
+ * validation is rescanned from its next A7 instead of being dropped whole, so
+ * one stray byte costs at most one packet. Sequence acceptance stays with the caller. */
+#define HALO_INTERBYTE_TIMEOUT_MS 20
+enum HaloEvent {HALO_EVENT_NONE=0,HALO_EVENT_HELLO=1,HALO_EVENT_PACKET=2};
+struct HaloReceiver {
+  uint8_t bytes[16];unsigned length;char hello[64];unsigned helloLength;uint32_t lastByteMs;
+  uint32_t rejected,timeouts,rescans;
+};
+static void haloReceiverInit(HaloReceiver& r){memset(&r,0,sizeof(r));}
+static int haloReceive(HaloReceiver& r,uint8_t byte,uint32_t nowMs,bool paired,HaloPacket& out) {
+  if(r.length>0&&(uint32_t)(nowMs-r.lastByteMs)>HALO_INTERBYTE_TIMEOUT_MS){r.length=0;r.timeouts++;}
+  r.lastByteMs=nowMs;
+  if(r.length==0&&byte!=0xA7) {
+    if(byte=='\n') {
+      r.hello[r.helloLength]=0;bool hello=strcmp(r.hello,"AETHER_HALO_HELLO 1")==0;r.helloLength=0;
+      return hello?HALO_EVENT_HELLO:HALO_EVENT_NONE;
+    }
+    if(byte!='\r'){
+      if(byte>=32&&byte<127&&r.helloLength<sizeof(r.hello)-1)r.hello[r.helloLength++]=(char)byte;else r.helloLength=0;
+    }
+    return HALO_EVENT_NONE;
+  }
+  if(!paired){r.length=0;return HALO_EVENT_NONE;}
+  if(r.length==1&&byte!=0x54){r.length=byte==0xA7?1:0;return HALO_EVENT_NONE;}
+  r.bytes[r.length++]=byte;
+  if(r.length<16)return HALO_EVENT_NONE;
+  if(haloDecode(r.bytes,out)){r.length=0;return HALO_EVENT_PACKET;}
+  r.rejected++;unsigned k=1;
+  while(k<16&&!(r.bytes[k]==0xA7&&(k==15||r.bytes[k+1]==0x54)))k++;
+  if(k<16)r.rescans++;
+  memmove(r.bytes,r.bytes+k,16-k);r.length=16-k;return HALO_EVENT_NONE;
 }
 static void haloColors(const HaloPacket& packet,bool linkWatchdog,uint8_t colors[24][3]) {
   const uint8_t palette[4][3]={{0,180,100},{255,190,0},{255,70,0},{255,0,30}};

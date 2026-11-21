@@ -39,6 +39,7 @@ export function ViewportHeading({
   quality,
   onQuality,
   effects,
+  resolvedQuality,
   onHelp,
 }: {
   mode: string;
@@ -47,6 +48,8 @@ export function ViewportHeading({
   quality: Quality;
   onQuality: (quality: Quality) => void;
   effects: RenderMetrics["effects"] | undefined;
+  /** The tier actually drawn (auto resolves to one); photoreal adds more synthetic look. */
+  resolvedQuality?: RenderMetrics["quality"];
   onHelp: () => void;
 }) {
   const { eyebrow, title } = heading(mode);
@@ -89,9 +92,14 @@ export function ViewportHeading({
         {(effects?.postprocessing || effects?.motion) && (
           <span
             className="effects-badge"
-            title="Bloom, fog and decorative motion change how the scene looks, not what was measured."
+            title={
+              resolvedQuality === "photoreal"
+                ? "Image-based lighting (a synthetic room environment), ambient occlusion, soft shadows, bloom and a procedural concrete floor texture change how the scene looks, not what was measured. The floor is not a capture of the real floor."
+                : "Bloom, fog and decorative motion change how the scene looks, not what was measured."
+            }
           >
             Effects · presentation only
+            {resolvedQuality === "photoreal" && " · synthetic floor and lighting"}
           </span>
         )}
         <button
@@ -166,10 +174,28 @@ export function ViewportStats({
 export function SceneEmpty({
   error,
   onRetry,
+  showcase,
 }: {
   error: string;
   onRetry: () => void;
+  /** Static showcase wording: a recorded replay is loading, not a service connection. */
+  showcase?: { progress: string | null };
 }) {
+  if (showcase)
+    return (
+      <div className="scene-empty">
+        <span className="scan-orb">
+          <Icon name="scan" size={34} />
+        </span>
+        <h2>{error ? "Recorded replay unavailable" : "Loading the recorded replay"}</h2>
+        <p>{error || showcase.progress || "Recorded data, not live. It appears here as it downloads."}</p>
+        {error && (
+          <button className="button ghost" onClick={onRetry}>
+            Retry
+          </button>
+        )}
+      </div>
+    );
   return (
     <div className="scene-empty">
       <span className="scan-orb">

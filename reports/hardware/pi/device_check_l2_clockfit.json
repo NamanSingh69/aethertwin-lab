@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "pi_device_check",
+  "date_utc": "2026-11-04T17:57:28.413506+00:00",
+  "label": "physical devices on the Pi capture node",
+  "hardware_verified": false,
+  "host": {
+    "name": "capture-pi",
+    "platform": "Linux-6.18.50+rpt-rpi-2712-aarch64-with-glibc2.41",
+    "python": "3.13.5",
+    "model": "Raspberry Pi 5 Model B Rev 1.1"
+  },
+  "system_before": {
+    "throttled": "throttled=0x0",
+    "temp": "temp=46.6'C",
+    "uptime": "17:57:28 up 16 min,  3 users,  load average: 0.02, 0.72, 0.75"
+  },
+  "usb_tree": "/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M\n/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M\n/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/2p, 480M\n    |__ Port 001: Dev 003, If 0, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 001: Dev 003, If 1, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 001: Dev 003, If 2, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 001: Dev 003, If 3, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 001: Dev 003, If 4, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 001: Dev 003, If 5, Class=Video, Driver=uvcvideo, 480M\n    |__ Port 001: Dev 003, If 6, Class=Human Interface Device, Driver=usbhid, 480M\n/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M",
+  "usb": "Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub\nBus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub\nBus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub\nBus 003 Device 003: ID 2bc5:0807 Orbbec 3D Technology International, Inc Orbbec Gemini 336L\nBus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub",
+  "l2": {
+    "first_sweep_after_open_s": 1.173022678000052,
+    "sweeps": 181,
+    "sweep_hz": 11.954026220759909,
+    "sweep_period_s": {
+      "min": 0.08307743072509766,
+      "p5": 0.08357882499694824,
+      "median": 0.08365297317504883,
+      "p95": 0.08374426364898682,
+      "max": 0.08428525924682617
+    },
+    "sweep_duration_s": {
+      "min": 0.0830161770686452,
+      "p5": 0.0834830103875532,
+      "median": 0.08360706149029154,
+      "p95": 0.08367945770289327,
+      "max": 0.08376537264957533
+    },
+    "points_per_sweep": {
+      "min": 4682.0,
+      "p5": 5136.0,
+      "median": 5186.0,
+      "p95": 5323.0,
+      "max": 5346.0
+    },
+    "imu_samples": 3787,
+    "imu_hz": 251.38725171376277,
+    "imu_accel_norm": {
+      "min": 10.15022549270837,
+      "p5": 10.403822802976483,
+      "median": 10.52415280679596,
+      "p95": 10.64695447665489,
+      "max": 11.074554871511001
+    },
+    "range_m": {
+      "min": 0.21233011782169342,
+      "p5": 0.6381567865610123,
+      "median": 2.4624788761138916,
+      "p95": 4.1472437381744385,
+      "max": 12.46765422821045
+    },
+    "dropped_clouds": 0,
+    "rejected_long_clouds": 0,
+    "monotonic_sweeps": true
+  },
+  "system_after": {
+    "throttled": "throttled=0x0",
+    "temp": "temp=46.6'C",
+    "uptime": "17:57:44 up 16 min,  3 users,  load average: 0.01, 0.67, 0.73"
+  }
+}

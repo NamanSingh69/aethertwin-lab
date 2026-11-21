@@ -7,14 +7,30 @@ from core.contracts import CameraCalibration
 from .sensor_synchronizer import SensorSynchronizer
 
 
+def load_measured_calibration(config,root=Path('.')):
+    """(calibration, raw JSON, path) for the configured file; simulation calibration is rejected."""
+    path=Path(config['calibration']);path=path if path.is_absolute() else Path(root)/path
+    data=json.loads(path.read_text(encoding='utf-8'))
+    calibration=CameraCalibration(np.array(data['K']),np.array(data['T_lidar_camera']),np.array(data.get('distortion',[0]*5)),data['calibration_id'],data.get('measured',False))
+    if not calibration.measured:raise ValueError('Live fusion requires a measured calibration; simulation calibration is rejected')
+    return calibration,data,path
+
+
+def open_live_source(config,root=Path('.')):
+    """Sensors on this host (``source: local``) or a Pi capture node over the raw-sensor transport (``source: remote``)."""
+    kind=config.get('source','local')
+    if kind=='local':return LiveSensorSource(config,root)
+    if kind=='remote':
+        from .remote_source import RemoteSensorSource
+        return RemoteSensorSource(config,root)
+    raise ValueError(f'live.source must be local or remote, not {kind!r}')
+
+
 class LiveSensorSource:
     def __init__(self,config,root=Path('.')):
         from .lidar_l2_driver import LidarL2Driver
         from .gemini_333l_driver import Gemini335LDriver
-        path=Path(config['calibration']);path=path if path.is_absolute() else Path(root)/path
-        data=json.loads(path.read_text(encoding='utf-8'))
-        calibration=CameraCalibration(np.array(data['K']),np.array(data['T_lidar_camera']),np.array(data.get('distortion',[0]*5)),data['calibration_id'],data.get('measured',False))
-        if not calibration.measured:raise ValueError('Live fusion requires a measured calibration; simulation calibration is rejected')
+        calibration,data,_=load_measured_calibration(config,root)
         self.lidar=LidarL2Driver(config['lidar_ip'],config['host_ip'],config['lidar_port'],config['host_port'])
         try:self.camera=Gemini335LDriver(calibration,config['camera_width'],config['camera_height'],config['camera_fps'],
             color_width=config.get('camera_color_width'),color_height=config.get('camera_color_height'),color_fps=config.get('camera_color_fps'),

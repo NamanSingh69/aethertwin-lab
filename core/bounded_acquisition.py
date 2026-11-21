@@ -27,8 +27,8 @@ class BufferedAcquisition:
         self.max_age=float(max_age_seconds);self.imu_seconds=float(imu_history_seconds);self.max_imu=int(max_imu_samples)
         self.raw_sink=raw_sink;self._items=deque();self._imu=deque();self._bytes=0
         self._cv=threading.Condition();self._stop=threading.Event();self._thread=None
-        self._terminal=False;self._error=None;self._delivered_end=None;self._acquired_end=None
-        self.dropped=0;self.acquired=0;self.peak_bytes=0;self.peak_frames=0;self.imu_dropped=0
+        self._terminal=False;self._error=None;self._delivered_end=None;self._acquired_end=None;self._segment=None
+        self.dropped=0;self.acquired=0;self.peak_bytes=0;self.peak_frames=0;self.imu_dropped=0;self.segment_dropped=0;self.segments=0
 
     def start(self):
         if self._thread is not None:return self
@@ -47,7 +47,14 @@ class BufferedAcquisition:
                     raise ValueError('Acquisition clock did not advance; relocalization/restart required')
                 self._acquired_end=end
                 if self.raw_sink is not None:self.raw_sink.write(frame)
+                segment=frame.diagnostics.get('acquisition_segment')
                 with self._cv:
+                    if segment!=self._segment:
+                        # A remote source started a new segment: no IMU history or queued frame crosses it.
+                        if self._segment is not None:
+                            self.segments+=1;self.dropped+=len(self._items);self.segment_dropped+=len(self._items)
+                            self._items.clear();self._bytes=0;self._imu.clear();self._delivered_end=None
+                        self._segment=segment
                     for sample in frame.imu_samples:
                         if not self._imu or sample.timestamp>self._imu[-1].timestamp:self._imu.append(sample)
                     cutoff=end-self.imu_seconds
@@ -63,6 +70,10 @@ class BufferedAcquisition:
         finally:
             with self._cv:self._terminal=True;self._cv.notify_all()
 
+    @property
+    def terminal(self):
+        """The acquisition thread has ended (error or source exhausted); it never restarts."""
+        return self._terminal
     def __iter__(self):return self
 
     def __next__(self):
@@ -89,6 +100,7 @@ class BufferedAcquisition:
                 'bytes':self._bytes,'capacity_frames':self.max_frames,'capacity_bytes':self.max_bytes,
                 'peak_frames':self.peak_frames,'peak_bytes':self.peak_bytes,'imu_samples':len(self._imu),
                 'imu_history_seconds':self.imu_seconds,'discarded_old_imu_samples':self.imu_dropped,
+                'segment_changes':self.segments,'dropped_at_segment_change':self.segment_dropped,
                 'error':None if self._error is None else str(self._error)}
 
     def status(self):

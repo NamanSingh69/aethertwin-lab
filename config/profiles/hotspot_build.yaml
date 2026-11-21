@@ -1,0 +1,15 @@
+# build-twin ONLY (laptop): the hotspot profile plus two opt-in commissioning settings. Not used by the Pi,
+# the capture node or the live run; pass it explicitly:
+#   main.py --mode build-twin --config config/profiles/hotspot_build.yaml --input <recording> --output <twin>
+# Plain hotspot.yaml (one sweep per scan) drifted 13.7 m on the real stationary bench recording: build with this file.
+extends: hotspot.yaml
+live:
+  # Accelerometer bias along gravity, estimated in each build from the cart's first 2 s at rest
+  # (slam_and_twin/imu_static_init.py). Real 600 s bench data: (0.0012, -0.0010, 0.719) m/s^2; bench
+  # measurement (0.0017, -0.0010, 0.715). If the cart moves in its first second, no bias is applied and the
+  # build report says why (commissioning.imu_static_init).
+  imu_accel_bias: auto
+mapping:
+  # Four raw L2 sweeps (~0.33 s, ~21k returns) per registered scan: about 3x faster and denser scans.
+  # With the bias above the in-scan IMU error is ~2 mm (42 mm without it) on the real bench recording.
+  commissioning_sweeps_per_scan: 4

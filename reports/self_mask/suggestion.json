@@ -1,0 +1,76 @@
+{
+  "tool": "tools/suggest_self_mask.py",
+  "suggestion_only": true,
+  "evidence": "Suggestion only, from one parked recording; the method is validated on synthetic recordings only until it has been run on the real rig. Review the boxes and the far-scene count before enabling the mask.",
+  "recording": "C:\\Users\\user\\aethertwin_rec\\self_mask_parked",
+  "frame": "lidar",
+  "frames_used": 1435,
+  "invalid_returns_ignored": 0,
+  "persistence_windows": 1435,
+  "parameters": {
+    "radius_m": 0.8,
+    "voxel_m": 0.02,
+    "persistence": 0.5,
+    "window_frames": 1,
+    "margin_m": 0.02,
+    "lidar_height_m": 0.09,
+    "floor_clearance_m": 0.03,
+    "max_floor_tilt_deg": 15.0,
+    "link_m": 0.04,
+    "min_voxels": 4,
+    "robot_size_m": [
+      0.229,
+      0.152,
+      0.135
+    ],
+    "lidar_offset_m": [
+      -0.075,
+      0.0
+    ],
+    "skip_frames": 0,
+    "max_frames": null
+  },
+  "floor": {
+    "source": "lidar_height",
+    "normal": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "offset_m": 0.09,
+    "support_voxels": null
+  },
+  "voxels": {
+    "near_hit": 336,
+    "persistent": 0,
+    "floor": 0,
+    "body": 0,
+    "clusters": 0,
+    "merges": 0,
+    "dropped_clusters": []
+  },
+  "boxes": [],
+  "footprint": {
+    "min": [
+      -0.03950000000000001,
+      -0.076,
+      -0.09
+    ],
+    "max": [
+      0.1895,
+      0.076,
+      0.04500000000000001
+    ],
+    "tolerance_m": 0.04,
+    "z_checked": true
+  },
+  "lidar_self_mask": {
+    "enabled": true,
+    "min_range": 0.0,
+    "boxes": []
+  },
+  "warnings": [
+    "no persistent body returns above the floor: nothing to suggest"
+  ],
+  "removal": null
+}

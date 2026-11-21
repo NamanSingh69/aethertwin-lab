@@ -12,6 +12,13 @@ from scipy.optimize import linear_sum_assignment
 from scipy.stats import chi2
 from core.contracts import Detection3D,TrackedEntity3D,SemanticClass
 from .geometry import OBB,generalized_iou_3d
+from functools import lru_cache
+
+
+@lru_cache(maxsize=64)
+def _gate(probability,dimension):
+    """Mahalanobis gate; chi2.ppf is slow and was recomputed for every track-detection pair."""
+    return float(chi2.ppf(probability,dimension))
 
 
 def transition_and_noise(dt,model="ca",spectral_density=.8):
@@ -54,15 +61,23 @@ class _Track:
     last_seen: float
     hits: int=1
     missed: int=0
+    votes: tuple=()     # C47: per observed frame, the argmax of the smoothed probabilities (last n only)
+    reported: int=-1    # C47: the persisted class reported for this track (-1 before the first report)
 
 
 class KalmanMultiObjectTracker:
     def __init__(self,model="ca",max_age=1.,position_noise=.08,
                  process_noise=.8,gate_probability=.99,min_hits=1,
-                 weights=(1.,2.,.5)):
+                 weights=(1.,2.,.5),person_confirm_frames=1,person_confirm_window=1):
         if model not in ("ca","cv"): raise ValueError("Unknown motion model")
         if max_age<=0 or min_hits<1 or not 0<gate_probability<1:
             raise ValueError("Invalid tracker lifetime/gate")
+        # C47 (opt-in, BEHAVIOUR-CHANGING when k>1, APPROXIMATE as a person filter): report HUMAN_PEDESTRIAN only after
+        # it won >= k of the track's last n observed frames; before that the track keeps its previously reported class
+        # (a new track: its most probable non-person class; SemanticClass has no "unknown"). k=1 is the code before C47.
+        k,n=int(person_confirm_frames),int(person_confirm_window)
+        if k<1 or n<1 or (k>1 and n<k): raise ValueError("person_confirm_frames must be >= 1 and <= person_confirm_window")
+        self.person_confirm_frames=k; self.person_confirm_window=n
         self.model=model; self.dimension=9 if model=="ca" else 6
         self.max_age=float(max_age); self.position_noise=float(position_noise)
         self.process_noise=float(process_noise); self.gate_probability=gate_probability
@@ -111,7 +126,7 @@ class KalmanMultiObjectTracker:
                 z,H,R=_measurement(d,dt,self.dimension,self.position_noise)
                 residual=z-H@t.x; S=H@t.covariance@H.T+R
                 mahal=float(residual@np.linalg.solve(S,residual))
-                if mahal>chi2.ppf(self.gate_probability,len(z)): continue
+                if mahal>_gate(float(self.gate_probability),len(z)): continue
                 b=OBB(d.position,np.maximum(d.size,.01)/2,d.rotation)
                 norm=np.linalg.norm(t.embedding)*np.linalg.norm(d.embedding)
                 cosine=(1-float(t.embedding@d.embedding)/norm) if norm>1e-12 and len(t.embedding)==len(d.embedding) else 1.
@@ -137,7 +152,16 @@ class KalmanMultiObjectTracker:
                 matched_detections.add(j)
         self.tracks.extend(self._create(d,timestamp,dt) for j,d in enumerate(detections) if j not in matched_detections)
         self.timestamp=timestamp
+        if self.person_confirm_frames>1:
+            for t in self.tracks: self._persist_class(t)
         return [self._snapshot(t) for t in self.tracks if t.hits>=self.min_hits]
+
+    def _persist_class(self,t):
+        """C47: votes count observed frames only (created or matched now); a predicted frame adds no class evidence."""
+        person=int(SemanticClass.HUMAN_PEDESTRIAN); raw=int(t.probabilities.argmax())
+        if not t.missed: t.votes=(t.votes+(raw,))[-self.person_confirm_window:]
+        if raw!=person or t.votes.count(person)>=self.person_confirm_frames: t.reported=raw
+        elif t.reported<0: t.reported=int(np.where(np.arange(len(t.probabilities))==person,-np.inf,t.probabilities).argmax())
 
     def _snapshot(self,t):
         d=t.detection; position=t.x[:3].copy(); velocity=t.x[3:6].copy()
@@ -147,8 +171,9 @@ class KalmanMultiObjectTracker:
         horizon=np.arange(0.,2.01,.2)
         trajectory=position+horizon[:,None]*velocity+.5*horizon[:,None]**2*acceleration
         shift=position-np.asarray(d.position)
-        return TrackedEntity3D(t.identifier,SemanticClass(int(t.probabilities.argmax())),
-            t.probabilities.copy(),float(t.probabilities.max()),position,velocity,
+        label=int(t.probabilities.argmax()) if self.person_confirm_frames==1 else t.reported
+        return TrackedEntity3D(t.identifier,SemanticClass(label),
+            t.probabilities.copy(),float(t.probabilities[label]),position,velocity,
             acceleration,np.asarray(d.flow).copy(),float(np.linalg.norm(velocity)),
             float(np.arctan2(velocity[1],velocity[0])),corners.min(0),corners.max(0),
             corners,np.asarray(d.points)+shift,np.asarray(d.eigen).copy(),float("inf"),

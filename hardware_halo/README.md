@@ -61,7 +61,9 @@ All runtime metadata keeps `physical_verified:false` until measured testing.
 
 The host opens only the configured port and sends ASCII
 `AETHER_HALO_HELLO 1\n`. It sends no binary telemetry until the receiver replies
-with the exact line `AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_DEVKIT_V1`.
+with one exact line for a supported board build: `AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_DEVKIT_V1`
+or `AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_S3_DEVKITC` (`protocol.IDENTITIES`; `status()` reports
+`board_profile`).
 Hello repeats at most every 250 ms during the bounded handshake, accommodating
 USB-board startup. An incompatible device is closed and reported visibly;
 virtual status continues. Firmware also refuses binary packets before handshake.
@@ -84,19 +86,43 @@ All multibyte fields are little-endian:
 
 Sequence acceptance uses `0 < (new - old) mod 65536 < 32768`, including wrap
 from 65535 to 0. Duplicate, old, corrupt and unsupported packets do not refresh
-the link watchdog. A new identity handshake resets the receiver sequence session.
+the link watchdog. A new identity handshake resets the receiver sequence session;
+if packets are still fresh it keeps the displayed state and link watchdog, so a
+host re-identifying does not flash the watchdog colour.
+
+Receiver robustness (the state machine lives in `halo_protocol.h` and is exercised
+by the desktop cross-check): a partial packet older than 20 ms is discarded, so a
+lost byte never joins two packets; a 16-byte block that fails validation is
+rescanned from its next `A7 54` instead of being dropped whole, so one stray byte
+costs at most one packet. The loop runs under the ESP32 task watchdog
+(`enableLoopWDT()`), and every OLED I²C transaction is bounded (`Wire.setTimeOut(20)`).
+
+Device heartbeat: once paired, the firmware prints
+`AETHER_HALO_ALIVE <uptime_ms> <accepted> <rejected> <timeouts>` every second.
+After a connection has shown one, the host treats 3 s of silence as a hung or
+reset board, closes the port and re-identifies (`status()` reports
+`device_heartbeat`, `heartbeat_age_seconds` and `heartbeat_timeouts`). Firmware
+without heartbeats still works; it is just not watched this way.
 There are no variable-length command or actuation fields.
 
 ## Firmware and explicit wiring profile
 
-`firmware/aether_halo` targets a classic ESP32 DevKit V1 with ESP32-WROOM-32,
-Arduino-ESP32 core **3.3.12**, FQBN `esp32:esp32:esp32`:
+`firmware/aether_halo` is one sketch with board builds for two boards, Arduino-ESP32 core **3.3.12**
+(`build_firmware.py --board esp32|esp32s3|esp32s3-usb`):
 
-| Signal | Pin/profile |
-|---|---|
-| 24-pixel WS2812B data, GRB wire order | GPIO18, hardware RMT at 10 MHz |
-| Optional SSD1306 128×64 I²C OLED | Address `0x3C`, SDA21, SCL22, 400 kHz |
-| Host telemetry | USB UART, 115200 baud |
+| Signal | ESP32 DevKit V1 (ESP32-WROOM-32), `esp32:esp32:esp32` | ESP32-S3 DevKitC, `esp32:esp32:esp32s3:CDCOnBoot=default` |
+|---|---|---|
+| 24-pixel WS2812B data, GRB wire order | GPIO18, hardware RMT at 10 MHz | GPIO18, hardware RMT at 10 MHz |
+| Optional SSD1306 128×64 I²C OLED, `0x3C`, 400 kHz | SDA21, SCL22 | SDA8, SCL9 (the S3 has no GPIO22) |
+| Host telemetry, 115200 baud | The board's USB port (UART bridge) | The USB-C port labelled **UART** (UART0; USB CDC stays off) |
+
+A third build, `--board esp32s3-usb` (`esp32:esp32:esp32s3:CDCOnBoot=cdc`), is the same S3 wiring
+with host telemetry on the board's native USB port (USB Serial/JTAG) instead.
+
+The S3 board used on the bring-up rig (ESP32-S3 rev v0.2, 16 MB flash, 8 MB PSRAM, CH343 bridge)
+was identified with esptool's read-only `chip-id`/`flash-id`, flashed with the `esp32s3` build on
+COM7 and then with the `esp32s3-usb` build on its native port (COM8, current); the serial link test
+passed on both, the LEDs are not verified: [`reports/hardware/halo/`](../reports/hardware/halo/README.md).
 
 The ring requires an appropriate regulated LED supply and common ground; do
 not assume a development board can power a ring at full brightness. Match the
@@ -125,7 +151,8 @@ No global PATH/Arduino installation is changed. The script issues core-install
 and compile commands only, with post-install scripts skipped; there is no
 upload, erase, flash or board-list step.
 Compiled artifacts stay in that workspace tool directory. Source hashes,
-binary hashes and compile result are retained in `firmware_verification.json`.
+binary hashes and compile result are retained in `firmware_verification.json` (ESP32) and
+`firmware_verification_esp32s3.json` (ESP32-S3).
 
 Tests cover the standard CRC vector, every packet-byte corruption, sequence
 wrap/rejection, watchdog expiry, rotated-rig directions, near-boundary LED

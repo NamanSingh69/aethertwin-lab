@@ -5,6 +5,14 @@ HERE=Path(__file__).resolve().parent
 CLI_VERSION='1.5.1'
 CORE_VERSION='3.3.12'
 FQBN='esp32:esp32:esp32'
+# One sketch, built per board. The S3 keeps USB CDC off so Serial is UART0 (the board's "UART" USB port).
+BOARDS={'esp32':{'fqbn':FQBN,'board_profile':'ESP32_DEVKIT_V1','gpio':{'ws2812_grb_24':18,'oled_sda':21,'oled_scl':22},
+                 'verification':'firmware_verification.json','log':'firmware_compile.log'},
+        'esp32s3':{'fqbn':'esp32:esp32:esp32s3:CDCOnBoot=default','board_profile':'ESP32_S3_DEVKITC','gpio':{'ws2812_grb_24':18,'oled_sda':8,'oled_scl':9},
+                   'verification':'firmware_verification_esp32s3.json','log':'firmware_compile_esp32s3.log'},
+        # Same board, host link on the S3's native USB port ("USB"/"OTG"; USB Serial/JTAG, VID 303A) instead of UART0.
+        'esp32s3-usb':{'fqbn':'esp32:esp32:esp32s3:CDCOnBoot=cdc','board_profile':'ESP32_S3_DEVKITC','gpio':{'ws2812_grb_24':18,'oled_sda':8,'oled_scl':9},
+                       'verification':'firmware_verification_esp32s3_usb.json','log':'firmware_compile_esp32s3_usb.log'}}
 INDEX='https://espressif.github.io/arduino-esp32/package_esp32_index.json'
 
 
@@ -16,7 +24,8 @@ def download(url,path):
         with urllib.request.urlopen(url,timeout=120) as response,path.open('wb') as stream:shutil.copyfileobj(response,stream)
 
 
-def build(tool_root=None,setup=False):
+def build(tool_root=None,setup=False,board='esp32'):
+    target=BOARDS[board]
     root=Path(tool_root or HERE.parents[2]/'work/halo_toolchain').resolve();root.mkdir(parents=True,exist_ok=True)
     executable=root/'cli'/('arduino-cli.exe' if sys.platform=='win32' else 'arduino-cli')
     if not executable.is_file():
@@ -48,24 +57,26 @@ def build(tool_root=None,setup=False):
     installed=next((item.get('installed_version') for item in platforms.get('platforms',[]) if item.get('id')=='esp32:esp32'),None)
     if installed!=CORE_VERSION:raise ValueError('Workspace ESP32 core version does not match the reviewed pin; run --setup')
     sources={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (HERE/'firmware/aether_halo').iterdir() if p.is_file()}
-    output=root/'compiled';output.mkdir(exist_ok=True)
-    command=prefix+['compile','--fqbn',FQBN,'--build-path',str(root/'build'),'--output-dir',str(output),str(HERE/'firmware/aether_halo')]
+    suffix='' if board=='esp32' else '_'+board.replace('-','_')
+    output=root/f'compiled{suffix}';output.mkdir(exist_ok=True)
+    command=prefix+['compile','--fqbn',target['fqbn'],'--build-path',str(root/f'build{suffix}'),'--output-dir',str(output),str(HERE/'firmware/aether_halo')]
     result=subprocess.run(command,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
-    (root/'compile.log').write_text(result.stdout,encoding='utf-8');(HERE/'firmware_compile.log').write_text(result.stdout,encoding='utf-8');print(result.stdout)
+    (root/f'compile{suffix}.log').write_text(result.stdout,encoding='utf-8');(HERE/target['log']).write_text(result.stdout,encoding='utf-8');print(result.stdout)
     source_changed=sources!={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (HERE/'firmware/aether_halo').iterdir() if p.is_file()}
     flash=re.search(r'Sketch uses (\d+) bytes',result.stdout);ram=re.search(r'Global variables use (\d+) bytes',result.stdout)
     report={'schema_version':1,'status':'passed' if result.returncode==0 and not source_changed else 'failed','compile_only':True,'flashed':False,
-        'hardware_verified':False,'cli_version':CLI_VERSION,'esp32_core_version':CORE_VERSION,'fqbn':FQBN,
-        'board_profile':'ESP32_DEVKIT_V1','gpio':{'ws2812_grb_24':18,'oled_sda':21,'oled_scl':22},
-        'platform':platform.platform(),'tool_root':str(root),'compile_log':'firmware_compile.log',
+        'hardware_verified':False,'cli_version':CLI_VERSION,'esp32_core_version':CORE_VERSION,'fqbn':target['fqbn'],
+        'board_profile':target['board_profile'],'gpio':target['gpio'],
+        'platform':platform.platform(),'tool_root':str(root),'compile_log':target['log'],
         'sources':sources,'source_changed_during_compile':source_changed,'cli_binary_sha256':hashlib.sha256(executable.read_bytes()).hexdigest(),
         'flash_bytes':int(flash.group(1)) if flash else None,'global_ram_bytes':int(ram.group(1)) if ram else None,
         'binaries':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in output.glob('*.bin')}}
-    (HERE/'firmware_verification.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
-    if result.returncode or source_changed:raise RuntimeError('Official ESP32 firmware compilation failed or source changed during compilation; see firmware_compile.log')
+    (HERE/target['verification']).write_text(json.dumps(report,indent=2),encoding='utf-8')
+    if result.returncode or source_changed:raise RuntimeError(f"Official ESP32 firmware compilation failed or source changed during compilation; see {target['log']}")
     return report
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--tool-root',type=Path);parser.add_argument('--setup',action='store_true')
-    args=parser.parse_args();build(args.tool_root,args.setup)
+    parser.add_argument('--board',choices=sorted(BOARDS),default='esp32',help='esp32 (DevKit V1, ESP32-WROOM-32), esp32s3 (ESP32-S3 DevKitC, UART port) or esp32s3-usb (same board, native USB port)')
+    args=parser.parse_args();build(args.tool_root,args.setup,args.board)

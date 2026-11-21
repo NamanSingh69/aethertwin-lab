@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "windows_cuda_lock_validation",
+  "label": "development laptop (RTX 4070 Laptop GPU), NOT the A2000 workstation; simulation only, no sensors",
+  "date_utc": "2026-11-01T21:09:08.461470+00:00",
+  "environment": {
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "python": "3.12.10",
+    "numpy": "2.5.4",
+    "torch": "2.14.1+cu126",
+    "torch_cuda": "12.6",
+    "cudnn": 91002,
+    "nvidia_smi": "NVIDIA GeForce RTX 4070 Laptop GPU, 8188 MiB, 572.60"
+  },
+  "lock": "requirements-windows-cuda.lock",
+  "install": "clean venv, pip install --no-index --require-hashes from wheels downloaded with --require-hashes; pip check: no broken requirements",
+  "gpu_smoke": "512x512 matmul on cuda matched CPU within 6.1e-05",
+  "pytest": "369 passed, 2 skipped (same suite as main at efd1e77)",
+  "pipeline": {
+    "command": "main.py --mode sim --device {cuda|cpu} --headless --max-frames 30 (seed from config/system_config.yaml)",
+    "runs": {
+      "cuda": {
+        "frames": 30,
+        "wall_seconds": 20.578999999997905,
+        "end_to_end_fps": 1.4577967831285803,
+        "mean_processing_fps": 2.155275950632865,
+        "module_latency_ms": {
+          "localization": {
+            "p50": 11.502699999255128,
+            "p95": 17.656314990017556
+          },
+          "occupancy": {
+            "p50": 117.51275000278838,
+            "p95": 129.89271499682218
+          },
+          "perception_tracking": {
+            "p50": 133.93534999340773,
+            "p95": 202.5591250130674
+          },
+          "planning": {
+            "p50": 78.80185000249185,
+            "p95": 469.5375400056944
+          },
+          "risk_fields": {
+            "p50": 0.7261999999172986,
+            "p95": 1.2961600034032015
+          }
+        }
+      },
+      "cpu": {
+        "frames": 30,
+        "wall_seconds": 21.5,
+        "end_to_end_fps": 1.3953488372093024,
+        "mean_processing_fps": 2.011545439382859,
+        "module_latency_ms": {
+          "localization": {
+            "p50": 11.764599999878556,
+            "p95": 15.810009997221638
+          },
+          "occupancy": {
+            "p50": 114.91820000810549,
+            "p95": 124.88320000120437
+          },
+          "perception_tracking": {
+            "p50": 221.95360000478104,
+            "p95": 239.96287000190932
+          },
+          "planning": {
+            "p50": 78.97425000555813,
+            "p95": 472.35772001004045
+          },
+          "risk_fields": {
+            "p50": 0.6763999990653247,
+            "p95": 1.5518300133408032
+          }
+        }
+      }
+    },
+    "note": "single run each (power state not recorded); occupancy and planning run on the CPU in both"
+  }
+}

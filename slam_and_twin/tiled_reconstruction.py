@@ -23,8 +23,9 @@ class DiskPointCloud:
         points=np.asarray(points,float);coords=np.floor(points/self.voxel_size).astype(np.int64)
         unique,indices,counts=np.unique(coords,axis=0,return_inverse=True,return_counts=True)
         sums=np.zeros((len(unique),3));np.add.at(sums,indices,points)
-        for key,total,n in zip(unique,sums,counts):
-            previous=np.asarray(self.cells.get(tuple(key),[0.,0.,0.,0.]));self.cells[tuple(key)]=previous+np.r_[total,n]
+        # One page visit per tile (DiskTileStore.update_many) instead of a get/set and possible eviction per voxel.
+        added=np.c_[sums,counts]
+        self.cells.update_many(unique,lambda i,key,old:added[i] if old is None else np.asarray(old)+added[i])
     def __len__(self):return len(self.cells)
     def iter_points(self,bounds=None):
         source_bounds=None

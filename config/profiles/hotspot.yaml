@@ -1,0 +1,34 @@
+# Moving cart: the L2 plugs into the Pi's Ethernet (unchanged, 192.168.1.2 <-> 192.168.1.62) and the
+# Pi reaches the laptop over the laptop's Windows Mobile Hotspot (laptop 192.168.137.1, Pi on a DHCP
+# lease such as 192.168.137.37 on wlan0). Same file on both ends:
+#   Pi:     python -m ingestion.capture_node --config config/profiles/hotspot.yaml   (binds wlan0's lease)
+#   Laptop: python -m command_center --mode live --config config/profiles/hotspot.yaml --capture-host 192.168.137.37
+# Budget: at most 5 MB/s (40 Mbit/s) offered, about half of an ASSUMED 80 Mbit/s sustained TCP on the
+# 5 GHz hotspot band; measure the real link with iperf3 first (docs/RASPBERRY_PI_WINDOWS.md). On the
+# synthetic loopback matrix this profile offers ~4.2 MB/s (34 Mbit/s), of which ~1.55 MB/s is L2 points and IMU
+# (reports/raw_transport/hotspot_codec_matrix_windows_laptop.json; not a Wi-Fi or Pi measurement).
+extends: laptop.yaml
+live:
+  source: remote
+  capture_host: null        # the Pi's lease is only known once it joins: pass --capture-host 192.168.137.N
+  # 640x400 instead of 1280x800: a quarter of the pixels. Not yet checked against the Gemini 335L's
+  # profile list; the driver refuses an unsupported profile and lists the supported ones.
+  camera_width: 640
+  camera_height: 400
+  camera_fps: 30            # keep 30: the host fuses a sweep only with a camera frame within 20 ms of its end
+  camera_color_width: 640
+  camera_color_height: 400
+  camera_color_fps: 30
+  # A calibration is measured at one image size; this profile needs its own file (same file on both ends).
+  calibration: config/calibration_extrinsics_640x400.json
+capture_node:
+  bind: null                # resolved from bind_interface; --bind ADDRESS overrides both
+  bind_interface: wlan0
+  allowed_peers: [192.168.137.1]
+  depth_codec: zlib         # lossless, ~2x smaller on synthetic depth; ~8 ms/frame on the i9 (Pi slower, measure)
+  depth_level: 1
+  color_codec: jpeg         # lossy, size bounded by quality; device passthrough may forward uncompressed RGB
+  color_quality: 80
+  camera_forward: sweep     # send only frames within 20 ms of a predicted sweep end (~10 of 30 per second)
+  camera_sweep_window_seconds: 0.02
+  fragment_bytes: 65536     # IMU waits behind at most ~13 ms of camera at 5 MB/s (1 MiB would be ~200 ms)

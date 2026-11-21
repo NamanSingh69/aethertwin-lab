@@ -1,10 +1,16 @@
 name: Software checks
 
+# CI runs on the laptop: `python tools/local_ci.py` (Windows suite natively, `--linux` for the Ubuntu suite in WSL,
+# `--e2e` for the mocked Playwright suite). GitHub Actions minutes are the free tier (2,000 a month; a Windows minute
+# bills as two on this private repo), so this workflow never starts by itself: run it by hand only when a remote check
+# is really needed, e.g. `gh workflow run ci.yml --ref <branch>` (add `-f windows=true` for the Windows job).
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
+    inputs:
+      windows:
+        description: Also run the Python suite on windows-latest (bills 2x)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -18,11 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: windows-latest
-            lock: requirements-windows.lock
-          - os: ubuntu-24.04
-            lock: requirements-ubuntu.lock
+        include: ${{ fromJSON(inputs.windows && '[{"os":"windows-latest","lock":"requirements-windows.lock"},{"os":"ubuntu-24.04","lock":"requirements-ubuntu.lock"}]' || '[{"os":"ubuntu-24.04","lock":"requirements-ubuntu.lock"}]') }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:

@@ -8,13 +8,21 @@ from core.se3_math import inverse,transform_points
 
 
 class ClockAligner:
-    """Affine device->host time fit; exposes residuals rather than claiming HW sync."""
-    def __init__(self,window=200):self.samples=deque(maxlen=window);self.scale=1.;self.offset=0.;self.residual=0.
+    """Affine device->host time fit; exposes residuals rather than claiming HW sync.
+
+    The slope (drift) is fitted and checked only once the samples span ``min_span`` seconds of device time:
+    over a short span, host read jitter dominates (on the Pi, 4 frames ~0.1 s apart with tens of ms of
+    scheduling jitter under encoding load gave slopes far outside 1 +/- 1 %). Until then the fit is offset-only."""
+    def __init__(self,window=200,min_span=2.):self.samples=deque(maxlen=window);self.scale=1.;self.offset=0.;self.residual=0.;self.min_span=float(min_span)
     def update(self,device_time,host_time):
+        if self.samples and device_time<self.samples[-1][0]:raise ValueError("Device clock reset or implausible drift")
         self.samples.append((device_time,host_time))
+        data=np.asarray(self.samples);x=data[:,0];y=data[:,1]
         if len(self.samples)==1:self.offset=host_time-device_time
-        elif len(self.samples)>3:
-            data=np.asarray(self.samples);x=data[:,0];y=data[:,1];x0=x.mean();y0=y.mean()
+        elif x[-1]-x[0]<self.min_span:
+            self.scale=1.;self.offset=float(np.median(y-x));self.residual=float(np.std(y-(x+self.offset)))
+        else:
+            x0=x.mean();y0=y.mean()
             slope=np.dot(x-x0,y-y0)/max(np.dot(x-x0,x-x0),1e-12)
             if not .99<slope<1.01:raise ValueError("Device clock reset or implausible drift")
             self.scale=slope;self.offset=y0-slope*x0;self.residual=float(np.std(y-(slope*x+self.offset)))
@@ -68,7 +76,10 @@ def fuse_frame(frame,semantic_features=None,stride=3,occlusion_tolerance=.08):
     if frame.rgb is None or frame.depth is None or frame.calibration is None:
         return replace(frame,diagnostics={**frame.diagnostics,"painting":"camera_unavailable"})
     painted,valid=paint_points(frame.lidar_points,frame.rgb,frame.depth,frame.calibration,semantic_features,occlusion_tolerance,frame.camera_pose_in_lidar)
-    dense=backproject_depth(frame.depth,frame.calibration,stride,frame.rgb,camera_pose_in_lidar=frame.camera_pose_in_lidar)
+    # The shared pixel-ray cache gives the same rows as backproject_depth (tests/test_perception_preprocessing.py,
+    # C31) without re-undistorting every pixel each frame. Imported here: the Pi never fuses frames.
+    from perception_ml.depth_cache import DEPTH_RAY_CACHE
+    dense=DEPTH_RAY_CACHE.backproject(frame.depth,frame.calibration,stride,frame.rgb,camera_pose_in_lidar=frame.camera_pose_in_lidar)
     return replace(frame,painted_features=painted,gemini_rgbd_cloud=dense,
                    diagnostics={**frame.diagnostics,"painted_fraction":float(valid.mean()) if len(valid) else 0.})
 

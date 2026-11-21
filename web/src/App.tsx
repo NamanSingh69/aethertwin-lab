@@ -57,6 +57,10 @@ const requestedView = parseViewParams(
   typeof window === "undefined" ? "" : window.location.search,
 );
 const QUALITY_KEY = "aethertwin.quality";
+/** Static showcase build: a recorded replay, local playback, no service or operator controls. */
+const SHOWCASE = import.meta.env.VITE_SHOWCASE === "1";
+const PLAYBACK_ACTIONS = ["pause", "resume", "step", "seek"];
+const SHOWCASE_WORKSPACES = ["Explore", "Replay"] as const;
 
 /** Saved render quality; storage can be unavailable (private mode, policy). */
 function storedQuality(): Quality {
@@ -157,6 +161,22 @@ export default function App() {
     refresh: session.refresh,
     expectAcknowledgement: session.expectAcknowledgement,
   });
+  const playback = session.playback;
+  /** Showcase playback is handled by the local player; everything else needs the service. */
+  const allowed = (action: string) =>
+    SHOWCASE
+      ? Boolean(playback) && PLAYBACK_ACTIONS.includes(action)
+      : canControl(bootstrap, action);
+  const loading = playback?.loading;
+  const loadingText = loading
+    ? `Downloading recorded data: chunk ${loading.chunk + 1} of ${loading.chunks}, ` +
+      `${Math.min(99, Math.round((100 * loading.received) / Math.max(1, loading.total)))}% of ` +
+      `${(loading.total / 1048576).toFixed(1)} MB`
+    : null;
+  const playbackCommand = (action: string, payload: unknown = {}) => {
+    if (SHOWCASE) session.player.current?.command(action, payload);
+    else void command(action, payload);
+  };
 
   // Endpoint drafts belong to one source and map revision; simulation/replay
   // pre-fill from the reported robot position and current path goal.
@@ -186,6 +206,7 @@ export default function App() {
   }, [scene, bootstrap?.source_mode, bootstrap?.map_revision, latest]);
 
   const login = async (token: string) => {
+    if (SHOWCASE) return false;
     try {
       await requestJSON("/api/v2/session", {
         method: "POST",
@@ -210,14 +231,17 @@ export default function App() {
     }
   };
 
-  const source = sourceLabel(scene, bootstrap),
+  // A showcase is always labelled a replay, whatever mode the recording reports.
+  const source = SHOWCASE ? "Replay" : sourceLabel(scene, bootstrap),
     freshness = { ageSeconds: age, transport: connection },
     warnings = sensorWarnings(scene, freshness),
-    paused = Boolean(bootstrap?.paused ?? scene?.diagnostics.paused),
+    paused = SHOWCASE
+      ? Boolean(playback?.paused)
+      : Boolean(bootstrap?.paused ?? scene?.diagnostics.paused),
     stale = age !== null && age > STALE_SECONDS;
   const options = sourceOptions(bootstrap);
   const sourceDisabled =
-    busy || !canControl(bootstrap, "select_source") || !options.length;
+    busy || !allowed("select_source") || !options.length;
   const chooseSource = (option: (typeof options)[number]) =>
     void command("select_source", sourcePayload(option));
   const liveAvailable = sourceAvailable(bootstrap, "live");
@@ -232,17 +256,18 @@ export default function App() {
     typeof bootstrap.identity.calibration_id === "string"
       ? bootstrap.identity.calibration_id
       : null);
-  const canSeek = canControl(bootstrap, "seek") && source === "Replay";
+  const canSeek = SHOWCASE ? Boolean(playback) : allowed("seek") && source === "Replay";
   const replay = bootstrap?.replay;
-  const currentFrame =
-    scene?.diagnostics.playback?.frame_index ??
+  const currentFrame = SHOWCASE
+    ? (playback?.frame ?? 0)
+    : scene?.diagnostics.playback?.frame_index ??
     replay?.current_frame ??
     scene?.frame_id ??
     0;
   const hasPath =
     (latest.current?.arrays.path?.length ?? 0) > 3 &&
     ["ok", "success"].includes(scene?.trajectory_status ?? "");
-  const seek = (frame: number) => void command("seek", { frame_index: frame });
+  const seek = (frame: number) => playbackCommand("seek", { frame_index: frame });
   const chooseMode = (tab: string) => {
     setMode(tab);
     if (tab === "Live" && bootstrap?.source_mode !== "live" && liveAvailable)
@@ -276,8 +301,8 @@ export default function App() {
     }
     if (key === " ") {
       const action = paused ? "resume" : "pause";
-      if (busy || !canControl(bootstrap, action)) return false;
-      void command(action);
+      if (busy || !allowed(action)) return false;
+      playbackCommand(action);
       return true;
     }
     if (/^[1-9]$/.test(key)) {
@@ -334,6 +359,7 @@ export default function App() {
         hardwareStatus={bootstrap?.hardware_status}
         role={bootstrap?.role}
         onToggleDock={() => setLeftOpen((v) => !v)}
+        workspaces={SHOWCASE ? SHOWCASE_WORKSPACES : undefined}
       />
       <LayerDock
         open={leftOpen}
@@ -365,13 +391,14 @@ export default function App() {
         onCutaway={setCutaway}
         routeOpen={routeOpen}
         onToggleRoute={() => setRouteOpen((v) => !v)}
-        zonesDisabled={!bootstrap}
+        zonesDisabled={SHOWCASE || !bootstrap}
         zoneCount={scene?.geofences?.length ?? 0}
         onOpenZones={() => setZonesOpen(true)}
         graphOpen={graphOpen}
         onToggleGraph={() => setGraphOpen((v) => !v)}
         mapRevision={bootstrap?.map_revision}
         capture={view.appearance}
+        workspaces={SHOWCASE ? SHOWCASE_WORKSPACES : undefined}
       />
       <main className="spatial-main">
         <div className="viewport" ref={host} />
@@ -383,6 +410,7 @@ export default function App() {
           quality={quality}
           onQuality={setQuality}
           effects={view.metrics?.effects}
+          resolvedQuality={view.metrics?.quality}
           onHelp={() => setHelpOpen(true)}
         />
         <ViewportStats
@@ -391,7 +419,13 @@ export default function App() {
           stale={stale}
           metrics={view.metrics}
         />
-        {!scene && <SceneEmpty error={session.error} onRetry={session.retry} />}
+        {!scene && (
+          <SceneEmpty
+            error={session.error}
+            onRetry={session.retry}
+            showcase={SHOWCASE ? { progress: loadingText } : undefined}
+          />
+        )}
         <ViewportWarnings
           warnings={warnings}
           sourceError={bootstrap?.error}
@@ -422,7 +456,7 @@ export default function App() {
               !busy &&
               finitePoint(start) &&
               finitePoint(goal) &&
-              canControl(bootstrap, "set_start_goal")
+              allowed("set_start_goal")
             }
             onPlan={() => void requestRoute()}
             hasPath={hasPath}
@@ -430,7 +464,7 @@ export default function App() {
             onClose={closeRoute}
           />
         )}
-        {mode === "Commission" && (
+        {!SHOWCASE && mode === "Commission" && (
           <CommissioningPanel
             role={bootstrap?.role}
             csrfToken={bootstrap?.csrf_token}
@@ -471,20 +505,25 @@ export default function App() {
       />
       <PlaybackBar
         source={source}
-        timestamp={scene?.timestamp}
+        timestamp={SHOWCASE ? playback?.t : scene?.timestamp}
         paused={paused}
-        canToggle={!busy && canControl(bootstrap, paused ? "resume" : "pause")}
-        canStep={!busy && paused && canControl(bootstrap, "step")}
-        onToggle={() => void command(paused ? "resume" : "pause")}
-        onStep={() => void command("step")}
+        canToggle={!busy && allowed(paused ? "resume" : "pause")}
+        canStep={!busy && paused && allowed("step")}
+        onToggle={() => playbackCommand(paused ? "resume" : "pause")}
+        onStep={() => playbackCommand("step")}
         events={session.events}
-        frameCount={replay?.frame_count}
+        frameCount={SHOWCASE ? playback?.frameCount : replay?.frame_count}
         currentFrame={currentFrame}
         canSeek={canSeek}
         busy={busy}
         onSeek={seek}
         eventsOpen={eventsOpen}
         onToggleEvents={() => setEventsOpen((v) => !v)}
+        seekHint={
+          SHOWCASE
+            ? (loadingText ?? "Seek snaps to the keyframe that starts each recorded chunk")
+            : undefined
+        }
         processingFps={scene?.diagnostics.end_to_end_fps ?? scene?.fps}
       />
       {eventsOpen && (
@@ -519,7 +558,7 @@ export default function App() {
           }
         />
       )}
-      {session.error && !bootstrap && <LoginPanel onLogin={login} />}
+      {!SHOWCASE && session.error && !bootstrap && <LoginPanel onLogin={login} />}
     </div>
   );
 }

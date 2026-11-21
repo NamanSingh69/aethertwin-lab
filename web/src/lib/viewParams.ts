@@ -3,9 +3,12 @@ import { initialLayers, type LayerName, type Layers } from "./types";
 export const VIEW_PRESETS = ["isometric", "top", "sensor"] as const;
 export type ViewPreset = (typeof VIEW_PRESETS)[number];
 
+/** Where the studio lives: the site root, except in the static showcase, whose root is the landing page. */
+export const STUDIO_HREF = import.meta.env.VITE_SHOWCASE === "1" ? "./replay.html" : "./";
+
 /** Studio URL that opens with only `layers` visible and the camera at `view`. */
 export function studioLink(layers: LayerName[], view: ViewPreset) {
-  return `./?${new URLSearchParams({ layers: layers.join(","), view })}`;
+  return `${STUDIO_HREF}?${new URLSearchParams({ layers: layers.join(","), view })}`;
 }
 
 /** Reads `?layers=a,b&view=top`; unknown names are ignored, absent params keep the defaults. */

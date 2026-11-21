@@ -8,7 +8,11 @@ export const WORKSPACES = ["Explore", "Live", "Replay", "Commission"] as const;
 function connectionText(connection: Connection, paused: boolean, stale: boolean) {
   if (connection === "streaming")
     return paused ? "Paused" : stale ? "Stale observations" : "Connected";
+  // Recorded data is never "Connected": the static showcase has no live service.
+  if (connection === "replay")
+    return paused ? "Recorded replay · paused" : "Recorded replay";
   return {
+    error: "Decode error",
     fallback: "Snapshot fallback",
     resync: "Resynchronizing",
     offline: "Disconnected",
@@ -39,6 +43,7 @@ export function TopBar({
   hardwareStatus,
   role,
   onToggleDock,
+  workspaces = WORKSPACES,
 }: {
   source: string;
   options: SourceOption[];
@@ -52,6 +57,7 @@ export function TopBar({
   hardwareStatus: string | undefined;
   role: string | undefined;
   onToggleDock: () => void;
+  workspaces?: readonly string[];
 }) {
   return (
     <header className="topbar">
@@ -89,7 +95,7 @@ export function TopBar({
         <Icon name="down" size={14} />
       </label>
       <nav className="main-nav" aria-label="Workspace">
-        {WORKSPACES.map((tab) => (
+        {workspaces.map((tab) => (
           <button
             className={mode === tab ? "active" : ""}
             key={tab}
@@ -105,7 +111,7 @@ export function TopBar({
       <div className="header-status">
         <span className={`connection-pill ${stale ? "stale" : ""}`}>
           <span
-            className={`dot ${connection === "streaming" && !stale ? "mint" : "amber"}`}
+            className={`dot ${(connection === "streaming" || connection === "replay") && !stale ? "mint" : "amber"}`}
           />
           {connectionText(connection, paused, stale)}
         </span>

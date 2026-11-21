@@ -2,11 +2,14 @@
 from collections import deque
 import copy
 import threading,time
-from .protocol import HELLO,IDENTITY,encode_packet
+from .protocol import HELLO,PROFILE_BY_IDENTITY,encode_packet
 from .state import halo_state
 
 # Device diagnostics after the handshake: bounded line buffer, only firmware error lines are kept.
 DEVICE_ERROR_PREFIX=b'AETHER_HALO_ERROR';MAX_DEVICE_LINE=256
+# Firmware heartbeat: 'AETHER_HALO_ALIVE <uptime_ms> <accepted> <rejected> <timeouts>' once a second.
+# Once a connection has shown one, silence for HEARTBEAT_TIMEOUT_SECONDS means a hung or reset board.
+DEVICE_ALIVE_PREFIX=b'AETHER_HALO_ALIVE';HEARTBEAT_TIMEOUT_SECONDS=3.
 # Reconnect backoff after a lost link or a port that is missing/busy (never after a wrong device identity).
 RECONNECT_MIN_SECONDS=.5;RECONNECT_MAX_SECONDS=8.
 
@@ -24,8 +27,9 @@ class HaloController:
         halo_state(None,**self.options)
         self._snapshot=None;self._lock=threading.Lock();self._stop=threading.Event();self._serial=None
         self._updates=deque(maxlen=128);self._last_identity=None;self._sequence=0;self._sent=0;self._ticks=0
-        self._connected=False;self._compatible=False;self._error=None;self._virtual=halo_state(None,**self.options)
+        self._connected=False;self._compatible=False;self._error=None;self._virtual=halo_state(None,**self.options);self._profile=None
         self._device_error=None;self._received=bytearray();self._connections=0
+        self._heartbeat=None;self._heartbeat_at=None;self._heartbeat_timeouts=0
         self._thread=threading.Thread(target=self._run,name='aether-halo-status',daemon=False);self._thread.start()
         self._transport_thread=None
         if self.enabled:
@@ -57,8 +61,10 @@ class HaloController:
                     if len(buffer)>1024:raise RuntimeError('Halo handshake exceeded bounded response size')
                     while b'\n' in buffer:
                         line,_,remaining=buffer.partition(b'\n');buffer=bytearray(remaining)
-                        if line.rstrip(b'\r')==IDENTITY:
-                            with self._lock:self._compatible=True;self._connected=True;self._connections+=1
+                        profile=PROFILE_BY_IDENTITY.get(bytes(line.rstrip(b'\r')))
+                        if profile is not None:
+                            with self._lock:
+                                self._compatible=True;self._connected=True;self._connections+=1;self._heartbeat_at=None;self._profile=profile
                             self._received=bytearray(buffer);return transport
                 self._stop.wait(.01)
             raise RuntimeError('Configured serial device did not identify as the compatible 24-pixel Halo')
@@ -77,7 +83,18 @@ class HaloController:
             line,_,remaining=self._received.partition(b'\n');self._received=bytearray(remaining)
             if line.startswith(DEVICE_ERROR_PREFIX):
                 with self._lock:self._device_error=line.rstrip(b'\r').decode('ascii','replace')[:120]
+            elif line.startswith(DEVICE_ALIVE_PREFIX):
+                fields=line.rstrip(b'\r').split()[1:]
+                if len(fields)==4 and all(field.isdigit() for field in fields):
+                    values=[int(field) for field in fields]
+                    with self._lock:
+                        self._heartbeat=dict(zip(('device_uptime_ms','accepted_packets','rejected_blocks','interbyte_timeouts'),values))
+                        self._heartbeat_at=time.monotonic()
         if len(self._received)>MAX_DEVICE_LINE:self._received.clear()
+        with self._lock:heartbeat_at=self._heartbeat_at
+        if heartbeat_at is not None and time.monotonic()-heartbeat_at>HEARTBEAT_TIMEOUT_SECONDS:
+            with self._lock:self._heartbeat_timeouts+=1
+            raise RuntimeError('Halo stopped sending heartbeats (hung or reset board); re-identifying')
     def _run_transport(self):
         retry=self.enabled;retry_at=0.;backoff=RECONNECT_MIN_SECONDS
         try:
@@ -127,12 +144,15 @@ class HaloController:
     def status(self):
         with self._lock:
             updates=list(self._updates);virtual=copy.deepcopy(self._virtual)
-            connected,compatible,error,device_error=self._connected,self._compatible,self._error,self._device_error
+            connected,compatible,error,device_error,profile=self._connected,self._compatible,self._error,self._device_error,self._profile
             sent,ticks,sequence,connections=self._sent,self._ticks,self._sequence,self._connections
+            heartbeat,heartbeat_at,heartbeat_timeouts=copy.deepcopy(self._heartbeat),self._heartbeat_at,self._heartbeat_timeouts
         source_hz=(len(updates)-1)/(updates[-1]-updates[0]) if len(updates)>1 and updates[-1]>updates[0] and time.monotonic()-updates[-1]<self.options['watchdog_ms']/1000 else 0.
-        return {'enabled':self.enabled,'connected':connected,'compatible':compatible,'port':self.port if self.enabled else None,
+        return {'enabled':self.enabled,'connected':connected,'compatible':compatible,'board_profile':profile,'port':self.port if self.enabled else None,
             'status_hz':self.hz,'source_update_hz':source_hz,'packets_sent':sent,'status_ticks':ticks,
             'next_sequence':sequence,'last_error':error,'last_device_error':device_error,'connections':connections,
+            'device_heartbeat':heartbeat,'heartbeat_age_seconds':None if heartbeat_at is None else time.monotonic()-heartbeat_at,
+            'heartbeat_timeouts':heartbeat_timeouts,
             'virtual':virtual,'hardware_verified':False}
     def close(self):
         self._stop.set();self._thread.join(timeout=max(1,self.handshake_timeout+.2))

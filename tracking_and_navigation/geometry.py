@@ -13,6 +13,7 @@ from scipy.spatial import ConvexHull, QhullError
 SIGNS = np.array(list(product((-1., 1.), repeat=3)))
 EDGES = [(i,j) for i in range(8) for j in range(i+1,8)
          if np.count_nonzero(SIGNS[i] != SIGNS[j]) == 1]
+_EDGE_I=np.array([i for i,_ in EDGES]);_EDGE_J=np.array([j for _,j in EDGES])
 
 
 @dataclass(frozen=True)
@@ -68,19 +69,13 @@ def obb_from_corners(corners):
 
 
 def boxes_intersect(a: OBB,b: OBB,tolerance=1e-9):
-    """The complete 15-axis separating-axis test, including edge cross axes."""
-    axes=[*a.rotation.T,*b.rotation.T]
-    axes.extend(np.cross(u,v) for u in a.rotation.T for v in b.rotation.T)
-    displacement=b.center-a.center
-    for axis in axes:
-        length=np.linalg.norm(axis)
-        if length<1e-12: continue
-        axis=axis/length
-        radius_a=np.dot(a.half_extents,np.abs(a.rotation.T@axis))
-        radius_b=np.dot(b.half_extents,np.abs(b.rotation.T@axis))
-        if abs(displacement@axis)>radius_a+radius_b+tolerance:
-            return False
-    return True
+    """The complete 15-axis separating-axis test, including edge cross axes (all axes evaluated at once)."""
+    ua=a.rotation.T;ub=b.rotation.T
+    axes=np.concatenate([ua,ub,np.cross(ua[:,None,:],ub[None,:,:]).reshape(9,3)])
+    length=np.linalg.norm(axes,axis=1);keep=length>=1e-12
+    axes=axes[keep]/length[keep,None]
+    radius_a=np.abs(axes@a.rotation)@a.half_extents;radius_b=np.abs(axes@b.rotation)@b.half_extents
+    return not bool(np.any(np.abs(axes@(b.center-a.center))>radius_a+radius_b+tolerance))
 
 
 def convex_volume(points):
@@ -98,19 +93,19 @@ def intersection_volume(a: OBB,b: OBB):
     if not boxes_intersect(a,b): return 0.
     corners_a,corners_b=a.corners,b.corners
     vertices=[*corners_a[b.contains(corners_a)],*corners_b[a.contains(corners_b)]]
-    for source,target in ((a,b),(b,a)):
-        corners=source.corners
+    for corners,source,target in ((corners_a,a,b),(corners_b,b,a)):
+        # Every (edge, plane) hit at once, in the same edge-major, plane-ascending order the per-edge loop produced.
         A,limits=target.planes()
-        for i,j in EDGES:
-            p,q=corners[i],corners[j]
-            d=q-p
-            den=A@d
-            for k in np.flatnonzero(np.abs(den)>1e-12):
-                alpha=(limits[k]-A[k]@p)/den[k]
-                if -1e-10<=alpha<=1+1e-10:
-                    v=p+np.clip(alpha,0,1)*d
-                    if target.contains(v) and source.contains(v): vertices.append(v)
+        P=corners[_EDGE_I];D=corners[_EDGE_J]-P
+        den=D@A.T;usable=np.abs(den)>1e-12
+        alpha=np.divide(limits[None,:]-P@A.T,den,out=np.zeros_like(den),where=usable)
+        hit=usable&(alpha>=-1e-10)&(alpha<=1+1e-10)
+        if hit.any():
+            edge,plane=np.nonzero(hit)
+            v=P[edge]+np.clip(alpha[edge,plane],0,1)[:,None]*D[edge]
+            vertices.extend(v[target.contains(v)&source.contains(v)])
     return min(a.volume,b.volume,convex_volume(vertices)) if vertices else 0.
+
 
 
 def generalized_iou_3d(a: OBB,b: OBB):

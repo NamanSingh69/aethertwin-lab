@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "compile_only": true,
+  "flashed": false,
+  "hardware_verified": false,
+  "cli_version": "1.5.1",
+  "esp32_core_version": "3.3.12",
+  "fqbn": "esp32:esp32:esp32s3:CDCOnBoot=cdc",
+  "board_profile": "ESP32_S3_DEVKITC",
+  "gpio": {
+    "ws2812_grb_24": 18,
+    "oled_sda": 8,
+    "oled_scl": 9
+  },
+  "platform": "Windows-11-10.0.26300-SP0",
+  "tool_root": "C:\\Users\\user\\Desktop\\Aethertwin\\.local\\halo_toolchain",
+  "compile_log": "firmware_compile_esp32s3_usb.log",
+  "sources": {
+    "aether_halo.ino": "3bbc4d891ff6dde6558037becb30b7250e5a445ab10f7fef76d234d01bbb5d1d",
+    "halo_protocol.h": "047949fcdb4e97edda6ef81bb52d5038711382ea1c11b65c554cd7196f1406ad"
+  },
+  "source_changed_during_compile": false,
+  "cli_binary_sha256": "1017de89179c3167e6b8a38ca6cc4091fa69a3cf97aafa7810f01423003f5571",
+  "flash_bytes": 323998,
+  "global_ram_bytes": 27184,
+  "binaries": {
+    "aether_halo.ino.bin": "a014b7d7142bab76728c9e215b89a2df126d9b0190653bf40390dd793f8db7ac",
+    "aether_halo.ino.bootloader.bin": "66cf6c060fc857c8ea6d6812aab8e9b27448431846426218b6fb81526b31e564",
+    "aether_halo.ino.merged.bin": "e2d5286e46c6199723ec9f5af1ccef77cbf469f3f2370c8348369e8f0b4a9195",
+    "aether_halo.ino.partitions.bin": "148b959cbff1c38aa8e1d5c0ba9d612c54997b945e56a63f41223eef650653a1"
+  }
+}

@@ -92,7 +92,8 @@ export interface Manifest {
   tiles: {
     id: string;
     bounds: Bounds;
-    lods: { url: string; distance: number; triangles: number }[];
+    /** `file` is the bare name next to the manifest (used by the static showcase). */
+    lods: { url: string; file?: string; distance: number; triangles: number }[];
   }[];
 }
 export interface Bootstrap {

@@ -1,0 +1,39 @@
+# AetherTwin capture node on the Raspberry Pi (see docs/RASPBERRY_PI_WINDOWS.md).
+# This is a TEMPLATE: the user and home placeholders are filled in with the login user that runs
+#   bash deployment/lab/pi_bootstrap.sh service      (prints the rendered unit: ... unit)
+# which installs it to /etc/systemd/system/. Do not copy it by hand: systemd rejects the placeholders.
+# Wired or hotspot: the config comes from /etc/default/aethertwin-capture, for example
+#   AETHERTWIN_CAPTURE_CONFIG=config/profiles/hotspot.yaml   (bootstrap: CAPTURE_CONFIG=... service)
+#   AETHERTWIN_CAPTURE_ARGS=--bind 192.168.137.37            (optional extra flags)
+# Logs:    journalctl -u aethertwin-capture -f   (one JSON status line every 30 s)
+[Unit]
+Description=AetherTwin capture node (Unitree L2 + Gemini 335L raw-sensor transport)
+# Start after the clock has been set: the L2 SDK and the node's epoch-to-monotonic offset are fixed at start.
+After=network-online.target time-sync.target
+Wants=network-online.target time-sync.target
+# Keep retrying while the bind address is missing (cable out, hotspot not joined yet): no start limit.
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=@USER@
+WorkingDirectory=@HOME@/aethertwin/src
+Environment=AETHERTWIN_CAPTURE_CONFIG=config/system_config.yaml
+EnvironmentFile=-/etc/default/aethertwin-capture
+ExecStart=@HOME@/aethertwin/capture-env/bin/python -m ingestion.capture_node --config ${AETHERTWIN_CAPTURE_CONFIG} --status-interval 30 $AETHERTWIN_CAPTURE_ARGS
+# The node binds one address (192.168.1.2 wired, wlan0's lease on the hotspot); until it is up, binding
+# fails and systemd retries. On the hotspot the node exits when wlan0's lease changes, to rebind.
+Restart=on-failure
+RestartSec=3
+Nice=-5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target

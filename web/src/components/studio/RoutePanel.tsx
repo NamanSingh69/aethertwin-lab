@@ -104,15 +104,18 @@ export function RoutePanel(props: {
           <Icon name="route" size={16} />
           Plan route
         </button>
-        <a
-          className={`button ghost ${props.hasPath ? "" : "disabled"}`}
-          aria-disabled={!props.hasPath}
-          href={props.hasPath ? "/api/v2/trajectory.csv" : undefined}
-          download="trajectory.csv"
-        >
-          <Icon name="download" size={15} />
-          CSV
-        </a>
+        {/* The static showcase has no service to export the trajectory from. */}
+        {import.meta.env.VITE_SHOWCASE !== "1" && (
+          <a
+            className={`button ghost ${props.hasPath ? "" : "disabled"}`}
+            aria-disabled={!props.hasPath}
+            href={props.hasPath ? "/api/v2/trajectory.csv" : undefined}
+            download="trajectory.csv"
+          >
+            <Icon name="download" size={15} />
+            CSV
+          </a>
+        )}
       </div>
       <p className="caption">
         {props.reason ||

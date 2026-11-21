@@ -115,6 +115,38 @@ export function sensorWarnings(
     )
       warnings.push("Depth camera reports zero current points.");
   }
+  const link = d.raw_transport;
+  if (link && typeof link === "object") {
+    const lost = (
+      [
+        [link.camera_missing, "camera frames"],
+        [link.camera_incomplete, "incomplete camera frames"],
+        [link.decode_errors, "undecodable camera frames"],
+        [link.cloud_missing, "LiDAR sweeps"],
+        [link.imu_missing_samples, "IMU samples"],
+      ] as const
+    ).filter(([count]) => typeof count === "number" && count > 0);
+    if (lost.length)
+      warnings.push(
+        `Pi capture link lost ${lost.map(([count, label]) => `${count} ${label}`).join(", ")} (counted; never filled in).`,
+      );
+    const restarts =
+      typeof link.connections === "number" ? link.connections - 1 : 0;
+    if (restarts > 0)
+      warnings.push(
+        `Pi capture link reconnected ${restarts} time(s)` +
+          (link.last_error ? ` (last: ${link.last_error})` : "") +
+          ".",
+      );
+    const changes =
+      typeof link.segment === "number"
+        ? link.segment - 1 - Math.max(restarts, 0)
+        : 0;
+    if (changes > 0)
+      warnings.push(
+        `Pi capture link started ${changes} new segment(s) without reconnecting (IMU break, clock or overflow); no data spans a segment boundary.`,
+      );
+  }
   if (scene?.validity?.localization === false)
     warnings.push(
       "Localization invalid; motion and navigation must remain held.",

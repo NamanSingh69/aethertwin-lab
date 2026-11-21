@@ -1,0 +1,25 @@
+{
+  "format": "int16le xyz centimetres, floor at z=0",
+  "count": 12000,
+  "total_measured_points": 61367,
+  "voxel_size_m": 0.08,
+  "min_cm": [
+    -862,
+    -344,
+    -5
+  ],
+  "max_cm": [
+    867,
+    1180,
+    363
+  ],
+  "sensor_cm": [
+    2,
+    1,
+    9
+  ],
+  "recording": "self_mask_parked",
+  "recorded": "2026-11-05",
+  "seed": 7,
+  "note": "seeded random subset of the twin's measured surface points; one viewpoint, LiDAR-only"
+}

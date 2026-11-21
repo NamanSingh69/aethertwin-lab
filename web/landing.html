@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f2efe8" />
+    <meta name="color-scheme" content="light" />
+    <title>AetherTwin · A robotics lab, measured in 3D from a hand-pushed cart</title>
+    <meta
+      name="description"
+      content="AetherTwin builds a measured 3D digital twin of a robotics lab from a Unitree L2 LiDAR and a depth camera on a Raspberry Pi 5, with tracking, risk fields and path planning in a browser studio. Measured results, what is not measured yet, and the plan for a robot that maps the lab by itself."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AetherTwin · A robotics lab, measured in 3D from a hand-pushed cart" />
+    <meta
+      property="og:description"
+      content="LiDAR + RGB-D digital twin with a browser studio. 15-minute live run on the real rig, 140 ms median per frame, no dropped snapshots. Every number says what it is and where it was measured."
+    />
+    <meta property="og:image" content="https://aethertwin-showcase.vercel.app/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" src="/src/landing/main.ts"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar" id="top">
+      <a class="wordmark" href="./" aria-label="AetherTwin home">AetherTwin</a>
+      <nav aria-label="Sections">
+        <a href="#results"><i>01</i> Results</a>
+        <a href="#pipeline"><i>02</i> Pipeline</a>
+        <a href="#rig"><i>03</i> Rig</a>
+        <a href="#practice"><i>04</i> Practice</a>
+        <a href="#roadmap"><i>05</i> Roadmap</a>
+      </nav>
+      <a class="btn small" href="./replay.html">Launch replay</a>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="frame">
+          <p class="meta-row">
+            <span>Lab digital twin</span>
+            <span>LiDAR + RGB-D</span>
+            <span>K-Explore Robotics, KIIT</span>
+            <span class="flag">Recorded 5 Nov 2026 · not live</span>
+          </p>
+          <h1 id="hero-title">A robotics lab, measured in 3D from a hand-pushed cart.</h1>
+          <div class="hero-row">
+            <p class="lede">
+              AetherTwin scans a room with a Unitree L2 LiDAR and a depth camera on a Raspberry Pi 5, streams the raw
+              data over Wi-Fi to a laptop GPU, and builds a 3D twin with tracking, risk fields and safe paths that you
+              watch in a browser. This page reports what has been measured, and what has not.
+            </p>
+            <div class="hero-actions">
+              <div class="cta">
+                <a class="btn" href="./replay.html">
+                  Launch the 3D replay
+                  <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+                </a>
+                <a class="btn line" href="./explainer.html">How it works</a>
+              </div>
+              <p class="cta-note">
+                Real sensor data from the lab, played back in the full studio. Recorded, not live. About %REPLAY_SIZE%.
+                <a href="https://github.com/NamanSingh69/aethertwin-lab" rel="noopener">Source on GitHub</a>
+              </p>
+            </div>
+          </div>
+
+          <figure class="plate" aria-labelledby="plate-caption">
+            <div class="plate-view">
+              <canvas id="twin-canvas" aria-hidden="true"></canvas>
+              <p class="plate-tag tl">Plate 1 · Lab twin, measured surface points</p>
+              <p class="plate-tag tr" id="plate-hint">Drag to orbit</p>
+              <dl class="plate-read">
+                <div><dt>Points shown</dt><dd id="read-points">12,000 of 61,367</dd></div>
+                <div><dt>Voxel</dt><dd id="read-voxel">8 cm</dd></div>
+                <div><dt>Extent</dt><dd id="read-extent">17.3 × 15.2 × 3.7 m</dd></div>
+                <div><dt>Viewpoints</dt><dd>1, stationary</dd></div>
+              </dl>
+              <div class="plate-scale" aria-hidden="true">
+                <span id="read-top">3.6 m</span>
+                <i></i>
+                <span>floor</span>
+              </div>
+            </div>
+            <figcaption id="plate-caption">
+              <b>Plate 1.</b> A subset of the surface points in the lab twin, built from one 120-second stationary
+              recording on 5 Nov 2026 (LiDAR-only). The dot marks where the cart stood; rings are every 2 m; the outline
+              is the extent of the data. Rotation and height colouring are presentation only.
+            </figcaption>
+          </figure>
+
+          <div class="stack" data-source="docs/CASE_STUDY.md" data-evidence="Python 3.12, PyTorch, Open3D, FastAPI">
+            <p id="stack-label">Built with</p>
+            <ul aria-labelledby="stack-label">
+              <li>Python 3.12</li>
+              <li>PyTorch</li>
+              <li>Open3D</li>
+              <li>FastAPI</li>
+              <li>React 19</li>
+              <li>TypeScript</li>
+              <li>Three.js</li>
+              <li>Playwright</li>
+              <li>Raspberry Pi 5</li>
+              <li>Unitree L2 LiDAR</li>
+              <li>Orbbec Gemini 336L</li>
+              <li>ESP32-S3 (serial link)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="results" aria-labelledby="results-title">
+        <div class="frame grid">
+          <header class="sec-head">
+            <p class="sec-no">01</p>
+            <p class="sec-name">Measured so far</p>
+          </header>
+          <div class="sec-body">
+            <h2 id="results-title">Six numbers, each with what it is and the conditions it was taken under.</h2>
+            <p class="intro">
+              None of these is an accuracy claim. A fit is called a fit and a rehearsal a rehearsal. What is still
+              unmeasured is listed beside the chart, not in a footnote.
+            </p>
+
+            <div class="ledger" role="table" aria-label="Measured results">
+              <div class="ledger-head" role="row">
+                <span role="columnheader">Value</span>
+                <span role="columnheader">What it is</span>
+                <span role="columnheader">Conditions</span>
+                <span role="columnheader">Source</span>
+              </div>
+              <div class="entry" role="row" data-source="reports/lab/README.md" data-evidence="0 dropped snapshots">
+                <strong role="cell">15 <small>min</small></strong>
+                <p role="cell" class="what">Live run on the real rig, end to end over Wi-Fi</p>
+                <p role="cell">5,510 frames processed, always the newest sweep (older ones are skipped by design); 0 dropped snapshots, memory flat at 1.5 to 1.6 GB. LiDAR-only.</p>
+                <cite role="cell">reports/lab <br />5 Nov 2026</cite>
+              </div>
+              <div class="entry" role="row" data-source="reports/lab/README.md" data-evidence="p50 140 ms, p95 216 ms">
+                <strong role="cell">140 <small>ms</small></strong>
+                <p role="cell" class="what">Median processing time per frame, live</p>
+                <p role="cell">p95 216 ms, about 6 frames a second. The 35 ms design target is not met.</p>
+                <cite role="cell">reports/lab <br />5 Nov 2026</cite>
+              </div>
+              <div class="entry" role="row" data-source="reports/lab/README.md" data-evidence="ICP RMSE 3.4 cm">
+                <strong role="cell">3.4 <small>cm</small></strong>
+                <p role="cell" class="what">Fit of the live scan to the twin (ICP residual)</p>
+                <p role="cell">Fitness 0.985, accepted on the first attempt. A fit, not accuracy.</p>
+                <cite role="cell">reports/lab <br />5 Nov 2026</cite>
+              </div>
+              <div class="entry" role="row" data-source="reports/lab/README.md" data-evidence="1,435 sweeps at 11.98 Hz">
+                <strong role="cell">0 <small>lost</small></strong>
+                <p role="cell" class="what">Of 1,435 LiDAR sweeps in the lab recording</p>
+                <p role="cell">120 s on the cart at 11.98 Hz, IMU at 251 Hz, a camera frame on every sweep.</p>
+                <cite role="cell">reports/lab <br />5 Nov 2026</cite>
+              </div>
+              <div class="entry" role="row" data-source="reports/rehearsal/README.md" data-evidence="p50 240 ms, p95 296 ms">
+                <strong role="cell">381 <small>to</small> 240 <small>ms</small></strong>
+                <p role="cell" class="what">Speed-ups that leave every output identical</p>
+                <p role="cell">In rehearsals on recorded real data, not live. Each change is tested against a copy of the old code.</p>
+                <cite role="cell">reports/rehearsal</cite>
+              </div>
+              <div class="entry" role="row" data-source="reports/test_suite/README.md" data-evidence="713 passed">
+                <strong role="cell">700+ <small>tests</small></strong>
+                <p role="cell" class="what">Automated Python tests</p>
+                <p role="cell">713 passed on 21 Nov 2026. Plus web unit tests and browser end-to-end runs with accessibility checks, on a local CI.</p>
+                <cite role="cell">reports/test_suite <br />21 Nov 2026</cite>
+              </div>
+            </div>
+
+            <div class="pair">
+              <figure class="fig" aria-labelledby="chart-title">
+                <figcaption>
+                  <p class="fig-no">Fig. 2</p>
+                  <h3 id="chart-title">Median processing time per frame</h3>
+                </figcaption>
+                <ol class="bars">
+                  <li style="--v: 381" data-source="reports/rehearsal/README.md" data-evidence="p50 381 ms">
+                    <span class="label">First 30-minute rehearsal</span><span class="bar"></span><b>381</b>
+                  </li>
+                  <li style="--v: 303" data-source="reports/rehearsal/README.md" data-evidence="p50 303 ms">
+                    <span class="label">Three exact live-path speed-ups</span><span class="bar"></span><b>303</b>
+                  </li>
+                  <li style="--v: 240" data-source="reports/rehearsal/README.md" data-evidence="p50 240 ms">
+                    <span class="label">Exact map and voxel speed-ups</span><span class="bar"></span><b>240</b>
+                  </li>
+                  <li style="--v: 204" data-source="reports/rehearsal/README.md" data-evidence="p50 204 ms">
+                    <span class="label">Opt-in GPU keep-alive</span><span class="bar"></span><b>204</b>
+                  </li>
+                  <li class="live" style="--v: 140" data-source="reports/lab/README.md" data-evidence="p50 140 ms">
+                    <span class="label">Live on the rig, LiDAR-only</span><span class="bar"></span><b>140</b>
+                  </li>
+                </ol>
+                <p class="axis"><span>0</span><span class="target">35 ms target</span><span>400 ms</span></p>
+                <p class="fig-note">
+                  The first four bars are rehearsals on recorded data (the first ran 30 minutes, the others 10). The last is the live rig, which does less work
+                  per frame (no camera fusion), so it is not a like-for-like step.
+                </p>
+              </figure>
+
+              <aside class="unmeasured" aria-labelledby="limits-title">
+                <h3 id="limits-title">Not measured, not done</h3>
+                <ul>
+                  <li><b>No camera-LiDAR calibration yet.</b> The live run was LiDAR-only; the camera streams but is not fused.</li>
+                  <li><b>No accuracy against ground truth.</b> 3.4 cm is how well a scan fits our own twin.</li>
+                  <li><b>No world-to-display latency.</b> The phone clip from the lab could not be scored.</li>
+                  <li><b>The twin is from one viewpoint.</b> The moving scan failed QA (81 s, turns up to 109°/s).</li>
+                  <li><b>35 ms is not met</b>, and the rig is not marked hardware-verified until a measured 30-minute run.</li>
+                  <li><b>Labels are not evaluated.</b> The perception model is trained on synthetic data only.</li>
+                  <li><b>The cart is pushed by hand.</b> Planning runs in simulation; no motor is driven.</li>
+                </ul>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="pipeline" aria-labelledby="pipeline-title">
+        <div class="frame grid">
+          <header class="sec-head">
+            <p class="sec-no">02</p>
+            <p class="sec-name">How it works</p>
+          </header>
+          <div class="sec-body">
+            <h2 id="pipeline-title">From a laser sweep to a scene in the browser, in eight stages.</h2>
+            <ol class="stages">
+              <li>
+                <span class="n">1</span>
+                <h3>Capture</h3>
+                <p>A Raspberry Pi 5 on the cart reads the LiDAR, its IMU and the RGB-D camera, and forwards raw data only.</p>
+                <code>ingestion/capture_node.py</code>
+              </li>
+              <li>
+                <span class="n">2</span>
+                <h3>Transport</h3>
+                <p>Our own raw-sensor protocol over Wi-Fi: mutual HMAC authentication, a MAC and a strict sequence number on every message.</p>
+                <code>ingestion/raw_transport.py</code>
+              </li>
+              <li>
+                <span class="n">3</span>
+                <h3>Sync and deskew</h3>
+                <p>LiDAR, IMU and camera go on one timeline; then each point is moved back to where it was, using IMU integration.</p>
+                <code>slam_and_twin/imu_deskew.py</code>
+              </li>
+              <li>
+                <span class="n">4</span>
+                <h3>Register</h3>
+                <p>ICP scan registration with a pose graph builds the map. A parked rig localizes once against the twin, then holds.</p>
+                <code>slam_and_twin/</code>
+              </li>
+              <li>
+                <span class="n">5</span>
+                <h3>Map and twin</h3>
+                <p>Log-odds occupancy and TSDF volumes, then a Poisson mesh for display. Unknown space is never assumed free.</p>
+                <code>slam_and_twin/log_odds_octomap.py</code>
+              </li>
+              <li>
+                <span class="n">6</span>
+                <h3>Perceive and track</h3>
+                <p>A sparse point network labels voxels (trained on synthetic data only, so far); a 9-state Kalman tracker follows people and objects between frames.</p>
+                <code>perception_ml/</code>
+              </li>
+              <li>
+                <span class="n">7</span>
+                <h3>Risk and plan</h3>
+                <p>A directional risk field with time-to-collision and protected zones feeds an A* and B-spline planner. Simulation only, today.</p>
+                <code>tracking_and_navigation/</code>
+              </li>
+              <li>
+                <span class="n">8</span>
+                <h3>Studio</h3>
+                <p>A FastAPI service streams a versioned binary scene protocol to a React and Three.js studio with streamed map tiles.</p>
+                <code>command_center/ · web/src/scene/</code>
+              </li>
+            </ol>
+            <p class="aside">
+              The reasoning behind each stage, with four small interactive labs, is in the
+              <a href="./explainer.html">step-by-step explainer</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="rig" aria-labelledby="rig-title">
+        <div class="frame grid">
+          <header class="sec-head">
+            <p class="sec-no">03</p>
+            <p class="sec-name">The rig and the studio</p>
+          </header>
+          <div class="sec-body">
+            <h2 id="rig-title">Low-cost sensors, one laptop, no cloud.</h2>
+            <div class="rig">
+              <figure class="photo">
+                <img src="/src/landing/img/rig-cart.jpg" width="464" height="330" loading="lazy" alt="The sensor cart on the lab floor: a small wheeled plate carrying a depth camera at the front, a controller board and the LiDAR at the back." />
+                <figcaption><b>Fig. 3.</b> The cart in the lab, 5 Nov 2026. Motors off; it is pushed by hand.</figcaption>
+              </figure>
+              <dl class="specs">
+                <div><dt>LiDAR</dt><dd>Unitree 4D LiDAR L2 with built-in IMU, mounted upright, window 9.0 cm above the floor</dd></div>
+                <div><dt>Depth camera</dt><dd>Orbbec Gemini 336L at 640 × 400, 21 cm in front of the LiDAR</dd></div>
+                <div><dt>Capture node</dt><dd>Raspberry Pi 5 on the cart; LiDAR on Ethernet, camera on USB</dd></div>
+                <div><dt>Compute</dt><dd>Windows laptop with an RTX 4070 Laptop GPU, reached over its own Wi-Fi hotspot</dd></div>
+                <div><dt>Status board</dt><dd>ESP32-S3 for an LED halo; firmware built, LEDs not yet fitted</dd></div>
+                <div><dt>Platform</dt><dd>22.9 × 15.2 cm wheeled cart</dd></div>
+              </dl>
+            </div>
+
+            <figure class="shot">
+              <a href="./replay.html" aria-label="Open the recorded replay in the studio">
+                <img src="/src/landing/img/studio.jpg" width="1440" height="810" loading="lazy" alt="The AetherTwin studio replaying the lab recording: the twin as a dark mesh with LiDAR points on top, a layer list on the left, a replay timeline below and a permanent recorded-replay banner across the top." />
+              </a>
+              <figcaption>
+                <span><b>Fig. 4.</b> The studio replaying the lab recording. The same web app runs live, in simulation and as this public replay.</span>
+                <a class="more" href="./replay.html">Open it
+                  <svg viewBox="0 0 20 20" width="13" height="13" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+                </a>
+              </figcaption>
+            </figure>
+            <ul class="notes">
+              <li>Layers for the measured twin, semantic voxels, tracks, safe trajectory, risk hotspots and protected zones.</li>
+              <li>Scrub, pause and step the recording frame by frame.</li>
+              <li>Instanced rendering, streamed map tiles and automatic quality tiers.</li>
+              <li>Keyboard shortcuts, a help overlay and automated accessibility checks.</li>
+              <li>Visual effects are labelled presentation-only inside the interface.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="practice" aria-labelledby="practice-title">
+        <div class="frame grid">
+          <header class="sec-head">
+            <p class="sec-no">04</p>
+            <p class="sec-name">Engineering practice</p>
+          </header>
+          <div class="sec-body">
+            <h2 id="practice-title">Built to be checked, not just shown.</h2>
+            <ol class="practice">
+              <li>
+                <h3>Evidence before claims</h3>
+                <p>Every figure in the interface and the documents carries what it measures and its source file. The studio shows “Hardware not tested” until a measured run says otherwise.</p>
+              </li>
+              <li>
+                <h3>Speed-ups that cannot change results</h3>
+                <p>Each optimisation ships with a test that runs a verbatim copy of the old code and demands identical output. That is how 381 ms became 240 ms in rehearsals without a behaviour change.</p>
+              </li>
+              <li>
+                <h3>Tested end to end</h3>
+                <p>More than 700 Python tests, web unit tests, and browser runs against a mock service, a live simulated service and this static site, from one local CI command.</p>
+              </li>
+              <li>
+                <h3>Secure by default</h3>
+                <p>Authenticated sensor transport, a strict content security policy, and a replay exporter that fails if an address, path or device identifier leaks into public files.</p>
+              </li>
+              <li>
+                <h3>Reproducible environments</h3>
+                <p>Hash-locked dependencies for Windows, Ubuntu and CUDA. Python 3.12, PyTorch and Open3D on the back end; React 19, TypeScript and Three.js on the front.</p>
+              </li>
+              <li>
+                <h3>A journal of every change</h3>
+                <p>About fifty change cycles are logged with a hypothesis, a failing test first, and a keep-or-revert decision. Reverts are kept as results.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="roadmap" aria-labelledby="roadmap-title">
+        <div class="frame grid">
+          <header class="sec-head">
+            <p class="sec-no">05</p>
+            <p class="sec-name">Where it goes next</p>
+          </header>
+          <div class="sec-body">
+            <h2 id="roadmap-title">From a pushed cart to a robot that maps the lab by itself.</h2>
+            <p class="intro">
+              Everything after the first row is planned work, not a result. Each phase is defined by the measurement
+              that ends it.
+            </p>
+            <ol class="phases">
+              <li class="done">
+                <p class="tag">Done</p>
+                <div>
+                  <h3>Sensing rig and live pipeline</h3>
+                  <p>Cart, authenticated Pi-to-laptop stream, a twin from a stationary recording, parked localization, a 15-minute live run, the browser studio and this public replay.</p>
+                </div>
+                <p class="ends">The results above</p>
+              </li>
+              <li class="next">
+                <p class="tag">Phase 1 · next</p>
+                <div>
+                  <h3>A complete, calibrated twin of the lab</h3>
+                  <p>Camera-LiDAR calibration with a target; a slow moving scan with loop closure, so the twin covers the whole room in colour; then a 30-minute verified run.</p>
+                </div>
+                <p class="ends">Landmark error against a tape, as percentiles; world-to-display latency</p>
+              </li>
+              <li>
+                <p class="tag">Phase 2</p>
+                <div>
+                  <h3>Localization while moving</h3>
+                  <p>Replace the fixed scan window with LiDAR-inertial odometry: an IMU-propagated state registered against a persistent local map, cross-checked offline against open-source baselines.</p>
+                </div>
+                <p class="ends">Trajectory error on return-to-start loops</p>
+              </li>
+              <li>
+                <p class="tag">Phase 3</p>
+                <div>
+                  <h3>An autonomous rover that reaches a goal</h3>
+                  <p>Motorize the cart: wheel odometry, a velocity controller, a hardware stop. A* routes on the twin; a local planner avoids live obstacles using the occupancy map and risk field. Click a destination in the studio and the robot drives there.</p>
+                </div>
+                <p class="ends">Goal success rate, clearance kept, stops near people</p>
+              </li>
+              <li>
+                <p class="tag">Phase 4</p>
+                <div>
+                  <h3>Self-scanning, and a twin that stays current</h3>
+                  <p>Frontier-based exploration sends the robot to unmapped space until the room is covered, with nobody pushing. Repeat patrols detect what changed and update the twin.</p>
+                </div>
+                <p class="ends">Coverage over time; change-detection precision</p>
+              </li>
+              <li>
+                <p class="tag">Phase 5</p>
+                <div>
+                  <h3>Real time on the GPU</h3>
+                  <p>Move deskew, voxelization and occupancy onto GPU-resident tensors in one process, towards the 35 ms target. How close it gets is not known until it is measured.</p>
+                </div>
+                <p class="ends">Per-stage GPU timings on the real rig</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing" aria-labelledby="closing-title">
+        <div class="frame">
+          <h2 id="closing-title">See the recording for yourself.</h2>
+          <p>The lab recording, replayed through the real studio in your browser. No install, no account.</p>
+          <div class="cta">
+            <a class="btn invert" href="./replay.html">
+              Launch the 3D replay
+              <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" /></svg>
+            </a>
+            <a class="btn line invert" href="./explainer.html">Read how it works</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="colophon">
+      <div class="frame">
+        <p>
+          <b>AetherTwin</b> is a student research project from the K-Explore Robotics programme at Kalinga Institute of
+          Industrial Technology, Bhubaneswar. Software and system design by Naman Singh, in a project team of six.
+        </p>
+        <p>
+          This site is static. It replays a recording and is never connected to the rig. It sets no cookies and loads
+          nothing from other sites. AetherTwin is a research platform, not a safety device.
+        </p>
+        <nav aria-label="Footer">
+          <a href="./replay.html">3D replay</a>
+          <a href="./explainer.html">Explainer</a>
+          <a href="https://github.com/NamanSingh69/aethertwin-lab" rel="noopener">GitHub</a>
+          <a href="#top">Top</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

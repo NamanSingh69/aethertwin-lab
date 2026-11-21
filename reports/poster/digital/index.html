@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab Digital Twin: Autonomous Scanning and 3D Reconstruction (Group 29, digital poster)</title>
+<style>
+:root{
+  --navy:#1d3f8f; --navy2:#2a56b8; --ink:#1b2333; --muted:#5a6475; --line:#c9d6ee;
+  --frame:#c0504d; --green:#1e9e45; --amber:#c46a12; --teal:#0f8a7e; --violet:#6b4fc4;
+  --bad:#c62f2f; --panel:#f6f8fd; --dark:#0d1726;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#2b3344}
+body{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:var(--ink);overflow:hidden}
+.stage{position:fixed;inset:0;display:flex;align-items:flex-start;justify-content:center}
+.poster{width:1240px;height:1754px;background:#fff;transform-origin:top left;position:absolute;left:0;top:0;
+  padding:14px 18px 10px;display:flex;flex-direction:column;gap:8px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.45)}
+.mono{font-family:Consolas,"Cascadia Mono","Courier New",monospace}
+/* header */
+header{display:flex;gap:16px;height:174px;flex:none}
+.brand{width:210px;display:flex;flex-direction:column;align-items:center;justify-content:space-between}
+.brand img{width:190px;height:auto}
+.group{background:#151515;color:#fff;font-weight:700;letter-spacing:.08em;font-size:19px;width:100%;text-align:center;padding:7px 0}
+.titlebox{flex:1;border:2px solid var(--frame);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;position:relative;padding-top:6px}
+.titlebox h1{font-family:Georgia,"Times New Roman",serif;color:var(--navy);font-size:36px;line-height:1.05}
+.titlebox h2{font-family:Georgia,"Times New Roman",serif;color:var(--navy2);font-size:23px;font-weight:700}
+.team{font-size:13px;font-weight:700;line-height:1.3}
+.team span{font-weight:400;color:var(--muted);font-family:Consolas,monospace;font-size:12.5px}
+.guide{font-size:14px;font-weight:700}
+.guide em{font-style:normal;color:var(--amber);border-bottom:1.5px dashed var(--amber)}
+.inst{color:var(--green);font-weight:700;font-size:14px}
+.kx{font-weight:700;font-size:14px}
+.status-pill{position:absolute;top:6px;right:8px;font-size:10.5px;color:#fff;background:var(--teal);padding:2px 8px;border-radius:9px;font-weight:600;letter-spacing:.03em}
+/* sections */
+.row{display:flex;gap:12px;flex:none}
+section{border:2px solid var(--frame);padding:5px 7px 7px;display:flex;flex-direction:column;min-width:0}
+section>h3{font-family:Georgia,"Times New Roman",serif;color:var(--navy);font-size:20px;text-align:center;padding:2px 0 3px;margin-bottom:5px;
+  background:linear-gradient(90deg,rgba(160,194,236,.15),rgba(160,194,236,.85) 30%,rgba(160,194,236,.85) 70%,rgba(160,194,236,.15));
+  clip-path:polygon(0 50%,14px 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,14px 100%)}
+.inner{border:1.5px solid var(--line);padding:6px 9px;flex:1;min-height:0;display:flex;flex-direction:column;gap:6px}
+p,li{font-size:12.5px;line-height:1.34}
+.bul{list-style:none;display:flex;flex-direction:column;gap:3px}
+.bul li{padding-left:16px;position:relative}
+.bul li::before{content:"";position:absolute;left:2px;top:6px;width:7px;height:7px;background:var(--navy2);transform:rotate(45deg)}
+.cap{font-size:11px;color:var(--muted);line-height:1.3}
+.cap b{color:var(--ink)}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:3px}
+.tag.ill{background:#fff2d6;color:#8a5200;border:1px solid #e9c27a}
+.tag.meas{background:#dcf3e3;color:#17663a;border:1px solid #9fd5b0}
+.tag.no{background:#fbe1e1;color:#9b1f1f;border:1px solid #eaa5a5}
+/* hero */
+.hero{position:relative;background:var(--dark);border-radius:4px;overflow:hidden}
+.hero canvas{display:block;width:100%;height:100%}
+.hero .badge{position:absolute;left:8px;top:7px}
+.hero .legend{position:absolute;right:8px;top:8px;font-size:10px;color:#9fb3cf;font-family:Consolas,monospace}
+/* objectives */
+.obj{list-style:none;display:flex;flex-direction:column;gap:4px}
+.obj li{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:start}
+.obj .n{width:22px;height:22px;border-radius:50%;background:var(--navy2);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.obj .st{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;margin-top:1px}
+.st.ok{background:#dcf3e3;color:#17663a}
+.st.part{background:#fff0d4;color:#8a5200}
+.obj .d{font-size:11.5px;color:var(--muted);display:block;line-height:1.3}
+.tick{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:3px}
+.tick path{stroke-dasharray:24;stroke-dashoffset:24;animation:draw .7s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.obj li:nth-child(1) .tick path{animation-delay:.3s}.obj li:nth-child(2) .tick path{animation-delay:.6s}
+.obj li:nth-child(3) .tick path{animation-delay:.9s}.obj li:nth-child(4) .tick path{animation-delay:1.2s}
+.obj li:nth-child(5) .tick path{animation-delay:1.5s}
+.legend-st{font-size:10.5px;color:var(--muted)}
+/* methodology */
+.flow svg{display:block;width:100%;height:auto}
+.flow text{font-family:"Segoe UI",system-ui,sans-serif}
+.chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.chip{font-family:Consolas,monospace;font-size:11px;border:1px solid var(--line);border-radius:10px;padding:1px 8px;background:var(--panel)}
+.chip.k{font-weight:700;letter-spacing:.08em;border:none;background:none;padding-left:0}
+/* results */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.tile{position:relative;border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--panel);padding:6px 8px 6px;border-radius:3px}
+.tile.warn{border-left-color:var(--amber)}
+.tile .v{font-size:25px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.05;white-space:nowrap}
+.tile .v small{font-size:14px;font-weight:700;color:var(--navy2)}
+.tile .w{font-size:11.5px;line-height:1.28;margin-top:2px}
+.tile .w b{font-weight:700}
+.tile .s{position:absolute;top:6px;right:7px;font-size:9.5px;color:var(--muted);font-family:Consolas,monospace}
+.tile .not{color:var(--bad);font-weight:700}
+.lat svg{display:block;width:100%;height:auto}
+.lat text{font-family:"Segoe UI",system-ui,sans-serif}
+/* photos */
+.photo{position:relative;flex:1;min-height:0;background:#111;border-radius:3px;overflow:hidden}
+.photo figure{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+.photo figure.on{opacity:1}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.photo img.bg{object-fit:cover;filter:blur(12px) brightness(.45);transform:scale(1.1)}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.82) 35%);color:#fff;font-size:12px;line-height:1.3;padding:18px 10px 7px}
+.thumbs{display:flex;gap:5px}
+.thumbs button{flex:1;height:38px;border:2px solid transparent;border-radius:3px;overflow:hidden;padding:0;cursor:pointer;background:#111;opacity:.6}
+.thumbs button.on{border-color:var(--navy2);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+/* not measured */
+.nm{border:2px solid var(--bad);background:#fff7f7}
+.nm>h3{color:var(--bad);background:linear-gradient(90deg,rgba(240,170,170,.15),rgba(240,170,170,.7) 30%,rgba(240,170,170,.7) 70%,rgba(240,170,170,.15))}
+.nm .inner{border-color:#efc2c2}
+.nm ul{list-style:none;display:flex;flex-direction:column;gap:2px}
+.nm li{font-size:12px;padding-left:20px;position:relative;line-height:1.32}
+.nm li::before{content:"\2715";position:absolute;left:2px;top:0;color:var(--bad);font-weight:700}
+/* bottom */
+.refs{font-size:10px;line-height:1.28;padding-left:16px}
+.refs li{font-size:10px;line-height:1.28}
+.qr{display:flex;gap:10px;align-items:center;border:1.5px dashed var(--navy2);padding:4px 8px;border-radius:4px;background:var(--panel)}
+.qr .box{width:50px;height:50px;flex:none;border:2px dashed var(--navy2);display:grid;place-items:center;font-family:Consolas,monospace;font-size:13px;color:var(--navy2);font-weight:700;background:#fff}
+.qr p{font-size:12px}
+.foot{font-size:10px;color:var(--muted);text-align:center;flex:none}
+/* print fallback: A3 portrait, every animation in its final state */
+@page{size:297mm 420mm;margin:0}
+@media print{
+  html,body{background:#fff;overflow:visible;width:297mm;height:420mm}
+  .stage{position:relative;display:block;width:297mm;height:420mm;overflow:hidden}
+  .poster{transform:scale(.90526)!important;box-shadow:none;position:absolute;left:0!important;top:0!important}
+  *{animation:none!important;transition:none!important}
+  .tick path{stroke-dashoffset:0}
+}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .tick path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+<main class="poster" id="poster">
+
+<header>
+  <div class="brand">
+    <img src="assets/kiit_logo.png" alt="KIIT logo">
+    <div class="group">GROUP NO. 29</div>
+  </div>
+  <div class="titlebox">
+    <span class="status-pill">LAB RUN ON THE REAL RIG: 5 NOV 2026</span>
+    <h1>Lab Digital Twin:</h1>
+    <h2>Autonomous Scanning and 3D Reconstruction</h2>
+    <div class="team">HIRANYA KUMAWAT <span>(24155539)</span>, SUMEDHA G <span>(2405198)</span>, SUJAL AGARWAL <span>(24051292)</span>,<br>
+      NAMAN SINGH <span>(24052230)</span>, UTKARSH JHA <span>(24155593)</span>, AASUTOSH SWAIN <span>(24157002)</span></div>
+    <div class="kx">K-Explore (Robotics)</div>
+    <div class="inst">Kalinga Institute of Industrial Technology (Deemed to be University), Bhubaneswar</div>
+  </div>
+</header>
+
+<!-- ROW 1: Introduction + Objectives -->
+<div class="row" style="height:300px">
+  <section style="flex:1.18">
+    <h3>Introduction</h3>
+    <div class="inner">
+      <div class="hero" style="height:132px;flex:none">
+        <canvas id="sweep" aria-label="Animated illustration of a LiDAR sweep revealing a stylised room"></canvas>
+        <span class="badge tag ill">Illustration, not data · stylised top view of a LiDAR sweep</span>
+      </div>
+      <ul class="bul">
+        <li><b>Motivation:</b> floor plans and photos lose a lab's 3D geometry; range and depth sensors on a mobile platform can capture it.</li>
+        <li><b>What we built:</b> a small wheeled cart (22.9 x 15.2 cm, <b>pushed by hand, motors off</b>) carrying a Unitree L2 4D LiDAR and an Orbbec Gemini 336L RGB-D camera, with a Raspberry Pi 5 streaming raw sensor data over Wi-Fi to a laptop that builds the twin.</li>
+        <li><b>All software is ours</b> (Python 3.12 + TypeScript), from sensor transport to studio.</li>
+      </ul>
+    </div>
+  </section>
+  <section style="flex:1">
+    <h3>Objectives</h3>
+    <div class="inner">
+      <ul class="obj">
+        <li><span class="n">1</span><span><b>Capture</b> lab geometry with a mobile scanning workflow.<span class="d">Lab recorded from the cart; twin from one viewpoint. Today's moving scan failed QA.</span></span><span class="st part">PARTLY</span></li>
+        <li><span class="n">2</span><span><b>Integrate</b> LiDAR and RGB-D in one pipeline and a common frame.<span class="d">Synchronizer built; camera-LiDAR calibration not done, so the live run was LiDAR-only.</span></span><span class="st part">PARTLY</span></li>
+        <li><span class="n">3</span><span><b>Align</b> scans and <b>reconstruct</b> the lab in 3D.<span class="d">ICP + pose graph, occupancy, TSDF and a Poisson mesh twin of the lab.</span></span><span class="st ok"><svg class="tick" viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#17663a" stroke-width="2.6" stroke-linecap="round"/></svg>DONE</span></li>
+        <li><span class="n">4</span><span><b>Visualize</b> the result interactively.<span class="d">React 19 + Three.js browser studio, "What is this?" explainer, static replay site.</span></span><span class="st ok"><svg class="tick" viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#17663a" stroke-width="2.6" stroke-linecap="round"/></svg>DONE</span></li>
+        <li><span class="n">5</span><span><b>Validate</b> in simulation and on replayed data before live use.<span class="d">Rehearsals on recorded real data, then a 15-min LiDAR-only live run on the rig.</span></span><span class="st ok"><svg class="tick" viewBox="0 0 16 16"><path d="M2 8.5l4 4 8-9" fill="none" stroke="#17663a" stroke-width="2.6" stroke-linecap="round"/></svg>DONE</span></li>
+      </ul>
+      <p class="legend-st">DONE = built and exercised on recorded or live data. PARTLY = built, but a step is still missing. "Done" is not a claim of accuracy.</p>
+    </div>
+  </section>
+</div>
+
+<!-- ROW 2: Methodology -->
+<section class="flow" style="flex:none">
+  <h3>Methodology</h3>
+  <div class="inner">
+    <svg id="flow" viewBox="0 0 1180 222" role="img" aria-label="Data flow: LiDAR, IMU and camera to the Raspberry Pi 5, over Wi-Fi to the laptop pipeline, then to the browser studio">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7d8aa3"/></marker>
+      </defs>
+      <text x="8" y="11" font-size="10.5" font-weight="700" fill="#c46a12" letter-spacing="1.2">ON THE CART</text>
+      <text x="424" y="11" font-size="10.5" font-weight="700" fill="#0f8a7e" letter-spacing="1.2">LAPTOP (WINDOWS, RTX 4070 LAPTOP GPU)</text>
+      <text x="1058" y="11" font-size="10.5" font-weight="700" fill="#1d3f8f" letter-spacing="1.2">VIEW</text>
+      <rect x="2" y="16" width="350" height="204" rx="6" fill="#fdf8f1" stroke="#ecd3ae" stroke-dasharray="5 4"/>
+      <rect x="420" y="16" width="612" height="204" rx="6" fill="#f1faf8" stroke="#a9dcd4" stroke-dasharray="5 4"/>
+      <g fill="none" stroke="#7d8aa3" stroke-width="1.6" marker-end="url(#ar)">
+        <path id="p_l" d="M170 47 H196 V100 H218"/>
+        <path id="p_i" d="M170 112 H218"/>
+        <path id="p_c" d="M170 177 H196 V124 H218" stroke-dasharray="5 4"/>
+        <path id="p_w" d="M344 112 H436"/>
+        <path id="p_r1" d="M544 52 H556"/>
+        <path id="p_r2" d="M664 52 H676"/>
+        <path id="p_r3" d="M784 52 H796"/>
+        <path id="p_r4" d="M904 52 H916"/>
+        <path id="p_d" d="M490 74 V150"/>
+        <path id="p_s1" d="M544 174 H556"/>
+        <path id="p_s2" d="M664 174 H676"/>
+        <path id="p_s3" d="M784 174 H796"/>
+        <path id="p_s4" d="M904 174 H916"/>
+        <path id="p_m" d="M970 74 V150"/>
+        <path id="p_o" d="M1024 174 H1042 V112 H1058"/>
+      </g>
+      <g font-size="12.5">
+        <rect x="10" y="24" width="160" height="46" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="2"/>
+        <text x="20" y="43" font-weight="700">Unitree L2 4D LiDAR</text><text x="20" y="60" font-size="11" fill="#5a6475">upright, window 9.0 cm up</text>
+        <rect x="10" y="89" width="160" height="46" rx="5" fill="#fff" stroke="#c46a12" stroke-width="2"/>
+        <text x="20" y="108" font-weight="700">IMU (in the L2)</text><text x="20" y="125" font-size="11" fill="#5a6475">for deskew + bias</text>
+        <rect x="10" y="154" width="160" height="46" rx="5" fill="#fff" stroke="#6b4fc4" stroke-width="2" stroke-dasharray="5 3"/>
+        <text x="20" y="173" font-weight="700">Orbbec Gemini 336L</text><text x="20" y="190" font-size="11" fill="#5a6475">RGB-D, 21 cm ahead</text>
+      </g>
+      <text x="10" y="214" font-size="9.5" fill="#6b4fc4">dashed: camera path built, not used in the live run</text>
+      <rect x="222" y="76" width="122" height="72" rx="6" fill="#fff" stroke="#c46a12" stroke-width="2"/>
+      <text x="283" y="100" font-size="13" font-weight="700" text-anchor="middle">Raspberry Pi 5</text>
+      <text x="283" y="117" font-size="11" fill="#5a6475" text-anchor="middle">capture node</text>
+      <text x="283" y="132" font-size="11" fill="#5a6475" text-anchor="middle">raw, timestamped</text>
+      <g transform="translate(390 94)" fill="none" stroke="#2a56b8" stroke-width="2" stroke-linecap="round">
+        <path class="wf w1" d="M-6 0 a8 8 0 0 1 12 0"/><path class="wf w2" d="M-11 -5 a15 15 0 0 1 22 0"/><path class="wf w3" d="M-16 -10 a22 22 0 0 1 32 0"/>
+      </g>
+      <text x="390" y="134" font-size="10.5" fill="#2a56b8" text-anchor="middle" font-weight="700">Wi-Fi hotspot</text>
+      <text x="390" y="146" font-size="9.5" fill="#5a6475" text-anchor="middle">authenticated</text>
+      <text x="390" y="157" font-size="9.5" fill="#5a6475" text-anchor="middle">raw-sensor transport</text>
+      <g font-size="11.5" text-anchor="middle">
+        <rect x="436" y="30" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="490" y="49" font-weight="700">Synchronize</text><text x="490" y="65" font-size="10" fill="#5a6475">LiDAR · IMU · RGB-D</text>
+        <rect x="556" y="30" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="610" y="49" font-weight="700">IMU deskew</text><text x="610" y="65" font-size="10" fill="#5a6475">motion in a sweep</text>
+        <rect x="676" y="30" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="730" y="49" font-weight="700">ICP + pose graph</text><text x="730" y="65" font-size="10" fill="#5a6475">scan registration</text>
+        <rect x="796" y="30" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="850" y="49" font-weight="700">Occupancy + TSDF</text><text x="850" y="65" font-size="10" fill="#5a6475">log-odds grid</text>
+        <rect x="916" y="30" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="970" y="49" font-weight="700">Mesh twin</text><text x="970" y="65" font-size="10" fill="#5a6475">Poisson surface</text>
+        <rect x="436" y="152" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="490" y="171" font-weight="700">Perception CNN</text><text x="490" y="187" font-size="10" fill="#5a6475">detections</text>
+        <rect x="556" y="152" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="610" y="171" font-weight="700">Kalman tracker</text><text x="610" y="187" font-size="10" fill="#5a6475">9-DoF tracks</text>
+        <rect x="676" y="152" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="730" y="171" font-weight="700">Risk fields</text><text x="730" y="187" font-size="10" fill="#5a6475">protected zones</text>
+        <rect x="796" y="152" width="108" height="44" rx="5" fill="#fff" stroke="#0f8a7e" stroke-width="1.6"/><text x="850" y="171" font-weight="700">Planner</text><text x="850" y="187" font-size="10" fill="#5a6475">routes, not driven</text>
+        <rect x="916" y="152" width="108" height="44" rx="5" fill="#fff" stroke="#1d3f8f" stroke-width="1.6"/><text x="970" y="171" font-weight="700">Command center</text><text x="970" y="187" font-size="10" fill="#5a6475">FastAPI</text>
+      </g>
+      <text x="502" y="108" font-size="10.5" fill="#0f8a7e" font-weight="600">parked mode: the cart localizes once against the twin, then holds</text>
+      <text x="502" y="122" font-size="10" fill="#5a6475">upper row: mapping · lower row: perception, safety, planning</text>
+      <rect x="1058" y="76" width="118" height="72" rx="6" fill="#0d1726" stroke="#1d3f8f" stroke-width="2"/>
+      <text x="1117" y="100" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">Browser studio</text>
+      <text x="1117" y="117" font-size="10.5" fill="#9fb3cf" text-anchor="middle">React 19 + Three.js</text>
+      <text x="1117" y="132" font-size="10.5" fill="#9fb3cf" text-anchor="middle">binary scene protocol</text>
+      <text x="1117" y="166" font-size="9.5" fill="#5a6475" text-anchor="middle">+ explainer page</text>
+      <text x="1117" y="178" font-size="9.5" fill="#5a6475" text-anchor="middle">+ static replay site</text>
+      <g id="packets"></g>
+    </svg>
+    <div class="chips">
+      <span class="chip k">SOFTWARE</span><span class="chip">Python 3.12</span><span class="chip">NumPy · SciPy [6,7]</span><span class="chip">Open3D [3]</span><span class="chip">OpenCV [4]</span><span class="chip">PyTorch [5]</span><span class="chip">React 19 · Three.js</span>
+      <span class="chip k" style="margin-left:8px">TESTS</span><span class="chip">713 Python tests</span><span class="chip">web unit + Playwright E2E</span><span class="chip">local CI</span>
+    </div>
+  </div>
+</section>
+
+<!-- ROW 3: Results -->
+<section style="flex:none">
+  <h3>Experimental Results</h3>
+  <div class="inner" style="gap:6px">
+    <div class="tiles">
+      <div class="tile"><div class="v"><span class="cu" data-to="716">716</span> <small>frames</small></div><div class="w"><b>0 lost</b> in the first 60 s Pi-to-laptop stream over Wi-Fi, <span class="cu" data-to="5.17" data-d="2">5.17</span> MB/s.</div><div class="s">bench · stationary</div></div>
+      <div class="tile"><div class="v"><span class="cu" data-to="7171">7,171</span> <small>frames</small></div><div class="w"><b>0 lost</b> in a 600 s stream; clocks agreed within ±0.9 ms.</div><div class="s">bench · stationary</div></div>
+      <div class="tile"><div class="v"><span class="cu" data-to="1435">1,435</span> <small>sweeps</small></div><div class="w">120 s lab recording on the cart at <span class="cu" data-to="11.98" data-d="2">11.98</span> Hz, 0 lost; IMU at 251 Hz.</div><div class="s">lab · 5 Nov</div></div>
+      <div class="tile"><div class="v"><span class="cu" data-to="61367">61,367</span> <small>points</small></div><div class="w">Surface points of the lab twin: 359 scans, 14,093 measured cells. One viewpoint; floor from the tape.</div><div class="s">lab · 5 Nov</div></div>
+      <div class="tile"><div class="v"><span class="cu" data-to="5510">5,510</span> <small>frames</small></div><div class="w"><b>15 min live</b> on the real rig over Wi-Fi, <b>LiDAR-only</b>: 0 drops, memory flat 1.51-1.64 GB.</div><div class="s">live · 5 Nov</div></div>
+      <div class="tile warn"><div class="v"><span class="cu" data-to="0.985" data-d="3">0.985</span> <small>fitness</small></div><div class="w">Live run localized against the twin, ICP RMSE <span class="cu" data-to="3.4" data-d="1">3.4</span> cm. <span class="not">A fit, NOT accuracy.</span></div><div class="s">live · 5 Nov</div></div>
+      <div class="tile warn"><div class="v"><span class="cu" data-to="42">42</span> <small>mm</small></div><div class="w">Pose spread of a rig that never moved: static precision, <span class="not">NOT accuracy.</span></div><div class="s">bench · stationary</div></div>
+      <div class="tile"><div class="v"><span class="cu" data-to="30">30</span> <small>min</small></div><div class="w">Rehearsal with <b>no errors</b>: recorded real data replayed through the real transport. <span class="not">Not live.</span></div><div class="s">rehearsal · recorded data</div></div>
+    </div>
+    <div class="lat">
+      <svg id="lat" viewBox="0 0 1180 150" role="img" aria-label="Processing time per frame: rehearsals 381 to 240 ms p50, LiDAR-only live run 140 ms p50, 35 ms target not met">
+        <text x="0" y="14" font-size="14" font-weight="700" fill="#1d3f8f">Processing time per frame (p50), lower is better</text>
+        <text x="0" y="29" font-size="11" fill="#5a6475">Rehearsals: 10-min runs on recorded data; only exact (same-result) software speed-ups between them. Live: different configuration (LiDAR-only), so the bars are not one series.</text>
+        <g id="axis" font-size="10" fill="#5a6475"></g>
+        <line id="tgt" x1="0" y1="36" x2="0" y2="128" stroke="#c62f2f" stroke-width="2" stroke-dasharray="6 4"/>
+        <text id="tgtl" x="0" y="146" font-size="11" font-weight="700" fill="#c62f2f">35 ms target · NOT MET</text>
+        <g font-size="12">
+          <text x="0" y="52" font-weight="700">Rehearsal, before</text><text x="0" y="64" font-size="10" fill="#5a6475">recorded data, 10 min</text>
+          <rect id="b1" x="210" y="42" height="21" width="0" fill="#9dbcea" rx="2"/><text id="t1" x="0" y="57" font-weight="700" fill="#1b2333">381 ms</text>
+          <text x="0" y="80" font-weight="700">Rehearsal, after speed-ups</text><text x="0" y="92" font-size="10" fill="#5a6475">same data, exact speed-ups</text>
+          <rect id="b2" x="210" y="70" height="21" width="0" fill="#2a56b8" rx="2"/><text id="t2" x="0" y="85" font-weight="700" fill="#1b2333">240 ms</text>
+          <text x="0" y="108" font-weight="700">Live run on the rig</text><text x="0" y="120" font-size="10" fill="#5a6475">LiDAR-only, Wi-Fi, 15 min</text>
+          <rect id="b3" x="210" y="98" height="21" width="0" fill="#0f8a7e" rx="2"/><line id="p95" x1="0" y1="94" x2="0" y2="123" stroke="#0f8a7e" stroke-width="2"/><text id="t3" x="0" y="113" font-weight="700" fill="#1b2333">140 ms (p95 216 ms)</text>
+        </g>
+      </svg>
+      <p class="cap">Not a world-to-display latency: that was never measured. Source: reports/rehearsal/README.md (fig 7) and reports/lab/README.md.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ROW 4: Photos + Not measured -->
+<div class="row" style="flex:1;min-height:0">
+  <section style="flex:1.25">
+    <h3>The Rig and the Live Run</h3>
+    <div class="inner" style="gap:5px">
+      <div class="photo" id="photo">
+        <figure class="on"><img src="assets/lab_cart_on_floor.jpg" alt="The cart on the lab floor"><figcaption><b>The cart in the lab.</b> Unitree L2 LiDAR + Gemini 336L + Raspberry Pi 5 on a small wheeled cart, pushed by hand (motors off).</figcaption></figure>
+        <figure><img src="assets/lab_live_run_walker.jpg" alt="A team member walking during the live run"><figcaption><b>Live run, 5 Nov.</b> A team member walks through the lab during the LiDAR-only live run; the studio runs on the laptop behind.</figcaption></figure>
+        <figure><img src="assets/studio_lab_twin_replay.jpg" alt="The browser studio showing the lab twin"><figcaption><b>The browser studio</b> showing the lab twin (replay).</figcaption></figure>
+        <figure><img src="assets/lab_live_run_walker2.jpg" alt="Second view of the live run"><figcaption><b>Live run, 5 Nov.</b> Another moment of the walk-through; the laptop with the studio is behind.</figcaption></figure>
+        <figure><img src="assets/step1_ruler_1.jpg" alt="Rig close-up with measuring tape"><figcaption><b>Rig close-up with tape:</b> measuring the sensor mount positions.</figcaption></figure>
+        <figure><img src="assets/step1_ruler_3.jpg" alt="Rig close-up with measuring tape, second view"><figcaption><b>Rig close-up with tape:</b> measuring the sensor heights above the floor.</figcaption></figure>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+  </section>
+  <section class="nm" style="flex:1">
+    <h3>Not Measured Yet</h3>
+    <div class="inner">
+      <p style="font-size:12px;color:#7a2020"><b>Stated plainly, so nothing above is read as more than it is.</b></p>
+      <ul>
+        <li><b>Camera-LiDAR calibration:</b> not done. The live run was <b>LiDAR-only</b>.</li>
+        <li><b>Accuracy</b> against independent ground truth: not measured. Fitness, RMSE and pose spread are fit and precision numbers.</li>
+        <li><b>World-to-display latency:</b> not measured. The numbers above are processing time per frame.</li>
+        <li><b>35 ms target:</b> not met (best live p50 140 ms).</li>
+        <li><b>30-minute hardware-verified run:</b> not done; the 30-min run was a rehearsal on recorded data (hardware_verified stays false).</li>
+        <li><b>Moving commissioning scan:</b> today's push failed QA; the twin is from one viewpoint.</li>
+        <li><b>Physical LED halo</b> and <b>autonomous driving:</b> not done; the cart was pushed by hand.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<!-- ROW 5: Conclusions, Future work, References -->
+<div class="row" style="height:226px">
+  <section style="flex:1.05">
+    <h3>Conclusions</h3>
+    <div class="inner">
+      <ul class="bul">
+        <li>The whole chain runs on <b>real hardware</b>: sensors on a cart, a Pi 5 streaming raw data over Wi-Fi, a laptop building the twin, a browser studio showing it.</li>
+        <li>The transport lost <b>0 frames</b> in the bench streams, the lab recording and the live run.</li>
+        <li>A <b>lab twin</b> was built from a hand-pushed recording, and a <b>15-min LiDAR-only live run</b> held its place against it.</li>
+        <li>Per-frame time is far from the 35 ms target; accuracy is unmeasured.</li>
+      </ul>
+    </div>
+  </section>
+  <section style="flex:1">
+    <h3>Future Work</h3>
+    <div class="inner">
+      <ul class="bul">
+        <li><b>Calibration</b> of camera and LiDAR with a target.</li>
+        <li>A full <b>moving scan</b> with loop closure.</li>
+        <li><b>Landmark accuracy</b> against tape measurements.</li>
+        <li><b>Latency</b> measured with a 240 fps phone camera.</li>
+        <li><b>Autonomous navigation</b> of the cart.</li>
+      </ul>
+      <div class="qr">
+        <div class="box">QR</div>
+        <p><b>Interactive replay site</b><br>aethertwin-showcase.vercel.app</p>
+      </div>
+    </div>
+  </section>
+  <section style="flex:1.15">
+    <h3>References</h3>
+    <div class="inner">
+      <ol class="refs">
+        <li>Unitree Robotics, "Unitree 4D LiDAR L2 User Manual," v1.1, Oct. 2024. unitree.com/L2</li>
+        <li>Orbbec, Gemini 330 series documentation (Gemini 336L). orbbec.com</li>
+        <li>Q.-Y. Zhou, J. Park, V. Koltun, "Open3D: A Modern Library for 3D Data Processing," arXiv:1801.09847, 2018.</li>
+        <li>G. Bradski, "The OpenCV Library," Dr. Dobb's J. Software Tools, 2000.</li>
+        <li>A. Paszke et al., "PyTorch: An Imperative Style, High-Performance Deep Learning Library," NeurIPS, 2019.</li>
+        <li>C. R. Harris et al., "Array programming with NumPy," Nature, 585, pp. 357-362, 2020.</li>
+        <li>P. Virtanen et al., "SciPy 1.0: Fundamental algorithms for scientific computing in Python," Nature Methods, 17, pp. 261-272, 2020.</li>
+      </ol>
+    </div>
+  </section>
+</div>
+<p class="foot">Digital poster. Animations are presentation only: the LiDAR sweep is an illustration, not data; the packet flow shows the data path, not measured traffic. Every number comes from the project's reports (reports/lab, reports/rehearsal, reports/hardware, docs/LAB_DAY.md).</p>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var poster = document.getElementById("poster");
+var W = 1240, H = 1754;
+function fit(){
+  var s = Math.min(window.innerWidth / W, window.innerHeight / H);
+  var x = (window.innerWidth - W * s) / 2, y = (window.innerHeight - H * s) / 2;
+  poster.style.transform = "translate(" + x + "px," + y + "px) scale(" + s + ")";
+}
+fit(); window.addEventListener("resize", fit);
+
+/* ---------- LiDAR sweep hero (illustration) ---------- */
+var cv = document.getElementById("sweep"), ctx = cv.getContext("2d");
+var CW = 0, CH = 0, DPR = 2;
+function sizeCanvas(){ var r = cv.parentNode; CW = r.clientWidth; CH = r.clientHeight; cv.width = CW * DPR; cv.height = CH * DPR; }
+sizeCanvas();
+// room in metres: 14 x 5.4, rows of desks like the lab
+var RW = 18, RH = 4.4, segs = [];
+function box(x, y, w, h){ segs.push([x,y,x+w,y],[x+w,y,x+w,y+h],[x+w,y+h,x,y+h],[x,y+h,x,y]); }
+segs.push([0,0,RW,0],[RW,0,RW,RH],[RW,RH,11.6,RH],[10.4,RH,0,RH],[0,RH,0,0]); // walls with a door gap
+box(1.2,0.4,5.6,0.6); box(7.8,0.4,5.6,0.6);            // desk row 1
+box(1.2,2.0,5.6,0.6); box(7.8,2.0,5.6,0.6);            // desk row 2
+box(16.4,0.6,0.6,2.6);                                  // cabinet
+for (var i = 0; i < 7; i += 2){ box(1.6 + i * 0.8, 1.2, 0.3, 0.3); box(8.2 + i * 0.8, 1.2, 0.3, 0.3); }
+box(5.2,3.45,0.45,0.4); box(14.2,3.45,1.0,0.4);         // pillar, bench
+function cast(ox, oy, a){
+  var dx = Math.cos(a), dy = Math.sin(a), best = 1e9;
+  for (var k = 0; k < segs.length; k++){
+    var s = segs[k], ex = s[2]-s[0], ey = s[3]-s[1], den = dx*ey - dy*ex;
+    if (Math.abs(den) < 1e-9) continue;
+    var t = ((s[0]-ox)*ey - (s[1]-oy)*ex) / den, u = ((s[0]-ox)*dy - (s[1]-oy)*dx) / den;
+    if (t > 0.05 && u >= 0 && u <= 1 && t < best) best = t;
+  }
+  return best < 30 ? best : -1;
+}
+var pts = [], MAXP = 11000, ang = 0, path = [[1.5,3.35],[7.5,3.3],[13.5,3.3],[15.8,3.3],[16.2,4.0],[9,4.05],[2,4.0]];
+function cartAt(t){ var n = path.length, L = t % n, i0 = Math.floor(L), f = L - i0, a = path[i0], b = path[(i0+1)%n]; return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f]; }
+function toPx(x, y){ var pad = 10, s = Math.min((CW - 2*pad)/RW, (CH - 14)/RH), ox = (CW - RW*s)/2, oy = (CH - RH*s)/2; return [ox + x*s, oy + y*s, s]; }
+function sample(cx, cy, a, now){
+  var d = cast(cx, cy, a); if (d < 0) return;
+  var j = (Math.random() - .5) * 0.04;
+  pts.push([cx + Math.cos(a)*(d+j), cy + Math.sin(a)*(d+j), now]);
+  if (pts.length > MAXP) pts.splice(0, pts.length - MAXP);
+}
+function drawSweep(now, cart, beam){
+  ctx.setTransform(DPR,0,0,DPR,0,0); ctx.clearRect(0,0,CW,CH);
+  // faint grid
+  var o = toPx(0,0), s = o[2];
+  ctx.strokeStyle = "rgba(120,150,200,0.08)"; ctx.lineWidth = 1;
+  for (var gx = 0; gx <= RW; gx++){ var p = toPx(gx,0); ctx.beginPath(); ctx.moveTo(p[0], o[1]); ctx.lineTo(p[0], o[1] + RH*s); ctx.stroke(); }
+  for (var gy = 0; gy <= RH; gy++){ var q = toPx(0,gy); ctx.beginPath(); ctx.moveTo(o[0], q[1]); ctx.lineTo(o[0] + RW*s, q[1]); ctx.stroke(); }
+  // points
+  for (var k = 0; k < pts.length; k++){
+    var pt = pts[k], age = (now - pt[2]) / 1000, pp = toPx(pt[0], pt[1]);
+    var hot = Math.max(0, 1 - age / 0.6);
+    ctx.fillStyle = hot > 0 ? "rgba(" + (90 + 165*hot|0) + ",240,220," + (0.55 + 0.45*hot) + ")" : "rgba(70,205,190,0.55)";
+    ctx.fillRect(pp[0]-0.9, pp[1]-0.9, 1.8 + hot*1.2, 1.8 + hot*1.2);
+  }
+  var c = toPx(cart[0], cart[1]);
+  if (beam !== null){
+    var g = ctx.createRadialGradient(c[0], c[1], 2, c[0], c[1], 9*s);
+    g.addColorStop(0, "rgba(120,255,230,0.30)"); g.addColorStop(1, "rgba(120,255,230,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(c[0], c[1]); ctx.arc(c[0], c[1], 9*s, beam - 0.55, beam); ctx.closePath(); ctx.fill();
+    var d = cast(cart[0], cart[1], beam); if (d < 0) d = 9;
+    var e = toPx(cart[0] + Math.cos(beam)*d, cart[1] + Math.sin(beam)*d);
+    ctx.strokeStyle = "rgba(170,255,240,0.9)"; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(c[0], c[1]); ctx.lineTo(e[0], e[1]); ctx.stroke();
+  }
+  // cart
+  ctx.fillStyle = "#f2a33a"; ctx.fillRect(c[0]-5, c[1]-4, 10, 8);
+  ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(c[0], c[1], 2, 0, 7); ctx.fill();
+}
+var last = 0, ct = 0;
+var frozen = false;
+function staticScan(){
+  pts = [];
+  [1.2, 2.4, 3.2, 4.6, 5.5].forEach(function(t){ var c = cartAt(t); for (var b = 0; b < Math.PI*2; b += 0.004) sample(c[0], c[1], b, -1e5); });
+  drawSweep(0, cartAt(4.6), null);
+}
+if (reduce) staticScan();
+function frame(now){
+  if (!last) last = now; var dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (frozen){ requestAnimationFrame(frame); return; }
+  ct += dt * 0.22; var cart = cartAt(ct);
+  var step = dt * Math.PI * 2 * 0.8, n = Math.max(1, Math.round(step / 0.006));
+  for (var k = 0; k < n; k++) sample(cart[0], cart[1], ang + step * k / n, now);
+  ang = (ang + step) % (Math.PI * 2);
+  drawSweep(now, cart, ang);
+  flowTick(now);
+  requestAnimationFrame(frame);
+}
+
+/* ---------- data-flow packets ---------- */
+var NS = "http://www.w3.org/2000/svg", pg = document.getElementById("packets"), lanes = [];
+var defs = [["p_l","#0f8a7e",3,0],["p_i","#c46a12",3,.3],["p_c","#6b4fc4",2,.6],["p_w","#2a56b8",4,0],
+  ["p_r1","#0f8a7e",1,.1],["p_r2","#0f8a7e",1,.3],["p_r3","#0f8a7e",1,.5],["p_r4","#0f8a7e",1,.7],["p_d","#0f8a7e",2,.2],
+  ["p_s1","#0f8a7e",1,.2],["p_s2","#0f8a7e",1,.4],["p_s3","#0f8a7e",1,.6],["p_s4","#0f8a7e",1,.8],["p_m","#1d3f8f",2,.4],["p_o","#1d3f8f",3,.1]];
+defs.forEach(function(d){
+  var p = document.getElementById(d[0]), L = p.getTotalLength(), dots = [];
+  for (var i = 0; i < d[2]; i++){ var c = document.createElementNS(NS, "circle"); c.setAttribute("r", "3.6"); c.setAttribute("fill", d[1]); c.setAttribute("stroke", "#fff"); c.setAttribute("stroke-width", "1"); pg.appendChild(c); dots.push(c); }
+  lanes.push({p: p, L: L, dots: dots, off: d[3], speed: 70});
+});
+function flowTick(now){
+  var t = now / 1000;
+  lanes.forEach(function(ln){
+    var period = Math.max(0.6, (ln.L + 40) / ln.speed);
+    ln.dots.forEach(function(c, i){
+      var f = ((t / period) + ln.off + i / ln.dots.length) % 1, pt = ln.p.getPointAtLength(f * ln.L);
+      c.setAttribute("cx", pt.x); c.setAttribute("cy", pt.y);
+      c.setAttribute("opacity", f < 0.08 ? f / 0.08 : f > 0.92 ? (1 - f) / 0.08 : 1);
+    });
+  });
+  var w = Math.floor(t * 2.5) % 4; ["w1","w2","w3"].forEach(function(k, i){ var e = document.querySelector("." + k); if (e) e.style.opacity = (i < w) ? 1 : 0.25; });
+}
+if (reduce) flowTick(1400);
+
+/* ---------- count-ups ---------- */
+var cus = [].slice.call(document.querySelectorAll(".cu"));
+function fmt(v, d){ return d ? v.toFixed(d) : Math.round(v).toLocaleString("en-US"); }
+function countUp(){
+  if (reduce) return;
+  var t0 = performance.now(), dur = 1800;
+  cus.forEach(function(e){ e.textContent = fmt(0, +e.dataset.d || 0); });
+  (function step(now){
+    var k = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - k, 3);
+    cus.forEach(function(e){ e.textContent = fmt(parseFloat(e.dataset.to) * ease, +e.dataset.d || 0); });
+    if (k < 1) requestAnimationFrame(step);
+  })(t0);
+}
+function finalNumbers(){ cus.forEach(function(e){ e.textContent = fmt(parseFloat(e.dataset.to), +e.dataset.d || 0); }); }
+
+/* ---------- latency bars ---------- */
+var X0 = 210, XMAX = 1095, MS = 400, sc = (XMAX - X0) / MS;
+function xm(ms){ return X0 + ms * sc; }
+var ax = document.getElementById("axis");
+for (var m = 0; m <= 400; m += 50){
+  var ln = document.createElementNS(NS, "line"); ln.setAttribute("x1", xm(m)); ln.setAttribute("x2", xm(m)); ln.setAttribute("y1", 38); ln.setAttribute("y2", 124); ln.setAttribute("stroke", "#e3e9f4"); ax.appendChild(ln);
+  var tx = document.createElementNS(NS, "text"); tx.setAttribute("x", xm(m)); tx.setAttribute("y", 135); tx.setAttribute("text-anchor", "middle"); tx.textContent = m + (m === 400 ? " ms" : ""); ax.appendChild(tx);
+}
+var tg = document.getElementById("tgt"); tg.setAttribute("x1", xm(35)); tg.setAttribute("x2", xm(35));
+document.getElementById("tgtl").setAttribute("x", xm(35) + 6);
+var p95 = document.getElementById("p95"); p95.setAttribute("x1", xm(216)); p95.setAttribute("x2", xm(216));
+var bars = [["b1","t1",381,"381 ms"],["b2","t2",240,"240 ms"],["b3","t3",140,"140 ms"]];
+function setBar(i, ms, label){
+  var b = document.getElementById(bars[i][0]), t = document.getElementById(bars[i][1]);
+  b.setAttribute("width", Math.max(0, ms * sc));
+  if (i === 2){ t.setAttribute("x", xm(216) + 8); t.textContent = label + " p50 · p95 216 ms"; }
+  else { t.setAttribute("x", xm(ms) + 8); t.textContent = label + " p50"; }
+}
+function finalBars(){ setBar(0, 381, "381 ms"); setBar(1, 240, "240 ms"); setBar(2, 140, "140 ms"); p95.setAttribute("opacity", 1); document.getElementById("t3").setAttribute("opacity", 1); }
+function animBars(){
+  if (reduce){ finalBars(); return; }
+  var t0 = performance.now(); p95.setAttribute("opacity", 0);
+  (function step(now){
+    var t = (now - t0) / 1000, e = function(k){ k = Math.max(0, Math.min(1, k)); return 1 - Math.pow(1 - k, 3); };
+    var a = e(t / 1.0); setBar(0, 381 * a, Math.round(381 * a) + " ms");
+    // second bar starts at 381 (the "before") and shrinks to 240 (the "after")
+    var g = e((t - 1.0) / 0.8), s2 = e((t - 2.2) / 1.4), v2 = g < 1 ? 381 * g : 381 - (381 - 240) * s2;
+    setBar(1, v2, Math.round(v2) + " ms");
+    var h = e((t - 4.0) / 1.0); setBar(2, 140 * h, Math.round(140 * h) + " ms"); p95.setAttribute("opacity", h); document.getElementById("t3").setAttribute("opacity", h > 0 ? 1 : 0);
+    if (t < 5.2) requestAnimationFrame(step);
+  })(t0);
+}
+
+/* ---------- photos ---------- */
+var figs = [].slice.call(document.querySelectorAll("#photo figure")), th = document.getElementById("thumbs"), cur = 0, btns = [];
+figs.forEach(function(f, i){
+  var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", "Show photo " + (i + 1));
+  var bg = document.createElement("img"); bg.className = "bg"; bg.alt = ""; bg.src = f.querySelector("img").src; f.insertBefore(bg, f.firstChild);
+  var im = document.createElement("img"); im.src = bg.src; im.alt = ""; b.appendChild(im);
+  b.addEventListener("click", function(){ show(i); }); th.appendChild(b); btns.push(b);
+});
+function show(i){ cur = i; figs.forEach(function(f, k){ f.classList.toggle("on", k === i); }); btns.forEach(function(b, k){ b.classList.toggle("on", k === i); }); }
+show(0);
+
+/* ---------- start / loop / print ---------- */
+window.addEventListener("beforeprint", function(){ frozen = true; staticScan(); finalNumbers(); finalBars(); show(0); });
+window.addEventListener("afterprint", function(){ frozen = false; });
+if (!reduce){
+  requestAnimationFrame(frame);
+  setTimeout(function(){ countUp(); animBars(); }, 400);
+  setInterval(function(){ countUp(); animBars(); }, 40000);
+  setInterval(function(){ show((cur + 1) % figs.length); }, 6000);
+} else { finalBars(); }
+window.addEventListener("resize", function(){ sizeCanvas(); if (reduce || frozen) drawSweep(0, cartAt(4.6), null); });
+})();
+</script>
+</body>
+</html>

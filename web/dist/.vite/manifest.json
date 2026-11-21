@@ -1,6 +1,6 @@
 {
-  "_SpatialRenderer-MsyoOC3A.js": {
-    "file": "assets/SpatialRenderer-MsyoOC3A.js",
+  "_SpatialRenderer-4Rd5zJa8.js": {
+    "file": "assets/SpatialRenderer-4Rd5zJa8.js",
     "name": "SpatialRenderer",
     "imports": [
       "_rolldown-runtime-4tVxZq34.js",
@@ -49,17 +49,17 @@
     "name": "three-vendor"
   },
   "benchmark.html": {
-    "file": "assets/benchmark-a9_IbJW0.js",
+    "file": "assets/benchmark-Bn_nbAYG.js",
     "name": "benchmark",
     "src": "benchmark.html",
     "isEntry": true,
     "imports": [
       "_modulepreload-polyfill-P2Xu9kJm.js",
-      "_SpatialRenderer-MsyoOC3A.js"
+      "_SpatialRenderer-4Rd5zJa8.js"
     ]
   },
   "explainer.html": {
-    "file": "assets/explainer-CKzbnrRS.js",
+    "file": "assets/explainer-C-RqkjyS.js",
     "name": "explainer",
     "src": "explainer.html",
     "isEntry": true,
@@ -73,7 +73,7 @@
     ]
   },
   "index.html": {
-    "file": "assets/index-B_Pwwuvt.js",
+    "file": "assets/index-BCv8qaBi.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -84,7 +84,7 @@
       "_appearance-BEtXmM5s.js"
     ],
     "dynamicImports": [
-      "_SpatialRenderer-MsyoOC3A.js"
+      "_SpatialRenderer-4Rd5zJa8.js"
     ],
     "css": [
       "assets/index-DtCvUPy7.css"

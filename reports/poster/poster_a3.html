@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lab Digital Twin: Autonomous Scanning and 3D Reconstruction (A3 poster)</title>
+<style>
+@page { size: 297mm 420mm; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 297mm; height: 420mm; }
+body {
+  font-family: "Segoe UI", "Source Sans 3", Arial, sans-serif; font-size: 11pt; line-height: 1.32;
+  color: #1d2433; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.page { zoom: 0.9; width: 330mm; height: 466.6mm; padding: 5mm 8mm 4mm; display: flex; flex-direction: column; gap: 2.4mm; overflow: hidden; }
+:root { --navy: #1e3a8a; --blue: #2563eb; --line: #b9473f; --pale: #eef4fc; --mono: Consolas, "Cascadia Mono", monospace;
+        --ok: #15803d; --part: #b45309; --amber-bg: #fff7e6; }
+b, strong { font-weight: 700; color: #111a2e; }
+
+/* Header */
+.header { display: flex; gap: 6mm; align-items: stretch; height: 35mm; flex: none; }
+.brand { width: 50mm; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.brand img { width: 34mm; }
+.group { background: #111; color: #fff; font-weight: 700; letter-spacing: 0.12em; font-size: 13pt; width: 100%; text-align: center; padding: 1.8mm 0; }
+.titlebox { flex: 1; border: 0.35mm solid var(--line); text-align: center; padding: 1.8mm 4mm; display: flex; flex-direction: column; justify-content: center; gap: 0.2mm; }
+.titlebox h1 { font-family: Georgia, "Cambria", serif; color: var(--navy); font-size: 27pt; line-height: 0.98; }
+.titlebox h2 { font-family: Georgia, "Cambria", serif; color: var(--blue); font-size: 16pt; font-weight: 700; line-height: 1.05; }
+.team { line-height: 1.15; font-size: 10pt; font-weight: 700; letter-spacing: 0.01em; }
+.team span { font-family: var(--mono); font-weight: 400; color: #555; font-size: 9.5pt; }
+.guide { font-size: 11pt; font-weight: 700; line-height: 1.1; }
+.guide em { font-style: normal; color: #c2410c; border-bottom: 0.3mm dashed #c2410c; }
+.inst { font-size: 11pt; font-weight: 700; color: #15803d; line-height: 1.1; }
+
+/* Sections */
+.row { display: grid; gap: 4mm; flex: none; }
+.sec { border: 0.35mm solid var(--line); background: #fbfcfe; padding: 2mm 2.2mm 2.4mm; display: flex; flex-direction: column; }
+.sec > h3 {
+  font-family: Georgia, "Cambria", serif; color: var(--navy); font-size: 14pt; text-align: center; padding: 0.5mm 0 0.6mm;
+  background: linear-gradient(90deg, #c9dcf5, #e9f1fb 50%, #c9dcf5); margin-bottom: 1.6mm;
+  clip-path: polygon(2.5% 0, 97.5% 0, 100% 50%, 97.5% 100%, 2.5% 100%, 0 50%);
+}
+.inner { border: 0.25mm solid #c8d6ea; background: #fff; padding: 1.8mm 2.8mm; flex: 1; }
+ul.dia { list-style: none; }
+ul.dia li { position: relative; padding-left: 4.6mm; margin-bottom: 1mm; }
+ul.dia li::before { content: ""; position: absolute; left: 0.4mm; top: 1.7mm; width: 2.1mm; height: 2.1mm; background: var(--blue); transform: rotate(45deg); }
+.cap { font-size: 9pt; color: #3b4558; line-height: 1.25; margin-top: 1mm; }
+.cap b { color: #111a2e; }
+.kicker { font-family: var(--mono); font-size: 8.5pt; letter-spacing: 0.08em; color: #b45309; font-weight: 700; text-transform: uppercase; margin-bottom: 0.8mm; }
+
+/* Objectives */
+ol.obj { list-style: none; counter-reset: o; }
+ol.obj li { counter-increment: o; position: relative; padding-left: 7mm; margin-bottom: 1mm; line-height: 1.25; white-space: nowrap; }
+ol.obj li::before { content: counter(o); position: absolute; left: 0; top: 0.2mm; width: 4.8mm; height: 4.8mm; border-radius: 50%; background: var(--navy); color: #fff; font-size: 8.5pt; font-weight: 700; text-align: center; line-height: 4.8mm; }
+.tag { display: inline-block; width: 17mm; text-align: center; font-size: 7.5pt; font-weight: 700; letter-spacing: 0.05em; padding: 0 1.2mm; border-radius: 1mm; margin-left: 0; margin-right: 1.6mm; vertical-align: 0.3mm; text-transform: uppercase; }
+.tag.ok { background: #dcfce7; color: var(--ok); border: 0.2mm solid #86efac; }
+.tag.part { background: #fef3c7; color: var(--part); border: 0.2mm solid #fcd34d; }
+.objnote { display: inline; font-size: 9.8pt; color: #4b5563; }
+
+/* Architecture diagram */
+.arch { display: grid; grid-template-columns: 42mm 13mm 1fr 13mm 45mm; align-items: stretch; gap: 0; }
+.lane { border: 0.35mm solid #93b4e6; border-radius: 2mm; background: var(--pale); padding: 1.2mm 1.8mm 1.6mm; display: flex; flex-direction: column; gap: 1.1mm; }
+.lane .lh { font-family: var(--mono); font-size: 8.5pt; font-weight: 700; letter-spacing: 0.06em; color: var(--navy); text-transform: uppercase; }
+.lane .ls { font-size: 8.5pt; color: #4b5563; margin-top: -1mm; }
+.box { background: #fff; border: 0.3mm solid #1e3a8a; border-radius: 1.2mm; padding: 0.7mm 1.4mm; font-size: 9.5pt; line-height: 1.18; }
+.box b { display: block; font-size: 10pt; }
+.box small { font-family: var(--mono); font-size: 7.6pt; color: #4b5563; white-space: nowrap; }
+.box.hw { border-color: #b45309; }
+.box.out { border-color: #15803d; }
+.link { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-size: 8pt; color: #1e3a8a; font-weight: 700; padding: 0 0.5mm; }
+.link svg { width: 12mm; height: 6mm; }
+.pipe { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.6mm; }
+.pipe .box { position: relative; }
+.pipe .box:not(:last-child)::after { content: "\25B6"; position: absolute; right: -1.75mm; top: 40%; font-size: 6pt; color: #1e3a8a; }
+.pipe2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.6mm; }
+.num { display: inline-block; width: 3.8mm; height: 3.8mm; border-radius: 50%; background: #1e3a8a; color: #fff; font-size: 7pt; text-align: center; line-height: 3.8mm; margin-right: 0.8mm; vertical-align: 0.3mm; font-weight: 700; }
+.modes { display: grid; grid-template-columns: 1.3fr 1fr 1.1fr 46mm; gap: 3.5mm; margin-top: 1.4mm; }
+.modes h4 { font-size: 10.5pt; color: var(--navy); margin-bottom: 0.6mm; }
+.modes p { font-size: 10pt; line-height: 1.25; }
+.chips { display: flex; flex-wrap: wrap; gap: 1mm; margin-top: 1.2mm; }
+.chips span { font-family: var(--mono); font-size: 8pt; border: 0.25mm solid #9db3d6; border-radius: 3mm; padding: 0.2mm 1.8mm; background: #f3f7fd; }
+
+/* Results */
+.banner { background: #ecfdf3; border: 0.3mm solid #86efac; border-left: 1.6mm solid var(--ok); padding: 1mm 2.5mm; font-size: 10.5pt; margin-bottom: 1.6mm; }
+.res { display: grid; grid-template-columns: 1.08fr 1fr; gap: 4mm; }
+table { width: 100%; border-collapse: collapse; font-size: 9.6pt; line-height: 1.22; }
+th { background: #1e3a8a; color: #fff; text-align: left; font-size: 8.8pt; letter-spacing: 0.03em; padding: 1mm 1.4mm; }
+td { border-bottom: 0.2mm solid #d5deeb; padding: 0.3mm 1.4mm; vertical-align: top; }
+tr:nth-child(even) td { background: #f5f8fd; }
+td.v { font-weight: 700; color: #0f2a6b; white-space: normal; }
+td.w { font-family: var(--mono); font-size: 7.8pt; color: #6b7280; white-space: nowrap; }
+.mean { color: #9a3412; font-weight: 600; }
+.photos { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
+.ph img { width: 100%; display: block; border: 0.25mm solid #b8c4d6; object-fit: cover; }
+.ph.tall img { height: 70mm; }
+.ph.wide { grid-column: span 2; }
+.ph.wide img { height: auto; }
+.honest { background: var(--amber-bg); border: 0.3mm solid #f5c46b; border-left: 1.6mm solid #d97706; padding: 1.6mm 2.5mm; margin-top: 2.2mm; }
+.honest h4 { font-size: 10.5pt; color: #92400e; margin-bottom: 0.6mm; }
+.honest ul { list-style: none; columns: 2; column-gap: 4mm; font-size: 9.6pt; line-height: 1.25; }
+.honest li { padding-left: 3.2mm; position: relative; margin-bottom: 0.5mm; break-inside: avoid; }
+.honest li::before { content: "\2715"; position: absolute; left: 0; color: #b45309; font-size: 7.5pt; top: 0.4mm; font-weight: 700; }
+
+/* Bottom row */
+.refs ol { font-size: 8pt; line-height: 1.18; padding-left: 4mm; color: #2b3445; columns: 3; column-gap: 5mm; }
+.refs li { break-inside: avoid; }
+.refs li { margin-bottom: 0.45mm; }
+.qrwrap { display: flex; gap: 3mm; align-items: center; margin-top: 2mm; }
+.qr { width: 26mm; height: 26mm; flex: none; border: 0.5mm dashed #1e3a8a; border-radius: 1.5mm; display: flex; align-items: center; justify-content: center; text-align: center; font-family: var(--mono); font-size: 8pt; color: #1e3a8a; background:
+  repeating-linear-gradient(45deg, #f2f6fc 0 2mm, #fff 2mm 4mm); }
+.qrtext { font-size: 10pt; line-height: 1.25; }
+.qrtext b { display: block; color: var(--navy); }
+.sub2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin-top: 1.4mm; }
+.sub2 p { font-size: 10pt; line-height: 1.27; }
+
+.tg { display: inline-block; font-family: var(--mono); font-size: 7.5pt; font-weight: 700; padding: 0 1.2mm; border-radius: 0.8mm; margin-right: 1.2mm; vertical-align: 0.2mm; }
+.tg.b { background: #e0e7ff; color: #3730a3; } .tg.l { background: #dcfce7; color: #166534; } .tg.r { background: #f3e8ff; color: #6b21a8; }
+td.m { color: #9a3412; font-size: 9.2pt; }
+.objrow { display: flex; justify-content: space-between; gap: 2mm; align-items: baseline; }
+.lower { display: grid; grid-template-columns: 88mm 40mm 1fr; gap: 3.5mm; margin-top: 1.6mm; align-items: start; }
+.honest { margin-top: 1.6mm; padding: 1.2mm 2.4mm; }
+.honest ul { columns: 2; column-gap: 3mm; font-size: 9.6pt; line-height: 1.22; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <img src="assets/kiit_logo.png" alt="KIIT logo">
+      <div class="group">GROUP NO. 29</div>
+    </div>
+    <div class="titlebox">
+      <h1>Lab Digital Twin:</h1>
+      <h2>Autonomous Scanning and 3D Reconstruction</h2>
+      <div class="team">HIRANYA KUMAWAT <span>(24155539)</span>, SUMEDHA G <span>(2405198)</span>, SUJAL AGARWAL <span>(24051292)</span>,<br>
+        NAMAN SINGH <span>(24052230)</span>, UTKARSH JHA <span>(24155593)</span>, AASUTOSH SWAIN <span>(24157002)</span></div>
+      <div class="guide">K-Explore (Robotics)</div>
+      <div class="inst">Kalinga Institute of Industrial Technology (Deemed to be University), Bhubaneswar</div>
+    </div>
+  </header>
+
+  <!-- ROW A: Introduction | Objectives -->
+  <div class="row" style="grid-template-columns: 1fr 146mm;">
+    <section class="sec">
+      <h3>Introduction</h3>
+      <div class="inner">
+        <ul class="dia">
+          <li><b>Motivation:</b> floor plans and photos lose a lab's 3D geometry; range and depth sensors can capture it.</li>
+          <li><b>What we built:</b> a <b>hand-pushed sensor cart</b> (Unitree L2 4D LiDAR, Orbbec Gemini 336L, Raspberry Pi 5) streaming raw data over Wi-Fi to a laptop, where our software builds a <b>lab digital twin</b> and shows it live in a browser.</li>
+        </ul>
+      </div>
+    </section>
+    <section class="sec">
+      <h3>Objectives</h3>
+      <div class="inner">
+        <ol class="obj">
+          <li><span class="tag part">Partly</span><b>Capture</b> the lab with a mobile scan <span class="objnote">· hand-pushed so far</span></li>
+          <li><span class="tag part">Partly</span><b>Integrate</b> LiDAR and RGB-D in one pipeline <span class="objnote">· no calibration yet</span></li>
+          <li><span class="tag ok">Achieved</span><b>Align</b> scans and <b>reconstruct</b> the lab in 3D <span class="objnote">· 359 scans, one viewpoint</span></li>
+          <li><span class="tag ok">Achieved</span><b>Visualize</b> the twin interactively <span class="objnote">· live on the real rig</span></li>
+          <li><span class="tag ok">Achieved</span><b>Validate</b> on replayed data before going live <span class="objnote">· tests, rehearsals</span></li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <!-- ROW B: Methodology -->
+  <section class="sec">
+    <h3>Methodology</h3>
+    <div class="inner">
+      <div class="arch">
+        <div class="lane">
+          <div class="lh">On the cart</div>
+          <div class="ls">hand-pushed, motors off</div>
+          <div class="box hw"><b>Unitree L2 4D LiDAR</b><small>upright · built-in IMU</small></div>
+          <div class="box hw"><b>Orbbec Gemini 336L</b><small>RGB-D · USB 2 · 640x400</small></div>
+          <div class="box hw"><b>Raspberry Pi 5</b><small>capture node</small></div>
+        </div>
+        <div class="link">
+          <svg viewBox="0 0 48 24"><line x1="2" y1="12" x2="40" y2="12" stroke="#1e3a8a" stroke-width="2.4" stroke-dasharray="5 3"/><polygon points="38,5 47,12 38,19" fill="#1e3a8a"/></svg>
+          Wi-Fi<br>hotspot<br><span style="font-weight:400">raw stream,<br>authenticated</span>
+        </div>
+        <div class="lane">
+          <div class="lh">Laptop pipeline (Python 3.12)</div>
+          <div class="ls">Windows laptop · RTX 4070 Laptop GPU · FastAPI command center</div>
+          <div class="pipe">
+            <div class="box"><span class="num">1</span><b style="display:inline">Sync</b><br><small>LiDAR·IMU·RGB-D</small></div>
+            <div class="box"><span class="num">2</span><b style="display:inline">Deskew</b><br><small>IMU motion</small></div>
+            <div class="box"><span class="num">3</span><b style="display:inline">Register</b><br><small>ICP + pose graph</small></div>
+            <div class="box"><span class="num">4</span><b style="display:inline">Map</b><br><small>log-odds + TSDF</small></div>
+            <div class="box out"><span class="num">5</span><b style="display:inline">Twin</b><br><small>Poisson mesh</small></div>
+          </div>
+          <div class="pipe2">
+            <div class="box"><span class="num">6</span><b style="display:inline">Perception</b><br><small>CNN + 9-DoF Kalman tracker</small></div>
+            <div class="box"><span class="num">7</span><b style="display:inline">Safety</b><br><small>risk fields · protected zones</small></div>
+            <div class="box"><span class="num">8</span><b style="display:inline">Planner</b><br><small>safe trajectory</small></div>
+          </div>
+        </div>
+        <div class="link">
+          <svg viewBox="0 0 48 24"><line x1="2" y1="12" x2="40" y2="12" stroke="#1e3a8a" stroke-width="2.4"/><polygon points="38,5 47,12 38,19" fill="#1e3a8a"/></svg>
+          binary<br>scene<br>protocol
+        </div>
+        <div class="lane">
+          <div class="lh">Browser studio</div>
+          <div class="ls">React 19 · TypeScript · Three.js</div>
+          <div class="box out"><b>Explore · Live · Replay</b><small>3D twin, tracks, zones</small></div>
+          <div class="box"><b>Explainer page</b><small>numbers cite sources</small></div>
+          <div class="box"><b>Static replay site</b><small>recorded session</small></div>
+        </div>
+      </div>
+      <div class="cap"><b>Fig. 1:</b> System architecture as built. Orange: hardware on the cart; numbered blocks run on the laptop; green: what people see. All software is our own code (Python 3.12 and TypeScript).</div>
+
+      <div class="modes">
+        <div>
+          <h4>Two ways to run</h4>
+          <p><b>Build twin</b> (offline): a recording is registered scan by scan (4 sweeps a scan, auto IMU bias) and fused. <b>Live, "parked":</b> the cart localizes once on the twin, then holds; perception and tracking run every frame.</p>
+        </div>
+        <div>
+          <h4>Rig geometry</h4>
+          <p>L2 upright, window <b>9.0 cm</b> above the floor; Gemini 336L <b>21 cm</b> in front and <b>2.5 cm</b> higher; cart <b>22.9 x 15.2 cm</b>. The cart's own body is masked in software.</p>
+        </div>
+        <div>
+          <h4>Engineering and testing</h4>
+          <p>Own raw-sensor transport protocol; 713 automated Python tests (21 Nov), web unit and Playwright E2E tests, local CI. Libraries: NumPy, SciPy, Open3D, OpenCV, PyTorch, MuJoCo.</p>
+        </div>
+        <div class="ph">
+          <img src="assets/cart_in_lab_crop.jpg" alt="The sensor cart on the lab floor" style="height:23mm;">
+          <div class="cap"><b>Fig. 2:</b> The cart in the lab, 5 Nov 2026.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROW C: Experimental Results -->
+  <section class="sec">
+    <h3>Experimental Results</h3>
+    <div class="inner">
+      <div class="banner"><b>Measured on 5 Nov 2026:</b> lab recording and live run on the real rig (bench streams and rehearsals from the days before).</div>
+      <table>
+        <thead><tr><th style="width:27%">Test</th><th style="width:50%">Result</th><th>What the number means</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tg b">BENCH</span>First Pi-to-laptop stream over Wi-Fi</td><td class="v">60 s · 716 frames · 0 lost · 5.17 MB/s</td><td class="m">transport works; rig standing still</td></tr>
+          <tr><td><span class="tg b">BENCH</span>Long stationary stream</td><td class="v">600 s · 7,171 frames · 0 lost · clocks within ±0.9 ms</td><td class="m">rig standing still</td></tr>
+          <tr><td><span class="tg b">BENCH</span>Pose spread, rig never moved</td><td class="v">42 mm</td><td class="m">static precision, not accuracy</td></tr>
+          <tr><td><span class="tg l">LAB 5 NOV</span>Recording on the cart</td><td class="v">120 s · 1,435 sweeps at 11.98 Hz · 0 lost · IMU 251 Hz</td><td class="m">real lab, one session</td></tr>
+          <tr><td><span class="tg l">LAB 5 NOV</span>Lab twin from that recording</td><td class="v">359 scans · 14,093 measured cells · 61,367 surface points</td><td class="m">one viewpoint; floor from the tape</td></tr>
+          <tr><td><span class="tg l">LAB 5 NOV</span>Live run localized on the twin</td><td class="v">fitness 0.985 · ICP RMSE 3.4 cm</td><td class="m">a fit, not accuracy</td></tr>
+          <tr><td><span class="tg l">LAB 5 NOV</span>Live run, LiDAR-only, over Wi-Fi</td><td class="v">15 min · 5,510 frames · 0 drops · p50 140 / p95 216 ms a frame · memory flat 1.51–1.64 GB</td><td class="m">processing time per frame, not latency</td></tr>
+          <tr><td><span class="tg r">REHEARSAL</span>Exact (same-result) speed-ups</td><td class="v">p50 381 → 240 ms a frame</td><td class="m">10-min runs on recorded data</td></tr>
+          <tr><td><span class="tg r">REHEARSAL</span>30-min endurance run</td><td class="v">no errors</td><td class="m">recorded real data, real transport; not live</td></tr>
+        </tbody>
+      </table>
+      <div class="cap"><b>Table 1:</b> Measured results. Sources in the project repository: reports/hardware, reports/lab, reports/rehearsal, docs/LAB_DAY.md.</div>
+
+      <div class="lower">
+        <div class="ph">
+          <img src="assets/fig7_latency_progression.png" alt="Processing time per frame across rehearsals">
+          <div class="cap"><b>Fig. 3:</b> Processing time per frame in rehearsals (recorded bench data, real transport on loopback; not Wi-Fi, not the Pi). Exact speed-ups: p50 381 to 240 ms. Orange: 35 ms target, not met.</div>
+        </div>
+        <div class="ph">
+          <img src="assets/live_run_walker_crop.jpg" alt="A team member walks through the lab during the live run" style="height:54mm; object-fit: cover; object-position: 50% 30%;">
+          <div class="cap"><b>Fig. 4:</b> Live run: a team member walks by; studio on the laptop behind.</div>
+        </div>
+        <div>
+          <div class="ph">
+            <img src="assets/studio_lab_twin_crop.jpg" alt="The browser studio showing the lab twin">
+            <div class="cap"><b>Fig. 5:</b> The studio showing the lab twin (dark mesh) and LiDAR points (cyan); it labels the run "Hardware not tested" and its effects "presentation only".</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROW D -->
+  <div class="row" style="grid-template-columns: 1.25fr 0.8fr 1.25fr;">
+    <section class="sec">
+      <h3>Conclusions</h3>
+      <div class="inner">
+        <ul class="dia">
+          <li>The <b>full chain runs on real hardware</b>, cart to browser, with 0 lost frames in every stream.</li>
+          <li>A <b>lab twin</b> was built; a 15-min LiDAR-only live run held against it, memory flat.</li>
+          <li><b>Limits:</b> uncalibrated, no ground truth, not autonomous; well above 35 ms.</li>
+        </ul>
+      </div>
+    </section>
+    <section class="sec">
+      <h3>Future Work</h3>
+      <div class="inner">
+        <ul class="dia">
+          <li>Camera-LiDAR <b>calibration</b> with a target</li>
+          <li>Full <b>moving scan</b> with loop closure</li>
+          <li><b>Landmark accuracy</b> vs the tape</li>
+          <li><b>Latency</b> with a 240 fps phone</li>
+          <li><b>Autonomous navigation</b></li>
+        </ul>
+      </div>
+    </section>
+    <section class="sec">
+      <h3>Not Measured Yet</h3>
+      <div class="inner honest" style="margin:0; border-left-width:1.6mm; padding:1.4mm 2.4mm;">
+        <ul>
+          <li>Camera-LiDAR calibration</li>
+          <li>Accuracy vs ground truth</li>
+          <li>World-to-display latency</li>
+          <li>30-min hardware-verified run</li>
+          <li>35 ms target (not met)</li>
+          <li>Moving scan (5 Nov push failed QA)</li>
+          <li>Physical LED halo</li>
+          <li>Autonomous driving</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="sec refs" style="flex: none;">
+    <h3 style="font-size:12pt; margin-bottom:1mm;">References</h3>
+    <div class="inner" style="display:flex; gap:3mm; align-items:center; padding:1.4mm 2.4mm;">
+      <ol style="flex:1;">
+        <li>Unitree Robotics, "Unitree 4D LiDAR L2 User Manual," v1.1, Oct. 2024. unitree.com/L2</li>
+        <li>Orbbec, "Gemini 336L" product page and Gemini 330 series documentation. orbbec.com</li>
+        <li>SLAMTEC, "RPLIDAR S2 Datasheet," v2.0. <i>(in the proposal; not used)</i></li>
+        <li>Q.-Y. Zhou, J. Park, V. Koltun, "Open3D: A Modern Library for 3D Data Processing," arXiv:1801.09847, 2018.</li>
+        <li>E. Todorov, T. Erez, Y. Tassa, "MuJoCo: A physics engine for model-based control," IEEE/RSJ IROS, pp. 5026–5033, 2012.</li>
+        <li>G. Bradski, "The OpenCV Library," Dr. Dobb's J. Software Tools, 2000.</li>
+        <li>A. Paszke et al., "PyTorch: An Imperative Style, High-Performance Deep Learning Library," NeurIPS, 2019.</li>
+        <li>C. R. Harris et al., "Array programming with NumPy," Nature, 585, pp. 357–362, 2020.</li>
+        <li>P. Virtanen et al., "SciPy 1.0: Fundamental algorithms for scientific computing in Python," Nature Methods, 17, pp. 261–272, 2020.</li>
+      </ol>
+      <div class="qr" style="width:21mm;height:21mm;">Live<br>replay</div>
+      <div style="width:24mm; font-size:8.5pt; line-height:1.2;"><b style="color:var(--navy)">Interactive replay site</b><br>aethertwin-showcase<br>.vercel.app</div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

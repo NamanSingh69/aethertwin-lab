@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "imu_bias",
+  "suggestion_only": true,
+  "gravity_m_s2": 9.80665,
+  "recordings": [
+    {
+      "recording": "C:\\Users\\user\\aethertwin_rec\\wifi_stationary_60s",
+      "samples": 15076,
+      "span_s": 59.98112499999115,
+      "rate_hz": 251.3290639347332,
+      "stationary": true,
+      "noise": {
+        "gyro_std_rad_s": [
+          0.004678661602617662,
+          0.0052452349743130336,
+          1.4128878950155076e-05
+        ],
+        "accel_std_m_s2": [
+          0.09306554421490919,
+          0.08289911482781119,
+          0.07107158019549732
+        ]
+      },
+      "gyro_mean_rad_s": [
+        -3.726441049287931e-06,
+        -6.684305911220236e-06,
+        -8.824750301849185e-08
+      ],
+      "accel_mean_m_s2": [
+        0.024854135402864002,
+        -0.015069765486334034,
+        10.521303248993753
+      ],
+      "accel_norm_m_s2": 10.521343397264673,
+      "gravity_direction": [
+        0.002362258740583028,
+        -0.0014323043091865868,
+        0.9999961841117239
+      ],
+      "accel_bias_gravity_method": [
+        0.001688290724525452,
+        -0.001023658432649394,
+        0.7146906700745177
+      ]
+    }
+  ],
+  "accel_bias_m_s2": [
+    0.001688290724525452,
+    -0.001023658432649394,
+    0.7146906700745177
+  ],
+  "axis_gravity_coverage": [
+    0.002362258740583028,
+    0.0014323043091865868,
+    0.9999961841117239
+  ],
+  "gyro_bias_rad_s": [
+    -3.726441049287931e-06,
+    -6.684305911220236e-06,
+    -8.824750301849185e-08
+  ],
+  "limitations": "gravity-magnitude method; one orientation cannot separate bias from scale on the loaded axis; unloaded axes keep the gravity-direction estimate only",
+  "config_snippet": {
+    "live": {
+      "imu_accel_bias": [
+        0.0017,
+        -0.001,
+        0.7147
+      ]
+    }
+  }
+}

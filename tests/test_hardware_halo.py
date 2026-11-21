@@ -138,6 +138,43 @@ def test_configured_compatible_receiver_handshake_precedes_all_binary_packets():
     assert serial.closed
 
 
+def test_each_supported_board_profile_is_accepted_and_reported():
+    from hardware_halo.protocol import IDENTITIES
+    for profile,line in IDENTITIES.items():
+        serial=MockSerial(line+b'\r\n')
+        controller=HaloController({'enabled':True,'port':'EXPLICIT_TEST_PORT'},serial_factory=lambda **kwargs:serial)
+        try:
+            controller.publish(snapshot(now=time.time()))
+            deadline=time.monotonic()+.7
+            while time.monotonic()<deadline and not controller.status()['compatible']:threading.Event().wait(.01)
+            status=controller.status()
+            assert status['compatible'] and status['board_profile']==profile.decode() and not status['hardware_verified']
+        finally:controller.close()
+    # A different pixel count or an unknown board is still refused.
+    for line in (b'AETHER_HALO 1 PIXELS=12 PROFILE=ESP32_S3_DEVKITC',b'AETHER_HALO 1 PIXELS=24 PROFILE=OTHER_BOARD'):
+        serial=MockSerial(line+b'\n')
+        controller=HaloController({'enabled':True,'port':'P','handshake_timeout_seconds':.1},serial_factory=lambda **kwargs:serial)
+        try:
+            controller.publish(snapshot(now=time.time()));threading.Event().wait(.2)
+            assert not controller.status()['compatible'] and controller.status()['board_profile'] is None
+        finally:controller.close()
+
+
+def test_firmware_profiles_match_the_host_identities():
+    import json
+    from pathlib import Path
+    from hardware_halo.protocol import IDENTITIES
+    from hardware_halo.build_firmware import BOARDS
+    here=Path(__file__).resolve().parents[1]/'hardware_halo'
+    sketch=(here/'firmware/aether_halo/aether_halo.ino').read_text(encoding='utf-8')
+    assert {target['board_profile'].encode() for target in BOARDS.values()}==set(IDENTITIES)
+    for target in BOARDS.values():
+        assert f'"{target["board_profile"]}"' in sketch
+        report=json.loads((here/target['verification']).read_text(encoding='utf-8'))
+        assert report['board_profile']==target['board_profile'] and report['fqbn']==target['fqbn'] and report['gpio']==target['gpio']
+        assert report['status']=='passed' and report['flashed'] is False and report['hardware_verified'] is False
+
+
 def test_incompatible_serial_device_receives_no_telemetry_and_virtual_status_continues():
     serial=MockSerial(b'UNRELATED_DEVICE 7\n')
     controller=HaloController({'enabled':True,'port':'ONLY_THIS_PORT','handshake_timeout_seconds':.1},serial_factory=lambda **kwargs:serial)
@@ -206,3 +243,59 @@ def test_actual_firmware_header_matches_host_crc_sequence_and_all_pixel_patterns
     assert lost_link['pixels'][0]==[64,0,47] and lost_link['pixels']!=states[0]['pixels']
     broken=bytearray(encode_packet(states[-1],1));broken[14]^=1
     assert subprocess.run([str(executable),broken.hex()],stdout=subprocess.PIPE).returncode==2
+
+
+def wait_for(condition,seconds=4):
+    end=time.monotonic()+seconds
+    while time.monotonic()<end:
+        if condition():return True
+        time.sleep(.01)
+    return False
+
+
+class HeartbeatSerial(MockSerial):
+    """Identifies, sends heartbeats while ``alive`` is set, then goes silent (a hung board whose USB bridge still accepts writes)."""
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs);self.alive=threading.Event();self.alive.set();self.next_beat=0.
+    def read(self,size):
+        data=super().read(size)
+        if not data and self.alive.is_set() and time.monotonic()>=self.next_beat:
+            self.next_beat=time.monotonic()+.2;return b'AETHER_HALO_ALIVE 1000 5 1 0\r\n'
+        return data
+
+
+def test_silent_heartbeat_reconnects_and_status_reports_device_counters(monkeypatch):
+    import hardware_halo.controller as module
+    monkeypatch.setattr(module,'HEARTBEAT_TIMEOUT_SECONDS',.5)
+    first=HeartbeatSerial();second=HeartbeatSerial();ports=[first,second]
+    controller=HaloController({'enabled':True,'port':'EXPLICIT_TEST_PORT'},serial_factory=lambda **kwargs:ports.pop(0))
+    try:
+        controller.publish(snapshot(now=time.time()))
+        assert wait_for(lambda:controller.status()['device_heartbeat'] is not None)
+        status=controller.status()
+        assert status['device_heartbeat']=={'device_uptime_ms':1000,'accepted_packets':5,'rejected_blocks':1,'interbyte_timeouts':0}
+        first.alive.clear()  # board hangs; writes keep succeeding
+        assert wait_for(lambda:controller.status()['connections']==2,seconds=6)
+        status=controller.status();assert first.closed and status['heartbeat_timeouts']==1 and 'heartbeats' in status['last_error']
+    finally:controller.close()
+
+
+def test_firmware_receiver_rescans_after_a_stray_byte_and_drops_stale_partials(tmp_path):
+    compiler=shutil.which('g++')
+    if compiler is None:pytest.skip('Optional desktop C++ compiler unavailable; firmware compilation has separate evidence')
+    root=Path(__file__).resolve().parents[1];source=root/'hardware_halo/firmware/host_protocol_check.cpp'
+    executable=tmp_path/('halo_protocol_check.exe' if sys.platform=='win32' else 'halo_protocol_check')
+    subprocess.run([compiler,'-O2',str(source),'-o',str(executable)],check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    state=halo_state(snapshot(),now=1000.);one=encode_packet(state,1);two=encode_packet(state,2);three=encode_packet(state,3)
+    def run(events):
+        stream=' '.join(f'{delay}:{data.hex()}' for delay,data in events)
+        return json.loads(subprocess.check_output([str(executable),'--receive',stream],text=True))
+    hello=b'AETHER_HALO_HELLO 1\n'
+    # A stray byte before packet two costs at most that packet; packet three is recovered by the rescan.
+    result=run([(0,hello),(0,one),(0,b'\x00'+two[:5]),(0,three)])
+    assert result['hello']==1 and 1 in result['sequences'] and 3 in result['sequences'] and result['rejected']>=1
+    # A partial packet followed by silence longer than the inter-byte timeout is discarded, not glued to the next one.
+    result=run([(0,hello),(0,one[:7]),(50,two)])
+    assert result['sequences']==[2] and result['timeouts']==1
+    # Binary data before pairing is ignored.
+    assert run([(0,one)])['sequences']==[]

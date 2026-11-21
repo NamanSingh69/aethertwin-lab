@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "kind": "halo_link_test",
+  "date_utc": "2026-11-04T14:31:36.327166+00:00",
+  "port": "COM7",
+  "label": "physical board, serial link only; LED output not observed",
+  "leds_verified": false,
+  "hardware_verified": false,
+  "host": {
+    "name": "Naman_PC",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python": "3.12.10",
+    "pyserial": "3.5"
+  },
+  "controller": {
+    "connected": true,
+    "compatible": true,
+    "board_profile": "ESP32_S3_DEVKITC",
+    "packets_sent": 241,
+    "connections": 1,
+    "device_heartbeat": {
+      "device_uptime_ms": 64003,
+      "accepted_packets": 688,
+      "rejected_blocks": 2,
+      "interbyte_timeouts": 2
+    },
+    "heartbeat_timeouts": 0,
+    "last_error": null,
+    "last_device_error": null,
+    "virtual_severity": "caution",
+    "heartbeats_seen": 8,
+    "accepted_growth": 209
+  },
+  "identity": "AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_S3_DEVKITC",
+  "board_profile": "ESP32_S3_DEVKITC",
+  "robustness": {
+    "before": {
+      "uptime_ms": 67003,
+      "accepted": 719,
+      "rejected": 2,
+      "timeouts": 2
+    },
+    "after": {
+      "uptime_ms": 70003,
+      "accepted": 721,
+      "rejected": 3,
+      "timeouts": 3
+    },
+    "other_lines": [],
+    "accepted_delta": 2,
+    "rejected_delta": 1,
+    "timeouts_delta": 1
+  },
+  "checks": {
+    "identified": true,
+    "heartbeats": true,
+    "packets_accepted": true,
+    "valid_packets_accepted": true,
+    "corrupt_block_rejected": true,
+    "partial_packet_timed_out": true,
+    "no_device_errors": true
+  },
+  "passed": true
+}

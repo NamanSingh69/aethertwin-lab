@@ -155,6 +155,28 @@ generation but is a much larger part; no A2000 figure is claimed.
 ## Prioritised backlog
 
 **P0, correctness and evidence**
+0. **Live parked frame on real data, 2026-11-05** (GPU laptop, recorded bench L2 + Gemini through the real
+   transport; `reports/rehearsal/`, in-process profile of 60 real frames): ~300-316 ms per frame against the 35 ms
+   target, after overnight exact speed-ups from 381 ms (`a97cabb`, `280ca5b`; journal `docs/aide2_tree.jsonl`
+   C16-C23). The 30-minute rehearsal is stable at ~2.5-3 processed frames/s with latest-frame coalescing, so this is
+   throughput, not correctness. Measured stages and what is left, cheapest first:
+   - **Perception + tracking ~145 ms.** Most of it is GPU work the host waits for (the 14 host-to-device copies take
+     ~4 ms in total when timed alone). **Measured, rejected:** the Jetson profile's 200x320 camera features on the
+     same 60 real frames were *slower* on this laptop (304 vs 289 ms a frame; the resize costs more than the smaller
+     camera CNN saves) and changed outputs (99.1 % voxel-class agreement, 12.2 vs 10.9 entities a frame). Timed with
+     synchronisation: the voxel network's forward is only ~20 ms; `prepare_frame` is ~68 ms (camera CNN, projection,
+     spatial index, map lookups) and tracking/risk the rest. Half precision would save <=10 ms. The map lookup inside it
+     is dominated by tile `get_many`, not decay arithmetic (C27, reverted). Best next lever: overlap preparation with
+     the previous frame's GPU work (pipelining), validated on recorded data. Tracker GIoU (~26 ms) is now scipy `ConvexHull` (a file open per
+     call on Windows): an analytic enclosing-box GIoU would remove it but changes association scores, so validate
+     on recorded tracks first.
+   - **Occupancy ~90 ms.** Per-cell Python dict work in `DiskTileStore` (vectorising only the log-odds arithmetic
+     gave nothing: C25 reverted) plus SQLite eviction. Lever: an array-backed tile page (numpy coords/values per tile,
+     hash index) instead of dict-of-lists; or, for a parked run, the in-memory map with a vectorised `query`
+     (in-memory occupancy measured 60 ms, but the grid refresh's per-point query eats the gain).
+   - **Localization ~27 ms** (deskew and re-anchoring of ~5k returns): fine for now.
+   Exactness rule used overnight: bit-identical or same-geometry changes only, each with a RED-first test and an oracle
+   copy of the old code; anything that changes model inputs or scores needs recorded-data validation first.
 1. Done: the seed-dependent perception slowdown was uncached disk-tile
    distance queries (see "Cloud GPU benchmarks"); confirmed on Modal.
 2. Occupancy and planning latency: move ray clearing fully to the native
@@ -202,10 +224,21 @@ generation but is a much larger part; no A2000 figure is claimed.
    whose stored value is already on the wrong side of the threshold (exact:
    decay never moves a value past its stored one); 74k cells 17.3 -> 6.6 ms,
    planning p50 47-49 -> 35-36 ms, total p50 208-212 -> 189-197 ms, outputs
-   byte-identical. Remaining: native ray clearing and evidence updates.
+   byte-identical. Next, the decay power is computed once per distinct stored
+   timestamp instead of once per cell (cells share frame timestamps; same
+   expression, so bit-identical), and traversed keys are de-duplicated by
+   packing three 21-bit offset-binary fields into one int64 for a 1-D unique
+   (identical rows and order; the 3-column sort remains the fallback beyond
+   +-2^20 cells). Laptop CPU, seed 7, 30 frames, three alternating pairs:
+   occupancy p50 59-67 -> 48-52 ms, p95 68-86 -> 57-63 ms; trajectory, saved
+   occupancy map and scene state (apart from timing fields) byte-identical in
+   all 12 runs. A native evidence store is still possible but would need the C
+   runtime's `pow` to stay bit-identical. Remaining: native evidence updates.
    Re-run `tools/modal_bench.py --suite latency` and the laptop before/after. [software]
-3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md` and the
-   Pi-to-Windows raw-sensor transport (does not exist yet). [HW]
+3. Physical commissioning per `docs/RASPBERRY_PI_WINDOWS.md`. The
+   Pi-to-Windows raw-sensor transport is implemented and soaked over loopback
+   with synthetic devices (`reports/raw_transport/`); it has not run on the Pi,
+   L2 or Gemini. [HW]
 
 **P1, performance and platform**
 4. `torch.compile` for inference: **done in software** behind `perception.compile`
@@ -215,8 +248,11 @@ generation but is a much larger part; no A2000 figure is claimed.
    p95 83.3 -> 65.5 ms, max difference 2.4e-6, ~12 s compile per signature
    (`reports/inference_compile_cpu.json`). Remaining: measure on the A2000 and
    decide whether to warm up at service start. [HW]
-5. CUDA lock profile for Windows (`requirements-windows-cuda.lock`) validated on
-   the A2000 workstation; record under `reports/` as a workstation profile. [HW]
+5. CUDA lock profile for Windows (`requirements-windows-cuda.lock`): **created
+   and validated on the RTX 4070 laptop** (`reports/gpu/windows_cuda_lock_laptop.json`:
+   clean `--require-hashes` install, pytest 369 passed; sim 30 frames,
+   perception+tracking p50/p95 134/203 ms on CUDA vs 222/240 ms on CPU, one run
+   each). Remaining: the same on the A2000 workstation. [HW]
 6. ONNX Runtime / TensorRT export for the A2000 (fp16 needs the overflow and
    scatter dtype issues fixed first). [software, then HW]
 7. Tune `auto` quality thresholds on at least an integrated GPU, the RTX
@@ -238,11 +274,13 @@ generation but is a much larger part; no A2000 figure is claimed.
     gateway and upstream certificate rotation drills passed and are documented
     in `deployment/gateway/README.md`. Remaining: a real deployment host with
     publicly trusted certificates. [ops]
-13. Halo [HW]: identify the board before flashing; add a device heartbeat or a
-    periodic re-HELLO (the firmware already re-identifies on HELLO, but resets
-    its link watchdog, which may flicker); inter-byte timeout and `0xA7`
-    rescan in the firmware parser; `enableLoopWDT()` and `Wire.setTimeOut`.
-    Keep `hardware_verified: false` until verified on a real ESP32 and ring.
+13. Halo [HW]: identify the board before flashing. **Done in software and
+    compile-checked (Arduino-ESP32 3.3.12, not flashed):** device heartbeat with
+    a host-side hung-board watchdog, re-HELLO without watchdog flicker,
+    inter-byte timeout and `0xA7 54` rescan (shared receiver state machine,
+    cross-checked with a desktop build), `enableLoopWDT()` and
+    `Wire.setTimeOut`. Keep `hardware_verified: false` until verified on a real
+    ESP32 and ring.
 14. Prometheus-style `/metrics` on loopback or behind a token; opt-in mDNS.
     Do not add Wi-Fi/BLE/OTA endpoints to the ESP32 without a strong need
     (secure boot, signed images and flash encryption would be required).

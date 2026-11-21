@@ -50,7 +50,12 @@ public:
         }
         return py::none();
     }
-    void close(){if(open_){reader_->stopLidarRotation();reader_->closeUDP();open_=false;}}
+    // unilidar_sdk2 2.0.9 (rev 0e3c51f, aarch64): closeUDP() segfaults, with or without stopping rotation
+    // first (minimal C++ reproduction on the Pi 5, 2026-11-04), so the socket is left to process exit; the
+    // reader allocation is process-lifetime anyway (below), so one reader per process. Rotation is also left
+    // running: the L2 spins from power-on, and after a stop the next clouds took 22 s to return (IMU at once),
+    // longer than the capture node's start-up limit.
+    void close(){open_=false;}
     ~L2Reader(){close();}
     // The vendor factory exposes no destruction function and its base class has
     // no virtual destructor. Its single reader allocation is process-lifetime;

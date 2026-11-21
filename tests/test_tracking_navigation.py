@@ -360,7 +360,7 @@ def _minimal_pipeline_for_navigation_test(monkeypatch,grid=None,source_size=.18,
         grid=PlannerGrid(np.zeros(3),.25,occupied,np.ones_like(occupied))
     twin=SimpleNamespace(floor_transform=np.eye(4),points=np.array([[0.,0.,0.]]))
     pipeline=pipeline_module.LabPipeline(config,None,twin,SparseMultiReturnVoxelMap(.25),grid)
-    pipeline.deskewer=SimpleNamespace(deskew_frame=lambda frame:frame,last_diagnostics={})
+    pipeline.deskewer=SimpleNamespace(deskew_frame=lambda frame:frame,last_diagnostics={},correct_state=lambda pose,velocity=None:None)
     pipeline.planner=planner(grid,radius=.2)
     pipeline.trajectory=PlannedTrajectory("ok",np.array([pipeline.start,pipeline.goal]),np.array([0.,2.]))
     pipeline.frames=1; pipeline.last_time=0.; pipeline.geofences=[]

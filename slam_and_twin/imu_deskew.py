@@ -17,12 +17,17 @@ def _rigid_pose(value):
 
 
 class ContinuousTimeIMUDeskewer:
-    def __init__(self,initial_pose=None,initial_velocity=None,gyro_bias=None,accel_bias=None,imu_to_lidar=None):
+    # Real L2 sweeps abut with sub-millisecond timestamp jitter (measured -0.77..+4.7 ms gaps over 7171 sweeps,
+    # reports/hardware/pi), so a start up to this far before the previous end is the same instant, not a replay.
+    OVERLAP_TOLERANCE_SECONDS=.002
+    def __init__(self,initial_pose=None,initial_velocity=None,gyro_bias=None,accel_bias=None,imu_to_lidar=None,overlap_tolerance=None):
         self.pose_world=np.eye(4) if initial_pose is None else _rigid_pose(initial_pose)
         self.velocity=np.zeros(3) if initial_velocity is None else np.array(initial_velocity,dtype=float)
         self.gyro_bias=np.zeros(3) if gyro_bias is None else np.asarray(gyro_bias,float)
         self.accel_bias=np.zeros(3) if accel_bias is None else np.asarray(accel_bias,float)
         self.imu_to_lidar=np.eye(4) if imu_to_lidar is None else np.asarray(imu_to_lidar,float)
+        self.overlap_tolerance=self.OVERLAP_TOLERANCE_SECONDS if overlap_tolerance is None else float(overlap_tolerance)
+        if not 0<=self.overlap_tolerance<.05:raise ValueError('overlap_tolerance must lie in [0, 0.05) seconds')
         self.last_timestamp=None;self.last_diagnostics={};self._trajectories=deque(maxlen=4)
         self.last_point_origins_world=np.empty((0,3));self.last_point_origins_lidar=np.empty((0,3))
 
@@ -106,10 +111,14 @@ class ContinuousTimeIMUDeskewer:
         if len(points) and (points[:,6].min()<-1e-6 or points[:,6].max()>duration+1e-6):raise ValueError('Point timestamp lies outside sweep')
         origins=np.zeros((len(points),3)) if origins is None else np.asarray(origins,float)
         if origins.shape!=(len(points),3) or not np.isfinite(origins).all():raise ValueError('Point origins must be finite and align with LiDAR returns')
-        integration_start=t0
+        integration_start=t0;overlap=0.
         if self.last_timestamp is not None:
             gap=t0-self.last_timestamp
-            if gap< -1e-6:raise ValueError('Overlapping sweeps require trajectory history; cannot integrate a future state twice')
+            if gap< -1e-6-self.overlap_tolerance:raise ValueError('Overlapping sweeps require trajectory history; cannot integrate a future state twice')
+            if gap< -1e-6:
+                # Jitter-sized overlap: integrate from the previous end; returns stamped inside the overlap take
+                # the pose at that instant (at most overlap_tolerance of motion, recorded in the diagnostics).
+                overlap=-gap;integration_start=self.last_timestamp
             if gap>1e-6:
                 if raw_t[0]>self.last_timestamp+1e-6:raise ValueError('IMU does not cover the interval between LiDAR sweeps')
                 integration_start=self.last_timestamp
@@ -128,16 +137,21 @@ class ContinuousTimeIMUDeskewer:
         alpha=np.gradient(gyro,times,axis=0)
         acc-=np.cross(alpha,lever)+np.cross(gyro,np.cross(gyro,lever))
         rotations=[self.pose_world[:3,:3].copy()];positions=[self.pose_world[:3,3].copy()];velocities=[self.velocity.copy()];world_acc=[]
-        for k,dt in enumerate(np.diff(times)):
-            w=.5*(gyro[k]+gyro[k+1]);specific=.5*(acc[k]+acc[k+1])
-            Rmid=rotations[-1]@so3_exp(w*dt/2)
+        # The step rotations are independent of the chain: evaluate them in two batches (bit-identical to the former
+        # per-step so3_exp calls, tests/test_aide2_c32_deskew_batch.py); only the products stay sequential.
+        steps=np.diff(times);w_steps=.5*(gyro[:-1]+gyro[1:])
+        half_turns=so3_exp_batch(w_steps*steps[:,None]/2);full_turns=so3_exp_batch(w_steps*steps[:,None])
+        for k,dt in enumerate(steps):
+            specific=.5*(acc[k]+acc[k+1])
+            Rmid=rotations[-1]@half_turns[k]
             a=Rmid@specific+np.array([0,0,-9.80665]);world_acc.append(a)
             positions.append(positions[-1]+velocities[-1]*dt+.5*a*dt*dt)
             velocities.append(velocities[-1]+a*dt)
-            rotations.append(rotations[-1]@so3_exp(w*dt))
+            rotations.append(rotations[-1]@full_turns[k])
         R=np.array(rotations);p=np.array(positions);v=np.array(velocities);a=np.array(world_acc)
-        trajectory={'times':times,'R':R,'p':p,'v':v,'a':a,'rotvec':np.array([so3_log(R[j].T@R[j+1]) for j in range(len(R)-1)])}
-        qt=np.clip(t0+points[:,6].astype(float),t0,t1)
+        relative=np.array([R[j].T@R[j+1] for j in range(len(R)-1)]).reshape(-1,3,3)
+        trajectory={'times':times,'R':R,'p':p,'v':v,'a':a,'rotvec':so3_log(relative) if len(relative) else np.empty((0,3))}
+        qt=np.clip(t0+points[:,6].astype(float),integration_start,t1)
         interp_R,interp_p,_=self._sample(trajectory,qt)
         end_R,end_p,end_v=self._sample(trajectory,[t1]);end_R=end_R[0];end_p=end_p[0]
         world=np.einsum('nij,nj->ni',interp_R,points[:,:3])+interp_p
@@ -148,6 +162,6 @@ class ContinuousTimeIMUDeskewer:
         self.pose_world=np.eye(4);self.pose_world[:3,:3]=end_R;self.pose_world[:3,3]=end_p
         self.velocity=end_v[0];self.last_timestamp=t1;self._trajectories.append(trajectory)
         self.last_diagnostics={'imu_samples':len(samples),'coverage_seconds':float(raw_t[-1]-raw_t[0]),'pointwise':True,
-                               'inter_sweep_integration_seconds':t0-integration_start,'per_return_origins':True,
+                               'inter_sweep_integration_seconds':max(0.,t0-integration_start),'sweep_overlap_seconds':overlap,'per_return_origins':True,
                                'coordinate_reference':'lidar_sweep_end'}
         return result

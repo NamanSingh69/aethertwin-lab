@@ -11,6 +11,8 @@ node_modules/
 coverage/
 .coverage
 htmlcov/
+# Per-machine tool state (tools/rig.py remembers the Pi here)
+/.local/
 # Generated packages; retain the browser bundle for a runnable clone
 build/
 /dist/

@@ -1,0 +1,1600 @@
+{
+  "schema_version": 1,
+  "kind": "raw_transport_loopback_soak",
+  "label": "synthetic devices over loopback on this host; not a Pi, network or sensor result",
+  "date_utc": "2026-11-01T20:44:54.269576+00:00",
+  "environment": {
+    "host": "Naman_PC",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_count": 20,
+    "python": "3.12.10",
+    "numpy": "2.5.4",
+    "opencv": "5.0.0",
+    "memory_bytes": 16780632064
+  },
+  "settings": {
+    "duration": 600.0,
+    "out": "C:\\Users\\user\\AppData\\Local\\Temp\\soak_final.json",
+    "width": 1280,
+    "height": 800,
+    "fps": 30.0,
+    "imu_hz": 250.0,
+    "lidar_hz": 10.0,
+    "points": 6400,
+    "depth_codec": "raw",
+    "color_codec": "device",
+    "port": 7611,
+    "sample_seconds": 30.0,
+    "consumer_ms": 0.0
+  },
+  "summary": {
+    "elapsed_seconds": 600.9219999999914,
+    "delivered_frames": 5992,
+    "delivered_hz": 9.971344034666872,
+    "consumer_errors": [],
+    "segments": 1,
+    "connections": 1,
+    "stalls": 0,
+    "clock_jumps": 0,
+    "imu_samples": 150005,
+    "imu_sequence_breaks": 0,
+    "imu_missing_samples": 0,
+    "clouds": 6000,
+    "cloud_missing": 0,
+    "camera_frames": 17992,
+    "camera_missing": 8,
+    "camera_incomplete": 0,
+    "receiver_overflows": 0,
+    "decode_errors": 0,
+    "node_outbox": {
+      "imu_samples": 150340,
+      "imu_dropped": 0,
+      "imu_gaps": 0,
+      "clouds": 6013,
+      "clouds_dropped": 0,
+      "camera_frames": 18041,
+      "camera_dropped": 8,
+      "discarded_without_client": 398,
+      "discarded_at_session_start": 0,
+      "queued_imu": 0,
+      "queued_clouds": 0,
+      "queued_camera": 0,
+      "imu_capacity": 20000,
+      "cloud_capacity": 4,
+      "camera_capacity": 2,
+      "streaming": true
+    },
+    "acquisition": {
+      "acquired": 5992,
+      "dropped_frames": 0,
+      "depth": 0,
+      "bytes": 0,
+      "capacity_frames": 2,
+      "capacity_bytes": 67108864,
+      "peak_frames": 1,
+      "peak_bytes": 7353840,
+      "imu_samples": 1252,
+      "imu_history_seconds": 5.0,
+      "discarded_old_imu_samples": 148699,
+      "segment_changes": 0,
+      "dropped_at_segment_change": 0,
+      "error": null
+    },
+    "bandwidth_megabytes_per_second": {
+      "mean": 64.51647917953746,
+      "max": 64.78238465233933
+    },
+    "arrival_latency_ms_final_window": {
+      "imu": {
+        "p50": 10.445325067848898,
+        "p95": 20.131781946111005,
+        "max": 28.89467909699306
+      },
+      "cloud": {
+        "p50": 113.31940347736236,
+        "p95": 121.20077536383178,
+        "max": 143.4573515143711
+      },
+      "camera": {
+        "p50": 17.102881174650975,
+        "p95": 30.112258900771845,
+        "max": 47.18954913550988
+      }
+    },
+    "camera_decode_ms_p95": 9.797449994948693,
+    "receiver_rss_megabytes": {
+      "first": 115.798016,
+      "last": 140.734464,
+      "max": 144.801792
+    },
+    "node_rss_megabytes": {
+      "first": 85.11488,
+      "last": 83.296256,
+      "max": 89.001984
+    },
+    "clock": {
+      "offset_seconds": 0.0008715356910775876,
+      "target_offset_seconds": 0.0011010500165866688,
+      "best_delay_seconds": 0.000772899977164343,
+      "error_bound_seconds": 0.0003864499885821715,
+      "residual_seconds": 0.00022951432550908117,
+      "jitter_seconds": 0.001392209723104964,
+      "exchanges": 1187,
+      "utc_offset_seconds": 0.0010809898376464844,
+      "utc_offset_note": "node UTC minus host UTC via the ping exchange; near zero only when both hosts are time-synchronised (chrony)",
+      "host_clock_alignment_seconds": 0.0042643999913707376
+    }
+  },
+  "codec_bench": {
+    "depth_raw": {
+      "bytes_mean": 2048000.0,
+      "ratio": 1.0,
+      "encode_ms_p50": 0.7367500074906275,
+      "decode_ms_p50": 0.7902000070316717,
+      "megabytes_per_second_at_30fps": 61.44
+    },
+    "depth_zlib": {
+      "bytes_mean": 1012238.05,
+      "ratio": 2.023239493911536,
+      "encode_ms_p50": 46.21045000385493,
+      "decode_ms_p50": 14.007749981828965,
+      "megabytes_per_second_at_30fps": 30.3671415
+    },
+    "depth_png": {
+      "bytes_mean": 862513.45,
+      "ratio": 2.3744557258788257,
+      "encode_ms_p50": 48.521899996558204,
+      "decode_ms_p50": 17.689900007098913,
+      "megabytes_per_second_at_30fps": 25.8754035
+    },
+    "color_raw": {
+      "bytes_mean": 3072000.0,
+      "ratio": 1.0,
+      "encode_ms_p50": 0.9568000095896423,
+      "decode_ms_p50": 1.0429000103613362,
+      "megabytes_per_second_at_30fps": 92.16
+    },
+    "color_png": {
+      "bytes_mean": 15860.75,
+      "ratio": 193.68567060195767,
+      "encode_ms_p50": 27.27125000092201,
+      "decode_ms_p50": 7.81624999945052,
+      "megabytes_per_second_at_30fps": 0.4758225
+    },
+    "color_jpeg": {
+      "bytes_mean": 49790.7,
+      "ratio": 61.69826895384078,
+      "encode_ms_p50": 3.9685500087216496,
+      "decode_ms_p50": 5.522499996004626,
+      "megabytes_per_second_at_30fps": 1.493721
+    }
+  },
+  "timeline": [
+    {
+      "t": 30.0,
+      "delivered_frames": 299,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.92084211250534,
+        "cloud": 9.98601387426293,
+        "camera": 29.828254152758667
+      },
+      "bandwidth_bytes_per_second": 64231837.22020177,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.117934016510844,
+          "p95": 21.55679621355375,
+          "max": 40.67195000243373
+        },
+        "cloud": {
+          "p50": 113.78562501340639,
+          "p95": 120.97848936537049,
+          "max": 134.14710000506602
+        },
+        "camera": {
+          "p50": 17.116095579694957,
+          "p95": 31.495500860910393,
+          "max": 46.78316687932238
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0,
+        "best_delay_seconds": 0.0007906999962870032,
+        "jitter_seconds": 0.0016673281634516925
+      },
+      "receiver_rss_bytes": 115798016,
+      "node_rss_bytes": 85114880,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 299,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7352440,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 6224,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 7833,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 313,
+        "clouds_dropped": 0,
+        "camera_frames": 940,
+        "camera_dropped": 0,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 60.0,
+      "delivered_frames": 598,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.11924827743056,
+        "cloud": 10.003486521223309,
+        "camera": 30.042750834290775
+      },
+      "bandwidth_bytes_per_second": 64539608.13680132,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.805349873611704,
+          "p95": 23.16012809897074,
+          "max": 43.45915562589653
+        },
+        "cloud": {
+          "p50": 113.82477500592358,
+          "p95": 121.4266999042593,
+          "max": 143.62130002700724
+        },
+        "camera": {
+          "p50": 18.22452094347682,
+          "p95": 33.64214060857193,
+          "max": 47.97245000372641
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.000210593445511769,
+        "best_delay_seconds": 0.0019002000335603952,
+        "jitter_seconds": 0.0018000280165681385
+      },
+      "receiver_rss_bytes": 142807040,
+      "node_rss_bytes": 85061632,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 598,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7352440,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 13699,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 15299,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 611,
+        "clouds_dropped": 0,
+        "camera_frames": 1836,
+        "camera_dropped": 0,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 90.0,
+      "delivered_frames": 898,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.20704842296956,
+        "cloud": 10.013497786318377,
+        "camera": 30.002092848723066
+      },
+      "bandwidth_bytes_per_second": 64610579.64067149,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 14.454551419476047,
+          "p95": 29.340620024595406,
+          "max": 43.81774345529266
+        },
+        "cloud": {
+          "p50": 114.57654599507805,
+          "p95": 123.473497654777,
+          "max": 145.11745810159482
+        },
+        "camera": {
+          "p50": 20.08011560246814,
+          "p95": 34.484197352139745,
+          "max": 47.9759179870598
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0,
+        "best_delay_seconds": 0.0020915999775752425,
+        "jitter_seconds": 0.0025918129944421664
+      },
+      "receiver_rss_bytes": 144801792,
+      "node_rss_bytes": 87162880,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 898,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7352440,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 21199,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 22798,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 911,
+        "clouds_dropped": 0,
+        "camera_frames": 2736,
+        "camera_dropped": 0,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 120.0,
+      "delivered_frames": 1199,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.94818349810294,
+        "cloud": 10.013837693187545,
+        "camera": 30.067972384778766
+      },
+      "bandwidth_bytes_per_second": 64566553.06189739,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 12.29940916527994,
+          "p95": 24.457525018078737,
+          "max": 34.20365002239123
+        },
+        "cloud": {
+          "p50": 115.60306075261906,
+          "p95": 123.27875085029517,
+          "max": 141.68599180993624
+        },
+        "camera": {
+          "p50": 19.31769886869006,
+          "p95": 33.41914282500511,
+          "max": 46.92867523408495
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.00017055594616103838,
+        "best_delay_seconds": 0.0018594000139273703,
+        "jitter_seconds": 0.0031824048875277156
+      },
+      "receiver_rss_bytes": 120864768,
+      "node_rss_bytes": 85069824,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 1199,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7352440,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 28724,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 30275,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 1210,
+        "clouds_dropped": 0,
+        "camera_frames": 3634,
+        "camera_dropped": 0,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 150.0,
+      "delivered_frames": 1498,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.9259118412382,
+        "cloud": 9.993956919397263,
+        "camera": 30.036394837489123
+      },
+      "bandwidth_bytes_per_second": 64511659.44602078,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.259091726969928,
+          "p95": 21.330330408818554,
+          "max": 33.380822074832395
+        },
+        "cloud": {
+          "p50": 114.81819691834971,
+          "p95": 123.54198882821947,
+          "max": 141.68599180993624
+        },
+        "camera": {
+          "p50": 17.76889176107943,
+          "p95": 29.94150196027476,
+          "max": 46.05346667813137
+        }
+      },
+      "clock": {
+        "residual_seconds": -0.00017264354512735872,
+        "best_delay_seconds": 0.0007561000238638371,
+        "jitter_seconds": 0.0010337801439143147
+      },
+      "receiver_rss_bytes": 142839808,
+      "node_rss_bytes": 85041152,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 1498,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7352440,
+        "imu_samples": 1276,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 36200,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 37737,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 1509,
+        "clouds_dropped": 0,
+        "camera_frames": 4529,
+        "camera_dropped": 0,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 180.0,
+      "delivered_frames": 1797,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.69087291826057,
+        "cloud": 10.022612855527068,
+        "camera": 30.02631866894954
+      },
+      "bandwidth_bytes_per_second": 64308730.554525636,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 15.266265138052404,
+          "p95": 36.59372322435955,
+          "max": 50.70064862957224
+        },
+        "cloud": {
+          "p50": 115.61386805260554,
+          "p95": 136.04695231624646,
+          "max": 190.48583408584818
+        },
+        "camera": {
+          "p50": 23.736612376524135,
+          "p95": 85.03143500711303,
+          "max": 126.55113113578409
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.00036550411008065596,
+        "best_delay_seconds": 0.0022044999641366303,
+        "jitter_seconds": 0.00459879566473224
+      },
+      "receiver_rss_bytes": 120135680,
+      "node_rss_bytes": 85336064,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 1797,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 43724,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 45346,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 1813,
+        "clouds_dropped": 0,
+        "camera_frames": 5442,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 210.0,
+      "delivered_frames": 2097,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.93126189052316,
+        "cloud": 9.993431052667479,
+        "camera": 29.995239010687996
+      },
+      "bandwidth_bytes_per_second": 64474400.44693326,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.975044762948528,
+          "p95": 21.084997276193462,
+          "max": 33.11612023389898
+        },
+        "cloud": {
+          "p50": 116.73215268820059,
+          "p95": 137.99799272528617,
+          "max": 190.48583408584818
+        },
+        "camera": {
+          "p50": 17.817847285186872,
+          "p95": 32.3809375273413,
+          "max": 61.57873346819542
+        }
+      },
+      "clock": {
+        "residual_seconds": -0.00025608633285737707,
+        "best_delay_seconds": 0.000690699991537258,
+        "jitter_seconds": 0.0016279343171654395
+      },
+      "receiver_rss_bytes": 119967744,
+      "node_rss_bytes": 89001984,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 2097,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1251,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 51225,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 52725,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 2108,
+        "clouds_dropped": 0,
+        "camera_frames": 6328,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 240.0,
+      "delivered_frames": 2396,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.20412603013975,
+        "cloud": 10.024429329720157,
+        "camera": 30.092800780927004
+      },
+      "bandwidth_bytes_per_second": 64259171.45365205,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 12.308773613767698,
+          "p95": 27.808436527266164,
+          "max": 48.98273412254639
+        },
+        "cloud": {
+          "p50": 114.62359764846042,
+          "p95": 127.34014171437593,
+          "max": 148.8935521338135
+        },
+        "camera": {
+          "p50": 18.327986035728827,
+          "p95": 31.532338321267158,
+          "max": 48.551591171417385
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.00031630537660384903,
+        "best_delay_seconds": 0.002015600010054186,
+        "jitter_seconds": 0.001623886042094142
+      },
+      "receiver_rss_bytes": 141275136,
+      "node_rss_bytes": 85336064,
+      "receiver_queue_packets": 4,
+      "acquisition": {
+        "acquired": 2396,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1277,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 58699,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 60248,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 2409,
+        "clouds_dropped": 0,
+        "camera_frames": 7230,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 270.0,
+      "delivered_frames": 2696,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 251.0010450547142,
+        "cloud": 10.01489767126419,
+        "camera": 30.079188409403972
+      },
+      "bandwidth_bytes_per_second": 64659872.49322022,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.480418077553622,
+          "p95": 20.815709583985154,
+          "max": 30.351958936080337
+        },
+        "cloud": {
+          "p50": 114.45635001291521,
+          "p95": 124.64155778288841,
+          "max": 133.2596366701182
+        },
+        "camera": {
+          "p50": 17.825591770815663,
+          "p95": 30.897732732410073,
+          "max": 47.81666665803641
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.000166919616764061,
+        "best_delay_seconds": 0.001670199999352917,
+        "jitter_seconds": 0.002709630274522455
+      },
+      "receiver_rss_bytes": 141946880,
+      "node_rss_bytes": 85303296,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 2696,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1251,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 66200,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 67744,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 2709,
+        "clouds_dropped": 0,
+        "camera_frames": 8130,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 300.0,
+      "delivered_frames": 2996,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.88242410795988,
+        "cloud": 9.98450181178435,
+        "camera": 29.99380859345445
+      },
+      "bandwidth_bytes_per_second": 64387065.59025263,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 12.148323221481405,
+          "p95": 23.117139683745336,
+          "max": 42.980884900316596
+        },
+        "cloud": {
+          "p50": 114.44286310870666,
+          "p95": 125.73401407717027,
+          "max": 152.29193278355524
+        },
+        "camera": {
+          "p50": 18.109389624441974,
+          "p95": 37.87486062210519,
+          "max": 68.33179562818259
+        }
+      },
+      "clock": {
+        "residual_seconds": -8.209456506303153e-06,
+        "best_delay_seconds": 0.0008356000180356205,
+        "jitter_seconds": 0.0021135392811550938
+      },
+      "receiver_rss_bytes": 140865536,
+      "node_rss_bytes": 85434368,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 2996,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1251,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 73700,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 75246,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 3009,
+        "clouds_dropped": 0,
+        "camera_frames": 9030,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 330.01600000000326,
+      "delivered_frames": 3297,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.99507585290362,
+        "cloud": 10.000444101362167,
+        "camera": 30.02698478769894
+      },
+      "bandwidth_bytes_per_second": 64487608.55541369,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 10.611100005917251,
+          "p95": 19.04896502092015,
+          "max": 32.67870002309792
+        },
+        "cloud": {
+          "p50": 114.15078800928313,
+          "p95": 125.7555268399301,
+          "max": 152.29193278355524
+        },
+        "camera": {
+          "p50": 17.224040828295983,
+          "p95": 29.921568569261577,
+          "max": 47.20887771691196
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0,
+        "best_delay_seconds": 0.0008460000099148601,
+        "jitter_seconds": 0.0012495352322118962
+      },
+      "receiver_rss_bytes": 118755328,
+      "node_rss_bytes": 85278720,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 3297,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 81224,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 82732,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 3309,
+        "clouds_dropped": 0,
+        "camera_frames": 9928,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 360.0,
+      "delivered_frames": 3597,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.15858862001767,
+        "cloud": 9.950939633701818,
+        "camera": 29.948923417595708
+      },
+      "bandwidth_bytes_per_second": 64602071.93482673,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.209400021471083,
+          "p95": 22.254145014449023,
+          "max": 31.66490004514344
+        },
+        "cloud": {
+          "p50": 113.98471514985431,
+          "p95": 124.94511159893591,
+          "max": 138.43205003649928
+        },
+        "camera": {
+          "p50": 17.795900028431788,
+          "p95": 32.510300022840966,
+          "max": 46.97729600593448
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0,
+        "best_delay_seconds": 0.0006832000217400491,
+        "jitter_seconds": 0.002182949047062503
+      },
+      "receiver_rss_bytes": 118784000,
+      "node_rss_bytes": 83181568,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 3597,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 88724,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 90337,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 3613,
+        "clouds_dropped": 0,
+        "camera_frames": 10841,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 390.0,
+      "delivered_frames": 3896,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.65675710304097,
+        "cloud": 10.009759924440349,
+        "camera": 30.038442755530117
+      },
+      "bandwidth_bytes_per_second": 64621171.877250925,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.81384568917565,
+          "p95": 24.757492695061956,
+          "max": 44.41013763425872
+        },
+        "cloud": {
+          "p50": 114.42829039879143,
+          "p95": 127.23519117134855,
+          "max": 136.2366000248585
+        },
+        "camera": {
+          "p50": 18.38621667411644,
+          "p95": 32.878504690597765,
+          "max": 47.71942994557321
+        }
+      },
+      "clock": {
+        "residual_seconds": -0.0003337773244915317,
+        "best_delay_seconds": 0.0007143999973777682,
+        "jitter_seconds": 0.0018258124948506759
+      },
+      "receiver_rss_bytes": 140337152,
+      "node_rss_bytes": 83214336,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 3896,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 96199,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 97833,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 3913,
+        "clouds_dropped": 0,
+        "camera_frames": 11740,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 420.0,
+      "delivered_frames": 4196,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.03696319392432,
+        "cloud": 10.0115238769838,
+        "camera": 30.07462705838678
+      },
+      "bandwidth_bytes_per_second": 64574770.25843598,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 13.546401882194914,
+          "p95": 30.49526126706041,
+          "max": 46.34702589828521
+        },
+        "cloud": {
+          "p50": 114.05034553899895,
+          "p95": 125.03112279810011,
+          "max": 136.91973118693568
+        },
+        "camera": {
+          "p50": 18.608380618388765,
+          "p95": 33.540096439537585,
+          "max": 46.08060236205347
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.00015708734566869504,
+        "best_delay_seconds": 0.001749899995047599,
+        "jitter_seconds": 0.003621856138838726
+      },
+      "receiver_rss_bytes": 139288576,
+      "node_rss_bytes": 83259392,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 4196,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1277,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 103699,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 105331,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 4213,
+        "clouds_dropped": 0,
+        "camera_frames": 12640,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 450.0,
+      "delivered_frames": 4497,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.96568563800946,
+        "cloud": 10.015080462929458,
+        "camera": 30.133891350936793
+      },
+      "bandwidth_bytes_per_second": 64330402.23318577,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 12.007400015136227,
+          "p95": 21.78538002044661,
+          "max": 30.411050014663488
+        },
+        "cloud": {
+          "p50": 114.40295001375489,
+          "p95": 123.34100724838208,
+          "max": 142.0880500227213
+        },
+        "camera": {
+          "p50": 17.833805119153112,
+          "p95": 31.12466500897426,
+          "max": 48.605881340336055
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0002570232731784925,
+        "best_delay_seconds": 0.0020951000042259693,
+        "jitter_seconds": 0.0010019276328424886
+      },
+      "receiver_rss_bytes": 115556352,
+      "node_rss_bytes": 83259392,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 4497,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 111224,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 112804,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 4512,
+        "clouds_dropped": 0,
+        "camera_frames": 13537,
+        "camera_dropped": 4,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 1,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 480.0,
+      "delivered_frames": 4793,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.9703610527207,
+        "cloud": 10.033330724666948,
+        "camera": 30.175539416166252
+      },
+      "bandwidth_bytes_per_second": 64758635.4959457,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.069600004702806,
+          "p95": 24.01663557393476,
+          "max": 40.9898750949651
+        },
+        "cloud": {
+          "p50": 115.84404933091719,
+          "p95": 138.27697408560198,
+          "max": 169.59439520724118
+        },
+        "camera": {
+          "p50": 19.20023035199847,
+          "p95": 50.062164245173335,
+          "max": 86.75327981472947
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0,
+        "best_delay_seconds": 0.0012709999864455312,
+        "jitter_seconds": 0.0015922207668354438
+      },
+      "receiver_rss_bytes": 143491072,
+      "node_rss_bytes": 85360640,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 4793,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1251,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 118700,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 120299,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 4811,
+        "clouds_dropped": 0,
+        "camera_frames": 14436,
+        "camera_dropped": 8,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 510.0,
+      "delivered_frames": 5094,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.51611272895252,
+        "cloud": 9.99053692264249,
+        "camera": 30.1385371462321
+      },
+      "bandwidth_bytes_per_second": 64476650.54058964,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.4861500042025,
+          "p95": 20.39991498168092,
+          "max": 27.845550008350983
+        },
+        "cloud": {
+          "p50": 115.26950002007652,
+          "p95": 133.1956510373857,
+          "max": 169.59439520724118
+        },
+        "camera": {
+          "p50": 17.080894176615402,
+          "p95": 31.78371002722997,
+          "max": 50.86756669334136
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0,
+        "best_delay_seconds": 0.0006966999790165573,
+        "jitter_seconds": 0.001295676715005197
+      },
+      "receiver_rss_bytes": 118120448,
+      "node_rss_bytes": 83263488,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 5094,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 126224,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 127809,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 5112,
+        "clouds_dropped": 0,
+        "camera_frames": 15337,
+        "camera_dropped": 8,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 540.0,
+      "delivered_frames": 5393,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 249.71280910647587,
+        "cloud": 10.014034362599931,
+        "camera": 30.0383174017753
+      },
+      "bandwidth_bytes_per_second": 64782384.652339324,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 10.926999995717779,
+          "p95": 20.558600005460903,
+          "max": 29.738350014667958
+        },
+        "cloud": {
+          "p50": 114.23990326875355,
+          "p95": 124.95418979087844,
+          "max": 142.05470535671338
+        },
+        "camera": {
+          "p50": 17.816133971791714,
+          "p95": 29.866625349677626,
+          "max": 53.71810001088306
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.0006050217558426084,
+        "best_delay_seconds": 0.0016621000249870121,
+        "jitter_seconds": 0.0008392453895209823
+      },
+      "receiver_rss_bytes": 125362176,
+      "node_rss_bytes": 83263488,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 5393,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 133724,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 135330,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 5413,
+        "clouds_dropped": 0,
+        "camera_frames": 16240,
+        "camera_dropped": 8,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 570.0,
+      "delivered_frames": 5693,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.0015677361326,
+        "cloud": 9.9866596569642,
+        "camera": 30.019831019864696
+      },
+      "bandwidth_bytes_per_second": 64674678.29738261,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 11.427393881604075,
+          "p95": 23.320558524574146,
+          "max": 44.98785300529562
+        },
+        "cloud": {
+          "p50": 113.90345216204878,
+          "p95": 122.59725775656987,
+          "max": 143.4573515143711
+        },
+        "camera": {
+          "p50": 16.93390055152122,
+          "p95": 30.62806701345835,
+          "max": 44.62720002629794
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.00034717886628932333,
+        "best_delay_seconds": 0.0017279000021517277,
+        "jitter_seconds": 0.0018102905907766986
+      },
+      "receiver_rss_bytes": 117489664,
+      "node_rss_bytes": 83263488,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 5693,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 141224,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 142832,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 5713,
+        "clouds_dropped": 0,
+        "camera_frames": 17140,
+        "camera_dropped": 8,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    },
+    {
+      "t": 600.0,
+      "delivered_frames": 5992,
+      "state": "streaming",
+      "segment": 1,
+      "rates_hz": {
+        "imu": 250.1959962979403,
+        "cloud": 10.009199066776247,
+        "camera": 30.12688177281047
+      },
+      "bandwidth_bytes_per_second": 64471731.70120207,
+      "arrival_latency_ms": {
+        "imu": {
+          "p50": 10.445325067848898,
+          "p95": 20.131781946111005,
+          "max": 28.89467909699306
+        },
+        "cloud": {
+          "p50": 113.31940347736236,
+          "p95": 121.20077536383178,
+          "max": 143.4573515143711
+        },
+        "camera": {
+          "p50": 17.102881174650975,
+          "p95": 30.112258900771845,
+          "max": 47.18954913550988
+        }
+      },
+      "clock": {
+        "residual_seconds": 0.00022951432550908117,
+        "best_delay_seconds": 0.000772899977164343,
+        "jitter_seconds": 0.001392209723104964
+      },
+      "receiver_rss_bytes": 140734464,
+      "node_rss_bytes": 83296256,
+      "receiver_queue_packets": 0,
+      "acquisition": {
+        "acquired": 5992,
+        "dropped_frames": 0,
+        "depth": 0,
+        "bytes": 0,
+        "capacity_frames": 2,
+        "capacity_bytes": 67108864,
+        "peak_frames": 1,
+        "peak_bytes": 7353840,
+        "imu_samples": 1252,
+        "imu_history_seconds": 5.0,
+        "discarded_old_imu_samples": 148699,
+        "segment_changes": 0,
+        "dropped_at_segment_change": 0,
+        "error": null
+      },
+      "node": {
+        "imu_samples": 150340,
+        "imu_dropped": 0,
+        "imu_gaps": 0,
+        "clouds": 6013,
+        "clouds_dropped": 0,
+        "camera_frames": 18041,
+        "camera_dropped": 8,
+        "discarded_without_client": 398,
+        "discarded_at_session_start": 0,
+        "queued_imu": 0,
+        "queued_clouds": 0,
+        "queued_camera": 0,
+        "imu_capacity": 20000,
+        "cloud_capacity": 4,
+        "camera_capacity": 2,
+        "streaming": true
+      }
+    }
+  ],
+  "node_log_tail": [
+    "{\"event\": \"status\", \"node_session\": \"f187d0b2d7e54114b9c88715496ea0a2\", \"uptime_seconds\": 540.7029999999795, \"address\": [\"127.0.0.1\", 7611], \"rejected_peers\": 0, \"auth_failures\": 0, \"protocol_errors\": 0, \"sessions\": 1, \"replaced_sessions\": 0, \"accept_errors\": 0, \"handshakes_refused\": 0, \"last_error\": null, \"outbox\": {\"imu_samples\": 135174, \"imu_dropped\": 0, \"imu_gaps\": 0, \"clouds\": 5406, \"clouds_dropped\": 0, \"camera_frames\": 16221, \"camera_dropped\": 8, \"discarded_without_client\": 398, \"discarded_at_session_start\": 0, \"queued_imu\": 0, \"queued_clouds\": 0, \"queued_camera\": 0, \"imu_capacity\": 20000, \"cloud_capacity\": 4, \"camera_capacity\": 2, \"streaming\": true}, \"devices\": {\"depth_codec\": \"raw\", \"color_codec\": \"device\", \"faults\": {}, \"camera_encode_ms_p50\": 0.7114500040188432, \"camera_encode_ms_p95\": 1.1074550086050294, \"camera_message_bytes_p50\": 2096351.5}, \"session\": {\"peer\": \"127.0.0.1\", \"streaming\": true, \"age_seconds\": 539.3279999999795, \"bytes_sent\": 34753241385, \"messages_sent\": 77002, \"bytes_received\": 89715}}\n",
+    "{\"event\": \"status\", \"node_session\": \"f187d0b2d7e54114b9c88715496ea0a2\", \"uptime_seconds\": 570.75, \"address\": [\"127.0.0.1\", 7611], \"rejected_peers\": 0, \"auth_failures\": 0, \"protocol_errors\": 0, \"sessions\": 1, \"replaced_sessions\": 0, \"accept_errors\": 0, \"handshakes_refused\": 0, \"last_error\": null, \"outbox\": {\"imu_samples\": 142685, \"imu_dropped\": 0, \"imu_gaps\": 0, \"clouds\": 5707, \"clouds_dropped\": 0, \"camera_frames\": 17123, \"camera_dropped\": 8, \"discarded_without_client\": 398, \"discarded_at_session_start\": 0, \"queued_imu\": 4, \"queued_clouds\": 0, \"queued_camera\": 1, \"imu_capacity\": 20000, \"cloud_capacity\": 4, \"camera_capacity\": 2, \"streaming\": true}, \"devices\": {\"depth_codec\": \"raw\", \"color_codec\": \"device\", \"faults\": {}, \"camera_encode_ms_p50\": 0.6400999991456047, \"camera_encode_ms_p95\": 1.0377300015534274, \"camera_message_bytes_p50\": 2096351.5}, \"session\": {\"peer\": \"127.0.0.1\", \"streaming\": true, \"age_seconds\": 569.375, \"bytes_sent\": 36689672766, \"messages_sent\": 81307, \"bytes_received\": 94689}}\n",
+    "{\"event\": \"status\", \"node_session\": \"f187d0b2d7e54114b9c88715496ea0a2\", \"uptime_seconds\": 600.7809999999881, \"address\": [\"127.0.0.1\", 7611], \"rejected_peers\": 0, \"auth_failures\": 0, \"protocol_errors\": 0, \"sessions\": 1, \"replaced_sessions\": 0, \"accept_errors\": 0, \"handshakes_refused\": 0, \"last_error\": null, \"outbox\": {\"imu_samples\": 150192, \"imu_dropped\": 0, \"imu_gaps\": 0, \"clouds\": 6007, \"clouds_dropped\": 0, \"camera_frames\": 18023, \"camera_dropped\": 8, \"discarded_without_client\": 398, \"discarded_at_session_start\": 0, \"queued_imu\": 0, \"queued_clouds\": 0, \"queued_camera\": 0, \"imu_capacity\": 20000, \"cloud_capacity\": 4, \"camera_capacity\": 2, \"streaming\": true}, \"devices\": {\"depth_codec\": \"raw\", \"color_codec\": \"device\", \"faults\": {}, \"camera_encode_ms_p50\": 0.613949989201501, \"camera_encode_ms_p95\": 1.0258399983285926, \"camera_message_bytes_p50\": 2096351.5}, \"session\": {\"peer\": \"127.0.0.1\", \"streaming\": true, \"age_seconds\": 599.4059999999881, \"bytes_sent\": 38625950070, \"messages_sent\": 85618, \"bytes_received\": 99654}}\n"
+  ]
+}

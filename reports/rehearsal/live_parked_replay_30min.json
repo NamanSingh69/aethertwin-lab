@@ -1,0 +1,76 @@
+{
+  "kind": "live_replay_rehearsal",
+  "label": "REHEARSAL: recorded data replayed over the real transport on loopback; NOT live hardware, NOT a lab result",
+  "commit": "def8582",
+  "recording": "wifi_stationary_60s",
+  "twin": "twin_final",
+  "calibration": "rehearsal_calibration.json",
+  "duration_s": 1800.0,
+  "device": "cuda",
+  "parked": true,
+  "node_port": 63437,
+  "service_port": 63438,
+  "started_utc": "2026-11-04T23:28:40.742711+00:00",
+  "verdict": "ran the full duration without a runtime error",
+  "monitored_span_s": 1807.5,
+  "samples": 180,
+  "completed": true,
+  "runtime_error": null,
+  "frame_errors": {
+    "total_frame_errors": 0,
+    "consecutive_frame_errors": 0,
+    "last_frame_error": null,
+    "stop_after_consecutive": 20
+  },
+  "live_source": {
+    "live_source_reopens": 0,
+    "failed_reopens": 0,
+    "last_reopen_error": null,
+    "max_source_reopens": 20
+  },
+  "localization_valid_at_end": true,
+  "parked_localization": {
+    "accepted": true,
+    "fitness": 0.9761330115312417,
+    "rmse_m": 0.025818007898583982,
+    "correction_m": 0.012631082588394049,
+    "correction_deg": 0.14533341503588257
+  },
+  "processing_ms": {
+    "p50": 380.75424999993857,
+    "p95": 569.8212299999,
+    "target_ms": 35
+  },
+  "module_ms_median": {
+    "localization": 75.32260000004953,
+    "occupancy": 119.01030000001356,
+    "perception_tracking": 178.4893499999498,
+    "planning": 0.006699999971715442,
+    "risk_fields": 1.230649999911293
+  },
+  "acquired_frames": 21484,
+  "dropped_by_latest_frame_coalescing": 17006,
+  "transport": {
+    "state": "streaming",
+    "segment": 1,
+    "segments": 1,
+    "bytes": 7577208595,
+    "clock_jumps": 0,
+    "imu_sequence_breaks": 0,
+    "cloud_missing": 0,
+    "camera_missing": 0
+  },
+  "rss_mb": {
+    "first": 1612.6015625,
+    "last": 1516.2734375,
+    "max": 1759.859375,
+    "slope_second_half_mb_per_min": 0.029952312394567006
+  },
+  "not_shown": [
+    "Wi-Fi delay or loss (loopback)",
+    "a measured calibration unless one was given",
+    "Pi temperature or power",
+    "moving people unless the recording has them"
+  ],
+  "twin_note": "twin built from the same recording with hotspot_build.yaml settings, a placeholder calibration (rehearsal-placeholder-NOT-A-CALIBRATION) and an ASSUMED 0.75 m LiDAR height"
+}

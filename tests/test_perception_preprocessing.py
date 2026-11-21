@@ -89,6 +89,24 @@ def test_reused_depth_cloud_matches_fusion_and_camera_feature_resize_preserves_p
     finally:source.close()
 
 
+def test_returns_at_or_behind_the_camera_never_make_camera_features_non_finite():
+    """A 360-degree L2 sees returns almost in the camera plane; with the Gemini's factory distortion their projection
+    overflows float32 to inf, which grid_sample turned into NaN camera features (found replaying real data)."""
+    from dataclasses import replace
+    from perception_ml.inference_engine import project_camera
+    source=SyntheticLabSimulator(seed=19,config={'lidar_points':500,'width':64,'height':40})
+    try:
+        frame=source.next_frame();frame=replace(frame,calibration=replace(frame.calibration,distortion=np.array([-.0306,.0358,0,0,0])))
+        camera=frame.sensor_pose_world@(frame.calibration.T_lidar_camera if frame.camera_pose_in_lidar is None else frame.camera_pose_in_lidar)
+        points=frame.lidar_points.astype(np.float64);points[:,:3]=transform_points(frame.sensor_pose_world,points[:,:3])
+        points[-3:,:3]=transform_points(camera,np.array([[1.,0.,1e-9],[0.,1.,-1e-9],[0.,0.,-2.]]))  # beside and behind the camera
+        _,uv,valid=project_camera(frame,points)
+        assert np.isfinite(uv).all() and not valid[-3:].any()
+        prepared=prepare_frame(MultiTaskVoxelSceneFlowNet(),frame,points,max_voxels=400)
+        assert torch.isfinite(prepared.inputs['camera_features']).all()
+    finally:source.close()
+
+
 @pytest.mark.parametrize('has_history',[False,True])
 def test_export_real_checkpoint_profile_is_numerically_gated_and_fp16_cpu_is_explicit(tmp_path,has_history):
     source=SyntheticLabSimulator(seed=19,config={'lidar_points':400,'width':40,'height':24})

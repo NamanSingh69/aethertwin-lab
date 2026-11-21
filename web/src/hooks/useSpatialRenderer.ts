@@ -46,7 +46,9 @@ export function useSpatialRenderer(
   settingsRef.current = settings;
   handlersRef.current = handlers;
   const loadMap = (instance: SpatialRenderer, url: string) =>
-    void instance.loadManifest(url).catch((cause) =>
+    void instance
+      .loadManifest(url, { relativeToManifest: import.meta.env.VITE_SHOWCASE === "1" })
+      .catch((cause) =>
       handlersRef.current.setNotice({
         text: `Measured map: ${String(cause)}`,
         bad: true,
@@ -70,8 +72,15 @@ export function useSpatialRenderer(
       });
     const progress = (event: Event) =>
       setMapProgress((event as CustomEvent<MapProgress>).detail);
+    const context = (event: Event) =>
+      handlersRef.current.setNotice(
+        (event as CustomEvent<string>).detail === "lost"
+          ? { text: "3D view paused: the browser dropped the graphics context. It resumes when the browser restores it; reload if the view stays dark.", bad: true }
+          : { text: "3D view restored after the graphics context was lost.", bad: false },
+      );
     element.addEventListener("asseterror", failed);
     element.addEventListener("tileprogress", progress);
+    element.addEventListener("rendercontext", context);
     void import("../scene/SpatialRenderer")
       .then(({ SpatialRenderer }) => {
         if (disposed) return;
@@ -102,6 +111,7 @@ export function useSpatialRenderer(
       disposed = true;
       element.removeEventListener("asseterror", failed);
       element.removeEventListener("tileprogress", progress);
+      element.removeEventListener("rendercontext", context);
       renderer.current?.dispose();
       renderer.current = null;
     };

@@ -6,7 +6,7 @@ and acquisition offset[s] from sweep start. Flow is past-to-current displacement
 in WORLD coordinates, attached to current observations, not velocity.
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import IntEnum
 from typing import Optional
 import numpy as np
@@ -32,8 +32,15 @@ class FrozenDict(dict):
     __setitem__=__delitem__=clear=pop=popitem=setdefault=update=__ior__=_immutable
 
 
+_SEALED=object()
+
+
 def freeze(value):
-    if isinstance(value,dict):return FrozenDict({key:freeze(item) for key,item in value.items()})
+    # A FrozenDict built here is already deeply frozen (read-only finite array copies, tuples): return it as is rather
+    # than walk and copy it again on every frame replace() (C34). Only freeze sets the seal, so a FrozenDict built
+    # any other way is still validated and copied.
+    if type(value) is FrozenDict and value.__dict__.get('_seal') is _SEALED:return value
+    if isinstance(value,dict):out=FrozenDict({key:freeze(item) for key,item in value.items()});out._seal=_SEALED;return out
     if isinstance(value,(list,tuple)):return tuple(freeze(item) for item in value)
     if isinstance(value,np.ndarray):return array(value,dtype=value.dtype)
     return value
@@ -174,6 +181,20 @@ class MultiModalSensorFrame:
             if value is not None and (value.ndim!=2 or value.shape[1]!=columns):raise ValueError(f'{name} requires shape (N,{columns})')
         object.__setattr__(self,'raw_timestamps',freeze(self.raw_timestamps))
         object.__setattr__(self,'diagnostics',freeze(self.diagnostics))
+
+
+# MultiModalSensorFrame fields whose __post_init__ check involves no other field, with that exact check.
+_INDEPENDENT_FRAME_FIELDS={'sensor_pose_world':rigid_array,'imu_to_lidar':rigid_array,'raw_timestamps':freeze,'diagnostics':freeze}
+
+
+def evolve_frame(frame,**changes):
+    """dataclasses.replace for a validated frame: when only independent fields change, validate just those (the same
+    checks as __post_init__) and share the other read-only, already validated values instead of copying and checking
+    the whole frame again (C34). Any other change takes the full replace() path."""
+    if type(frame) is not MultiModalSensorFrame or not changes.keys()<=_INDEPENDENT_FRAME_FIELDS.keys():return replace(frame,**changes)
+    out=object.__new__(MultiModalSensorFrame);out.__dict__.update(frame.__dict__)
+    for name,value in changes.items():object.__setattr__(out,name,_INDEPENDENT_FRAME_FIELDS[name](value))
+    return out
 
 
 @dataclass(frozen=True)

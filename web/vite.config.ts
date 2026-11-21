@@ -3,6 +3,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
+  // The studio build is never the static showcase (vite.showcase.config.ts is);
+  // a literal lets the minifier drop every showcase branch and its lazy chunk.
+  define: { "import.meta.env.VITE_SHOWCASE": JSON.stringify("0") },
   // Playwright owns e2e/; Vitest runs the unit and contract suites only.
   test: { include: ["tests/**/*.test.ts"] },
   server: {

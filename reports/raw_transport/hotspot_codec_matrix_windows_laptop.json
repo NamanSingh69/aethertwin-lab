@@ -1,0 +1,554 @@
+{
+  "schema_version": 1,
+  "kind": "raw_transport_codec_matrix",
+  "label": "SYNTHETIC devices over LOOPBACK on this host: offered load and CPU only; not a Wi-Fi, Raspberry Pi or sensor result",
+  "date_utc": "2026-11-04T16:35:12.794322+00:00",
+  "environment": {
+    "host": "Naman_PC",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "cpu_count": 20,
+    "python": "3.12.10",
+    "numpy": "2.5.4",
+    "opencv": "5.0.0",
+    "memory_bytes": 16780632064
+  },
+  "settings": {
+    "duration_seconds_per_row": 60.0,
+    "imu_hz": 250,
+    "lidar_hz": 10,
+    "points_per_sweep": 6400,
+    "camera_fps": 30,
+    "fragment_bytes": 65536,
+    "sync_tolerance_seconds": 0.02,
+    "cpu_note": "percent of one logical core, psutil, mean of 5 s windows after the first"
+  },
+  "rows": [
+    {
+      "name": "wired_default_1280x800_raw_device",
+      "soak_passed": true,
+      "elapsed_seconds": 61.015999999995984,
+      "consumer_errors": [],
+      "camera": {
+        "width": 1280,
+        "height": 800,
+        "fps": 30
+      },
+      "depth_codec": "raw",
+      "color_codec": "device",
+      "color_quality": null,
+      "camera_forward": "all",
+      "offered_megabytes_per_second": {
+        "mean": 63.64547320647055,
+        "max": 69.19965871020283
+      },
+      "offered_megabits_per_second_mean": 509.1637856517644,
+      "camera_messages_hz": 28.713779992135102,
+      "camera_skipped_at_node": 0,
+      "camera_message_bytes_p50": 2096351.5,
+      "node_camera_encode_ms": {
+        "p50": 0.7713999984844122,
+        "p95": 2.9944300011266014
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 23.109090909090906,
+        "receiver_mean": 106.07272727272726
+      },
+      "fused_frames_hz": 9.571259997378368,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 45,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 2048000.0,
+          "ratio": 1.0,
+          "encode_ms_p50": 0.6750000029569492,
+          "decode_ms_p50": 0.6792499989387579,
+          "megabytes_per_second_at_30fps": 61.44
+        },
+        "color": null
+      }
+    },
+    {
+      "name": "1280x800_zlib_device",
+      "soak_passed": false,
+      "elapsed_seconds": 5.0,
+      "consumer_errors": [
+        "RuntimeError('Continuous sensor acquisition failed')"
+      ],
+      "camera": {
+        "width": 1280,
+        "height": 800,
+        "fps": 30
+      },
+      "depth_codec": "zlib",
+      "color_codec": "device",
+      "color_quality": null,
+      "camera_forward": "all",
+      "offered_megabytes_per_second": {
+        "mean": 25.5495812654316,
+        "max": 25.5495812654316
+      },
+      "offered_megabits_per_second_mean": 204.3966501234528,
+      "camera_messages_hz": 23.2,
+      "camera_skipped_at_node": 0,
+      "camera_message_bytes_p50": 1060998.5,
+      "node_camera_encode_ms": {
+        "p50": 35.33659999811789,
+        "p95": 51.452789996619686
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 118.1,
+        "receiver_mean": 75.9
+      },
+      "fused_frames_hz": 4.8,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 50,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 1012238.05,
+          "ratio": 2.023239493911536,
+          "encode_ms_p50": 36.39560000010533,
+          "decode_ms_p50": 10.399999999208376,
+          "megabytes_per_second_at_30fps": 30.3671415
+        },
+        "color": null
+      }
+    },
+    {
+      "name": "1280x800_png_device",
+      "soak_passed": false,
+      "elapsed_seconds": 4.0310000000026776,
+      "consumer_errors": [
+        "RuntimeError('Continuous sensor acquisition failed')"
+      ],
+      "camera": {
+        "width": 1280,
+        "height": 800,
+        "fps": 30
+      },
+      "depth_codec": "png",
+      "color_codec": "device",
+      "color_quality": null,
+      "camera_forward": "all",
+      "offered_megabytes_per_second": {
+        "mean": null,
+        "max": null
+      },
+      "offered_megabits_per_second_mean": null,
+      "camera_messages_hz": 21.582733812935306,
+      "camera_skipped_at_node": 0,
+      "camera_message_bytes_p50": 911163.0,
+      "node_camera_encode_ms": {
+        "p50": 33.097499996074475,
+        "p95": 63.03151000138313
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": null,
+        "receiver_mean": null
+      },
+      "fused_frames_hz": 4.961548002973633,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 40,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 862513.45,
+          "ratio": 2.3744557258788257,
+          "encode_ms_p50": 46.498799998516915,
+          "decode_ms_p50": 13.184249997721054,
+          "megabytes_per_second_at_30fps": 25.8754035
+        },
+        "color": null
+      }
+    },
+    {
+      "name": "1280x800_zlib_jpeg80_sweep",
+      "soak_passed": true,
+      "elapsed_seconds": 61.0,
+      "consumer_errors": [],
+      "camera": {
+        "width": 1280,
+        "height": 800,
+        "fps": 30
+      },
+      "depth_codec": "zlib",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "sweep",
+      "offered_megabytes_per_second": {
+        "mean": 11.948944412711807,
+        "max": 12.084510603084679
+      },
+      "offered_megabits_per_second_mean": 95.59155530169446,
+      "camera_messages_hz": 9.836065573770492,
+      "camera_skipped_at_node": 1196,
+      "camera_message_bytes_p50": 1049616.0,
+      "node_camera_encode_ms": {
+        "p50": 37.34160000021802,
+        "p95": 65.26292999842553
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 52.69090909090908,
+        "receiver_mean": 52.690909090909095
+      },
+      "fused_frames_hz": 9.80327868852459,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 1012238.05,
+          "ratio": 2.023239493911536,
+          "encode_ms_p50": 30.111600004602224,
+          "decode_ms_p50": 8.86105000245152,
+          "megabytes_per_second_at_30fps": 30.3671415
+        },
+        "color": {
+          "bytes_mean": 49790.7,
+          "ratio": 61.69826895384078,
+          "encode_ms_p50": 2.0554499969875906,
+          "decode_ms_p50": 2.956700001959689,
+          "megabytes_per_second_at_30fps": 1.493721
+        }
+      }
+    },
+    {
+      "name": "848x480_zlib_jpeg80_sweep",
+      "soak_passed": true,
+      "elapsed_seconds": 60.96800000000076,
+      "consumer_errors": [],
+      "camera": {
+        "width": 848,
+        "height": 480,
+        "fps": 30
+      },
+      "depth_codec": "zlib",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "sweep",
+      "offered_megabytes_per_second": {
+        "mean": 5.796166510035899,
+        "max": 5.85528322493508
+      },
+      "offered_megabits_per_second_mean": 46.369332080287194,
+      "camera_messages_hz": 9.8412281852774,
+      "camera_skipped_at_node": 1195,
+      "camera_message_bytes_p50": 422055.0,
+      "node_camera_encode_ms": {
+        "p50": 12.18584999878658,
+        "p95": 13.720940002531279
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 17.80909090909091,
+        "receiver_mean": 16.700000000000003
+      },
+      "fused_frames_hz": 9.808424091326476,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 406156.25,
+          "ratio": 2.004351773486189,
+          "encode_ms_p50": 10.733749997598352,
+          "decode_ms_p50": 3.181949996360345,
+          "megabytes_per_second_at_30fps": 12.1846875
+        },
+        "color": {
+          "bytes_mean": 21411.0,
+          "ratio": 57.03236654056326,
+          "encode_ms_p50": 0.8336000028066337,
+          "decode_ms_p50": 1.2144000029365998,
+          "megabytes_per_second_at_30fps": 0.64233
+        }
+      }
+    },
+    {
+      "name": "640x400_raw_jpeg80_all",
+      "soak_passed": true,
+      "elapsed_seconds": 60.95300000000134,
+      "consumer_errors": [],
+      "camera": {
+        "width": 640,
+        "height": 400,
+        "fps": 30
+      },
+      "depth_codec": "raw",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "all",
+      "offered_megabytes_per_second": {
+        "mean": 17.455457993013535,
+        "max": 17.64870796073816
+      },
+      "offered_megabits_per_second_mean": 139.64366394410828,
+      "camera_messages_hz": 29.547356159663355,
+      "camera_skipped_at_node": 0,
+      "camera_message_bytes_p50": 523131.5,
+      "node_camera_encode_ms": {
+        "p50": 0.874699999258155,
+        "p95": 1.6611599989118986
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 15.390909090909089,
+        "receiver_mean": 16.363636363636363
+      },
+      "fused_frames_hz": 9.810837858677782,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 512000.0,
+          "ratio": 1.0,
+          "encode_ms_p50": 0.03130000186502002,
+          "decode_ms_p50": 0.014700002793688327,
+          "megabytes_per_second_at_30fps": 15.36
+        },
+        "color": {
+          "bytes_mean": 14919.0,
+          "ratio": 51.47798109792882,
+          "encode_ms_p50": 0.5150999968464021,
+          "decode_ms_p50": 0.4951999981130939,
+          "megabytes_per_second_at_30fps": 0.44757
+        }
+      }
+    },
+    {
+      "name": "640x400_zlib_jpeg80_all",
+      "soak_passed": true,
+      "elapsed_seconds": 60.92199999999866,
+      "consumer_errors": [],
+      "camera": {
+        "width": 640,
+        "height": 400,
+        "fps": 30
+      },
+      "depth_codec": "zlib",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "all",
+      "offered_megabytes_per_second": {
+        "mean": 9.589388399003418,
+        "max": 9.724729988148901
+      },
+      "offered_megabits_per_second_mean": 76.71510719202735,
+      "camera_messages_hz": 29.56239125439151,
+      "camera_skipped_at_node": 0,
+      "camera_message_bytes_p50": 267359.5,
+      "node_camera_encode_ms": {
+        "p50": 8.151649999490473,
+        "p95": 12.577905000944156
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 34.29090909090909,
+        "receiver_mean": 26.66363636363637
+      },
+      "fused_frames_hz": 9.815830077804621,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 256095.45,
+          "ratio": 1.9992545748079475,
+          "encode_ms_p50": 9.40814999921713,
+          "decode_ms_p50": 3.019200001290301,
+          "megabytes_per_second_at_30fps": 7.6828635
+        },
+        "color": {
+          "bytes_mean": 14919.0,
+          "ratio": 51.47798109792882,
+          "encode_ms_p50": 0.5969000012555625,
+          "decode_ms_p50": 0.8553499974368606,
+          "megabytes_per_second_at_30fps": 0.44757
+        }
+      }
+    },
+    {
+      "name": "640x400_png_jpeg80_sweep",
+      "soak_passed": true,
+      "elapsed_seconds": 60.98500000000058,
+      "consumer_errors": [],
+      "camera": {
+        "width": 640,
+        "height": 400,
+        "fps": 30
+      },
+      "depth_codec": "png",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "sweep",
+      "offered_megabytes_per_second": {
+        "mean": 3.8972257995220634,
+        "max": 3.9288693062334397
+      },
+      "offered_megabits_per_second_mean": 31.177806396176507,
+      "camera_messages_hz": 9.854882348118295,
+      "camera_skipped_at_node": 1195,
+      "camera_message_bytes_p50": 228244.5,
+      "node_camera_encode_ms": {
+        "p50": 8.9019500046561,
+        "p95": 15.30702500094776
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 15.009090909090911,
+        "receiver_mean": 16.37272727272727
+      },
+      "fused_frames_hz": 9.82208739854053,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 601,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 217030.9,
+          "ratio": 2.359111075888272,
+          "encode_ms_p50": 7.103200001438381,
+          "decode_ms_p50": 2.611850002722349,
+          "megabytes_per_second_at_30fps": 6.510927
+        },
+        "color": {
+          "bytes_mean": 14919.0,
+          "ratio": 51.47798109792882,
+          "encode_ms_p50": 0.5166500013729092,
+          "decode_ms_p50": 0.6925999987288378,
+          "megabytes_per_second_at_30fps": 0.44757
+        }
+      }
+    },
+    {
+      "name": "hotspot_profile_640x400_zlib_jpeg80_sweep",
+      "soak_passed": true,
+      "elapsed_seconds": 60.953999999997905,
+      "consumer_errors": [],
+      "camera": {
+        "width": 640,
+        "height": 400,
+        "fps": 30
+      },
+      "depth_codec": "zlib",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "sweep",
+      "offered_megabytes_per_second": {
+        "mean": 4.218735234343525,
+        "max": 4.254570552439733
+      },
+      "offered_megabits_per_second_mean": 33.7498818747482,
+      "camera_messages_hz": 9.843488532336199,
+      "camera_skipped_at_node": 1195,
+      "camera_message_bytes_p50": 267359.5,
+      "node_camera_encode_ms": {
+        "p50": 8.176049999747192,
+        "p95": 11.013195003033616
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 15.681818181818182,
+        "receiver_mean": 13.136363636363637
+      },
+      "fused_frames_hz": 9.810676903895077,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 256095.45,
+          "ratio": 1.9992545748079475,
+          "encode_ms_p50": 7.87674999810406,
+          "decode_ms_p50": 2.414649996353546,
+          "megabytes_per_second_at_30fps": 7.6828635
+        },
+        "color": {
+          "bytes_mean": 14919.0,
+          "ratio": 51.47798109792882,
+          "encode_ms_p50": 0.5448499978228938,
+          "decode_ms_p50": 0.7643500030098949,
+          "megabytes_per_second_at_30fps": 0.44757
+        }
+      }
+    },
+    {
+      "name": "fallback_424x240_zlib_jpeg80_sweep",
+      "soak_passed": true,
+      "elapsed_seconds": 60.95300000000134,
+      "consumer_errors": [],
+      "camera": {
+        "width": 424,
+        "height": 240,
+        "fps": 30
+      },
+      "depth_codec": "zlib",
+      "color_codec": "jpeg",
+      "color_quality": 80,
+      "camera_forward": "sweep",
+      "offered_megabytes_per_second": {
+        "mean": 2.674465605627241,
+        "max": 2.697781088026641
+      },
+      "offered_megabits_per_second_mean": 21.395724845017927,
+      "camera_messages_hz": 9.843650025429213,
+      "camera_skipped_at_node": 1195,
+      "camera_message_bytes_p50": 109522.0,
+      "node_camera_encode_ms": {
+        "p50": 3.2650000030116644,
+        "p95": 4.770169997573248
+      },
+      "cpu_percent_of_one_core": {
+        "node_mean": 8.100000000000001,
+        "receiver_mean": 7.8
+      },
+      "fused_frames_hz": 9.810837858677782,
+      "segments": 1,
+      "imu_sequence_breaks": 0,
+      "camera_missing": 0,
+      "clouds": 600,
+      "cloud_missing": 0,
+      "receiver_overflows": 0,
+      "codec_bench_single_frame": {
+        "depth": {
+          "bytes_mean": 103969.05,
+          "ratio": 1.957505623067634,
+          "encode_ms_p50": 2.395849998720223,
+          "decode_ms_p50": 0.7555499978479929,
+          "megabytes_per_second_at_30fps": 3.1190715
+        },
+        "color": {
+          "bytes_mean": 7799.55,
+          "ratio": 39.14071965690328,
+          "encode_ms_p50": 0.1676499996392522,
+          "decode_ms_p50": 0.16310000137309544,
+          "megabytes_per_second_at_30fps": 0.2339865
+        }
+      }
+    }
+  ]
+}

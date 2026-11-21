@@ -42,8 +42,13 @@ def build_spatial_index_pack(coords,neighbors=16,temporal_neighbors=12,previous_
         return np.asarray(idx,dtype=np.int64).reshape(len(points),-1)
     local=query(tree,xyz,neighbors)
     count=min(fps_cap,max(1,n//4));distance=np.full(n,np.inf);ids=[];current=0
+    # Farthest-point sampling with preallocated buffers: (dx*dx+dy*dy)+dz*dz is the row sum np.sum(axis=1) takes over
+    # three columns, in the same order and dtype, so distances and picks are bit-identical (C35).
+    columns=[np.ascontiguousarray(xyz[:,j]) for j in range(3)];delta=np.empty(n,xyz.dtype);step=np.empty(n,xyz.dtype)
     for _ in range(count):
-        ids.append(current);distance=np.minimum(distance,np.sum((xyz-xyz[current])**2,axis=1));current=int(distance.argmax())
+        ids.append(current);np.subtract(columns[0],columns[0][current],out=delta);np.multiply(delta,delta,out=step)
+        for column in columns[1:]:np.subtract(column,column[current],out=delta);delta*=delta;step+=delta
+        np.minimum(distance,step,out=distance);current=int(distance.argmax())
     ids=np.asarray(ids,np.int64);centers=xyz[ids]
     large=query(tree,centers,2*neighbors)
     propagation=query(cKDTree(centers),xyz,3)

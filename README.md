@@ -1,24 +1,56 @@
 # AetherTwin — lab digital twin
 
+[![AetherTwin landing page: a robotics lab, measured in 3D from a hand-pushed cart](web/src/landing/img/og.jpg)](https://aethertwin-showcase.vercel.app)
+
+**[Public site with a 3D replay](https://aethertwin-showcase.vercel.app)** (recorded lab data, not live) ·
+**[Case study](docs/CASE_STUDY.md)** · **[Future work](docs/FUTURE_WORK.md)** · **[Resume wording](docs/RESUME_ENTRY.md)**
+
+A sensing cart (Unitree L2 LiDAR and Orbbec depth camera on a Raspberry Pi 5) streams raw data over Wi-Fi to a GPU
+laptop, which builds a 3D twin of the lab with tracking, risk fields and path planning, shown in a browser studio.
+
+| Measured | What it is | Source |
+|---|---|---|
+| 15 min, 5,510 frames | Live run on the real rig over Wi-Fi, LiDAR-only | `reports/lab/README.md` |
+| p50 140 ms, p95 216 ms | Processing time per frame, live (35 ms target not met) | `reports/lab/README.md` |
+| 3.4 cm ICP residual | Fit of the live scan to the project's own twin, not accuracy | `reports/lab/README.md` |
+| 7,171 frames, 0 lost | 600 s stationary Pi-to-laptop stream over Wi-Fi, on the bench | `docs/LAB_DAY.md` |
+| 381 to 240 ms | Output-identical speed-ups, rehearsals on recorded data | `reports/rehearsal/README.md` |
+| 713 Python tests | Plus web unit and browser end-to-end tests | `reports/test_suite/README.md` |
+
+Not done yet: camera-LiDAR calibration, accuracy against ground truth, a moving full-room scan, a 30-minute verified
+run. The cart is pushed by hand; planning runs in simulation. Stack: Python 3.12, PyTorch, Open3D, FastAPI, React 19,
+TypeScript, Three.js, Playwright.
+
+## Overview
+
 A Python research platform for calibrated LiDAR/RGB-D perception, measured 3D
 mapping, learned voxel semantics and scene flow, multi-object tracking, and
 collision-checked trajectory simulation. The original supplied specification is
 preserved in **SPEC.md**. Implementation corrections are recorded below.
 
-![Simulated runtime snapshot: top-view occupancy, tracked objects and the planned route](artifacts/runtime_scene_preview_hud.png)
-
-*Simulated runtime snapshot from the bundled demonstration (no physical sensors).*
-
 The bundled demonstration needs no sensors. It includes a trained synthetic
 checkpoint, measured simulator commissioning scans, a reconstructed twin, and a
 conservative navigation map. Physical robot commands are not emitted.
 
-The current deployment direction is **Raspberry Pi 5 sensor capture + Windows
-workstation with NVIDIA A2000 processing**, using **Unitree 4D LiDAR L2/IMU,
-Orbbec Gemini 335L and ESP32**. Jetson is no longer the selected deployment.
-The Pi-to-Windows raw-sensor bridge is still pending; the existing gateway relays
-processed scene state and is not a raw-sensor transport. Physical capture,
-calibration, Pi compatibility and A2000 performance remain unverified.
+The current deployment is **Raspberry Pi 5 sensor capture + a Windows laptop
+(i9-13900H, RTX 4070 Laptop GPU) for all processing**, using a **Unitree 4D LiDAR
+L2 (with its IMU), an Orbbec Gemini 336L (USB 2, 640x400) and an ESP32-S3** status
+board, on a hand-pushed cart. Jetson is no longer the selected deployment.
+Measured so far (`reports/hardware/`): the authenticated Pi-to-laptop raw-sensor
+transport streamed real L2 and Gemini data over the laptop's Wi-Fi hotspot for
+600 s with 7,171 frames and zero losses; the real bench recordings have been run
+through the twin build and, as a loopback replay rehearsal, through the parked live
+stack (`docs/LAB_DAY.md`, "Overnight software changes"). Their headline numbers are
+self-consistency, not accuracy: 42 mm is the pose spread of a rig that never moved
+(static precision), 2.6-2.7 cm the ICP registration residual (RMSE) against the twin,
+and processing ran at p50 381 ms / p95 570 ms a frame at first and p50 240 ms / p95 296 ms after exact
+speed-ups (10-minute rehearsal), missing the 35 ms target
+(`reports/rehearsal/`). Still pending on the rig:
+the camera-LiDAR calibration, a moving commissioning scan and the 30-minute live run.
+Nothing is marked hardware-verified until those are measured.
+
+One-document summary: [case study](docs/CASE_STUDY.md); what comes next (full-room twin, autonomous rover):
+[future work](docs/FUTURE_WORK.md).
 
 The bundled simulation and replay run today. See [current status](docs/PROJECT_STATUS.md),
 [repository structure](docs/REPOSITORY_STRUCTURE.md), and the
@@ -71,7 +103,7 @@ only when processing is faster than sensor time.
 Measured results, configurations and limits are in `reports/BENCHMARK.md` and
 `reports/ACCEPTANCE.md`. Processing and browser rendering have separate budgets.
 The 35ms pipeline target remains future work; synthetic measurements are not
-Pi, A2000 or real-lab performance claims.
+Pi, laptop or real-lab performance claims.
 
 For architecture, first physical setup and private deployment, read
 [architecture](docs/AETHERTWIN_ARCHITECTURE.md),

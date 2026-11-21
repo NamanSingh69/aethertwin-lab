@@ -43,8 +43,17 @@ export type Connection =
   | "streaming"
   | "fallback"
   | "resync"
-  | "offline";
-export class SceneStream {
+  | "offline"
+  /** A packet failed to decode (malformed, not a sequence gap). */
+  | "error"
+  /** Static showcase: frames come from a recorded replay, never a live service. */
+  | "replay";
+/** What the studio needs from a scene source: a counter and a way to stop it. */
+export interface SceneSource {
+  dropped: number;
+  close(): void;
+}
+export class SceneStream implements SceneSource {
   private worker: Worker;
   private socket: WebSocket | null = null;
   private timer: ReturnType<typeof setTimeout> | null = null;
@@ -69,7 +78,10 @@ export class SceneStream {
         this.onStatus("streaming");
         this.onFrame(event.data.frame);
       } else {
-        this.onStatus("resync", event.data.message);
+        // A sequence gap is a resync; anything else is a real decode failure and
+        // is reported as one. Both recover from the next keyframe.
+        if (event.data.type === "resync") this.onStatus("resync", event.data.message);
+        else this.onStatus("error", `Scene decode failed: ${event.data.message ?? "unknown error"}`);
         if (this.socket?.readyState === WebSocket.OPEN)
           this.socket.send(JSON.stringify({ type: "resync" }));
         this.pending = null;

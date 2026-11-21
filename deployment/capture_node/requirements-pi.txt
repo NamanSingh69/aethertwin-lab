@@ -1,0 +1,15 @@
+# Capture-node environment on the Raspberry Pi 5 (aarch64, Raspberry Pi OS 64-bit).
+# Versions match the processing host's locks so both ends decode identically.
+# Installed on the rig Pi (Debian 13, Python 3.13.5) on 2026-11-04; the exact wheels with their
+# hashes are in requirements-pi.lock (pip install --no-deps --require-hashes -r requirements-pi.lock).
+numpy==2.5.4
+opencv-python-headless==5.0.0.93
+PyYAML==6.0.3
+# core/se3_math.py (imported by the capture node via the synchronizer) needs scipy.
+scipy==1.18.1
+# pyorbbecsdk2==2.1.2 is installed separately with --no-deps (pi_bootstrap.sh python_env): its metadata
+# requires av, opencv-python (GUI build, a second cv2), pygame and pynput (evdev, no wheel), none of
+# which the SDK imports at runtime. https://github.com/orbbec/pyorbbecsdk/pull/220
+# Build-time only, for the native Unitree binding (native/README.md):
+pybind11==3.1.0
+cmake

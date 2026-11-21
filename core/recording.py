@@ -22,6 +22,7 @@ def start_raw_recording(path,twin_path,mobile,metadata=None,options=None,remaini
     if capture_quota<1:raise RuntimeError('Recording disk quota cannot hold the matching twin bundle')
     raw=FrameRecorder(path,chunk_size=options.get('chunk_frames',4),
         max_buffer_bytes=options.get('chunk_bytes',64*1024**2),max_disk_bytes=capture_quota,
+        compression_level=options.get('compression_level'),
         metadata={'motion_mode':'mobile' if mobile else 'stationary',
                   'recording_policy':'synchronized_raw_frames',**(metadata or {})})
     try:shutil.copytree(twin_path,path/'twin',dirs_exist_ok=True)

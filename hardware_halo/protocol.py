@@ -6,6 +6,9 @@ VERSION=1
 PIXELS=24
 HELLO=b'AETHER_HALO_HELLO 1\n'
 IDENTITY=b'AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_DEVKIT_V1'
+# Same 24-pixel protocol, firmware built for each board: profile name -> exact identity line.
+IDENTITIES={b'ESP32_DEVKIT_V1':IDENTITY,b'ESP32_S3_DEVKITC':b'AETHER_HALO 1 PIXELS=24 PROFILE=ESP32_S3_DEVKITC'}
+PROFILE_BY_IDENTITY={line:profile.decode() for profile,line in IDENTITIES.items()}
 SOURCES={'unspecified':0,'sim':1,'replay':2,'live':3,'test':4}
 SOURCE_NAMES={value:key for key,value in SOURCES.items()}
 SEVERITIES={'clear':0,'caution':1,'warning':2,'critical':3}

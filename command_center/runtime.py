@@ -4,6 +4,7 @@ import copy
 from dataclasses import replace
 import io
 import json
+import os
 from pathlib import Path
 import threading
 import time
@@ -12,6 +13,66 @@ import numpy as np
 
 from core.resources import resource_root
 from .assets import export_twin_assets,file_revision
+
+
+class FrameErrorPolicy:
+    """Live runs skip a failing frame (localization lost, a bad sweep, a transient acquisition error) and stop only
+    after max_consecutive failures in a row; replay and simulation keep stopping at the first error."""
+    def __init__(self,max_consecutive=20):
+        self.max_consecutive=int(max_consecutive);self.consecutive=0;self.total=0;self.last=None
+    def failed(self,exc):
+        self.consecutive+=1;self.total+=1;self.last=f'{type(exc).__name__}: {exc}';return self.consecutive>=self.max_consecutive
+    def succeeded(self):self.consecutive=0
+    def status(self):
+        return {'total_frame_errors':self.total,'consecutive_frame_errors':self.consecutive,'last_frame_error':self.last,
+                'stop_after_consecutive':self.max_consecutive}
+
+
+def write_progress(path,progress):
+    """Write progress.json atomically (temporary file + os.replace); a failure (e.g. a Windows lock held by an
+    antivirus or indexer) returns False instead of turning into a frame error."""
+    path=Path(path);temporary=path.with_name(path.name+'.tmp')
+    try:
+        temporary.write_bytes(json.dumps(progress,indent=2).encode('utf-8'));os.replace(temporary,path);return True
+    except OSError:
+        try:temporary.unlink()
+        except OSError:pass
+        return False
+
+
+class LiveSourceReopener:
+    """Reopen a live acquisition that has gone terminal (e.g. a Wi-Fi outage longer than capture_max_outage_seconds),
+    at most max_reopens times, waiting backoff_seconds after a failed open. The pipeline re-seeds deskew itself."""
+    def __init__(self,open_source,max_reopens=20,backoff_seconds=5.):
+        self.open_source=open_source;self.max_reopens=int(max_reopens);self.backoff=float(backoff_seconds)
+        self.reopens=0;self.failures=0;self.next_attempt=0.;self.last_error=None
+    @property
+    def exhausted(self):return self.reopens>=self.max_reopens
+    def maybe_reopen(self,source,now):
+        if source is None or not getattr(source,'terminal',False) or self.exhausted or now<self.next_attempt:return None
+        try:source.close()
+        except Exception:pass
+        try:fresh=self.open_source()
+        except Exception as exc:
+            self.failures+=1;self.last_error=f'{type(exc).__name__}: {exc}';self.next_attempt=now+self.backoff;return None
+        self.reopens+=1;self.next_attempt=now;return fresh
+    def status(self):
+        return {'live_source_reopens':self.reopens,'failed_reopens':self.failures,'last_reopen_error':self.last_error,'max_source_reopens':self.max_reopens}
+
+
+def live_twin_acceptable(provenance,cfg):
+    """A calibrated live run needs a twin built with a measured camera calibration. An explicitly uncalibrated run
+    (live.capture_bringup, command_center --lidar-only: the camera is not fused) may also use a real LiDAR-only twin."""
+    if provenance.get('live_reference_eligible',False):return True
+    return bool((cfg.get('live') or {}).get('capture_bringup')) and bool(provenance.get('lidar_only_reference_eligible',False))
+
+
+def live_motion(cfg):
+    """True (mobile odometry) unless live.parked: a parked live run localizes once against the twin and then holds
+    its station every sweep (core/pipeline.py _relocalize_parked). Sets live.parked_relocalize for the pipeline."""
+    parked=bool((cfg.get('live') or {}).get('parked',False))
+    if parked:cfg['live']['parked_relocalize']=True
+    return not parked
 
 
 class BrowserRuntime:
@@ -32,6 +93,7 @@ class BrowserRuntime:
         self.recording_id='input' if recording is not None else 'sample'
         self.mode=mode;self.source=None;self.pipeline=None;self.iterator=None;self.hub=None;self.controls=None
         self.paused=False;self.completed=False;self.error=None;self.current_frame=-1;self.frame_count=None
+        self.frame_errors=FrameErrorPolicy((config.get('live') or {}).get('max_consecutive_frame_errors',20));self.live_reopener=None
         self.seek_target=None;self.steps=0;self.session_id=uuid.uuid4().hex;self.source_active=False
         self._stop=threading.Event();self._thread=None;self._status_lock=threading.Lock();self._asset_map=None
         self.halo=None
@@ -61,9 +123,9 @@ class BrowserRuntime:
             count=len(candidate);mobile=candidate.manifest.get('metadata',{}).get('motion_mode')=='mobile'
         else:
             if self.requested_twin is None:raise ValueError('Live mode requires an explicit measured commissioned twin')
-            twin_path=self.requested_twin;candidate=None;count=None;mobile=True
-            if not read_commissioning_provenance(twin_path).get('live_reference_eligible',False):
-                raise ValueError('Live mode rejects synthetic/unknown commissioning provenance')
+            twin_path=self.requested_twin;candidate=None;count=None;mobile=live_motion(cfg)
+            if not live_twin_acceptable(read_commissioning_provenance(twin_path),cfg):
+                raise ValueError('Live mode rejects synthetic/unknown commissioning provenance (a LiDAR-only twin needs --lidar-only)')
         twin=static=pipeline=recorder=live=None
         try:
             twin,static,grid=load_commissioned_assets(twin_path)
@@ -92,14 +154,20 @@ class BrowserRuntime:
                 recorder=start_raw_recording(self.record_root/f'{self._record_segment:04d}-{mode}',twin_path,mobile,
                     {'source_mode':mode,'map_revision':revision},options=options,remaining_bytes=remaining)
             if mode=='live':
-                from ingestion.live_source import LiveSensorSource
+                from ingestion.live_source import open_live_source
                 from core.bounded_acquisition import BufferedAcquisition
                 if self.source is not None:self.source.close();self.source=None;self.source_active=False
-                live=LiveSensorSource(cfg['live'],self.root)
-                budgets=cfg.get('acquisition',{})
-                candidate=BufferedAcquisition(live,max_frames=budgets.get('max_frames',2),max_bytes=budgets.get('max_bytes',64*1024*1024),
-                    max_age_seconds=budgets.get('max_age_seconds',.5),imu_history_seconds=budgets.get('imu_history_seconds',5),
-                    max_imu_samples=budgets.get('max_imu_samples',8192),raw_sink=recorder).start()
+                budgets=cfg.get('acquisition',{});live_config=cfg['live']
+                def open_acquisition(sink=recorder):
+                    live=open_live_source(live_config,self.root)
+                    try:
+                        return BufferedAcquisition(live,max_frames=budgets.get('max_frames',2),max_bytes=budgets.get('max_bytes',64*1024*1024),
+                            max_age_seconds=budgets.get('max_age_seconds',.5),imu_history_seconds=budgets.get('imu_history_seconds',5),
+                            max_imu_samples=budgets.get('max_imu_samples',8192),raw_sink=sink).start()
+                    except BaseException:
+                        live.close();raise
+                live=None;candidate=open_acquisition()
+                self.live_reopener=LiveSourceReopener(open_acquisition,live_config.get('max_source_reopens',20),live_config.get('source_reopen_backoff_seconds',5.))
         except BaseException:
             extra_live=live if candidate is None else None
             resources=(candidate,extra_live,recorder,pipeline) if pipeline is not None else (candidate,extra_live,recorder,static,twin)
@@ -174,14 +242,23 @@ class BrowserRuntime:
                     self.pipeline.last_state=state
                     if self.pipeline.frames%10==0:
                         progress=self.pipeline.report();progress['telemetry']=self.hub.status()
-                        (self.output/'progress.json').write_text(json.dumps(progress,indent=2),encoding='utf-8')
+                        if not write_progress(self.output/'progress.json',progress):self.progress_write_failures=getattr(self,'progress_write_failures',0)+1
                     if self.halo is not None:self.halo.publish(state)
                     if self.seek_target is not None:
                         if self.current_frame>=self.seek_target:self.seek_target=None;self.paused=True;self.hub.publish(state)
                     elif not self.paused or self.steps:self.hub.publish(state)
                     if self.steps:self.steps-=1
+                    if self.mode=='live':self.frame_errors.succeeded()
                     if self.mode=='sim':self._stop.wait(max(0,frame.sweep_duration-(time.monotonic()-started)))
                 except Exception as exc:
+                    if self.mode=='live' and self.live_reopener is not None:
+                        fresh=self.live_reopener.maybe_reopen(self.source,time.monotonic())
+                        if fresh is not None:
+                            self.source=fresh;self.iterator=iter(fresh);self.frame_errors.succeeded();self.source_active=True;continue
+                        if getattr(self.source,'terminal',False) and not self.live_reopener.exhausted:
+                            self._stop.wait(.5);continue  # backing off between reopen attempts
+                    if self.mode=='live' and not self.frame_errors.failed(exc):
+                        self._stop.wait(.05);continue
                     self.error=f'{type(exc).__name__}: {exc}';self.paused=True;self.source_active=False
         finally:
             try:
@@ -215,7 +292,8 @@ class BrowserRuntime:
                           'current_time':None if latest is None else latest.timestamp,'seeking':self.seek_target is not None},
                 'session_id':self.session_id,'hardware_verified':False,
                 'halo':None if halo_status is None else halo_status['virtual'],'halo_transport':halo_status,
-                'recording':None if self.recorder is None else self.recorder.status()}
+                'recording':None if self.recorder is None else self.recorder.status(),'frame_errors':self.frame_errors.status(),
+                'live_source':None if self.live_reopener is None else self.live_reopener.status()}
 
     def trajectory_csv(self):
         if self.pipeline is None:raise ValueError('Pipeline is not ready')
