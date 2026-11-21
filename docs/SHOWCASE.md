@@ -122,5 +122,17 @@ Gate: pass=10 warn=2 fail=0. Firewall read through the API just before: 300/min 
 3D libraries, ledger values clear of the next column, `/replay` plays (48 to 96 of 360 frames in 3 s), the explainer
 keeps `?x=1`, an unknown path is 404.
 
+Deployment URLs other than production redirect to the Vercel login (302). There are no deny rules for unused paths.
+Link previews: since 21 Nov 2026 a firewall `bypass` rule "Allow link-preview crawlers on / and /og.jpg" (GET only,
+user agents WhatsApp, LinkedInBot, facebookexternalhit, Twitterbot, Slackbot, TelegramBot, Discordbot) lets them through
+bot protection (owner's yes). Checked with curl: those agents get 200 on `/` and `/og.jpg` and 429 elsewhere; a POST and
+a curl user agent still get 429.
+
+Deploy 21 Nov 2026 16:57 UTC (landing fixes, cycle C54, staged in `vercel_showcase_20261121b`, gate pass=10 warn=2
+fail=0, firewall and team re-read first): every navigation link and button is at least 44 x 44 px, links use clean URLs
+(`./replay`, `./explainer`, so no 308 per click), and `/og.jpg` and `/favicon.svg` are cached for a day. Checked live in
+headed Chrome at 375 and 1440 px: no link under 44 px, no `.html` link, no redirect from landing to replay to explainer,
+the replay plays, `/explainer.html?x=1` ends at `/explainer?x=1`, an unknown path is 404.
+
 Previous deploy: 21 Nov 2026, commit `93c6445` (landing page at `/`, replay at `/replay`). Landing page measured live at
 9 requests and 178 kB transferred.

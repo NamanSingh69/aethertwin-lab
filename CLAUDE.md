@@ -61,6 +61,10 @@ that was not measured; visual effects are presentation-only and must say so.
 - Bundle budget: `npm run size` after a build. GPU benchmark: `node tools/run-benchmark.mjs --mode streaming
   --quality balanced --out ../artifacts/renderer_benchmarks/x.json` (headed Chrome, real GPU).
 - Cloud GPU (Modal): `modal run tools/modal_bench.py --suite smoke --gpu T4` (see reports/modal/README.md).
+- Poster PDF (Windows, installed Chrome): in `web/`, `node tools/export-poster.mjs` rewrites
+  `reports/poster/AetherTwin_poster_A3.pdf` from `poster_a3.html`; it refuses if text runs past the page or title box.
+- Public repo `aethertwin-lab` is a curated copy, not a mirror: sync steps in the vault note "Public repo aethertwin-lab
+  is a curated copy" (script `.local/public_sync/curate.py`, local only). Show the owner the file list before a push.
 
 ## Gotchas
 - `vite preview` proxies `/api` and `/ws` to :8080. Mock E2E relies on the AUTO `service` fixture
@@ -106,3 +110,7 @@ that was not measured; visual effects are presentation-only and must say so.
    plan: `docs/SHOWCASE_PLAN.md`; poster: `reports/poster/`.
 10. Next (`docs/LAB_DAY.md`): calibration with the monitor at 640x400, a moving commissioning scan that passes QA
    (the 5 Nov push failed: 81 s, 109 deg/s turns), landmark spans, latency trials, the 30-minute run.
+11. Showcase and resume polish (21 Nov): landing page, case study, poster PDF and staging script merged as PR #10
+   (`f94993e`), deployed (`docs/SHOWCASE.md` section 5), public repo synced (`aethertwin-lab` `feaa36c`). Open items,
+   owner first: replay data off Vercel (R2, option A; no Cloudflare login on this PC), faculty guide's name for the poster.
+   Landing fixes and the link-preview rule are done. List: `reports/reviews/aethertwin_showcase_review_2026-11-21.md` "Status".

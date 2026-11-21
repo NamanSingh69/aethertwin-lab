@@ -4,7 +4,7 @@ export const VIEW_PRESETS = ["isometric", "top", "sensor"] as const;
 export type ViewPreset = (typeof VIEW_PRESETS)[number];
 
 /** Where the studio lives: the site root, except in the static showcase, whose root is the landing page. */
-export const STUDIO_HREF = import.meta.env.VITE_SHOWCASE === "1" ? "./replay.html" : "./";
+export const STUDIO_HREF = import.meta.env.VITE_SHOWCASE === "1" ? "./replay" : "./";
 
 /** Studio URL that opens with only `layers` visible and the camera at `view`. */
 export function studioLink(layers: LayerName[], view: ViewPreset) {

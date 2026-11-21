@@ -40,6 +40,10 @@
       "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     },
     {
+      "source": "/(og\\.jpg|favicon\\.svg)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
       "source": "/(replay|explainer)",
       "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     }

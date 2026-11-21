@@ -4,7 +4,8 @@
 Title "Lab Digital Twin: Autonomous Scanning and 3D Reconstruction"; team HIRANYA KUMAWAT (24155539), SUMEDHA G
 (2405198), SUJAL AGARWAL (24051292), NAMAN SINGH (24052230), UTKARSH JHA (24155593), AASUTOSH SWAIN (24157002);
 no "Guided by" line until the team has the faculty guide's name (owner, 21 Nov 2026: the "[Faculty Guide — to be
-added]" placeholder was dropped; add the line back with the name and re-export the PDF); K-Explore (Robotics); Kalinga
+added]" placeholder was dropped; add the line back with the name and re-export the PDF with
+`node tools/export-poster.mjs` in `web/`); K-Explore (Robotics); Kalinga
 Institute of Industrial Technology (Deemed to be University), Bhubaneswar; GROUP NO. 29; the KIIT logo.
 
 ## What changed since the old poster (it said "proposed project, nothing measured")

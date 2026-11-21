@@ -49,8 +49,8 @@ const frameId = async (page: Page) =>
 const pill = (page: Page) => page.locator(".connection-pill");
 
 async function openReplay(page: Page) {
-  // The site root is the landing page; the studio replay lives at replay.html.
-  await page.goto("/replay.html");
+  // The site root is the landing page; the studio replay lives at /replay (replay.html).
+  await page.goto("/replay");
   await expect(pill(page)).toHaveText("Recorded replay");
   await expect(page.locator(".viewport-stats strong").first()).toHaveText(/^\d{5}$/);
 }
@@ -133,7 +133,7 @@ test.describe("static showcase", () => {
   test("the explainer link opens the explainer page", async ({ page }) => {
     await openReplay(page);
     await page.getByRole("link", { name: "What is this?" }).click();
-    await expect(page).toHaveURL(/\/explainer\.html$/);
+    await expect(page).toHaveURL(/\/explainer$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("live 3D copy");
   });
 
@@ -143,10 +143,10 @@ test.describe("static showcase", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText("measured in 3D");
   });
 
-  test("the explainer opens the studio at replay.html, not the landing page", async ({ page }) => {
+  test("the explainer opens the studio at /replay, not the landing page", async ({ page }) => {
     await page.goto("/explainer.html");
     await page.getByRole("link", { name: "Open the 3D studio" }).click();
-    await expect(page).toHaveURL(/\/replay\.html$/);
+    await expect(page).toHaveURL(/\/replay$/);
     // The studio boots after a click here (no page.goto to wait on), under parallel software rendering.
     await expect(pill(page)).toHaveText("Recorded replay", { timeout: 30_000 });
   });
@@ -210,10 +210,35 @@ test.describe("showcase landing page", () => {
   test("the primary action opens the recorded replay", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("link", { name: "Launch the 3D replay" }).first().click();
-    await expect(page).toHaveURL(/\/replay\.html$/);
+    await expect(page).toHaveURL(/\/replay$/);
     // The studio boots after a click here (no page.goto to wait on), under parallel software rendering.
     await expect(pill(page)).toHaveText("Recorded replay", { timeout: 30_000 });
   });
+
+  test("links to the studio and explainer by clean URL (no .html redirect on Vercel)", async ({ page }) => {
+    await page.goto("/");
+    const hrefs = await page.locator("a[href]").evaluateAll((links) => links.map((a) => a.getAttribute("href") ?? ""));
+    expect(hrefs.filter((href) => /(replay|explainer)\.html/.test(href))).toEqual([]);
+    expect(hrefs).toContain("./replay");
+    await page.goto("/explainer");
+    await expect(page.getByRole("link", { name: "Open the 3D studio" })).toHaveAttribute("href", "./replay");
+  });
+
+  for (const width of [375, 1440]) {
+    test(`navigation links are at least 44 px tall at ${width} px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/");
+      const small = await page
+        .locator(".topbar a, .colophon nav a, a.more, .btn")
+        .evaluateAll((links) =>
+          links
+            .map((a) => ({ text: (a.textContent ?? "").trim().slice(0, 24), box: a.getBoundingClientRect() }))
+            .filter(({ box }) => box.width > 0 && box.height > 0 && (box.height < 44 || box.width < 44))
+            .map(({ text, box }) => `${text} ${Math.round(box.height)}px`),
+        );
+      expect(small).toEqual([]);
+    });
+  }
 
   test("fits a phone without sideways scrolling and keeps its targets tappable", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });

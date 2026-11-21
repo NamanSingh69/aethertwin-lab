@@ -158,6 +158,9 @@ a:hover {
   border-bottom: 1px solid var(--rule-strong);
 }
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink);
   font-size: 17px;
   font-weight: 700;
@@ -175,6 +178,10 @@ a:hover {
   margin-left: auto;
 }
 .topbar nav a {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
   color: var(--ink-2);
   text-decoration: none;
 }
@@ -230,7 +237,7 @@ a:hover {
   color: var(--paper);
 }
 .btn.small {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   font-size: 13.5px;
 }
@@ -805,6 +812,7 @@ h3 {
 .more {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 7px;
   flex: none;
   color: var(--ink);
@@ -968,11 +976,17 @@ h3 {
 }
 .colophon nav {
   display: grid;
-  gap: 8px;
+  gap: 0;
   align-content: start;
 }
 .colophon a {
   color: var(--plate-ink);
+}
+.colophon nav a {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 .colophon a:hover {
   color: #fff;

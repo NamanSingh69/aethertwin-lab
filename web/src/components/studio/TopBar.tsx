@@ -105,7 +105,7 @@ export function TopBar({
           </button>
         ))}
       </nav>
-      <a className="explainer-link" href="explainer.html">
+      <a className="explainer-link" href={import.meta.env.VITE_SHOWCASE === "1" ? "./explainer" : "explainer.html"}>
         What is this?
       </a>
       <div className="header-status">

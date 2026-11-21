@@ -58,7 +58,7 @@ describe("showcase landing page", () => {
   it("links only to pages of the static site and the public repository", () => {
     const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]!);
     for (const href of hrefs)
-      expect(href).toMatch(/^(#[\w-]+|\.\/|\.\/replay\.html|\.\/explainer\.html|https:\/\/github\.com\/NamanSingh69\/aethertwin-lab)$/);
+      expect(href).toMatch(/^(#[\w-]+|\.\/|\.\/replay|\.\/explainer|https:\/\/github\.com\/NamanSingh69\/aethertwin-lab)$/);
     expect(html).not.toMatch(/\/api\/|\/ws\/|wss?:\/\//);
   });
 
